@@ -44,6 +44,9 @@
   --myds-static-glass: #ffffff24;
   --myds-static-glass-subtle: #ffffff0f;
   --myds-static-scrim-bar: #0a143373;
+  --myds-action-hover: #1d4ed8;
+  --myds-action-active: #1e40af;
+  --myds-static-white-30: #ffffff4d;
 }
 
 :root[data-theme='dark'] {
@@ -80,6 +83,8 @@
   --myds-warning-100: #3d3214;
   --myds-warning-600: #e2a80c;
   --myds-warning-700: #fcd34d;
+  --myds-action-hover: #255fe0;
+  --myds-action-active: #1f50c4;
 }
 
 /* Tailwind theme: defaults are cleared so only Figma tokens exist. */
@@ -128,6 +133,9 @@
   --color-static-glass: var(--myds-static-glass);
   --color-static-glass-subtle: var(--myds-static-glass-subtle);
   --color-static-scrim-bar: var(--myds-static-scrim-bar);
+  --color-action-hover: var(--myds-action-hover);
+  --color-action-active: var(--myds-action-active);
+  --color-static-white-30: var(--myds-static-white-30);
 }
 
 @theme {
@@ -167,6 +175,12 @@
     #0f1c45eb 100%
   );
   --background-image-nav-scrim: linear-gradient(180deg, #0a1433a6 0%, #0a143300 100%);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 250ms;
   --container-*: initial;
   --container-page: 90rem;
   --container-content: 75rem;

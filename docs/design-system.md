@@ -94,3 +94,13 @@ Light, Dark and Match system (the default for new visitors). `src/lib/theme/them
 ## Components
 
 Built in the foundations iteration on shadcn/ui (Radix) primitives, restyled to Figma with these tokens. The catalogue, with every variant and state, lives at `/dev/components` in development.
+
+## Added in iteration 1 (not variables in Figma)
+
+| Token | Light | Dark | Why |
+|---|---|---|---|
+| `action-hover` | #1d4ed8 (primary/700) | #255fe0 | Primary button hover. Dark `primary-700` is a light text blue, so it can't carry white labels |
+| `action-active` | #1e40af (primary/800) | #1f50c4 | Primary button pressed |
+| `static-white-30` | white 30 % | white 30 % | Social pill border on the navy footer (measured on 1:127) |
+
+Motion: `ease-standard` cubic-bezier(0.2, 0, 0, 1), `ease-enter` (0, 0, 0.2, 1), `ease-exit` (0.4, 0, 1, 1); durations `--duration-fast` 150 ms, `--duration-base` 200 ms, `--duration-slow` 250 ms (use `duration-(--duration-base)`). All motion is removed under `prefers-reduced-motion`.

@@ -46,6 +46,8 @@ for (const [k, v] of Object.entries(src.shadow)) out(`  --shadow-${k}: ${v};`);
 out('  --blur-*: initial;');
 for (const [k, v] of Object.entries(src.blur)) out(`  --blur-${k}: ${v}px;`);
 for (const [k, v] of Object.entries(src.gradient)) out(`  --background-image-${k}: ${v};`);
+for (const [k, v] of Object.entries(src.ease)) out(`  --ease-${k}: ${v};`);
+for (const [k, v] of Object.entries(src.duration)) out(`  --duration-${k}: ${v}ms;`);
 out('  --container-*: initial;');
 for (const [k, v] of Object.entries(src.layout)) {
   if (k.startsWith('header')) out(`  --spacing-${k}: ${rem(v)};`);

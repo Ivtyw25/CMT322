@@ -13,7 +13,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint . --max-warnings=0 && prettier --check .",
     "format": "prettier --write .",
-    "tokens": "node scripts/generate-tokens.mjs",
+    "tokens": "node scripts/generate-tokens.mjs && prettier --write src/styles/tokens.css",
     "check:tokens": "node scripts/check-tokens.mjs",
     "test:e2e": "node scripts/run-tests.mjs e2e",
     "test:responsive": "node scripts/run-tests.mjs responsive",

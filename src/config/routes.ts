@@ -30,6 +30,7 @@ export const routes = {
     login: '/login',
     loginReturningTo: (path: string) => `/login?next=${encodeURIComponent(path)}`,
     signup: '/signup',
+    signupReturningTo: (path: string) => `/signup?next=${encodeURIComponent(path)}`,
     forgotPassword: '/forgot-password',
     profile: '/account',
     profileSection: (section: ProfileSection) => `/account#${section}`,
