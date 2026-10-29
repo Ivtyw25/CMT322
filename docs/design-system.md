@@ -104,3 +104,8 @@ Built in the foundations iteration on shadcn/ui (Radix) primitives, restyled to 
 | `static-white-30` | white 30 % | white 30 % | Social pill border on the navy footer (measured on 1:127) |
 
 Motion: `ease-standard` cubic-bezier(0.2, 0, 0, 1), `ease-enter` (0, 0, 0.2, 1), `ease-exit` (0.4, 0, 1, 1); durations `--duration-fast` 150 ms, `--duration-base` 200 ms, `--duration-slow` 250 ms (use `duration-(--duration-base)`). All motion is removed under `prefers-reduced-motion`.
+
+## Added in iteration 2 (home hero)
+
+- `static-white-35` (white 35 %, Try chip border, measured on 37:1025) and `static-glass-strong` (white 24 %, chip hover; not in Figma).
+- Hero type, not Figma text styles but measured on the hero: `type-hero-title` Poppins Bold 60/72 −1.2, `type-hero-title-mobile` 44/50, `type-hero-title-compact` 36/44 (below 390 px), `type-hero-tagline` Poppins Light 36/46, `type-hero-tagline-mobile` 22/30. Poppins 300 and 700 are loaded for these only.

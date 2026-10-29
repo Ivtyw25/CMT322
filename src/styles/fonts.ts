@@ -1,9 +1,9 @@
 import { Inter, Poppins } from 'next/font/google';
 
-/** Headings: Poppins SemiBold. Exposed as --font-poppins and used by the type-heading-* utilities. */
+/** Headings: Poppins SemiBold; Light and Bold for the home hero only. Exposed as --font-poppins and used by the type-heading-* utilities. */
 export const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['600'],
+  weight: ['300', '600', '700'],
   display: 'swap',
   variable: '--font-poppins',
 });

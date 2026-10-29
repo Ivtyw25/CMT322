@@ -185,6 +185,16 @@
       "figma": "social pill border on navy, white 30% (footer 1:127)",
       "light": "#ffffff4d",
       "dark": "#ffffff4d"
+    },
+    "static-white-35": {
+      "figma": "Try chip border on the hero, white 35% (37:1025)",
+      "light": "#ffffff59",
+      "dark": "#ffffff59"
+    },
+    "static-glass-strong": {
+      "figma": "not in Figma: hero chip hover, white 24%",
+      "light": "#ffffff3d",
+      "dark": "#ffffff3d"
     }
   },
   "gradient": {
@@ -321,6 +331,41 @@
       "line": 18,
       "tracking": 0,
       "weight": 600
+    },
+    "hero-title": {
+      "family": "heading",
+      "size": 60,
+      "line": 72,
+      "tracking": -1.2,
+      "weight": 700
+    },
+    "hero-title-mobile": {
+      "family": "heading",
+      "size": 44,
+      "line": 50,
+      "tracking": -0.88,
+      "weight": 700
+    },
+    "hero-title-compact": {
+      "family": "heading",
+      "size": 36,
+      "line": 44,
+      "tracking": -0.5,
+      "weight": 700
+    },
+    "hero-tagline": {
+      "family": "heading",
+      "size": 36,
+      "line": 46,
+      "tracking": 0,
+      "weight": 300
+    },
+    "hero-tagline-mobile": {
+      "family": "heading",
+      "size": 22,
+      "line": 30,
+      "tracking": 0,
+      "weight": 300
     }
   },
   "radius": {

@@ -4,17 +4,21 @@
  */
 export const routes = {
   home: '/',
+  homeWorksIn: (areaId: string) => `/?area=${areaId}#works`,
   project: {
     overview: '/project',
     about: '/project/about',
     stations: '/project/stations',
     station: (stationCode: string) => `/project/stations/${stationCode.toLowerCase()}`,
     construction: '/project/construction',
+    constructionUpdate: (updateId: string) => `/project/construction#${updateId}`,
     faq: '/project/faq',
+    faqItem: (itemId: string) => `/project/faq#${itemId}`,
   },
   traffic: {
     overview: '/traffic',
     map: '/traffic/map',
+    mapFocus: (itemId: string) => `/traffic/map?focus=${itemId}`,
     route: '/traffic/route',
     routeAt: (stationCode: string) => `/traffic/route?station=${stationCode.toLowerCase()}`,
     announcements: '/traffic/announcements',

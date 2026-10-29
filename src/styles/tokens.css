@@ -47,6 +47,8 @@
   --myds-action-hover: #1d4ed8;
   --myds-action-active: #1e40af;
   --myds-static-white-30: #ffffff4d;
+  --myds-static-white-35: #ffffff59;
+  --myds-static-glass-strong: #ffffff3d;
 }
 
 :root[data-theme='dark'] {
@@ -136,6 +138,8 @@
   --color-action-hover: var(--myds-action-hover);
   --color-action-active: var(--myds-action-active);
   --color-static-white-30: var(--myds-static-white-30);
+  --color-static-white-35: var(--myds-static-white-35);
+  --color-static-glass-strong: var(--myds-static-glass-strong);
 }
 
 @theme {
@@ -325,4 +329,39 @@
   line-height: 1.125rem;
   letter-spacing: 0;
   font-weight: 600;
+}
+@utility type-hero-title {
+  font-family: var(--font-heading);
+  font-size: 3.75rem;
+  line-height: 4.5rem;
+  letter-spacing: -0.075rem;
+  font-weight: 700;
+}
+@utility type-hero-title-mobile {
+  font-family: var(--font-heading);
+  font-size: 2.75rem;
+  line-height: 3.125rem;
+  letter-spacing: -0.055rem;
+  font-weight: 700;
+}
+@utility type-hero-title-compact {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  line-height: 2.75rem;
+  letter-spacing: -0.0313rem;
+  font-weight: 700;
+}
+@utility type-hero-tagline {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  line-height: 2.875rem;
+  letter-spacing: 0;
+  font-weight: 300;
+}
+@utility type-hero-tagline-mobile {
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  line-height: 1.875rem;
+  letter-spacing: 0;
+  font-weight: 300;
 }
