@@ -45,7 +45,7 @@
         "127:5800",
         "127:5801"
       ],
-      "status": "todo"
+      "status": "in-progress"
     },
     {
       "id": "home",
@@ -717,7 +717,7 @@
   "deploy": {
     "provider": "vercel",
     "by": "main agent (Vercel CLI)",
-    "productionUrl": null,
+    "productionUrl": "https://mutiara-connect.vercel.app",
     "$comment": "The main agent fills productionUrl after the first deploy."
   },
   "$routes": "Route patterns use Next.js App Router notation: [param] is a dynamic segment.",
