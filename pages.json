@@ -50,7 +50,7 @@
     {
       "id": "home",
       "iteration": 2,
-      "status": "todo"
+      "status": "in-progress"
     },
     {
       "id": "project",
@@ -125,7 +125,7 @@
         }
       ],
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "in-progress",
       "rounds": {
         "tester": 0,
         "main": 0
