@@ -1,0 +1,85 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(/**)",
+      "Edit(//c/Users/Ivantham/mutiara-wt/**)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(vercel *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm *)",
+      "mcp__playwright",
+      "mcp__plugin_figma_figma",
+      "mcp__figma"
+    ],
+    "deny": [
+      "PowerShell",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * --force*)",
+      "Bash(git push * -f)",
+      "Bash(git push * -f *)",
+      "Bash(vercel env pull*)",
+      "Bash(vercel env add*)",
+      "Bash(vercel pull*)",
+      "Bash(vercel remove*)",
+      "Bash(vercel rm*)",
+      "Bash(vercel project rm*)",
+      "Bash(vercel project remove*)",
+      "Bash(vercel projects rm*)",
+      "Bash(vercel projects remove*)",
+      "Bash(gh repo delete*)",
+      "Bash(gh auth token*)",
+      "Bash(gh secret *)",
+      "Bash(git credential*)",
+      "Bash(printenv*)",
+      "Bash(env)",
+      "Bash(npm publish*)",
+      "Bash(npm token*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(~/.ssh/**)",
+      "Read(~/.git-credentials)",
+      "Read(~/.npmrc)",
+      "Read(~/.netrc)",
+      "Read(~/AppData/Roaming/com.vercel.cli/**)",
+      "Read(~/.claude/.credentials.json)",
+      "Edit(/.claude/settings.json)",
+      "Edit(/.claude/settings.local.json)",
+      "Edit(/.claude/hooks/guard-bash.mjs)"
+    ],
+    "additionalDirectories": [
+      "../mutiara-wt"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-bash.mjs\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop-gate.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

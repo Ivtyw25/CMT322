@@ -1,0 +1,725 @@
+{
+  "$comment": "Source of truth for build progress. Status values: todo | in-progress | review | done | blocked | skipped. Only the main agent edits statuses. 'skipped' = out of scope by owner decision.",
+  "figmaFileKey": "8kWWATZPol9TwztOw8MYG4",
+  "viewports": {
+    "visual": [
+      1440,
+      390
+    ],
+    "responsive": [
+      320,
+      360,
+      390,
+      414,
+      768,
+      1024,
+      1280,
+      1440,
+      1920
+    ]
+  },
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "limits": {
+    "testerRoundsPerOwner": 3,
+    "mainReviewRounds": 2,
+    "parallelTeams": 2
+  },
+  "groups": [
+    {
+      "id": "foundations",
+      "iteration": 1,
+      "title": "Shared layer: tokens, layout, UI parts, patterns",
+      "figma": [
+        "1:48",
+        "127:5451",
+        "5:1408",
+        "124:5451",
+        "4:736",
+        "4:750",
+        "1:127",
+        "101:4039",
+        "127:5787",
+        "127:5800",
+        "127:5801"
+      ],
+      "status": "todo"
+    },
+    {
+      "id": "home",
+      "iteration": 2,
+      "status": "todo"
+    },
+    {
+      "id": "project",
+      "iteration": 3,
+      "status": "todo"
+    },
+    {
+      "id": "traffic",
+      "iteration": 4,
+      "status": "todo"
+    },
+    {
+      "id": "report-track",
+      "iteration": 5,
+      "status": "todo"
+    },
+    {
+      "id": "account",
+      "iteration": 6,
+      "status": "todo"
+    },
+    {
+      "id": "legal-help",
+      "iteration": 7,
+      "status": "todo"
+    },
+    {
+      "id": "admin-1",
+      "iteration": 8,
+      "status": "skipped",
+      "figma": [
+        "112:4616",
+        "118:5313"
+      ],
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build."
+    },
+    {
+      "id": "admin-2",
+      "iteration": 9,
+      "status": "skipped",
+      "figma": [
+        "112:4616",
+        "118:5313"
+      ],
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build."
+    }
+  ],
+  "pages": [
+    {
+      "id": "home",
+      "route": "/",
+      "title": "Home",
+      "group": "home",
+      "figma": {
+        "desktop": "37:1025",
+        "mobile": "133:6556",
+        "darkDesktop": "121:4634",
+        "darkMobile": "134:11532"
+      },
+      "states": [
+        {
+          "name": "menu-open",
+          "desktop": "47:1249",
+          "mobile": "134:8244",
+          "how": "Header menu open (desktop: Project mega-menu; mobile: drawer). Applies on every page."
+        },
+        {
+          "name": "search-suggestions",
+          "desktop": "49:1127",
+          "mobile": "134:8874",
+          "how": "Type 'buk' into the hero search."
+        }
+      ],
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "project-overview",
+      "route": "/project",
+      "title": "Project overview",
+      "group": "project",
+      "figma": {
+        "desktop": "55:2090",
+        "mobile": "133:14049"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "about",
+      "route": "/project/about",
+      "title": "About the line",
+      "group": "project",
+      "figma": {
+        "desktop": "1:332",
+        "mobile": "129:5475",
+        "darkDesktop": "121:4964"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "stations",
+      "route": "/project/stations",
+      "title": "Stations",
+      "group": "project",
+      "figma": {
+        "desktop": "100:3723",
+        "mobile": "133:18202"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "station",
+      "route": "/project/stations/[stationCode]",
+      "title": "Station page (template, Figma shows KOMTAR S20)",
+      "group": "project",
+      "figma": {
+        "desktop": "95:3102",
+        "mobile": "133:14946",
+        "darkDesktop": "121:5382",
+        "darkMobile": "134:12072"
+      },
+      "notes": "Template: renders all 22 stations from the mock data, statically generated. Visual test uses /project/stations/s20.",
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "construction",
+      "route": "/project/construction",
+      "title": "Construction progress",
+      "group": "project",
+      "figma": {
+        "desktop": "1:413",
+        "mobile": "133:24780"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "faq",
+      "route": "/project/faq",
+      "title": "FAQ",
+      "group": "project",
+      "figma": {
+        "desktop": "1:557",
+        "mobile": "133:16086"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "traffic-overview",
+      "route": "/traffic",
+      "title": "Traffic overview",
+      "group": "traffic",
+      "figma": {
+        "desktop": "66:2206",
+        "mobile": "133:26630"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "traffic-map",
+      "route": "/traffic/map",
+      "title": "Traffic map",
+      "group": "traffic",
+      "figma": {
+        "desktop": "1:801",
+        "mobile": "133:27469"
+      },
+      "visualTolerance": 0.08,
+      "notes": "Leaflet + OpenStreetMap (owner decision). Tiles differ from the Figma drawing; compare panel, controls, pop-up and legend, not the basemap.",
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "route-view",
+      "route": "/traffic/route",
+      "title": "Route view",
+      "group": "traffic",
+      "figma": {
+        "desktop": "5:843",
+        "mobile": "133:27775"
+      },
+      "notes": "Figma shows S09 Bukit Jambul selected. Support ?station=<code>.",
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "announcements",
+      "route": "/traffic/announcements",
+      "title": "Traffic announcements",
+      "group": "traffic",
+      "figma": {
+        "desktop": "1:629",
+        "mobile": "133:27022"
+      },
+      "notes": "Desktop table becomes cards on mobile.",
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "report-track-overview",
+      "route": "/report-track",
+      "title": "Report & Track overview",
+      "group": "report-track",
+      "figma": {
+        "desktop": "71:2326",
+        "mobile": "133:32762"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "report",
+      "route": "/report",
+      "title": "Report an issue",
+      "group": "report-track",
+      "figma": {
+        "desktop": "1:950",
+        "mobile": "133:33123"
+      },
+      "notes": "Requires sign-in; guests are sent to Log in and back after.",
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "report-submitted",
+      "route": "/report/submitted/[ticketId]",
+      "title": "Report submitted",
+      "group": "report-track",
+      "figma": {
+        "desktop": "1:1120",
+        "mobile": "133:33577"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "track",
+      "route": "/track (search) and /track/[ticketId] (result)",
+      "title": "Track a ticket",
+      "group": "report-track",
+      "figma": {
+        "desktop": "1:1175",
+        "mobile": "133:33954"
+      },
+      "notes": "Without an ID: search form only (UX designer specifies the empty state). Figma shows MLC-261028-0482.",
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "login",
+      "route": "/login",
+      "title": "Log in",
+      "group": "account",
+      "figma": {
+        "desktop": "4:959",
+        "mobile": "133:36579"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "signup",
+      "route": "/signup",
+      "title": "Sign up",
+      "group": "account",
+      "figma": {
+        "desktop": "78:2530",
+        "mobile": "133:36671"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "forgot-password",
+      "route": "/forgot-password",
+      "title": "Forgot password",
+      "group": "account",
+      "figma": {
+        "desktop": "100:4081",
+        "mobile": "133:36768"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "profile",
+      "route": "/account",
+      "title": "Profile & settings",
+      "group": "account",
+      "figma": {
+        "desktop": "92:2963",
+        "mobile": "133:36817"
+      },
+      "notes": "Requires sign-in. Section anchors: #profile, #reports, #stations, #notifications, #security, #privacy.",
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "terms",
+      "route": "/terms",
+      "title": "Terms & Conditions",
+      "group": "legal-help",
+      "figma": {
+        "desktop": "89:2843",
+        "mobile": "133:38704"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "privacy",
+      "route": "/privacy",
+      "title": "Privacy policy",
+      "group": "legal-help",
+      "figma": {
+        "desktop": "99:3246",
+        "mobile": "133:39089"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "contact",
+      "route": "/contact",
+      "title": "Contact us",
+      "group": "legal-help",
+      "figma": {
+        "desktop": "99:3673",
+        "mobile": "133:39432"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "accessibility",
+      "route": "/accessibility",
+      "title": "Accessibility",
+      "group": "legal-help",
+      "figma": {
+        "desktop": "99:3469",
+        "mobile": "133:39804"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "sitemap",
+      "route": "/sitemap",
+      "title": "Sitemap",
+      "group": "legal-help",
+      "figma": {
+        "desktop": "99:3931",
+        "mobile": "133:40126"
+      },
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      },
+      "notes": ""
+    },
+    {
+      "id": "not-found",
+      "route": "not-found (Next.js not-found page)",
+      "title": "Page not found (404)",
+      "group": "legal-help",
+      "figma": {
+        "desktop": null,
+        "mobile": null
+      },
+      "notes": "Not in Figma. UX designer specifies it from existing patterns; no visual reference test.",
+      "visualTolerance": 0.03,
+      "status": "todo",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-login",
+      "route": "/admin/login",
+      "title": "Staff log in",
+      "group": "admin-1",
+      "figma": {
+        "desktop": "113:4621",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-dashboard-authority",
+      "route": "/admin",
+      "title": "Dashboard (Government authority)",
+      "group": "admin-1",
+      "figma": {
+        "desktop": "113:4668",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-tickets",
+      "route": "/admin/tickets",
+      "title": "Tickets queue",
+      "group": "admin-1",
+      "figma": {
+        "desktop": "115:4681",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-ticket-detail",
+      "route": "/admin/tickets/[ticketId]",
+      "title": "Ticket detail",
+      "group": "admin-1",
+      "figma": {
+        "desktop": "115:5036",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-dashboard-developer",
+      "route": "/admin (role: Project developer)",
+      "title": "Dashboard (Project developer)",
+      "group": "admin-1",
+      "figma": {
+        "desktop": "116:4824",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour. Same route as the authority dashboard; content depends on the signed-in role.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-announcements",
+      "route": "/admin/announcements",
+      "title": "Traffic announcements",
+      "group": "admin-2",
+      "figma": {
+        "desktop": "116:4985",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-announcement-editor",
+      "route": "/admin/announcements/[id]/edit",
+      "title": "Announcement editor",
+      "group": "admin-2",
+      "figma": {
+        "desktop": "116:5269",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-map-items",
+      "route": "/admin/map-items",
+      "title": "Map items editor",
+      "group": "admin-2",
+      "figma": {
+        "desktop": "117:5034",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-progress",
+      "route": "/admin/progress",
+      "title": "Progress updates",
+      "group": "admin-2",
+      "figma": {
+        "desktop": "117:5417",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    },
+    {
+      "id": "admin-progress-editor",
+      "route": "/admin/progress/[id]/edit",
+      "title": "Progress update editor",
+      "group": "admin-2",
+      "figma": {
+        "desktop": "117:5669",
+        "mobile": null
+      },
+      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "visualTolerance": 0.03,
+      "status": "skipped",
+      "rounds": {
+        "tester": 0,
+        "main": 0
+      }
+    }
+  ],
+  "deploy": {
+    "provider": "vercel",
+    "by": "main agent (Vercel CLI)",
+    "productionUrl": null,
+    "$comment": "The main agent fills productionUrl after the first deploy."
+  },
+  "$routes": "Route patterns use Next.js App Router notation: [param] is a dynamic segment.",
+  "stack": "Next.js 16.4.2, App Router, Turbopack, TypeScript strict"
+}
