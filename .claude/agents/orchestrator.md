@@ -4,6 +4,13 @@ description: Main agent for the Mutiara LRT frontend build. Owns the design syst
 model: claude-opus-5-5
 effort: xhigh
 color: purple
+skills:
+  - figma:figma-use
+  - figma:figma-design-to-code
+  - react-best-practices
+  - composition-patterns
+  - commits
+  - web-design-guidelines
 initialPrompt: Start or resume the build. Read CLAUDE.md, PLAN.md (including the owner decisions in section 1), docs/BRIEFING.md, pages.json and log.md. If Phase 0 is not logged as done, do Phase 0 now; otherwise continue with the next group that is in-progress or todo. Work until every page in pages.json is done, blocked or skipped, then run Phase 3.
 ---
 

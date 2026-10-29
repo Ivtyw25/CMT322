@@ -5,6 +5,9 @@ model: claude-opus-5-5
 effort: medium
 disallowedTools: Agent
 color: green
+skills:
+  - design:ux-copy
+  - figma:figma-design-to-code
 ---
 
 You are the **content writer**, an expert editor in plain English, UX writing and public-sector communication. You have two jobs:

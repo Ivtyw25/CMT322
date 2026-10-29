@@ -1,0 +1,121 @@
+{
+  "$source": "Figma file 8kWWATZPol9TwztOw8MYG4, extracted 2026-10-30. Colour: collection 'MYDS Colour' (modes Light, Dark). Type: local text styles. Radius, shadow and overlay values: measured on the Prototype — Commuter page (no effect styles exist in the file). Edit this file, then run `npm run tokens`.",
+  "color": {
+    "surface": { "figma": "white", "light": "#ffffff", "dark": "#141416" },
+    "gray-50": { "light": "#fafafa", "dark": "#1b1b1f" },
+    "gray-100": { "light": "#f4f4f5", "dark": "#26262b" },
+    "gray-200": { "light": "#e4e4e7", "dark": "#34343a" },
+    "gray-300": { "light": "#d4d4d8", "dark": "#4a4a52" },
+    "gray-400": { "light": "#a1a1aa", "dark": "#6e6e78" },
+    "gray-500": { "light": "#71717a", "dark": "#a1a1aa" },
+    "gray-600": { "light": "#52525b", "dark": "#b8b8c0" },
+    "gray-700": { "light": "#3f3f46", "dark": "#d4d4d8" },
+    "gray-800": { "light": "#27272a", "dark": "#e4e4e7" },
+    "gray-900": { "light": "#18181b", "dark": "#f4f4f5" },
+    "primary-50": { "light": "#eff6ff", "dark": "#16203a" },
+    "primary-100": { "light": "#dbeafe", "dark": "#1b2a4f" },
+    "primary-200": { "light": "#c2d5ff", "dark": "#26407a" },
+    "primary-300": { "light": "#96b7ff", "dark": "#3558a8" },
+    "primary-500": { "light": "#3a75f6", "dark": "#5b92ff" },
+    "primary-600": { "light": "#2563eb", "dark": "#2f6bf0" },
+    "primary-700": { "light": "#1d4ed8", "dark": "#8ab4ff" },
+    "primary-800": { "light": "#1e40af", "dark": "#c3d7ff" },
+    "primary-900": { "light": "#1e3a8a", "dark": "#0b1633" },
+    "danger-50": { "light": "#fef2f2", "dark": "#2c1517" },
+    "danger-100": { "light": "#fee2e2", "dark": "#40191d" },
+    "danger-600": { "light": "#dc2626", "dark": "#f26b6b" },
+    "danger-700": { "light": "#b91c1c", "dark": "#fca5a5" },
+    "success-50": { "light": "#f0fdf4", "dark": "#0f2619" },
+    "success-100": { "light": "#dcfce7", "dark": "#163522" },
+    "success-600": { "light": "#16a34a", "dark": "#2bb866" },
+    "success-700": { "light": "#15803d", "dark": "#86efac" },
+    "warning-50": { "light": "#fefce8", "dark": "#2a2310" },
+    "warning-100": { "light": "#fef9c3", "dark": "#3d3214" },
+    "warning-600": { "light": "#ca8a04", "dark": "#e2a80c" },
+    "warning-700": { "light": "#a16207", "dark": "#fcd34d" },
+    "static-white": { "light": "#ffffff", "dark": "#ffffff" },
+    "static-on-navy-100": { "light": "#dbeafe", "dark": "#dbeafe" },
+    "static-on-navy-200": { "light": "#c2d5ff", "dark": "#c2d5ff" },
+    "static-on-navy-300": { "light": "#96b7ff", "dark": "#96b7ff" },
+    "static-navy": { "figma": "hero fallback fill", "light": "#1e3a8a", "dark": "#1e3a8a" },
+    "static-amber": {
+      "figma": "notification bar text on the hero",
+      "light": "#fce08a",
+      "dark": "#fce08a"
+    },
+    "static-glass": { "figma": "white 14% on the hero", "light": "#ffffff24", "dark": "#ffffff24" },
+    "static-glass-subtle": {
+      "figma": "white 6% on navy (mobile newsletter)",
+      "light": "#ffffff0f",
+      "dark": "#ffffff0f"
+    },
+    "static-scrim-bar": {
+      "figma": "notification bar over the hero, #0a1433 45%",
+      "light": "#0a143373",
+      "dark": "#0a143373"
+    }
+  },
+  "gradient": {
+    "hero-scrim": "linear-gradient(180deg, #0f1c4526 0%, #0f1c4599 55%, #0f1c45eb 100%)",
+    "nav-scrim": "linear-gradient(180deg, #0a1433a6 0%, #0a143300 100%)"
+  },
+  "font": {
+    "heading": "var(--font-poppins), ui-sans-serif, system-ui, sans-serif",
+    "body": "var(--font-inter), ui-sans-serif, system-ui, sans-serif"
+  },
+  "type": {
+    "heading-xl": { "family": "heading", "size": 60, "line": 72, "tracking": -1.2, "weight": 600 },
+    "heading-l": { "family": "heading", "size": 48, "line": 60, "tracking": -0.96, "weight": 600 },
+    "heading-m": { "family": "heading", "size": 36, "line": 44, "tracking": -0.5, "weight": 600 },
+    "heading-s": { "family": "heading", "size": 30, "line": 38, "tracking": -0.3, "weight": 600 },
+    "heading-xs": { "family": "heading", "size": 24, "line": 32, "tracking": 0, "weight": 600 },
+    "heading-2xs": { "family": "heading", "size": 20, "line": 28, "tracking": 0, "weight": 600 },
+    "heading-3xs": { "family": "heading", "size": 16, "line": 24, "tracking": 0, "weight": 600 },
+    "body-xl": { "family": "body", "size": 20, "line": 28, "tracking": 0, "weight": 400 },
+    "body-l": { "family": "body", "size": 18, "line": 26, "tracking": 0, "weight": 400 },
+    "body-m": { "family": "body", "size": 16, "line": 24, "tracking": 0, "weight": 400 },
+    "body-m-medium": { "family": "body", "size": 16, "line": 24, "tracking": 0, "weight": 500 },
+    "body-m-semibold": { "family": "body", "size": 16, "line": 24, "tracking": 0, "weight": 600 },
+    "body-s": { "family": "body", "size": 14, "line": 20, "tracking": 0, "weight": 400 },
+    "body-s-medium": { "family": "body", "size": 14, "line": 20, "tracking": 0, "weight": 500 },
+    "body-s-semibold": { "family": "body", "size": 14, "line": 20, "tracking": 0, "weight": 600 },
+    "body-xs": { "family": "body", "size": 12, "line": 18, "tracking": 0, "weight": 400 },
+    "body-xs-medium": { "family": "body", "size": 12, "line": 18, "tracking": 0, "weight": 500 },
+    "body-xs-semibold": { "family": "body", "size": 12, "line": 18, "tracking": 0, "weight": 600 }
+  },
+  "radius": {
+    "xs": 2,
+    "sm": 4,
+    "md": 6,
+    "lg": 8,
+    "xl": 10,
+    "2xl": 12,
+    "3xl": 16,
+    "4xl": 20,
+    "full": 9999
+  },
+  "shadow": {
+    "xs": "0 1px 2px #0000001a",
+    "control": "0 1px 3px #0000001a",
+    "button": "0 1px 3px #1a33992e",
+    "knob": "0 1px 2px #00000033",
+    "map-control": "0 1px 4px #0000002e",
+    "popover": "0 8px 24px #00000029",
+    "menu": "0 12px 32px #0f172929",
+    "drawer": "0 16px 32px #0f17292e",
+    "panel": "0 16px 40px #0f172924",
+    "suggestions": "0 16px 40px #0f172938",
+    "hero-search": "0 12px 32px #00000040",
+    "focus": "0 0 0 3px var(--color-primary-200)"
+  },
+  "blur": { "bar": 12 },
+  "layout": {
+    "page": 1440,
+    "content": 1200,
+    "article": 760,
+    "docs-sidebar": 240,
+    "docs-aside": 200,
+    "header": 92,
+    "header-mobile": 60
+  }
+}

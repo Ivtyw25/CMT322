@@ -1,0 +1,14 @@
+node_modules
+.next
+.vercel
+playwright-report
+test-results
+tests/visual/__diff__
+tests/visual/reference
+design-assets
+.claude
+docs
+*.md
+pages.json
+package-lock.json
+next-env.d.ts

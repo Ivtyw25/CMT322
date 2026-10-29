@@ -1,0 +1,67 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Dark styles come from token swaps; this variant exists only for rare non-colour tweaks. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--spacing-header-mobile) + 1rem);
+  }
+
+  @media (min-width: 64rem) {
+    html {
+      scroll-padding-top: calc(var(--spacing-header) + 1rem);
+    }
+  }
+
+  body {
+    @apply bg-surface type-body-m text-gray-700 antialiased;
+    min-height: 100dvh;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-gray-900;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary-600);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/*
+ * Grows the tap area of a small control to at least 44 × 44 px without changing its look.
+ * The responsive test accepts controls that carry this class.
+ */
+@utility hit-area {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 2.75rem);
+    height: max(100%, 2.75rem);
+    transform: translate(-50%, -50%);
+  }
+}

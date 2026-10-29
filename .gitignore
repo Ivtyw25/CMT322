@@ -9,3 +9,10 @@ test-results/
 .claude/hooks/.stop-gate-state.json
 .vercel/
 .claude/settings.local.json
+
+# build kit
+next-env.d.ts
+*.tsbuildinfo
+
+.vercel
+.env*
