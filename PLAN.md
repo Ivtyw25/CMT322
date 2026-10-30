@@ -44,11 +44,11 @@ Build the **commuter site** from Figma file `8kWWATZPol9TwztOw8MYG4` as a mainta
 
 | Role | Agent file | Model | Effort | Owns |
 |---|---|---|---|---|
-| Main agent (orchestrator) | `.claude/agents/orchestrator.md` | Opus 5.5 (`claude-opus-5-5`) | Extra high (`xhigh`) | Design system, codebase structure, page list, delegation, final review, commits, pushes, Vercel deploys, `log.md` |
-| Builder | `.claude/agents/builder.md` | Sonnet 5.5 (`claude-sonnet-5-5`) | High | Turns Figma frames into code, including interactions and responsive behaviour |
-| UI/UX designer | `.claude/agents/ux-designer.md` | Opus 5.5 | Medium | Writes the interaction and responsive spec the builder follows, because Figma is static |
-| Tester | `.claude/agents/tester.md` | Opus 5.5 | Medium | Tests each page against the definition of done and sends issues back to the right owner |
-| Content writer | `.claude/agents/content-writer.md` | Opus 5.5 | Medium | Rewrites placeholder copy so it is grammatical, plain and easy to understand, without changing facts. Also writes the content Figma doesn't show: every option in dropdowns and filters, every tab panel, every paginated or expanded list, and every record behind a template page. |
+| Main agent (orchestrator) | `.claude/agents/orchestrator.md` | Opus 5.5 (`claude-opus-5-5`) | Medium (never above high) | Design system, codebase structure, page list, delegation, final review, commits, pushes, Vercel deploys, `log.md` |
+| Builder | `.claude/agents/builder.md` | Sonnet 5.5 (`claude-sonnet-5-5`) | Medium | Turns Figma frames into code, including interactions and responsive behaviour |
+| UI/UX designer | `.claude/agents/ux-designer.md` | Sonnet 5.5 | Medium | Writes the interaction and responsive spec the builder follows, because Figma is static |
+| Tester | `.claude/agents/tester.md` | Sonnet 5.5 | Medium | Tests each page against the definition of done and sends issues back to the right owner |
+| Content writer | `.claude/agents/content-writer.md` | Sonnet 5.5 | Medium | Rewrites placeholder copy so it is grammatical, plain and easy to understand, without changing facts. Also writes the content Figma doesn't show: every option in dropdowns and filters, every tab panel, every paginated or expanded list, and every record behind a template page. |
 
 **How a "team" is formed.** A team is one builder, one UI/UX designer, one tester and one content writer, all working on one page group.
 - The main agent spawns and coordinates all four.

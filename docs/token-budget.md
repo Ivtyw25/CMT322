@@ -35,3 +35,10 @@ skills: <used>; delegated: <what, model, what you corrected>, or "none"
 - Read team files (specs, QA reports) only to make a decision, using `Grep` for the part needed.
 - Wait for agent notifications; avoid output-heavy polling.
 - Before the context gets large, make sure `pages.json` and `log.md` are current, so a fresh session can resume.
+
+## Faster iterations (owner, 31 Oct 2026)
+
+- `npm run verify` builds once with `DEV_GALLERY=1` and runs every suite, e2e included, against `next start` (about 4 min, was 8–10). `verify:quick` still uses the dev server for the inner loop.
+- Builders end with a full `npm run verify`. Testers reuse its logs and re-run only failures.
+- Testers compare Figma by hand only where the visual diff fails (`tester.md`, "Faster test routine").
+- Small groups (legal-help) get one Sonnet agent for both content and the UX spec.

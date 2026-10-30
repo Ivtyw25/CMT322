@@ -17,11 +17,14 @@ const run = (label, cmd, args, extraEnv = {}, stopOnFail = false) => {
 run('typecheck', 'npm', ['run', 'typecheck']);
 run('lint', 'npm', ['run', 'lint']);
 run('check-tokens', 'npm', ['run', 'check:tokens']);
-run('build', 'npm', ['run', 'build'], {}, true);
-// Behaviour tests use the dev-only gallery (/dev/components is a 404 in production), so they run on
-// the dev server. Layout, links, accessibility and visuals run against the production build.
-run('verify-e2e', 'node', ['scripts/run-tests.mjs', 'e2e']);
-for (const suite of ['responsive', 'links', 'a11y', 'visual']) {
-  run(`verify-${suite}`, 'node', ['scripts/run-tests.mjs', suite], { PW_SERVER: 'build' });
+// The test build keeps the dev gallery on (src/lib/dev-gallery.ts), so every suite, behaviour tests
+// included, runs against `next start`: no first-visit compiles, no dev-server timeouts.
+const testBuild = { DEV_GALLERY: '1' };
+run('build', 'npm', ['run', 'build'], testBuild, true);
+for (const suite of ['e2e', 'responsive', 'links', 'a11y', 'visual']) {
+  run(`verify-${suite}`, 'node', ['scripts/run-tests.mjs', suite], {
+    ...testBuild,
+    PW_SERVER: 'build',
+  });
 }
 finish();
