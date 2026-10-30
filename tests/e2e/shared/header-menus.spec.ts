@@ -192,14 +192,19 @@ test.describe('desktop header menus: closing and placement (QA round 1)', () => 
   test('the appearance menu focuses the checked option and arrow keys wrap', async ({ page }) => {
     const button = page.locator(header).getByRole('button', { name: /^Appearance/ });
     await button.click();
+    // prepare() saves Light, so Light is the checked option and takes focus (spec §4).
+    const light = page.getByRole('menuitemradio', {
+      name: startsWith(navCopy.appearance.options.light.label),
+    });
     const system = page.getByRole('menuitemradio', {
       name: startsWith(navCopy.appearance.options.system.label),
     });
+    await expect(light).toHaveAttribute('aria-checked', 'true');
+    await expect(light).toBeFocused();
+    await page.keyboard.press('ArrowUp');
     await expect(system).toBeFocused();
     await page.keyboard.press('ArrowDown');
-    await expect(
-      page.getByRole('menuitemradio', { name: startsWith(navCopy.appearance.options.light.label) }),
-    ).toBeFocused();
+    await expect(light).toBeFocused();
   });
 
   test('the appearance and account menus open 8 px below the header', async ({ page }) => {

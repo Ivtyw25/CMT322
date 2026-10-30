@@ -18,7 +18,10 @@ run('typecheck', 'npm', ['run', 'typecheck']);
 run('lint', 'npm', ['run', 'lint']);
 run('check-tokens', 'npm', ['run', 'check:tokens']);
 run('build', 'npm', ['run', 'build'], {}, true);
-for (const suite of ['e2e', 'responsive', 'links', 'a11y', 'visual']) {
+// Behaviour tests use the dev-only gallery (/dev/components is a 404 in production), so they run on
+// the dev server. Layout, links, accessibility and visuals run against the production build.
+run('verify-e2e', 'node', ['scripts/run-tests.mjs', 'e2e']);
+for (const suite of ['responsive', 'links', 'a11y', 'visual']) {
   run(`verify-${suite}`, 'node', ['scripts/run-tests.mjs', suite], { PW_SERVER: 'build' });
 }
 finish();

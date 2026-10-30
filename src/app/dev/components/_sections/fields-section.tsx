@@ -134,7 +134,7 @@ export function FieldsSection() {
       </Specimen>
       <Specimen caption={devCopy.labels.errorOnNavy} surface="navy">
         <Field
-          label={samples.fieldLabel}
+          label={samples.emailLabel}
           hideLabel
           tone="onNavy"
           error={uiCopy.form.errors.emailInvalid}

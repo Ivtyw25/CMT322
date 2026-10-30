@@ -69,7 +69,12 @@ test.describe('mobile drawer', () => {
       .getByRole('link', { name: navGroups.traffic.items[0].label })
       .click();
     await expect(page.getByRole('navigation', { name: 'Site menu' })).toBeHidden();
-    await settle(page);
+    // Re-choosing the current page can trigger a reload while the route is still a placeholder,
+    // so retry the settle step until no navigation is in flight.
+    await expect(async () => {
+      await page.waitForLoadState('load');
+      await settle(page);
+    }).toPass();
     await openDrawer(page);
     await page
       .getByRole('navigation', { name: 'Site menu' })

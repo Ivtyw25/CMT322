@@ -32,6 +32,7 @@ export default defineConfig([
   ...nextTs,
   prettier,
   globalIgnores([
+    '.logs/**',
     '.next/**',
     'node_modules/**',
     'playwright-report/**',
