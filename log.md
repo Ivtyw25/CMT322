@@ -43,3 +43,10 @@ The main agent appends one entry per iteration, using the format in `PLAN.md` §
 - Route groups: `(site)` with header/footer, `(auth)` for log in, sign up and forgot password.
 - Tests use port 3100 (team 2 sets `TEST_PORT=3200`); dev servers use 5173/5174.
 - The Sitemap board says "Report & Track needs an account". The UX designer decides in the report-track iteration whether Track needs sign-in. Report and Profile need it for sure.
+
+## Resume note (iteration 1, foundations, in progress)
+
+- The tester's round 1 is FAIL with 16 issues (3 major, 13 minor). The report is in the foundations worktree at docs/qa/foundations.md: builder B1–B12 (2 major), ux-designer U1–U2 (1 major: Home header Solid vs Transparent on 47:1249), content-writer 2 minor.
+- Next: send each owner its issues (round 1 of 3), have the tester re-test only the failed checks, then the main review, then merge.
+- The owner added Antigravity delegation from iteration 2 (docs/delegation.md, commit 724ff51, not pushed yet). Add it under Decisions in the foundations entry.
+- gstack browse is not installed, so the tester used Playwright scripts instead. Its first-time build needs the owner's OK.
