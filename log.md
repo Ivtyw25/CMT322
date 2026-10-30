@@ -122,7 +122,7 @@ Commit 3fe685a, deploy https://mutiara-connect-atb1jwqjj-ivtyw25s-projects.verce
 ### Done
 - Home page with all 11 sections, hero search (`?area=` filters), Works in your area (announcements and road works merged), line diagram, menu-open and search-suggestion visual states, and tests/e2e/home.spec.ts.
 - Shared: hydration-safe current-path nav on the prerendered 404 (NavCurrentAfterHydration), accordion size "roomy", cream notice bar below 1024, appearance-menu and desktop-header fixes.
-- Process (owner, 31 Oct): every suite runs on one production test build (), so verify takes about 4 minutes, down from 8–10. Testers reuse the builder's logs and check Figma by hand only where the visual diff fails.
+- Process (owner, 31 Oct): every suite runs on one production test build (`DEV_GALLERY=1`), so verify takes about 4 minutes, down from 8–10. Testers reuse the builder's logs and check Figma by hand only where the visual diff fails.
 
 ### Critique (tester and main review)
 - Round 1: 8 issues (builder 6, ux 1, main 1). All fixed except H5 (visual).
