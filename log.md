@@ -112,3 +112,11 @@ Cost is roughly calls × context. Changes from now on (main agent decision):
 - Footer social label: the content file wins ("MRT Corp on social media"), because the names aren't links (owner decision), so "Follow" would invite an action the page can't offer.
 - `verify` runs e2e on the dev server, because the gallery is dev-only.
 - For the owner: install gstack browse if the tester should use it (`docs/skills.md`).
+
+## Decisions in progress (iterations 2–3)
+
+- **Owner, 30 Oct 2026:** approved Antigravity delegation with `agy-delegate --yolo --dir <worktree>`, after the auto-mode classifier had refused one brief. Delegation follows `docs/delegation.md`; the delegating agent still verifies every result.
+- **Home works list:** merges announcements and road works (active or upcoming), earliest first, at most 3, which reproduces Figma for Bukit Jambul (12 Oct, 26 Oct, 3 Nov). The home spec §4 was corrected.
+- **Home "See all announcements":** kept over Figma's "All announcements" (it starts with a verb and matches "See all updates" and "See all questions").
+- **Shared `Container`:** got `gutter="wide"` (32 px at 390, Home and station hero rows) in place of a page-local duplicate. **Hero scrim:** now 90deg, per Figma 37:1028.
+- **Project decisions:** `docs/specs/_project-decisions.md` (URL filters via `useSearchParams` in client leaves so the routes stay static; followed stations in `lib/follows`, storage key `mlc-follows`; OSM only, no satellite toggle; four new route helpers).
