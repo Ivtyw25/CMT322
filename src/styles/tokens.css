@@ -173,9 +173,9 @@
   --blur-*: initial;
   --blur-bar: 12px;
   --background-image-hero-scrim: linear-gradient(
-    180deg,
+    90deg,
     #0f1c4526 0%,
-    #0f1c4599 55%,
+    #0f1c4599 45%,
     #0f1c45eb 100%
   );
   --background-image-nav-scrim: linear-gradient(180deg, #0a1433a6 0%, #0a143300 100%);

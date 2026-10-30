@@ -48,7 +48,7 @@ Mode switching: `:root` holds the light values as `--myds-*`; `:root[data-theme=
 | `static-glass` | white 14 % | Glass panels on the hero |
 | `static-glass-subtle` | white 6 % | Mobile footer newsletter box |
 | `static-scrim-bar` | #0a1433 at 45 % | Notification bar over the hero (with `backdrop-blur-bar`) |
-| `bg-hero-scrim` | navy gradient 15 → 60 → 92 % | Hero photo overlay |
+| `bg-hero-scrim` | navy gradient left to right, 15 → 60 (45 %) → 92 % | Hero photo overlay (Figma 37:1028) |
 | `bg-nav-scrim` | navy 65 % → 0 | Top of the hero behind the transparent header |
 
 Not tokenised on purpose: the Google sign-in button colours (we use Google's official SVGs unchanged) and the colours of the Figma map drawing (replaced by OpenStreetMap tiles).
