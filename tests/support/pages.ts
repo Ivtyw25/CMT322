@@ -103,3 +103,12 @@ function isGroupActive(groupId: string): boolean {
     (group) => group.id === groupId && group.status !== 'todo' && group.status !== 'skipped',
   );
 }
+
+/** Paths of pages not built yet (status todo). Links to them are reported, not failed, until the final sweep. */
+export function pendingPaths(): Set<string> {
+  if (process.env.LINKS_STRICT) return new Set();
+  const pending = manifest.pages.filter((page) => page.status === 'todo');
+  return new Set(
+    pending.flatMap((page) => urlsFor(page.id).map((url) => url.split(/[?#]/)[0] ?? url)),
+  );
+}

@@ -366,6 +366,13 @@
       "line": 30,
       "tracking": 0,
       "weight": 300
+    },
+    "wordmark-mobile": {
+      "family": "heading",
+      "size": 13,
+      "line": 20,
+      "tracking": 0,
+      "weight": 600
     }
   },
   "radius": {

@@ -5,15 +5,28 @@
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 @layer base {
+  /* Anchors and focus scrolling stay clear of the sticky header (+ 1 px border + 24 px air). */
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: calc(var(--spacing-header-mobile) + 1rem);
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--spacing-header-mobile) + 1px + 1.5rem);
+  }
+
+  /* Below 1024 px the docs section bar is sticky under the header: 44 px + 1 px border. */
+  html:has([data-section-bar]) {
+    scroll-padding-top: calc(var(--spacing-header-mobile) + 1px + 1.5rem + 2.8125rem);
   }
 
   @media (min-width: 64rem) {
-    html {
-      scroll-padding-top: calc(var(--spacing-header) + 1rem);
+    html,
+    html:has([data-section-bar]) {
+      scroll-padding-top: calc(var(--spacing-header) + 1px + 1.5rem);
     }
+  }
+
+  /* <main> receives focus from the skip link and the notice close button; no ring there. */
+  main:focus {
+    outline: none;
   }
 
   body {
@@ -64,4 +77,74 @@
     height: max(100%, 2.75rem);
     transform: translate(-50%, -50%);
   }
+}
+
+/*
+ * Shell state from the head script (src/lib/theme/theme-script.ts). Unlayered on purpose so
+ * these beat any display utility. Both auth variants are rendered; CSS shows the right one
+ * before first paint, and the session provider keeps data-session in sync afterwards.
+ */
+html:not([data-session='signed-in']) [data-auth='signed-in'],
+html[data-session='signed-in'] [data-auth='guest'],
+html[data-notice='dismissed'] [data-notice-bar] {
+  display: none;
+}
+
+/* Theme changes apply instantly: no colour transitions while data-theme-switching is set. */
+html[data-theme-switching] *,
+html[data-theme-switching] *::before,
+html[data-theme-switching] *::after {
+  transition: none !important;
+}
+
+/* Page scroll lock while the mobile drawer is open; the gutter keeps the layout from shifting. */
+html[data-scroll-locked] {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* Motion: enter and exit curves and durations come from tokens. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+@keyframes drawer-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+@utility animate-menu-in {
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin, top right);
+  animation: menu-in var(--duration-fast) var(--ease-enter) both;
+}
+@utility animate-menu-out {
+  animation: fade-out 100ms var(--ease-exit) both;
+}
+@utility animate-panel-in {
+  animation: drop-in var(--duration-fast) var(--ease-enter) both;
+}
+@utility animate-drawer-in {
+  animation: drawer-in var(--duration-base) var(--ease-enter) both;
+}
+@utility animate-fade-out {
+  animation: fade-out var(--duration-fast) var(--ease-exit) both;
 }

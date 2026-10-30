@@ -35,3 +35,18 @@ export function resolveTheme(preference: ThemePreference, systemIsDark: boolean)
 export function applyTheme(theme: ResolvedTheme): void {
   document.documentElement.dataset.theme = theme;
 }
+
+/** Keeps the browser UI colour in step with the page surface, whichever theme is active. */
+export function syncThemeColor(): void {
+  const surface = getComputedStyle(document.documentElement)
+    .getPropertyValue('--myds-surface')
+    .trim();
+  if (!surface) return;
+  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (!meta) {
+    meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    document.head.appendChild(meta);
+  }
+  meta.content = surface;
+}

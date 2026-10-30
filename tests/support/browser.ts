@@ -42,3 +42,14 @@ export async function settle(page: Page) {
     );
   });
 }
+
+/**
+ * Waits until React has attached to the first element matching `selector`, so clicks and key
+ * presses are not lost to a page that is still hydrating (slow on the dev server).
+ */
+export async function whenHydrated(page: Page, selector: string) {
+  await page.waitForFunction((css) => {
+    const element = document.querySelector(css);
+    return element !== null && Object.keys(element).some((key) => key.startsWith('__reactProps'));
+  }, selector);
+}
