@@ -198,7 +198,7 @@
     }
   },
   "gradient": {
-    "hero-scrim": "linear-gradient(180deg, #0f1c4526 0%, #0f1c4599 55%, #0f1c45eb 100%)",
+    "hero-scrim": "linear-gradient(90deg, #0f1c4526 0%, #0f1c4599 45%, #0f1c45eb 100%)",
     "nav-scrim": "linear-gradient(180deg, #0a1433a6 0%, #0a143300 100%)"
   },
   "font": {

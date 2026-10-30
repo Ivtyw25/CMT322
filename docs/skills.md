@@ -37,7 +37,7 @@ Vercel skills were read in full before installing into `.claude/skills/` (Markdo
 
 ## Delegation (from iteration 2)
 
-`antigravity` plugin (agy CLI 1.4.10, plugin 0.17.0): content writer, builder, tester and main agent hand bulk work to agy as `docs/delegation.md` says. Call `agy-delegate` with an exact `-m` model; the plugin's `--tier` names are stale. The UX designer doesn't delegate.
+`antigravity` plugin (agy CLI 1.4.10, plugin 0.17.0): content writer, builder, tester and main agent hand bulk work to agy as `docs/delegation.md` says. Call `agy-delegate` with an exact `-m` model; the plugin's `--tier` names are stale. The UX designer doesn't delegate. **Paused** since 30 Oct 2026 (quota used up; `PLAN.md` §4b).
 
 ## Overrides
 
