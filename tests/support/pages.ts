@@ -38,7 +38,7 @@ const stationCodes = await getStationCodes();
 
 /** Concrete URLs per page. The first URL is the one compared with Figma. */
 const URLS: Record<string, string[]> = {
-  home: [routes.home],
+  home: [`${routes.home}?area=bukit-jambul`, routes.home],
   'project-overview': [routes.project.overview],
   about: [routes.project.about],
   stations: [routes.project.stations],

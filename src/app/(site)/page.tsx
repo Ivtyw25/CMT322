@@ -1,16 +1,45 @@
 import type { Metadata } from 'next';
+import { commonCopy } from '@/content/common';
 import { homeCopy } from '@/content/home';
+import { getAnnouncements } from '@/data/api/announcements';
+import { getAreas } from '@/data/api/areas';
+import { getSearchIndex } from '@/data/api/search';
+import type { AreaId } from '@/data/models/area';
+import { Hero } from '@/features/home/hero';
+import { toWorksItems } from '@/features/home/works-items';
+import { WorksSection } from '@/features/home/works-section';
 
-export const metadata: Metadata = { title: { absolute: homeCopy.heading } };
+export const metadata: Metadata = {
+  title: { absolute: commonCopy.metadata.defaultTitle },
+  description: homeCopy.meta.description,
+};
 
-/** Placeholder until the Home iteration. The navy block stands in for the hero behind the header. */
-export default function HomePage() {
+/** `?area=` as an area id, or null for all areas (also for a value that is not an area). */
+function chosenArea(value: string | string[] | undefined, ids: readonly AreaId[]): AreaId | null {
+  const first = Array.isArray(value) ? value[0] : value;
+  return ids.find((id) => id === first) ?? null;
+}
+
+export default async function HomePage({ searchParams }: PageProps<'/'>) {
+  const [params, searchIndex, areas, announcements] = await Promise.all([
+    searchParams,
+    getSearchIndex(),
+    getAreas(),
+    getAnnouncements(),
+  ]);
+  const areaOptions = areas.map(({ id, label }) => ({ id, label }));
+
   return (
-    <div className="bg-static-navy">
-      <div className="mx-auto max-w-content px-5 pt-40 pb-24 md:px-8 lg:px-10">
-        <h1 className="type-heading-m text-static-white lg:type-heading-xl">{homeCopy.heading}</h1>
-        <p className="mt-4 type-body-l text-static-on-navy-100 lg:type-body-xl">{homeCopy.intro}</p>
-      </div>
-    </div>
+    <>
+      <Hero searchIndex={searchIndex} />
+      <WorksSection
+        areas={areaOptions}
+        items={toWorksItems(announcements)}
+        area={chosenArea(
+          params.area,
+          areas.map((area) => area.id),
+        )}
+      />
+    </>
   );
 }
