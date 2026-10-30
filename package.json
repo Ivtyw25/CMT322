@@ -21,7 +21,8 @@
     "test:a11y": "node scripts/run-tests.mjs a11y",
     "test:visual": "node scripts/run-tests.mjs visual",
     "verify:quick": "node scripts/verify-quick.mjs",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "usage:tokens": "node scripts/token-usage.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

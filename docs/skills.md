@@ -35,6 +35,10 @@ Vercel skills were read in full before installing into `.claude/skills/` (Markdo
 | Tester | `browse`, `design:accessibility-review`, `web-design-guidelines`, `figma:figma-design-to-code` | Definition-of-done checks, visual side-by-side, a11y |
 | Content writer | `design:ux-copy`, `figma:figma-design-to-code` | Copy edits, hidden content, mock records |
 
+## Delegation (from iteration 2)
+
+`antigravity` plugin (agy CLI 1.4.10, plugin 0.17.0): content writer, builder, tester and main agent hand bulk work to agy as `docs/delegation.md` says. Call `agy-delegate` with an exact `-m` model; the plugin's `--tier` names are stale. The UX designer doesn't delegate.
+
 ## Overrides
 
 - **shadcn:** use it for behaviour and structure only. Restyle every component to Figma with project tokens. No default shadcn colours, radii, shadows or CSS variables. `components.json` sets `cssVariables: false`; if `npx shadcn add` edits `src/styles/globals.css`, revert that change.

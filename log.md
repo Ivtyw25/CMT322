@@ -43,3 +43,31 @@ The main agent appends one entry per iteration, using the format in `PLAN.md` §
 - Route groups: `(site)` with header/footer, `(auth)` for log in, sign up and forgot password.
 - Tests use port 3100 (team 2 sets `TEST_PORT=3200`); dev servers use 5173/5174.
 - The Sitemap board says "Report & Track needs an account". The UX designer decides in the report-track iteration whether Track needs sign-in. Report and Profile need it for sure.
+
+## Resume note (iteration 1, foundations, in progress)
+
+- The tester's round 1 is FAIL with 16 issues (3 major, 13 minor). The report is in the foundations worktree at docs/qa/foundations.md: builder B1–B12 (2 major), ux-designer U1–U2 (1 major: Home header Solid vs Transparent on 47:1249), content-writer 2 minor.
+- Next: send each owner its issues (round 1 of 3), have the tester re-test only the failed checks, then the main review, then merge.
+- The owner added Antigravity delegation from iteration 2 (docs/delegation.md, commit 724ff51, not pushed yet). Add it under Decisions in the foundations entry.
+- gstack browse is not installed, so the tester used Playwright scripts instead. Its first-time build needs the owner's OK.
+
+## Token usage (tracking from 30 Oct 2026)
+
+Measured with `npm run usage:tokens [sessionId]`, which reads Claude Code's local transcripts. Every iteration entry from now on gets a **Tokens** line.
+
+Session 1b750263 (Phase 0, iteration 1 build and the home spec/copy): 589 calls, 155M cache-read, 4.7M cache-write, 0.75M output.
+
+| Agent | Calls | Cache read | Max context |
+|---|---|---|---|
+| Foundations builder | 168 | 68.3M | 593k |
+| Main agent | 140 | 33.9M | 366k |
+| Foundations tester | 99 | 21.5M | 304k |
+| Foundations content writer | 73 | 13.0M | 364k |
+| Home UX / home content / foundations UX | 31–41 | 5.9–6.7M | 253–325k |
+
+Cost is roughly calls × context. Changes from now on (main agent decision):
+1. **Fresh agent per fix round when the old one is over ~250k context.** This is cheaper than resuming it. It departs from PLAN §5 step 4 ("continue the same agent"); the fresh agent reads the QA file and the earlier summary.
+2. **One builder per slice** (e.g. shell components, then page sections) instead of one 150+ call session.
+3. **Lean-context rule in every brief:** test, lint and build output goes to a file, and the agent reads only the failures. No multi-file `cat`. Small Figma reads.
+4. **Antigravity** for bulk generation (docs/delegation.md) from iteration 2.
+5. **Tester re-tests only failed checks** in fix rounds.

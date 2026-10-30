@@ -1,21 +1,21 @@
 // Usage: node scripts/run-tests.mjs <project> [--base-url <url>] [extra playwright args]
-import { spawnSync } from 'node:child_process';
+// Quiet by default (see scripts/lib/step.mjs); VERBOSE=1 streams the full Playwright output.
+import { step } from './lib/step.mjs';
 
 const [project, ...rest] = process.argv.slice(2);
 const args = [];
-const env = { ...process.env };
+const extraEnv = {};
 for (let i = 0; i < rest.length; i++) {
-  if (rest[i] === '--base-url') env.BASE_URL = rest[++i];
-  else if (rest[i].startsWith('--base-url=')) env.BASE_URL = rest[i].slice('--base-url='.length);
+  if (rest[i] === '--base-url') extraEnv.BASE_URL = rest[++i];
+  else if (rest[i].startsWith('--base-url='))
+    extraEnv.BASE_URL = rest[i].slice('--base-url='.length);
   else args.push(rest[i]);
 }
-const result = spawnSync(
-  'npx',
-  ['playwright', 'test', `--project=${project}`, '--pass-with-no-tests', ...args],
-  {
-    stdio: 'inherit',
-    env,
-    shell: process.platform === 'win32',
-  },
+process.exit(
+  step(
+    `test-${project}`,
+    'npx',
+    ['playwright', 'test', `--project=${project}`, '--pass-with-no-tests', ...args],
+    extraEnv,
+  ),
 );
-process.exit(result.status ?? 1);
