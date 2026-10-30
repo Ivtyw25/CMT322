@@ -185,6 +185,15 @@ export const devCopy = {
         body: 'Operations are planned to start in December 2031.',
       },
     ],
+    /** Second accordion set, with its own wording so the gallery's samples stay distinct. */
+    accordionTopics: [
+      { title: 'Where do the works start?', body: 'Pier works begin at the Penang Sentral end.' },
+      { title: 'Who do I call about noise?', body: 'Call the MRTCareline at any time.' },
+      {
+        title: 'Will my bus route change?',
+        body: 'Affected routes are listed on the traffic page.',
+      },
+    ],
     accordionEyebrow: 'Construction',
     stagesList: [
       { label: 'Planning and design', detail: 'Completed Mar 2025' },

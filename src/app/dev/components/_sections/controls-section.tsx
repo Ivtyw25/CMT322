@@ -84,7 +84,7 @@ export function SegmentedSection() {
           labels={samples.chips}
           initial={1}
           orientation="adaptive"
-          className="max-w-xs"
+          className="max-w-80"
         />
         <DemoSegmented
           legend={states.adaptiveSwitch}

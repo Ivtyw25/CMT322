@@ -29,6 +29,11 @@ export function AccordionSection() {
     title: entry.title,
     content: <p>{entry.body}</p>,
   }));
+  const topicItems = samples.accordionTopics.map((entry, index) => ({
+    id: `gallery-topic-${index + 1}`,
+    title: entry.title,
+    content: <p>{entry.body}</p>,
+  }));
   return (
     <GallerySection id="accordion">
       <Specimen caption={states.open} className="[&>*]:w-full">
@@ -37,9 +42,8 @@ export function AccordionSection() {
       <Specimen caption={states.eyebrowDefaultOpen} className="[&>*]:w-full">
         <Accordion
           size="large"
-          items={items.map((item, index) => ({
+          items={topicItems.map((item, index) => ({
             ...item,
-            id: `gallery-topic-${index + 1}`,
             eyebrow: samples.accordionEyebrow,
             defaultOpen: index === 0,
           }))}
@@ -47,7 +51,7 @@ export function AccordionSection() {
       </Specimen>
       <Specimen caption={states.openFromCode} className="[&>*]:w-full">
         <DemoAccordionOpen
-          items={items.map((item, index) => ({ ...item, id: `gallery-code-${index + 1}` }))}
+          items={topicItems.map((item, index) => ({ ...item, id: `gallery-code-${index + 1}` }))}
           targetId="gallery-code-3"
           buttonLabel={devCopy.labels.openItemButton}
         />

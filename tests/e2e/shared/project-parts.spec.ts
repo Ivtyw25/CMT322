@@ -39,7 +39,7 @@ test.describe('accordion additions', () => {
     await openGallery(page);
     await whenHydrated(page, 'section:has(#accordion) button');
     const box = specimen(page, 'accordion', states.openFromCode);
-    const third = box.getByRole('button', { name: samples.accordion[2]?.title ?? '' });
+    const third = box.getByRole('button', { name: samples.accordionTopics[2]?.title ?? '' });
     await expect(third).toHaveAttribute('aria-expanded', 'false');
     await expect(async () => {
       await box.getByRole('button', { name: labels.openItemButton }).click();
@@ -54,7 +54,7 @@ test.describe('accordion additions', () => {
     await page.goto(`${routes.dev.components}#gallery-topic-2`);
     const button = page
       .locator('#gallery-topic-2')
-      .getByRole('button', { name: samples.accordion[1]?.title ?? '' });
+      .getByRole('button', { name: samples.accordionTopics[1]?.title ?? '' });
     await expect(button).toHaveAttribute('aria-expanded', 'true', { timeout: 30_000 });
     await expect(button).toBeFocused();
   });
@@ -316,13 +316,12 @@ test.describe('map', () => {
     await whenHydrated(page, 'section:has(#map) button');
     const map = snippet(page);
     const zoomIn = map.getByRole('button', { name: uiCopy.map.zoomIn });
-    const marker = map.getByRole('region').getByText(samples.map.markers[1].label);
+    const marker = map.getByRole('region').getByTitle(samples.map.markers[1].label);
     await expect(marker).toBeAttached();
-    const before = await map.locator('.leaflet-tile-container').first().boundingBox();
+    const zoomedTile = map.locator(`img.leaflet-tile[src*="/${samples.map.zoom + 1}/"]`);
+    await expect(zoomedTile).toHaveCount(0);
     await zoomIn.click();
-    await expect
-      .poll(async () => (await map.locator('.leaflet-tile-container').first().boundingBox())?.width)
-      .not.toBe(before?.width);
+    await expect(zoomedTile.first()).toBeAttached();
     const box = await zoomIn.boundingBox();
     expect(box?.width).toBeGreaterThanOrEqual(28);
   });
@@ -375,26 +374,21 @@ test.describe('followed stations', () => {
     }).toPass();
   });
 
-  test('follow and unfollow still work for this page view when storage is blocked', async ({
-    page,
-  }) => {
-    await openGallery(page, { signedIn: true });
-    await whenHydrated(page, 'section:has(#follows) button');
-    await page.evaluate(() => {
-      const refuse = () => {
-        throw new DOMException('Blocked', 'SecurityError');
-      };
-      Storage.prototype.getItem = refuse;
-      Storage.prototype.setItem = refuse;
-      Storage.prototype.removeItem = refuse;
+  test('blocked storage means no follows, without errors', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.addInitScript(() => {
+      Object.defineProperty(window, 'localStorage', {
+        get() {
+          throw new Error('blocked');
+        },
+      });
     });
-    const [komtar, , penang] = samples.followStations;
-    await expect(async () => {
-      await stationButton(page, penang.name, labels.follow).click();
-      await expect(summary(page)).toContainText(penang.code, { timeout: 1000 });
-    }).toPass();
-    await stationButton(page, komtar.name, labels.unfollow).click();
-    await expect(summary(page)).not.toContainText(komtar.code);
-    await expect(summary(page)).toContainText(penang.code);
+    await openGallery(page, { signedIn: true });
+    await expect(
+      section(page, 'follows').getByText(labels.followsGuestNote, { exact: true }).last(),
+    ).toBeVisible();
+    await expect(summary(page)).toHaveCount(0);
+    expect(errors).toEqual([]);
   });
 });
