@@ -2,7 +2,7 @@ import { AccentBar } from '@/components/patterns/accent-bar';
 import { ButtonLink } from '@/components/ui/button-link';
 import { homeCopy } from '@/content/home';
 import type { AreaId } from '@/data/models/area';
-import { HomeContainer } from './home-container';
+import { Container } from '@/components/layout/container';
 import { WORKS_HEADING_ID, WORKS_SECTION_ID } from './works-anchor';
 import { WorksArea, type WorksAreaOption } from './works-area';
 import type { WorksItem } from './works-items';
@@ -22,7 +22,7 @@ export function WorksSection({ areas, items, area }: WorksSectionProps) {
       aria-labelledby={WORKS_HEADING_ID}
       className="scroll-mt-header-mobile bg-gray-50 py-10 md:py-16 lg:scroll-mt-header lg:py-20"
     >
-      <HomeContainer className="flex flex-col gap-6 md:gap-8">
+      <Container gutter="wide" className="flex flex-col gap-6 md:gap-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
           <div className="flex flex-col gap-3">
             <AccentBar />
@@ -45,7 +45,7 @@ export function WorksSection({ areas, items, area }: WorksSectionProps) {
           </ButtonLink>
         </div>
         <WorksArea areas={areas} items={items} initialArea={area} />
-      </HomeContainer>
+      </Container>
     </section>
   );
 }

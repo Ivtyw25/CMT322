@@ -3,7 +3,7 @@ import { ButtonLink } from '@/components/ui/button-link';
 import { homeCopy } from '@/content/home';
 import type { SearchEntry } from '@/data/models/search';
 import heroPhoto from '@/assets/images/hero.jpg';
-import { HomeContainer } from './home-container';
+import { Container } from '@/components/layout/container';
 import { HeroSearch } from './hero-search';
 import { TryChips } from './try-chips';
 
@@ -26,7 +26,7 @@ export function Hero({ searchIndex }: { searchIndex: readonly SearchEntry[] }) {
         <div className="absolute inset-0 bg-hero-scrim" />
         <div className="absolute inset-x-0 top-0 h-55 bg-nav-scrim" />
       </div>
-      <HomeContainer className="relative pt-47.5 pb-10 lg:pt-71.75 lg:pb-0">
+      <Container gutter="wide" className="relative pt-47.5 pb-10 lg:pt-71.75 lg:pb-0">
         <div className="flex max-w-140 flex-col items-start gap-3.5 lg:ml-auto lg:w-160 lg:max-w-none lg:items-end lg:text-right">
           <h1
             id={HERO_TITLE_ID}
@@ -56,7 +56,7 @@ export function Hero({ searchIndex }: { searchIndex: readonly SearchEntry[] }) {
             </ButtonLink>
           </div>
         </div>
-      </HomeContainer>
+      </Container>
     </section>
   );
 }
