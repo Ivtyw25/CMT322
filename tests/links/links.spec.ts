@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { prepare, settle } from '../support/browser';
 import { allowedExternalLinks, socialNames } from '../support/external-links';
-import { visitsForActivePages } from '../support/pages';
+import { pendingPaths, visitsForActivePages } from '../support/pages';
 
 const MAX_BUTTONS_PER_PAGE = 60;
 
@@ -71,7 +71,12 @@ for (const visit of visitsForActivePages()) {
         problems.push(`external link needs an "opens in new tab" label ${label}`);
     }
 
+    const pending = pendingPaths();
     for (const path of internal) {
+      if (pending.has(path.split(/[?#]/)[0] ?? path)) {
+        test.info().annotations.push({ type: 'pending page', description: path });
+        continue;
+      }
       const res = await request.get(path, { maxRedirects: 5 });
       if (res.status() >= 400) problems.push(`internal link returns ${res.status()}: ${path}`);
     }
@@ -80,6 +85,8 @@ for (const visit of visitsForActivePages()) {
   });
 
   test(`buttons on ${visit.pageId} ${visit.url}`, async ({ page }) => {
+    // Each button gets a fresh page load; the long gallery needs more than the default 60 s.
+    test.setTimeout(300_000);
     await prepare(page, { signedIn: visit.signedIn });
     await page.goto(visit.url);
     await settle(page);

@@ -1,0 +1,48 @@
+'use client';
+
+import { cn } from '@/lib/cn';
+
+export type FilterChipOption<Value extends string> = { value: Value; label: string };
+
+type FilterChipsProps<Value extends string> = {
+  /** Name of the group, e.g. "Area". */
+  label: string;
+  options: readonly FilterChipOption<Value>[];
+  value: Value;
+  onValueChange: (value: Value) => void;
+  className?: string;
+};
+
+/** Single-select filters as toggle buttons: exactly one is pressed at a time. */
+export function FilterChips<Value extends string>({
+  label,
+  options,
+  value,
+  onValueChange,
+  className,
+}: FilterChipsProps<Value>) {
+  return (
+    <div role="group" aria-label={label} className={cn('flex flex-wrap gap-2', className)}>
+      {options.map((option) => {
+        const pressed = option.value === value;
+        return (
+          <button
+            key={option.value}
+            type="button"
+            aria-pressed={pressed}
+            onClick={() => onValueChange(option.value)}
+            className={cn(
+              'hit-area cursor-pointer rounded-full border px-3.5 py-1.5 type-body-s-medium',
+              'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
+              pressed
+                ? 'border-gray-900 bg-gray-900 text-surface'
+                : 'border-gray-200 bg-surface text-gray-700 hover:border-gray-400',
+            )}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}

@@ -365,3 +365,10 @@
   letter-spacing: 0;
   font-weight: 300;
 }
+@utility type-wordmark-mobile {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  letter-spacing: 0;
+  font-weight: 600;
+}
