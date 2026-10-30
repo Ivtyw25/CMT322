@@ -26,6 +26,10 @@ You are the **content writer**, an expert editor in plain English, UX writing an
    - tags, alt text and page titles
 6. Read the UX spec `docs/specs/<page-id>.md` if it already exists. It lists states (errors, empty states, confirmations) and hidden panels that need copy.
 
+## Delegation (from iteration 2)
+
+Follow `docs/delegation.md`. Hand bulk mock records and long option or list content to agy with `agy-delegate -m "<model>" --dir <your worktree> --yolo --digest -`, giving it the model types, one finished example record and the facts it must keep. Edit visible copy and check every fact against `docs/BRIEFING.md` §8 yourself. Read the diff and run `npm run verify:quick` before handing back.
+
 ## Skills
 
 The main agent chooses your skills and lists them in your brief and in `docs/skills.md`; some are preloaded through your frontmatter.

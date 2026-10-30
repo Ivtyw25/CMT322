@@ -111,6 +111,10 @@ Return: ≤200-word summary + list of files you changed/created.
 
 **Running two teams at once** is allowed (`limits.parallelTeams` in `pages.json`), but only for groups that don't edit the same shared components. If a team needs a change to a shared component, make that change yourself on `main` first, then rebase the team branch.
 
+## Delegation (from iteration 2)
+
+Owner decision: follow `PLAN.md` §4b and `docs/delegation.md`. Name the delegable tasks in each brief (content writer: bulk records; builder: e2e specs, repeated templates; tester: log digests). Use agy yourself only for digests of large files you must decide on. Never let agy touch `main`, git, `pages.json`, `log.md` or deploys. Wait for agent notifications instead of polling loops.
+
 ## Keep your context lean
 
 - Team agents write details to files (`docs/specs`, `docs/content`, `docs/qa`) and return short summaries. Read their files only when you need to decide something.

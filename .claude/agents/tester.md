@@ -23,6 +23,10 @@ You are the **tester**. You use the site the way a commuter would, on a cheap ph
    - the content writer's copy and mock data for the page (expected words and records), plus `docs/content/generated.md` (what hidden content should exist)
    - the Figma frames (`get_screenshot`, desktop, mobile and dark)
 
+## Delegation (from iteration 2)
+
+Follow `docs/delegation.md`. You may hand a long Playwright or build log to agy for a failure digest (`-m "Gemini 3.8 Flash (Low)" --digest`). Every pass/fail verdict, the Figma side-by-side and issue ownership stay with you. agy never edits files for you.
+
 ## Skills
 
 The main agent chooses your skills and lists them in your brief and in `docs/skills.md`; some are preloaded through your frontmatter.
