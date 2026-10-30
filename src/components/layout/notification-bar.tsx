@@ -86,9 +86,8 @@ export function NotificationBar({ notice, preview }: NotificationBarProps) {
       data-shell-inert=""
       className={cn(
         '@container border-b',
-        overHero
-          ? 'border-static-white/15 bg-static-scrim-bar backdrop-blur-bar'
-          : 'border-warning-100 bg-warning-50',
+        'border-warning-100 bg-warning-50',
+        overHero && 'lg:border-static-white/15 lg:bg-static-scrim-bar lg:backdrop-blur-bar',
         !preview && isHome && 'absolute inset-x-0 top-header-mobile z-30 mt-px lg:top-header',
         fading && 'animate-fade-out',
       )}
@@ -98,30 +97,30 @@ export function NotificationBar({ notice, preview }: NotificationBarProps) {
           <span className="flex h-7.5 shrink-0 items-start pt-1 @min-[64rem]:items-center @min-[64rem]:pt-0">
             <TriangleAlert
               aria-hidden
-              className={cn('size-4.5', overHero ? 'text-static-white' : 'text-warning-700')}
+              className={cn('size-4.5 text-warning-700', overHero && 'lg:text-static-white')}
             />
           </span>
           <div className="flex min-h-7.5 min-w-0 flex-1 flex-col items-start justify-center gap-0.5 type-body-s @min-[64rem]:block">
             <span
               className={cn(
-                'type-body-s-semibold @min-[64rem]:hidden',
-                overHero ? 'text-static-amber' : 'text-warning-700',
+                'type-body-s-semibold text-warning-700 @min-[64rem]:hidden',
+                overHero && 'lg:text-static-amber',
               )}
             >
               {notice.title}
             </span>
             <span
               className={cn(
-                'mr-1.5 hidden type-body-s-semibold @min-[64rem]:inline',
-                overHero ? 'text-static-amber' : 'text-warning-700',
+                'mr-1.5 hidden type-body-s-semibold text-warning-700 @min-[64rem]:inline',
+                overHero && 'lg:text-static-amber',
               )}
             >
               {notificationCopy.titleInline(notice.title)}
             </span>
             <span
               className={cn(
-                '@min-[64rem]:mr-1.5',
-                overHero ? 'text-static-white' : 'text-gray-800',
+                'text-gray-800 @min-[64rem]:mr-1.5',
+                overHero && 'lg:text-static-white',
               )}
             >
               {notice.message}
@@ -129,10 +128,8 @@ export function NotificationBar({ notice, preview }: NotificationBarProps) {
             <Link
               href={routes.traffic.announcements}
               className={cn(
-                'hit-area type-body-s-semibold underline decoration-1 underline-offset-2 hover:decoration-2',
-                overHero
-                  ? 'text-static-amber focus-visible:outline-static-white'
-                  : 'text-warning-700',
+                'hit-area type-body-s-semibold text-warning-700 underline decoration-1 underline-offset-2 hover:decoration-2',
+                overHero && 'lg:text-static-amber lg:focus-visible:outline-static-white',
               )}
             >
               {notificationCopy.viewDetails}
@@ -146,9 +143,9 @@ export function NotificationBar({ notice, preview }: NotificationBarProps) {
             className={cn(
               'hit-area flex size-7.5 shrink-0 cursor-pointer items-center justify-center rounded-md',
               'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
-              overHero
-                ? 'text-static-white hover:bg-static-glass focus-visible:outline-static-white'
-                : 'text-gray-600 hover:bg-warning-100',
+              'text-gray-600 hover:bg-warning-100',
+              overHero &&
+                'lg:text-static-white lg:hover:bg-static-glass lg:focus-visible:outline-static-white',
             )}
           >
             <X aria-hidden className="size-4.5" />

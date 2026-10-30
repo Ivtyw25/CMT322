@@ -22,6 +22,7 @@ import { currentGroupId, navGroupList, type NavGroupId } from './nav-groups';
 import { NavPanel } from './nav-panel';
 import type { ThemePreference } from '@/lib/theme/theme';
 import type { ShellData } from './shell-data';
+import { useNavCurrent } from '@/lib/navigation/nav-current';
 import { useOverHero } from './use-over-hero';
 
 export type HeaderVariant = 'solid' | 'transparent';
@@ -57,6 +58,7 @@ export function DesktopHeader({ data, preview, className }: DesktopHeaderProps) 
   const announce = useAnnounce();
   const { isHome, overHero } = useOverHero();
   const wide = useMediaQuery('(min-width: 64rem)');
+  const navCurrent = useNavCurrent();
   const uid = useId();
   const rootRef = useRef<HTMLElement>(null);
   const triggerRefs = useRef<Partial<Record<NavGroupId, HTMLButtonElement | null>>>({});
@@ -82,7 +84,11 @@ export function DesktopHeader({ data, preview, className }: DesktopHeaderProps) 
   const accountIsOpen = preview ? Boolean(preview.accountOpen) : accountOpen;
   const variant: HeaderVariant = preview ? preview.variant : overHero ? 'transparent' : 'solid';
   const onHero = variant === 'transparent';
-  const activeGroup = preview ? (preview.currentGroup ?? null) : currentGroupId(pathname);
+  const activeGroup = preview
+    ? (preview.currentGroup ?? null)
+    : navCurrent
+      ? currentGroupId(pathname)
+      : null;
 
   const closePanel = useCallback(() => setOpened(null), []);
   const openGroup = useCallback(
