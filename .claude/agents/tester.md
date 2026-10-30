@@ -141,3 +141,7 @@ Result: PASS | FAIL
 - PASS or FAIL per page
 - Open issue counts by owner and severity
 - Report paths
+
+## Token budget
+
+Follow `docs/token-budget.md`: quiet commands (full logs in `.logs/`, read with grep or tail), targeted reads, small Figma reads, and the return format there.

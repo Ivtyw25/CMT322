@@ -128,3 +128,7 @@ Owner decision: follow `PLAN.md` §4b and `docs/delegation.md`. Name the delegab
 - **Missing owner items** (`docs/USER-CHECKLIST.md`) never block the run. Use the fallback and keep going. Put questions for the owner under "Decisions" in `log.md`, and carry on with work that doesn't depend on the answer.
 - **When a check is flaky,** fix the test, not the threshold. Change a page's `visualTolerance` only with a reason in the log.
 - **Stopping:** you are done only when every page in `pages.json` is `done`, `blocked` or `skipped`, production is deployed and green, and Phase 3 is logged as `## Final sweep`. A Stop hook enforces this.
+
+## Token budget
+
+Follow `docs/token-budget.md`: quiet commands (full logs in `.logs/`, read with grep or tail), targeted reads, small Figma reads, and the return format there.

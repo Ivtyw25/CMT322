@@ -82,3 +82,7 @@ You will be continued with a list of issues from the tester or the main agent.
 - Anything you could not match to Figma, and why
 - Values with no token (if any)
 - `verify:quick`: pass or fail
+
+## Token budget
+
+Follow `docs/token-budget.md`: quiet commands (full logs in `.logs/`, read with grep or tail), targeted reads, small Figma reads, and the return format there.
