@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { devGalleryEnabled } from '@/lib/dev-gallery';
 import { devCopy } from '@/content/dev';
 import { Container } from '@/components/layout/container';
 import { loadShellData } from '@/components/layout/shell-data';
@@ -26,6 +27,7 @@ import { FieldsSection } from './_sections/fields-section';
 import { FooterSection } from './_sections/footer-section';
 import { HeaderDesktopSection } from './_sections/header-desktop-section';
 import { HeaderMobileSection } from './_sections/header-mobile-section';
+import { DocsPartsSection, FollowsSection, MapSection } from './_sections/project-parts-sections';
 import { NavPanelsSection } from './_sections/nav-panels-section';
 import { NotificationSection } from './_sections/notification-section';
 import { SectionBarSection } from './_sections/section-bar-section';
@@ -34,9 +36,9 @@ import { TokensSection } from './_sections/tokens-section';
 
 export const metadata: Metadata = { title: devCopy.title, robots: { index: false } };
 
-/** Development-only gallery of every shared component, variant and state. 404 in production. */
+/** Development-only gallery of every shared component, variant and state. 404 on the live site. */
 export default async function ComponentsGalleryPage() {
-  if (process.env.NODE_ENV === 'production') notFound();
+  if (!devGalleryEnabled) notFound();
   const data = await loadShellData();
   return (
     <>
@@ -70,6 +72,9 @@ export default async function ComponentsGalleryPage() {
         <NotificationSection />
         <SectionBarSection />
         <DocsSection />
+        <DocsPartsSection />
+        <MapSection />
+        <FollowsSection />
         <FooterSection />
       </Container>
     </>

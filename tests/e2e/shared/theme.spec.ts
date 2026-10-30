@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { routes } from '@/config/routes';
 import { THEME_STORAGE_KEY } from '@/lib/theme/theme';
-import { prepare } from '../../support/browser';
+import { prepare, settle } from '../../support/browser';
 
 test.describe('theme', () => {
   test('a saved dark choice is applied before first paint', async ({ page }) => {
@@ -14,7 +14,7 @@ test.describe('theme', () => {
     await page.goto(routes.home, { waitUntil: 'commit' });
     await page.waitForFunction(() => document.body !== null);
     expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark');
-    await page.waitForLoadState('networkidle');
+    await settle(page);
     expect(
       errors.filter((e) => /hydrat/i.test(e)),
       'hydration errors',

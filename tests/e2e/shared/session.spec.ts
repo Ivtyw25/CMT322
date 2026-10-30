@@ -31,7 +31,7 @@ test.describe('mock session', () => {
     await prepare(page, { signedIn: true });
     await page.goto(routes.reportTrack.report);
     await settle(page);
-    await page.waitForLoadState('networkidle');
+    await settle(page);
     await expect(page).toHaveURL(new RegExp(`${routes.reportTrack.report}$`));
   });
 
@@ -48,7 +48,7 @@ test.describe('mock session', () => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto(routes.account.profile);
     await settle(page);
-    await page.waitForLoadState('networkidle');
+    await settle(page);
     await page.getByRole('button', { name: /^Account menu/ }).click();
     await page.getByRole('menuitem', { name: /Log out/ }).click();
     await expect(page).toHaveURL(new RegExp(`${routes.home}$`));

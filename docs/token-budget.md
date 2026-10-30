@@ -18,7 +18,7 @@ So the fix is to keep each agent's own context small and its life short.
 3. **Small Figma reads.** `get_metadata` on the frame first, then `get_design_context` or `get_screenshot` on one section at a time. Never `get_design_context` on a whole page frame.
 4. **Short life.** One builder per slice of a group (e.g. shared parts, then sections), not one session for the whole group. The main agent starts a **fresh** agent for a fix round when the previous one ended above ~250k context. The fresh agent reads the QA file instead of inheriting the old context.
 5. **Re-test only what failed** in fix rounds, plus the quick automated regression.
-6. **Bulk generation goes to Antigravity** (`docs/delegation.md`), from iteration 2.
+6. **Antigravity delegation is paused** (owner, 30 Oct 2026: quota used up). Agents do bulk work themselves. The main agent may give mechanical work (log digests, repeated records) to a short-lived Haiku agent instead.
 7. **Return format** (≤200 words, nothing else):
 
 ```
@@ -35,3 +35,10 @@ skills: <used>; delegated: <what, model, what you corrected>, or "none"
 - Read team files (specs, QA reports) only to make a decision, using `Grep` for the part needed.
 - Wait for agent notifications; avoid output-heavy polling.
 - Before the context gets large, make sure `pages.json` and `log.md` are current, so a fresh session can resume.
+
+## Faster iterations (owner, 31 Oct 2026)
+
+- `npm run verify` builds once with `DEV_GALLERY=1` and runs every suite, e2e included, against `next start` (about 4 min, was 8–10). `verify:quick` still uses the dev server for the inner loop.
+- Builders end with a full `npm run verify`. Testers reuse its logs and re-run only failures.
+- Testers compare Figma by hand only where the visual diff fails (`tester.md`, "Faster test routine").
+- Small groups (legal-help) get one Sonnet agent for both content and the UX spec.

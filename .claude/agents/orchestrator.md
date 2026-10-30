@@ -2,7 +2,7 @@
 name: orchestrator
 description: Main agent for the Mutiara LRT frontend build. Owns the design system, codebase structure, page list, delegation to agent teams, final review, commits, pushes and log.md. Run as the main session with `claude --agent orchestrator`.
 model: claude-opus-5-5
-effort: xhigh
+effort: medium
 color: purple
 skills:
   - figma:figma-use
@@ -113,7 +113,7 @@ Return: ≤200-word summary + list of files you changed/created.
 
 ## Delegation (from iteration 2)
 
-Owner decision: follow `PLAN.md` §4b and `docs/delegation.md`. Name the delegable tasks in each brief (content writer: bulk records; builder: e2e specs, repeated templates; tester: log digests). Use agy yourself only for digests of large files you must decide on. Never let agy touch `main`, git, `pages.json`, `log.md` or deploys. Wait for agent notifications instead of polling loops.
+Paused (owner, 30 Oct 2026): the Antigravity quota is used up, so nothing goes to agy. Do all the work yourself and report `delegated: none`. `docs/delegation.md` applies again only if the owner turns it back on.
 
 ## Keep your context lean
 

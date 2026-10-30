@@ -37,6 +37,7 @@ Content that Figma implies but does not show. "Today" in the data is `MOCK_NOW` 
 | Landmark labels, "You are logged out." | `common.ts` | Spec landmarks and live regions |
 | Gallery sections (23), state labels and sample values | `dev.ts` | Dev components gallery |
 
+<<<<<<< HEAD
 ## Home
 
 ## home: copy (`src/content/home.ts`)
@@ -64,3 +65,27 @@ Content that Figma implies but does not show. "Today" in the data is `MOCK_NOW` 
 ## home: data
 
 No new records. 3 replacement values (1 announcement summary, 2 construction update titles) so Home matches Figma: see `home-data-additions.md`.
+=======
+## Project
+
+Iteration 3. Station, FAQ, construction and milestone records already existed (see Data above); this iteration extended them and wrote all Project page copy.
+
+| What | Where | Count | Why |
+|---|---|---|---|
+| Station "serves" sentences | `mock/stations.ts` (`serves`, new field) | 22 (S13 from Figma, 21 written) | About route diagram: Figma shows only S13 selected |
+| Construction timeline titles | `mock/construction-updates.ts` (`timelineTitle`, new field) | 2 set, 10 null | Construction page words two updates differently from Home (verify P4) |
+| Construction "On this page" labels | `mock/construction-updates.ts` (`tocLabel`, new field) | 12 (4 from Figma, 8 written) | TOC lists each update; older ones appear after "Load older updates" |
+| Milestone long titles | `mock/construction-updates.ts` (`longTitle`, new field) | 6, all from Figma 1:332 | About timeline uses longer labels than the Construction timeline |
+| Route tab "PSR-A to Penang Sentral" | `content/project.ts` `about.routes.tabs[1]` | 1 panel (intro + 3 facts) | Figma shows only the PSR-A to KOMTAR panel |
+| "A smarter way to travel" tabs | `content/project.ts` `about.benefits.tabs` | 3 written (General public, Businesses, Environment) + 1 Figma | Figma shows only Daily commuters |
+| Route diagram texts | `content/project.ts` `about.stations` | hint, link, diagram label | Panel before a station is selected; link to the station page |
+| Stations search states | `content/project.ts` `stations.search` | result count, empty title and body | Figma shows the idle search box only |
+| Stations aside variants | `content/project.ts` `stations.aside` | 3 (following, none, signed out) | Figma shows Mei Ling following 2 stations |
+| Station template states | `content/project.ts` `station` | Follow / followed / unfollowed, not-started tag and stat, no-distance stat, traffic empty, progress not started (Segment 2), site updates empty, worksite not started, reports empty, alerts for not following and signed out | Figma shows KOMTAR only; 21 other stations and Segment 2 need these |
+| Construction filter states | `content/project.ts` `construction.updates` | count, all loaded, empty with reset, photo alt | Figma shows "All updates" with 4 entries |
+| FAQ states | `content/project.ts` `faq` | search results and empty state, topic view heading and back link, show fewer, feedback thanks (2) | Figma shows the default view with the first answer open |
+| Docs page shared words | `content/ui.ts` `docsPage` | Need help?, page feedback, Related pages | Same on every docs-layout page (Project, Traffic, Report & Track) |
+| FAQ "How often will trains run?" answer | `mock/faq.ts` | 1 rewritten | Matched the About page figure (verify P2) |
+
+Not delegated to Antigravity: the bulk records (22 stations, 22 FAQ answers, 12 updates, 6 milestones) already existed, and the additions (about 60 short lines) were smaller than a delegation brief.
+>>>>>>> main

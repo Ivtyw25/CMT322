@@ -70,6 +70,8 @@ export type Station = {
   areaId: AreaId;
   /** One-sentence introduction under the station name on the station page. */
   lede: string;
+  /** One sentence on what the station serves, shown when it is selected on the About page route diagram. */
+  serves: string;
   /** Every Mutiara Line station is elevated. */
   structure: 'elevated';
   /** Neighbouring stations shown under "Connects to". */

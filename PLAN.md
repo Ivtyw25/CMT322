@@ -44,11 +44,11 @@ Build the **commuter site** from Figma file `8kWWATZPol9TwztOw8MYG4` as a mainta
 
 | Role | Agent file | Model | Effort | Owns |
 |---|---|---|---|---|
-| Main agent (orchestrator) | `.claude/agents/orchestrator.md` | Opus 5.5 (`claude-opus-5-5`) | Extra high (`xhigh`) | Design system, codebase structure, page list, delegation, final review, commits, pushes, Vercel deploys, `log.md` |
-| Builder | `.claude/agents/builder.md` | Sonnet 5.5 (`claude-sonnet-5-5`) | High | Turns Figma frames into code, including interactions and responsive behaviour |
-| UI/UX designer | `.claude/agents/ux-designer.md` | Opus 5.5 | Medium | Writes the interaction and responsive spec the builder follows, because Figma is static |
-| Tester | `.claude/agents/tester.md` | Opus 5.5 | Medium | Tests each page against the definition of done and sends issues back to the right owner |
-| Content writer | `.claude/agents/content-writer.md` | Opus 5.5 | Medium | Rewrites placeholder copy so it is grammatical, plain and easy to understand, without changing facts. Also writes the content Figma doesn't show: every option in dropdowns and filters, every tab panel, every paginated or expanded list, and every record behind a template page. |
+| Main agent (orchestrator) | `.claude/agents/orchestrator.md` | Opus 5.5 (`claude-opus-5-5`) | Medium (never above high) | Design system, codebase structure, page list, delegation, final review, commits, pushes, Vercel deploys, `log.md` |
+| Builder | `.claude/agents/builder.md` | Sonnet 5.5 (`claude-sonnet-5-5`) | Medium | Turns Figma frames into code, including interactions and responsive behaviour |
+| UI/UX designer | `.claude/agents/ux-designer.md` | Sonnet 5.5 | Medium | Writes the interaction and responsive spec the builder follows, because Figma is static |
+| Tester | `.claude/agents/tester.md` | Sonnet 5.5 | Medium | Tests each page against the definition of done and sends issues back to the right owner |
+| Content writer | `.claude/agents/content-writer.md` | Sonnet 5.5 | Medium | Rewrites placeholder copy so it is grammatical, plain and easy to understand, without changing facts. Also writes the content Figma doesn't show: every option in dropdowns and filters, every tab panel, every paginated or expanded list, and every record behind a template page. |
 
 **How a "team" is formed.** A team is one builder, one UI/UX designer, one tester and one content writer, all working on one page group.
 - The main agent spawns and coordinates all four.
@@ -171,6 +171,8 @@ Skills are packaged instructions for doing one kind of task well, e.g. a shadcn/
 ## 4b. Delegation to Antigravity (from iteration 2)
 
 Owner decision (30 Oct 2026), to cut Claude token use: bulk, repetitive work (mock records, e2e test files, repeated page templates, digests of long logs) is delegated to the Antigravity CLI by the agent that owns it. `docs/delegation.md` lists what goes to agy, the exact command and models, the brief template, and the verify steps. Judgement, Figma work, reviews, `pages.json`, `log.md`, git and deploys stay with Claude. Every delegated result is checked by the delegating agent (`npm run verify:quick` and a diff read) before handing back. If agy fails, the agent does the work itself.
+
+**Paused (owner, 30 Oct 2026):** the Antigravity quota is used up, so delegation is off until the owner turns it back on. To save tokens, team agents run on Sonnet with effort medium; the main agent runs on Opus with effort medium, never above high. Mechanical work may go to a short-lived Haiku agent instead.
 
 Owner decision (30 Oct 2026), token budget: every agent follows `docs/token-budget.md` (quiet commands with logs in `.logs/`, targeted reads, small Figma reads, short-lived agents, a fixed return format). For a fix round the main agent may start a fresh agent instead of continuing one whose context ended above ~250k; the fresh agent reads the QA file.
 
