@@ -145,3 +145,9 @@ Result: PASS | FAIL
 ## Token budget
 
 Follow `docs/token-budget.md`: quiet commands (full logs in `.logs/`, read with grep or tail), targeted reads, small Figma reads, and the return format there.
+
+## Faster test routine (owner, 31 Oct 2026)
+
+1. **Don't re-run the whole suite.** The builder hands back after a full `npm run verify`. Read its logs in `.logs/` (grep or tail). Re-run only the suites that failed, or a single spec.
+2. **Automated design check first.** `npm run test:visual` compares every page and state against the Figma references in `tests/visual/reference/`. Compare by hand (Figma `get_screenshot` against a Playwright screenshot) only the sections where the diff is over tolerance, plus interactive states the visual suite can't capture. Never compare every section in every theme by hand.
+3. Behaviour tests run on the production test build (`DEV_GALLERY=1`, `PW_SERVER=build`), so there are no dev-server compile timeouts. A failure there is a real failure.
