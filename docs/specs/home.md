@@ -126,7 +126,7 @@ Row wraps (Figma mobile wraps to two rows). Desktop: right-aligned (`justify-end
 - The Figma frames show "Bukit Jambul to Sungai Nibong" selected: that state is `/?area=bukit-jambul`. The visual test uses that URL (record it in `tests/visual/states.ts`).
 - Filtering happens in the browser on the list passed from the server (all active and upcoming announcements); no loading state.
 
-**Which items, which order. Decision:** announcements with status `active` or `upcoming` whose `areaIds` include the chosen area (all of them for All areas), sorted by `startDate` ascending (earliest first), at most 3. This reproduces Figma for Bukit Jambul (12 Oct closure, 26 Oct lane shift, 3 Nov night works). Ended items never show.
+**Which items, which order. Decision:** announcements and road works with status `active` or `upcoming` whose `areaIds` include the chosen area (all of them for All areas), sorted by `startDate` ascending (earliest first), at most 3. This reproduces Figma for Bukit Jambul (12 Oct closure, 26 Oct lane shift, 3 Nov night works). Ended items never show.
 
 **Area update card list** (37:1433): one `surface` card, border `gray-200`, radius `2xl` (16), items separated by 1 px `gray-200`. `<ul>`; each item `<li>`:
 - Text column: Tag (if `status === 'upcoming'` the **Upcoming** tag, otherwise the type tag Closure / Construction / Hazard), title `h3` Body/M Semibold `gray-900`, one-line summary Body/S `gray-600` (`announcement.summary`).
