@@ -4,6 +4,8 @@
  */
 export const routes = {
   home: '/',
+  /** A section deep link: `<path>#<id>`. */
+  withHash: (path: string, id: string) => `${path}#${id}`,
   homeWorksIn: (areaId: string) => `/?area=${areaId}#works`,
   project: {
     overview: '/project',
@@ -14,6 +16,7 @@ export const routes = {
     constructionUpdate: (updateId: string) => `/project/construction#${updateId}`,
     faq: '/project/faq',
     faqItem: (itemId: string) => `/project/faq#${itemId}`,
+    faqTopic: (topicId: string) => `/project/faq?topic=${topicId}`,
   },
   traffic: {
     overview: '/traffic',
@@ -22,10 +25,12 @@ export const routes = {
     route: '/traffic/route',
     routeAt: (stationCode: string) => `/traffic/route?station=${stationCode.toLowerCase()}`,
     announcements: '/traffic/announcements',
+    announcement: (announcementId: string) => `/traffic/announcements#${announcementId}`,
   },
   reportTrack: {
     overview: '/report-track',
     report: '/report',
+    reportAt: (stationCode: string) => `/report?station=${stationCode.toLowerCase()}`,
     submitted: (ticketId: string) => `/report/submitted/${ticketId}`,
     track: '/track',
     ticket: (ticketId: string) => `/track/${ticketId}`,

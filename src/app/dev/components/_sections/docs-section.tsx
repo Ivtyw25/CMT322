@@ -1,13 +1,23 @@
 import { routes } from '@/config/routes';
 import { devCopy } from '@/content/dev';
+import { DocsAside } from '@/components/layout/docs-aside';
 import { DocsLayout } from '@/components/layout/docs-layout';
+import { NeedHelpBlock } from '@/components/patterns/need-help-block';
 import { SectionHeading } from '@/components/patterns/section-heading';
-import { GallerySection } from '@/app/dev/components/_parts/section';
+import { GallerySection, Specimen } from '@/app/dev/components/_parts/section';
 
-const { samples, labels } = devCopy;
+const { samples, labels, states } = devCopy;
 const headings = samples.docsHeadings.map((label, index) => ({
   id: `gallery-docs-${index + 1}`,
   label,
+}));
+const nestedHeadings = samples.docsNestedHeadings.map((item, index) => ({
+  id: `gallery-nested-${index + 1}`,
+  label: item.label,
+  children: item.children.map((child, childIndex) => ({
+    id: `gallery-nested-${index + 1}-${childIndex + 1}`,
+    label: child,
+  })),
 }));
 
 export function DocsSection() {
@@ -17,9 +27,7 @@ export function DocsSection() {
         <DocsLayout
           currentHref={routes.project.about}
           onThisPage={headings}
-          needHelp={
-            <p className="type-body-xs-semibold text-gray-900">{samples.docsArticleTitle}</p>
-          }
+          aside={<NeedHelpBlock careline={samples.careline} />}
         >
           <h3 className="type-heading-s">{samples.docsArticleTitle}</h3>
           {headings.map((heading) => (
@@ -32,6 +40,18 @@ export function DocsSection() {
               ))}
             </div>
           ))}
+        </DocsLayout>
+      </div>
+      <Specimen caption={states.nestedAside} className="sm:w-72">
+        <DocsAside items={nestedHeadings} previewActiveId="gallery-nested-2-2" />
+      </Specimen>
+      <div className="-mx-5 border-y border-gray-200 md:-mx-8 lg:-mx-10">
+        <DocsLayout
+          currentHref={routes.project.stations}
+          preview={{ activeId: '' }}
+          aside={<NeedHelpBlock careline={samples.careline} />}
+        >
+          <h3 className="type-heading-s">{states.asideOnly}</h3>
         </DocsLayout>
       </div>
     </GallerySection>

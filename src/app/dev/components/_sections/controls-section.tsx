@@ -70,6 +70,29 @@ export function SegmentedSection() {
           />
         ))}
       </Specimen>
+      <Specimen caption={states.verticalSwitch} className="[&>*]:w-full sm:[&>*]:w-72">
+        <DemoSegmented
+          legend={states.verticalSwitch}
+          labels={samples.chips}
+          initial={0}
+          orientation="vertical"
+        />
+      </Specimen>
+      <Specimen caption={states.adaptiveSwitch} className="gap-6 [&>*]:w-full">
+        <DemoSegmented
+          legend={states.adaptiveSwitch}
+          labels={samples.chips}
+          initial={1}
+          orientation="adaptive"
+          className="max-w-xs"
+        />
+        <DemoSegmented
+          legend={states.adaptiveSwitch}
+          labels={samples.chips}
+          initial={2}
+          orientation="adaptive"
+        />
+      </Specimen>
     </GallerySection>
   );
 }

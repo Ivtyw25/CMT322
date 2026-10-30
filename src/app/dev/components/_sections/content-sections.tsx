@@ -13,6 +13,7 @@ import { LineRail, LineRailStop } from '@/components/patterns/line-rail';
 import { SectionHeading } from '@/components/patterns/section-heading';
 import { Stepper, type StepEntry, type StepState } from '@/components/patterns/stepper';
 import { Timeline, type TimelineEntry } from '@/components/patterns/timeline';
+import { DemoAccordionOpen } from '@/app/dev/components/_parts/demo-accordion-open';
 import { GallerySection, Specimen } from '@/app/dev/components/_parts/section';
 
 const { samples, states } = devCopy;
@@ -32,6 +33,24 @@ export function AccordionSection() {
     <GallerySection id="accordion">
       <Specimen caption={states.open} className="[&>*]:w-full">
         <Accordion items={items} defaultOpenIds={items.slice(0, 1).map((item) => item.id)} />
+      </Specimen>
+      <Specimen caption={states.eyebrowDefaultOpen} className="[&>*]:w-full">
+        <Accordion
+          size="large"
+          items={items.map((item, index) => ({
+            ...item,
+            id: `gallery-topic-${index + 1}`,
+            eyebrow: samples.accordionEyebrow,
+            defaultOpen: index === 0,
+          }))}
+        />
+      </Specimen>
+      <Specimen caption={states.openFromCode} className="[&>*]:w-full">
+        <DemoAccordionOpen
+          items={items.map((item, index) => ({ ...item, id: `gallery-code-${index + 1}` }))}
+          targetId="gallery-code-3"
+          buttonLabel={devCopy.labels.openItemButton}
+        />
       </Specimen>
     </GallerySection>
   );
@@ -74,6 +93,16 @@ export function CardsSection() {
           href={routes.project.faq}
           title={samples.cardTitle}
           className="w-full border-gray-300 sm:w-80 [&_h3]:text-primary-700"
+        >
+          <p className="type-body-xs text-gray-600">{samples.cardBody}</p>
+        </LinkCard>
+      </Specimen>
+      <Specimen caption={states.selectedCard} className="gap-6">
+        <LinkCard
+          href={routes.project.faqTopic('construction')}
+          title={samples.cardTitle}
+          selected
+          className="w-full sm:w-80"
         >
           <p className="type-body-xs text-gray-600">{samples.cardBody}</p>
         </LinkCard>
@@ -156,8 +185,8 @@ export function TimelineSection() {
       <Specimen caption={states.vertical}>
         <Timeline items={timelineItems} className="w-full sm:w-120" />
       </Specimen>
-      <Specimen caption={states.horizontal}>
-        <Timeline items={timelineItems} horizontalFromLg className="w-full" />
+      <Specimen caption={states.responsiveRow}>
+        <Timeline items={timelineItems} orientation="responsive" className="w-full" />
       </Specimen>
     </GallerySection>
   );
@@ -173,6 +202,21 @@ function stepsWithCurrent(current: number): StepEntry[] {
   });
 }
 
+const stageStates: readonly StepState[] = [
+  'complete',
+  'complete',
+  'current',
+  'upcoming',
+  'upcoming',
+  'upcoming',
+];
+const stages: StepEntry[] = samples.stagesList.map((stage, index) => ({
+  id: `stage-${index + 1}`,
+  label: stage.label,
+  detail: stage.detail,
+  state: stageStates[index] ?? 'upcoming',
+}));
+
 export function StepperSection() {
   return (
     <GallerySection id="stepper" note={devCopy.states.horizontal}>
@@ -181,6 +225,9 @@ export function StepperSection() {
           <Stepper steps={stepsWithCurrent(index)} className="w-full" />
         </Specimen>
       ))}
+      <Specimen caption={states.stages} className="sm:w-120">
+        <Stepper variant="stages" label={states.stages} steps={stages} className="w-full" />
+      </Specimen>
     </GallerySection>
   );
 }

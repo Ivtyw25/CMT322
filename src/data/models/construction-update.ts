@@ -8,7 +8,12 @@ export type ConstructionUpdate = {
   id: string;
   /** ISO 8601 date. */
   date: string;
+  /** Card title (Home "Latest construction progress"). */
   title: string;
+  /** Heading on the Construction progress timeline where Figma words it differently. Null: use title. */
+  timelineTitle: string | null;
+  /** Short label for the "On this page" list, after the date, e.g. "Pier caps completed". */
+  tocLabel: string;
   /** One sentence for cards (Home "Latest construction progress"). */
   summary: string;
   /** Full text for the Construction progress timeline. */
@@ -28,8 +33,10 @@ export type Milestone = {
   date: string;
   /** Year-month that ends a period such as "Feb to May 2026". Null for a single month. */
   endDate: string | null;
-  /** Short label as on the timeline. */
+  /** Short label as on the Construction progress timeline. */
   title: string;
+  /** Longer label for the About page timeline, e.g. "Construction begins on PSR-A to KOMTAR". */
+  longTitle: string;
   /** One or two sentences for the About page and screen readers. */
   description: string;
 };

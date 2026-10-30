@@ -4,7 +4,9 @@ import { useCallback, useRef, useState, useSyncExternalStore } from 'react';
 import { commonCopy } from '@/content/common';
 import { cn } from '@/lib/cn';
 
-export type DocsAsideItem = { id: string; label: string };
+export type DocsAsideLink = { id: string; label: string };
+/** A section heading, with the headings nested under it (one level). */
+export type DocsAsideItem = DocsAsideLink & { children?: readonly DocsAsideLink[] };
 
 /** The scroll-spy line: a section is "current" once its heading is above this many px from the top. */
 const SPY_LINE_PX = 140;
@@ -23,7 +25,47 @@ function activeIdFromPage(ids: readonly string[]): string {
   return active;
 }
 
-/** "On this page" list with scroll-spy (Figma 1:332). One link per section heading. */
+function flattenIds(items: readonly DocsAsideItem[]): string[] {
+  return items.flatMap((item) => [item.id, ...(item.children ?? []).map((child) => child.id)]);
+}
+
+type AsideLinkProps = {
+  link: DocsAsideLink;
+  active: boolean;
+  nested?: boolean;
+  onSelect: (id: string) => void;
+};
+
+function AsideLink({ link, active, nested = false, onSelect }: AsideLinkProps) {
+  return (
+    <a
+      href={`#${link.id}`}
+      aria-current={active ? 'true' : undefined}
+      onClick={() => onSelect(link.id)}
+      className={cn(
+        '-ml-0.5 block border-l-2 py-1.5 transition-colors duration-(--duration-fast) ease-(--ease-standard)',
+        nested ? 'pl-7' : 'pl-3.5',
+        nested
+          ? active
+            ? 'type-body-xs-semibold'
+            : 'type-body-xs'
+          : active
+            ? 'type-body-s-medium'
+            : 'type-body-s',
+        active
+          ? 'border-primary-600 text-primary-700'
+          : 'border-transparent text-gray-600 hover:text-gray-900',
+      )}
+    >
+      {link.label}
+    </a>
+  );
+}
+
+/**
+ * "On this page" list with scroll-spy (Figma 1:332). One link per section heading, with optional
+ * nested headings (one level). The items may change after mount (filters): the spy follows.
+ */
 export function DocsAside({
   items,
   className,
@@ -34,7 +76,7 @@ export function DocsAside({
   /** Gallery only: pin the active item. */
   previewActiveId?: string;
 }) {
-  const ids = items.map((item) => item.id);
+  const ids = flattenIds(items);
   const idKey = ids.join('|');
   const [clicked, setClicked] = useState<string | null>(null);
   const clickedRef = useRef<string | null>(null);
@@ -66,34 +108,35 @@ export function DocsAside({
   );
   const activeId = previewActiveId ?? clicked ?? fromPage;
 
+  function select(id: string) {
+    clickedRef.current = id;
+    setClicked(id);
+    document.getElementById(id)?.focus({ preventScroll: true });
+  }
+
   return (
     <nav aria-label={commonCopy.landmarks.onThisPage} className={className}>
       <p className="mb-3 type-body-xs-semibold text-gray-900">{commonCopy.landmarks.onThisPage}</p>
       <ul className="flex flex-col border-l-2 border-gray-200">
-        {items.map((item) => {
-          const active = item.id === activeId;
-          return (
-            <li key={item.id}>
-              <a
-                href={`#${item.id}`}
-                aria-current={active ? 'true' : undefined}
-                onClick={() => {
-                  clickedRef.current = item.id;
-                  setClicked(item.id);
-                  document.getElementById(item.id)?.focus({ preventScroll: true });
-                }}
-                className={cn(
-                  '-ml-0.5 block border-l-2 py-1.5 pl-3.5 type-body-s transition-colors duration-(--duration-fast) ease-(--ease-standard)',
-                  active
-                    ? 'border-primary-600 type-body-s-medium text-primary-700'
-                    : 'border-transparent text-gray-600 hover:text-gray-900',
-                )}
-              >
-                {item.label}
-              </a>
-            </li>
-          );
-        })}
+        {items.map((item) => (
+          <li key={item.id}>
+            <AsideLink link={item} active={item.id === activeId} onSelect={select} />
+            {item.children?.length ? (
+              <ul>
+                {item.children.map((child) => (
+                  <li key={child.id}>
+                    <AsideLink
+                      link={child}
+                      active={child.id === activeId}
+                      onSelect={select}
+                      nested
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </li>
+        ))}
       </ul>
     </nav>
   );
