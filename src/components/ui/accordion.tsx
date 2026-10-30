@@ -7,7 +7,8 @@ import { cn } from '@/lib/cn';
 export type AccordionEntry = {
   /** Also the URL hash that opens the item (#id). */
   id: string;
-  title: string;
+  /** Plain text, or text with parts marked up (search matches in bold). */
+  title: React.ReactNode;
   /** Small label above the title (the FAQ topic). */
   eyebrow?: string;
   /** Open on first render, and when the item first appears in a changing list. */
@@ -186,9 +187,12 @@ function AccordionItem({
         >
           <span className="flex min-w-0 flex-col gap-0.5">
             {entry.eyebrow ? (
-              <span className="type-body-xs font-normal text-gray-500">{entry.eyebrow}</span>
+              <span aria-hidden className="type-body-xs font-normal text-gray-500">
+                {entry.eyebrow}
+              </span>
             ) : null}
             {entry.title}
+            {entry.eyebrow ? <span className="sr-only">{`, ${entry.eyebrow}`}</span> : null}
           </span>
           <ChevronDown
             aria-hidden

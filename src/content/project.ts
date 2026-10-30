@@ -204,6 +204,10 @@ export const projectCopy = {
         S05: ['Bayan Lepas FIZ'],
       },
       depot: 'Depot',
+      groupLabel: 'Stations along the line',
+      keyboardHint: 'Use the arrow keys to move along the line.',
+      /** Accessible name of a stop, e.g. "S13 Jalan Universiti". */
+      stopName: (code: string, name: string) => `${code} ${name}`,
       selected: {
         hint: 'Select a station on the diagram to see what it serves.',
         link: (name: string) => `Open the ${name} station page`,
@@ -557,6 +561,23 @@ export const projectCopy = {
       /** Heading when one topic is open. */
       showingTopic: (topic: string) => `Questions about ${topic.toLowerCase()}`,
       backToAll: 'Back to all topics',
+    },
+    view: {
+      results: (query: string) => `Results for “${query}”`,
+      showMostAsked: 'Show most asked questions',
+      /** Completes "Show all 22 …". */
+      nouns: 'questions',
+      topicEmpty: 'No questions in this topic yet.',
+      status: {
+        mostAsked: (count: number) => `Showing ${count} most asked questions`,
+        all: (count: number) => `Showing all ${count} questions`,
+        topic: (count: number, topic: string) =>
+          `Showing ${count} questions about ${topic.toLowerCase()}`,
+        matches: (count: number, query: string) =>
+          count === 1 ? `1 question matches “${query}”` : `${count} questions match “${query}”`,
+        none: (query: string) => `No questions match “${query}”`,
+        topics: (count: number) => `Showing ${count} topics`,
+      },
     },
     mostAsked: {
       title: 'Most asked this month',
