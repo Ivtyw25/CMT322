@@ -457,6 +457,48 @@ test.describe('home: line preview', () => {
       await expect(page).toHaveURL(new RegExp(`${routes.project.station('S20')}$`));
     });
 
+    test('Escape closes a marker popup', async ({ page }) => {
+      await prepare(page);
+      await page.route(/tile\.openstreetmap\.org/, (route) =>
+        route.fulfill({ contentType: 'image/png', body: TILE_PNG }),
+      );
+      await page.goto(routes.home);
+      await settle(page);
+      const region = await openMap(page);
+      const marker = region.getByRole('button', { name: /^S20 KOMTAR/ });
+      await marker.focus();
+      await marker.press('Enter');
+      const link = region.getByRole('link', {
+        name: homeCopy.line.map.openStationPage('KOMTAR'),
+      });
+      await expect(link).toBeVisible();
+      await page.keyboard.press('Escape');
+      await expect(link).toBeHidden();
+    });
+
+    test('the zoom buttons disable at the limits', async ({ page }) => {
+      await prepare(page);
+      await page.route(/tile\.openstreetmap\.org/, (route) =>
+        route.fulfill({ contentType: 'image/png', body: TILE_PNG }),
+      );
+      await page.goto(routes.home);
+      await settle(page);
+      const region = await openMap(page);
+      const zoomIn = region.getByRole('button', { name: homeCopy.line.map.zoomIn });
+      const zoomOut = region.getByRole('button', { name: homeCopy.line.map.zoomOut });
+      await expect(zoomIn).toBeEnabled();
+      await expect(async () => {
+        if (await zoomIn.isEnabled()) await zoomIn.click();
+        await expect(zoomIn).toBeDisabled({ timeout: 500 });
+      }).toPass({ timeout: 20_000 });
+      await expect(zoomOut).toBeEnabled();
+      await expect(async () => {
+        if (await zoomOut.isEnabled()) await zoomOut.click();
+        await expect(zoomOut).toBeDisabled({ timeout: 500 });
+      }).toPass({ timeout: 20_000 });
+      await expect(zoomIn).toBeEnabled();
+    });
+
     test('with no tiles the map shows the error, and Try again retries', async ({ page }) => {
       await visit(page);
       const region = await openMap(page);

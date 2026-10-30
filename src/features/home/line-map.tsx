@@ -130,6 +130,9 @@ function MapCanvas({ stations, onStatus }: MapCanvasProps) {
           L.latLngBounds(stations.map((station) => [station.lat, station.lng] as [number, number])),
           { padding: [48, 48] },
         );
+        leafletMap.getContainer().addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') leafletMap.closePopup();
+        });
         leafletMap.on('zoomend', () => setZoom(leafletMap.getZoom()));
         setZoom(leafletMap.getZoom());
         setMap(leafletMap);
