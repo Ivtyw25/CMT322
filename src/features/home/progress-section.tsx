@@ -34,7 +34,7 @@ export function ProgressSection({ updates }: ProgressSectionProps) {
                 href={copy.cardHref(update.id)}
                 title={update.title}
                 media={
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-5">
                     <ImagePlaceholder decorative className="h-50 w-full" />
                     <time dateTime={update.date} className="px-5 type-body-xs text-gray-500">
                       {formatDate(update.date)}

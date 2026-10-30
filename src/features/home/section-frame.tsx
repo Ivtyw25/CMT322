@@ -57,7 +57,7 @@ export function SectionHeader({
         <h2 id={headingId} className="type-heading-xs lg:type-heading-s">
           {title}
         </h2>
-        {lede ? <p className="type-body-m text-gray-600">{lede}</p> : null}
+        {lede ? <p className="max-w-150 type-body-m text-gray-600">{lede}</p> : null}
       </div>
       {action ? <div className="md:shrink-0">{action}</div> : null}
     </div>

@@ -32,7 +32,7 @@ export function HelpSection({ careline }: HelpSectionProps) {
   return (
     <HomeSection headingId={HEADING_ID} tone="band">
       <SectionHeader headingId={HEADING_ID} title={copy.title} hidden />
-      <div className="grid gap-6 md:grid-cols-3 md:gap-0">
+      <div className="grid gap-6 md:min-h-57 md:grid-cols-3 md:gap-0">
         <HelpColumn>
           <TriangleAlert aria-hidden className="size-6 text-primary-600" />
           <h3 className="type-heading-2xs text-wrap">{copy.report.title}</h3>
@@ -58,7 +58,7 @@ export function HelpSection({ careline }: HelpSectionProps) {
             <a
               href={careline.tel}
               aria-label={callLabel}
-              className="rounded-sm text-gray-900 hover:underline"
+              className="hit-area rounded-sm text-gray-900 hover:underline"
             >
               {copy.careline.title(careline.label, careline.number)}
             </a>

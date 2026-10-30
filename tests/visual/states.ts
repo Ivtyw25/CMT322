@@ -17,15 +17,20 @@ export const visualStates: Record<string, VisualState[]> = {
       name: 'home-menu-open',
       run: async (page) => {
         const desktop = (page.viewportSize()?.width ?? 0) >= DESKTOP_MIN_WIDTH;
-        const trigger = desktop
-          ? page
-              .locator('[data-header="desktop"]')
-              .getByRole('button', { name: navGroups.project.label })
-          : page
-              .locator('[data-header="mobile"]')
-              .getByRole('button', { name: navCopy.mobile.openMenu });
-        await trigger.click();
-        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        if (desktop) {
+          const trigger = page
+            .locator('[data-header="desktop"]')
+            .getByRole('button', { name: navGroups.project.label });
+          await trigger.click();
+          await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+          return;
+        }
+        const mobile = page.locator('[data-header="mobile"]');
+        await mobile.getByRole('button', { name: navCopy.mobile.openMenu }).click();
+        // The button's name changes once the menu is open.
+        await expect(
+          mobile.getByRole('button', { name: navCopy.mobile.closeMenu }),
+        ).toHaveAttribute('aria-expanded', 'true');
       },
     },
     {

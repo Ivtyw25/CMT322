@@ -18,7 +18,7 @@ export function AboutSection() {
           <h2 id={HEADING_ID} className="type-heading-xs lg:type-heading-s">
             {copy.title}
           </h2>
-          <p className="type-body-m text-gray-700 lg:type-body-xl lg:leading-8">{copy.body}</p>
+          <p className="type-body-l leading-8 text-gray-700 lg:type-body-xl">{copy.body}</p>
           <ButtonLink href={copy.link.href}>{copy.link.label}</ButtonLink>
         </div>
         <Image

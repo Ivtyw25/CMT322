@@ -122,7 +122,7 @@ export function WorksSubscribe({ area }: { area: SubscribeArea }) {
                 {copy.sendFailed}
               </p>
             ) : null}
-            <p className="type-body-xs text-gray-500">{copy.footnote}</p>
+            <p className="type-body-xs text-gray-600">{copy.footnote}</p>
           </form>
         </>
       )}

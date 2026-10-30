@@ -35,7 +35,7 @@ export function FaqSection({ items }: FaqSectionProps) {
             {copy.seeAll.label}
           </ButtonLink>
         </div>
-        <Accordion items={entries} defaultOpenIds={[first.id]} />
+        <Accordion items={entries} size="roomy" defaultOpenIds={[first.id]} />
       </div>
     </HomeSection>
   );

@@ -2,6 +2,7 @@ import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { homeCopy } from '@/content/home';
 import type { Station } from '@/data/models/station';
+import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { cn } from '@/lib/cn';
 import { LineDiagramArt } from './line-diagram-art';
 import {
@@ -12,7 +13,7 @@ import {
   stationLayouts,
   type StationLayout,
 } from './line-diagram-layout';
-import { stationHref, stationLinkLabel } from './line-station';
+import { stationHref, stationNotes } from './line-station';
 
 /** Extra room around circle and label, so the focus ring does not touch them. */
 const ARM = 6;
@@ -33,12 +34,10 @@ function StationStop({ station, layout }: { station: Station; layout: StationLay
     <li>
       <Link
         href={stationHref(station.code)}
-        aria-label={stationLinkLabel(station)}
         className="group absolute block rounded-xl"
         style={{ left: box.left, top: box.top, width: box.width, height: box.height }}
       >
         <span
-          aria-hidden
           className={cn(
             'absolute flex items-center justify-center rounded-full bg-surface transition-colors duration-(--duration-fast) group-hover:bg-primary-50',
             junction ? 'border-primary-800' : branch ? 'border-primary-300' : 'border-primary-600',
@@ -56,14 +55,16 @@ function StationStop({ station, layout }: { station: Station; layout: StationLay
             className={
               junction
                 ? 'type-body-s-semibold text-primary-800'
-                : cn('type-body-xs-semibold', branch ? 'text-primary-600' : 'text-primary-700')
+                : cn(
+                    'type-body-xs-semibold',
+                    branch ? 'text-primary-600 dark:text-primary-500' : 'text-primary-700',
+                  )
             }
           >
             {station.code}
           </span>
-        </span>
+        </span>{' '}
         <span
-          aria-hidden
           className={cn(
             'absolute flex flex-col',
             label.anchor === 'end' ? 'justify-end' : 'justify-start',
@@ -87,9 +88,12 @@ function StationStop({ station, layout }: { station: Station; layout: StationLay
             {station.name}
           </span>
           {station.isProvisionalName ? (
-            <span className="type-body-xs text-gray-500">{homeCopy.line.provisionalShort}</span>
+            <span aria-hidden className="type-body-xs text-gray-500">
+              {homeCopy.line.provisionalShort}
+            </span>
           ) : null}
         </span>
+        {stationNotes(station) ? <VisuallyHidden>{stationNotes(station)}</VisuallyHidden> : null}
       </Link>
     </li>
   );

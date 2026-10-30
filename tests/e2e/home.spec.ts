@@ -364,7 +364,7 @@ test.describe('home: line preview', () => {
     await visit(page);
     const diagram = section(page, 'line-heading')
       .locator('ol')
-      .filter({ has: page.locator('a[aria-label^="S31"]') });
+      .filter({ has: page.locator('a[href$="/s31"]') });
     const links = diagram.getByRole('link');
     await expect(links).toHaveCount(stations.length);
     for (const [index, station] of stations.entries()) {

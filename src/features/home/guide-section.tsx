@@ -11,7 +11,7 @@ export function GuideSection() {
   return (
     <HomeSection headingId={HEADING_ID}>
       <SectionHeader headingId={HEADING_ID} title={copy.title} lede={copy.lede} />
-      <ul className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
+      <ul className="grid gap-6 md:grid-cols-2 md:gap-6 lg:grid-cols-4 lg:gap-y-8">
         {copy.cards.map((card) => {
           const Icon = sectionIcons[card.icon];
           return (
