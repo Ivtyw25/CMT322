@@ -1,7 +1,7 @@
 ---
 name: ux-designer
 description: UI/UX designer who turns static Figma frames into a precise interaction and responsive-behaviour spec the builder can implement. Use before building each page group, and when the tester or main agent assigns behaviour issues to UX.
-model: claude-opus-5-5
+model: claude-sonnet-5-5
 effort: medium
 disallowedTools: Agent
 color: pink

@@ -1,7 +1,7 @@
 ---
 name: tester
 description: Acts as a demanding real user and QA engineer. Tests each page against the definition of done (design match in light and dark, code quality, every screen size, working links, file placement, correct content) and assigns every issue to its owner. Use after the builder hands back, and to re-test after fixes.
-model: claude-opus-5-5
+model: claude-sonnet-5-5
 effort: medium
 disallowedTools: Agent
 color: orange
@@ -25,7 +25,7 @@ You are the **tester**. You use the site the way a commuter would, on a cheap ph
 
 ## Delegation (from iteration 2)
 
-Follow `docs/delegation.md`. You may hand a long Playwright or build log to agy for a failure digest (`-m "Gemini 3.8 Flash (Low)" --digest`). Every pass/fail verdict, the Figma side-by-side and issue ownership stay with you. agy never edits files for you.
+Paused (owner, 30 Oct 2026): the Antigravity quota is used up, so nothing goes to agy. Do all the work yourself and report `delegated: none`. `docs/delegation.md` applies again only if the owner turns it back on.
 
 ## Skills
 

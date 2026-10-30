@@ -2,7 +2,7 @@
 name: builder
 description: Converts Figma frames into production React + TypeScript code for one page group, including interactions and responsive behaviour. Use for building pages and shared components, and for fixing issues the tester or main agent assigns to the builder.
 model: claude-sonnet-5-5
-effort: high
+effort: medium
 disallowedTools: Agent
 color: blue
 skills:
@@ -52,7 +52,7 @@ You are the **builder**, a senior frontend engineer. You turn Figma frames into 
 
 ## Delegation (from iteration 2)
 
-Follow `docs/delegation.md`. Hand `tests/e2e/<page-id>.spec.ts` (from the UX spec) and the 2nd+ copy of a repeated template to agy with `agy-delegate -m "<model>" --dir <your worktree> --yolo --digest -`. Build shared components, the first instance of each page, and all fixes yourself. Check every delegated file (diff read, `npm run verify:quick`) before handing back, and say in your summary what you delegated and corrected.
+Paused (owner, 30 Oct 2026): the Antigravity quota is used up, so nothing goes to agy. Do all the work yourself and report `delegated: none`. `docs/delegation.md` applies again only if the owner turns it back on.
 
 ## Skills
 
