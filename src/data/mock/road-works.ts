@@ -1,0 +1,93 @@
+import type { RoadWork } from '@/data/models/road-work';
+
+/*
+ * Works and hazards beside the announcements. Titles and summaries of the first two and the last
+ * two are from Figma (Home 37:1025, KOMTAR 95:3102); the road-plates hazard is invented.
+ */
+export const roadWorks: RoadWork[] = [
+  {
+    id: 'komtar-pier-works-lane',
+    kind: 'construction',
+    status: 'active',
+    title: 'Left lane closed for pier works',
+    summary: 'Outside KOMTAR bus terminal. Expect slow traffic at peak hours.',
+    brief: 'Left lane closed',
+    location: 'Jalan Dr Lim Chwee Leong, George Town',
+    road: 'Jalan Dr Lim Chwee Leong',
+    areaIds: ['george-town'],
+    stationCodes: ['S20'],
+    startDate: '2026-10-05',
+    endDate: '2027-02',
+    dailyHours: null,
+    duration: 'About 5 months',
+  },
+
+  {
+    id: 'bukit-jambul-lane-shift',
+    kind: 'construction',
+    status: 'active',
+    title: 'Lane shift beside Bukit Jambul station worksite',
+    summary: 'Traffic shifts to the inner lane near the station site.',
+    brief: 'Inner lane only',
+    location: 'Jalan Bukit Jambul, Bayan Lepas',
+    road: 'Jalan Bukit Jambul',
+    areaIds: ['bukit-jambul'],
+    stationCodes: ['S09'],
+    startDate: '2026-10-26',
+    endDate: '2026-11-22',
+    dailyHours: { from: '07:00', to: '19:00' },
+    duration: '4 weeks, daytime',
+  },
+
+  {
+    id: 'jalan-universiti-road-plates',
+    kind: 'hazard',
+    status: 'active',
+    title: 'Steel road plates near Jalan Universiti station',
+    summary:
+      'Temporary steel plates cover a trench by the worksite gate. Slow down, especially on a motorcycle.',
+    brief: 'Slow down for road plates',
+    location: 'Jalan Sultan Azlan Shah, Gelugor',
+    road: 'Jalan Sultan Azlan Shah',
+    areaIds: ['gelugor'],
+    stationCodes: ['S13'],
+    startDate: '2026-10-27',
+    endDate: '2026-11-07',
+    dailyHours: null,
+    duration: '12 days',
+  },
+
+  {
+    id: 'komtar-crosshead-night-closure',
+    kind: 'construction',
+    status: 'upcoming',
+    title: 'Night lane closure for crosshead lifting',
+    summary: 'One lane closed from 10 pm to 6 am. Allow extra time at night.',
+    brief: 'One lane closed at night',
+    location: 'Jalan Magazine, George Town',
+    road: 'Jalan Magazine',
+    areaIds: ['george-town'],
+    stationCodes: ['S20'],
+    startDate: '2026-11-03',
+    endDate: '2026-11-07',
+    dailyHours: { from: '22:00', to: '06:00' },
+    duration: '5 nights',
+  },
+
+  {
+    id: 'tun-dr-awang-night-works',
+    kind: 'construction',
+    status: 'upcoming',
+    title: 'Night works on Jalan Tun Dr Awang',
+    summary: 'Box girder lifting. Expect short stops for traffic.',
+    brief: 'Short stops at night',
+    location: 'Jalan Tun Dr Awang',
+    road: 'Jalan Tun Dr Awang',
+    areaIds: ['bukit-jambul'],
+    stationCodes: ['S10'],
+    startDate: '2026-11-03',
+    endDate: '2026-11-10',
+    dailyHours: { from: '22:00', to: '06:00' },
+    duration: '1 week, nights',
+  },
+];

@@ -7,6 +7,7 @@ import {
   readStoredPreference,
   resolveTheme,
   storePreference,
+  syncThemeColor,
   THEME_STORAGE_KEY,
   type ResolvedTheme,
   type ThemePreference,
@@ -33,9 +34,17 @@ function subscribePreference(onChange: () => void): () => void {
     window.removeEventListener('storage', onStorage);
   };
 }
+/** Colours change at once: transitions are off for two frames while the theme swaps. */
 function setPreference(preference: ThemePreference): void {
+  const root = document.documentElement;
+  root.dataset.themeSwitching = '';
   storePreference(preference);
   listeners.forEach((notify) => notify());
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      delete root.dataset.themeSwitching;
+    }),
+  );
 }
 const getServerPreference = (): ThemePreference | null => null;
 
@@ -64,6 +73,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (stored !== null) applyTheme(resolvedTheme);
+    syncThemeColor();
   }, [stored, resolvedTheme]);
 
   const value = useMemo(

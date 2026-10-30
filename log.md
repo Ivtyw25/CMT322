@@ -44,13 +44,6 @@ The main agent appends one entry per iteration, using the format in `PLAN.md` §
 - Tests use port 3100 (team 2 sets `TEST_PORT=3200`); dev servers use 5173/5174.
 - The Sitemap board says "Report & Track needs an account". The UX designer decides in the report-track iteration whether Track needs sign-in. Report and Profile need it for sure.
 
-## Resume note (iteration 1, foundations, in progress)
-
-- The tester's round 1 is FAIL with 16 issues (3 major, 13 minor). The report is in the foundations worktree at docs/qa/foundations.md: builder B1–B12 (2 major), ux-designer U1–U2 (1 major: Home header Solid vs Transparent on 47:1249), content-writer 2 minor.
-- Next: send each owner its issues (round 1 of 3), have the tester re-test only the failed checks, then the main review, then merge.
-- The owner added Antigravity delegation from iteration 2 (docs/delegation.md, commit 724ff51, not pushed yet). Add it under Decisions in the foundations entry.
-- gstack browse is not installed, so the tester used Playwright scripts instead. Its first-time build needs the owner's OK.
-
 ## Token usage (tracking from 30 Oct 2026)
 
 Measured with `npm run usage:tokens [sessionId]`, which reads Claude Code's local transcripts. Every iteration entry from now on gets a **Tokens** line.
@@ -71,3 +64,51 @@ Cost is roughly calls × context. Changes from now on (main agent decision):
 3. **Lean-context rule in every brief:** test, lint and build output goes to a file, and the agent reads only the failures. No multi-file `cat`. Small Figma reads.
 4. **Antigravity** for bulk generation (docs/delegation.md) from iteration 2.
 5. **Tester re-tests only failed checks** in fix rounds.
+
+## Iteration 1: foundations (2026-10-30)
+
+**Pages:** none (shared layer). Home stays `todo` until its builder starts (spec and copy ready on `iter/2-home`).
+**Commit:** 024cb98 `feat(foundations): shared UI, site shell, session and dev gallery`
+**Deploy:** https://mutiara-connect-2hwnesw4g-ivtyw25s-projects.vercel.app (production: https://mutiara-connect.vercel.app). Smoke test: `/` 200, `/dev/components` 404 as intended, `test:links --base-url` passed (no built pages yet, so the crawl had nothing to visit).
+**Tokens:** session d192399f (this iteration's fix and re-test): 327 calls, 50M cache-read, 1.3M cache-write, 175k output. The fix-round agents peaked at 66–190k context (fresh agents), against 300–600k in the first build and test.
+
+### Done
+- **Shared UI** (`src/components/ui`, 24 files): button, button link, icon button, tag, field, text input, password input, textarea, select, file upload, radio card, switch, segmented control, tabs, filter chips, accordion, breadcrumb, link card, callout, external link. shadcn/Radix for behaviour, restyled to Figma with tokens.
+- **Layout** (`src/components/layout`, 22 files): site shell (the only `<main id="main">`), desktop header (transparent over the Home hero, solid on scroll), mobile header and drawer, nav panels, appearance and account menus, notification bar (dismiss per tab), footer with newsletter, section bar, docs layout and aside, ProtectedRoute, skip link.
+- **Patterns** (7): line rail, timeline, stepper, theme switcher, image placeholder, accent bar, section heading.
+- **lib:** session (mock, `mlc-session`), announcer, dom hooks (media query, scrolled, release focus, header menu offset), format, navigation. The no-flash head script now sets `data-theme`, `data-session` and `data-notice`.
+- **Content and data:** shell copy in `src/content/{common,nav,footer,notifications,ui,dev}.ts`. Data split per domain, adding areas, the site notice, station coordinates (VERIFY) and `getCurrentUser`. There are 11 VERIFY items in `docs/content/verify.md`.
+- **Dev gallery** at `/dev/components` (404 in production).
+- **Tests:** 7 shared e2e specs (60 tests), with the gallery added to responsive, links and a11y on the dev server.
+
+### Critique (tester and main review)
+- Round 1 (tester): 16 issues (3 major, 13 minor).
+  - Builder: menus covered the header (B1), the footer area select stretched (B2), panels stayed open across a resize (B7), Appearance menu focus and wrap (B8), "Show notice again" did nothing (B12), and 7 minor issues.
+  - UX: the spec had the Home header turning solid while a panel was open, but Figma 47:1249 shows it transparent (U1). Traffic panel sort order (U2).
+  - Content: verify.md numbering, missing change rows.
+- Fix round 1: everything fixed except B11, a mislabelled gallery field, which the main agent fixed. B8's test was wrong (Light is focused because it's the saved theme) and the tester corrected it.
+- Re-test: PASS apart from B11 (now fixed). A flaky drawer test was fixed in the test (it waited during a navigation), not by loosening thresholds.
+- Main review:
+  - The screenshots match Figma 1:127 (footer), 47:1249 (menu open) and 134:8244 (drawer, dark).
+  - Code checks: no `any` or `ts-ignore`; links come from `routes`; inline style is used only for upload progress; client components are justified.
+  - Found and fixed: under `next start`, `networkidle` never arrives because the Next router leaves the 404 prefetch bodies of unbuilt pages unread. `settle()` now waits for `load`, fonts, images and two frames.
+  - Found and fixed: the gallery-based e2e tests can't run on the production build, so `verify` now runs e2e on the dev server and the other suites on the build.
+
+### Open
+- None for the shared layer.
+- "Back to top" sits about 60 px right of Figma because the social label is "MRT Corp on social media". Accepted.
+
+### Skills used
+- Builder: figma-design-to-code, shadcn, react-best-practices, composition-patterns, responsive-design, typescript-style-guide, interaction-design.
+- UX: figma-design-to-code, interaction-design, responsive-design, accessibility-review, web-design-guidelines.
+- Content: ux-copy, figma-design-to-code.
+- Tester: accessibility-review, web-design-guidelines, figma-design-to-code. browse is not installed (its first-time build needs the owner), so Playwright scripts were used instead.
+- Main: code-review checks, commits, figma-use.
+
+### Decisions
+- **Owner decision:** bulk work goes to Antigravity from iteration 2 (`docs/delegation.md`, PLAN §4b).
+- **Owner decision:** token budget (`docs/token-budget.md`). Quiet test runners write logs to `.logs/`. Fresh agents are used for fix rounds when the old one is above about 250k, a departure from PLAN §5 step 4. Every log entry gets a Tokens line (`npm run usage:tokens`).
+- Home header stays Transparent while a nav panel is open, per Figma 47:1249 (spec decision 9). Traffic panel lists active announcements oldest first (decision 10).
+- Footer social label: the content file wins ("MRT Corp on social media"), because the names aren't links (owner decision), so "Follow" would invite an action the page can't offer.
+- `verify` runs e2e on the dev server, because the gallery is dev-only.
+- For the owner: install gstack browse if the tester should use it (`docs/skills.md`).

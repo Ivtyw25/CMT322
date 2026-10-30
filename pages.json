@@ -125,12 +125,12 @@
         }
       ],
       "visualTolerance": 0.03,
-      "status": "in-progress",
+      "status": "todo",
       "rounds": {
         "tester": 0,
         "main": 0
       },
-      "notes": ""
+      "notes": "Spec (docs/specs/home.md) and copy ready on iter/2-home; set to in-progress when the home builder starts."
     },
     {
       "id": "project-overview",

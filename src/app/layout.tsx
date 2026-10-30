@@ -1,8 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import { commonCopy } from '@/content/common';
+import { getSiteNotice } from '@/data/api/announcements';
+import { getCurrentUser } from '@/data/api/user';
+import { AnnouncerProvider } from '@/lib/announce/announcer';
 import { cn } from '@/lib/cn';
+import { SessionProvider } from '@/lib/session';
 import { ThemeProvider } from '@/lib/theme/theme-provider';
-import { themeScript } from '@/lib/theme/theme-script';
+import { buildShellScript } from '@/lib/theme/theme-script';
 import { inter, poppins } from '@/styles/fonts';
 import '@/styles/globals.css';
 
@@ -18,14 +22,24 @@ export const viewport: Viewport = {
   colorScheme: 'light dark',
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+  const [user, notice] = await Promise.all([getCurrentUser(), getSiteNotice()]);
   return (
-    <html lang="en-MY" className={cn(poppins.variable, inter.variable)} suppressHydrationWarning>
+    <html
+      lang="en-MY"
+      className={cn(poppins.variable, inter.variable)}
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+    >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: buildShellScript(notice?.id ?? null) }} />
       </head>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <SessionProvider user={user}>
+            <AnnouncerProvider>{children}</AnnouncerProvider>
+          </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

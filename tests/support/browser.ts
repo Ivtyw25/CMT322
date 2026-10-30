@@ -28,17 +28,36 @@ export async function prepare(
   await page.route(/tile\.openstreetmap\.org/, (route) => route.abort());
 }
 
-/** Waits until fonts, images and client components have settled. */
+/**
+ * Waits until the page, fonts and images have settled. Not `networkidle`: in production the Next
+ * router leaves the bodies of 404 prefetches unread, so Chrome keeps those requests open forever.
+ */
 export async function settle(page: Page) {
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('load');
   await page.evaluate(async () => {
     await document.fonts.ready;
     await Promise.all(
       Array.from(document.images)
         .filter((image) => !image.complete)
         .map(
-          (image) => new Promise((done) => image.addEventListener('load', done, { once: true })),
+          (image) =>
+            new Promise((done) => {
+              image.addEventListener('load', done, { once: true });
+              image.addEventListener('error', done, { once: true });
+            }),
         ),
     );
+    await new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
   });
+}
+
+/**
+ * Waits until React has attached to the first element matching `selector`, so clicks and key
+ * presses are not lost to a page that is still hydrating (slow on the dev server).
+ */
+export async function whenHydrated(page: Page, selector: string) {
+  await page.waitForFunction((css) => {
+    const element = document.querySelector(css);
+    return element !== null && Object.keys(element).some((key) => key.startsWith('__reactProps'));
+  }, selector);
 }
