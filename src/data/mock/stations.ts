@@ -76,6 +76,8 @@ export const stations: Station[] = [
     area: 'Butterworth',
     areaId: 'butterworth',
     lede: 'Butterworth, at the mainland end of the line. Change here for KTM trains, the ferry and Rapid Penang buses.',
+    serves:
+      'Serves Butterworth, with links to KTM trains, the Penang ferry and Rapid Penang buses.',
     structure: 'elevated',
     connectsTo: [{ code: 'S30', distanceKm: null }],
     interchanges: ['KTM Butterworth', 'Ferry terminal', 'Rapid Penang bus terminal'],
@@ -102,6 +104,7 @@ export const stations: Station[] = [
     area: 'Butterworth',
     areaId: 'butterworth',
     lede: 'Butterworth, on the Macallum to Penang Sentral segment. The station name is provisional.',
+    serves: 'Serves the homes and shops along Jalan Bagan Luar in Butterworth.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S31', distanceKm: null },
@@ -125,6 +128,7 @@ export const stations: Station[] = [
     area: 'George Town',
     areaId: 'george-town',
     lede: 'George Town, where the Macallum to Penang Sentral segment begins. Works here start in January 2027.',
+    serves: 'Serves the Macallum Street and Weld Quay area, where the two routes meet.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S20', distanceKm: 0.79 },
@@ -148,6 +152,7 @@ export const stations: Station[] = [
     area: 'George Town',
     areaId: 'george-town',
     lede: 'George Town, on the PSR-A to KOMTAR segment. Change here for the KOMTAR bus terminal.',
+    serves: 'Serves KOMTAR Tower, the KOMTAR bus terminal and the George Town UNESCO site.',
     structure: 'elevated',
     // VERIFY: Figma lists only S19 Macallum under "Connects to"; S18 Bandar Sri Pinang is also next to KOMTAR.
     connectsTo: [{ code: 'S19', distanceKm: 0.79 }],
@@ -183,6 +188,7 @@ export const stations: Station[] = [
     area: 'George Town',
     areaId: 'george-town',
     lede: 'George Town, on the PSR-A to KOMTAR segment, beside Lebuhraya Tun Dr Lim Chong Eu.',
+    serves: 'Serves Bandar Sri Pinang and the homes beside Lebuhraya Tun Dr Lim Chong Eu.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S20', distanceKm: null },
@@ -215,6 +221,7 @@ export const stations: Station[] = [
     area: 'Jelutong',
     areaId: 'george-town',
     lede: 'Jelutong, on the PSR-A to KOMTAR segment, near the Sungai Pinang river mouth.',
+    serves: 'Serves the Sungai Pinang and Jelutong neighbourhoods.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S18', distanceKm: null },
@@ -241,6 +248,7 @@ export const stations: Station[] = [
     area: 'Jelutong',
     areaId: 'george-town',
     lede: 'Jelutong, on the PSR-A to KOMTAR segment, on the coastal side of the expressway.',
+    serves: 'Serves East Jelutong and the coastal side of the expressway.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S17', distanceKm: null },
@@ -267,6 +275,7 @@ export const stations: Station[] = [
     area: 'Jelutong',
     areaId: 'george-town',
     lede: 'Jelutong, on the PSR-A to KOMTAR segment, along the eastern waterfront.',
+    serves: 'Serves the eastern waterfront between Jelutong and Gelugor.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S16', distanceKm: null },
@@ -293,6 +302,7 @@ export const stations: Station[] = [
     area: 'Gelugor',
     areaId: 'gelugor',
     lede: 'Gelugor, on the PSR-A to KOMTAR segment, close to Jalan Gelugor.',
+    serves: 'Serves Gelugor town and the homes and schools around Jalan Gelugor.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S15', distanceKm: null },
@@ -319,6 +329,7 @@ export const stations: Station[] = [
     area: 'USM, Gelugor',
     areaId: 'gelugor',
     lede: 'Gelugor, on the PSR-A to KOMTAR segment. The closest station to the USM main campus.',
+    serves: 'Serves Universiti Sains Malaysia (USM) and nearby sports and youth facilities.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S14', distanceKm: null },
@@ -351,6 +362,7 @@ export const stations: Station[] = [
     area: 'Gelugor',
     areaId: 'gelugor',
     lede: 'Gelugor, on the PSR-A to KOMTAR segment, serving the Batu Uban neighbourhood.',
+    serves: 'Serves Batu Uban and the southern side of the USM campus.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S13', distanceKm: null },
@@ -377,6 +389,7 @@ export const stations: Station[] = [
     area: 'Sungai Dua',
     areaId: 'gelugor',
     lede: 'Sungai Dua, on the PSR-A to KOMTAR segment, next to the Sungai Dua Depot.',
+    serves: 'Serves Sungai Dua and the Sungai Dua Depot, where trains will be kept and maintained.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S12', distanceKm: null },
@@ -403,6 +416,7 @@ export const stations: Station[] = [
     area: 'Sungai Nibong',
     areaId: 'bukit-jambul',
     lede: 'Sungai Nibong, on the PSR-A to KOMTAR segment. Change here for the Sungai Nibong bus terminal.',
+    serves: 'Serves the Sungai Nibong bus terminal and the homes and shops around it.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S11', distanceKm: null },
@@ -429,6 +443,7 @@ export const stations: Station[] = [
     area: 'Bayan Lepas',
     areaId: 'bukit-jambul',
     lede: 'Bayan Lepas, on the PSR-A to KOMTAR segment, beside Bukit Jambul Complex.',
+    serves: 'Serves Bukit Jambul, its shopping complex and the homes around it.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S10', distanceKm: null },
@@ -461,6 +476,7 @@ export const stations: Station[] = [
     area: 'Bayan Baru',
     areaId: 'bukit-jambul',
     lede: 'Bayan Baru, on the PSR-A to KOMTAR segment, next to SPICE Arena.',
+    serves: 'Serves SPICE Arena and the offices and homes of Bayan Baru.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S09', distanceKm: null },
@@ -493,6 +509,7 @@ export const stations: Station[] = [
     area: 'Bayan Baru',
     areaId: 'bukit-jambul',
     lede: 'Bayan Baru, on the PSR-A to KOMTAR segment, on Jalan Tengah.',
+    serves: 'Serves Bayan Baru town centre and the offices along Jalan Tengah.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S08', distanceKm: null },
@@ -519,6 +536,8 @@ export const stations: Station[] = [
     area: 'Bayan Lepas',
     areaId: 'bayan-lepas',
     lede: 'Bayan Lepas, on the PSR-A to KOMTAR segment, at the north end of the Free Industrial Zone.',
+    serves:
+      'Serves the factories and offices at the north end of the Bayan Lepas Free Industrial Zone.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S07', distanceKm: null },
@@ -551,6 +570,8 @@ export const stations: Station[] = [
     area: 'Bayan Lepas',
     areaId: 'bayan-lepas',
     lede: 'Bayan Lepas, on the PSR-A to KOMTAR segment, at the south end of the Free Industrial Zone.',
+    serves:
+      'Serves the factories and offices at the south end of the Bayan Lepas Free Industrial Zone.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S06', distanceKm: null },
@@ -577,6 +598,7 @@ export const stations: Station[] = [
     area: 'Bayan Lepas',
     areaId: 'bayan-lepas',
     lede: 'Bayan Lepas, on the PSR-A to KOMTAR segment, serving Sungai Tiram.',
+    serves: 'Serves Sungai Tiram and the homes near the Bayan Lepas industrial area.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S05', distanceKm: null },
@@ -603,6 +625,7 @@ export const stations: Station[] = [
     area: 'Bayan Lepas',
     areaId: 'bayan-lepas',
     lede: 'Bayan Lepas, on the PSR-A to KOMTAR segment. Walk to the airport terminal from here.',
+    serves: 'Serves Penang International Airport and its terminal.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S04', distanceKm: null },
@@ -629,6 +652,7 @@ export const stations: Station[] = [
     area: 'Permatang Damar Laut',
     areaId: 'bayan-lepas',
     lede: 'Permatang Damar Laut, on the PSR-A to KOMTAR segment, south of the airport.',
+    serves: 'Serves the coastal village of Permatang Damar Laut.',
     structure: 'elevated',
     connectsTo: [
       { code: 'S03', distanceKm: null },
@@ -655,6 +679,7 @@ export const stations: Station[] = [
     area: 'Penang South Reclamation',
     areaId: 'bayan-lepas',
     lede: 'Penang South Reclamation, at the southern end of the line. The station name is provisional.',
+    serves: 'Serves Penang South Reclamation Island A, at the southern end of the line.',
     structure: 'elevated',
     connectsTo: [{ code: 'S02', distanceKm: null }],
     interchanges: [],

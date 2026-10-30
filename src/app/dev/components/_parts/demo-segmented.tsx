@@ -8,10 +8,18 @@ type DemoSegmentedProps = {
   labels: readonly string[];
   /** Index selected first. */
   initial: number;
+  orientation?: 'horizontal' | 'vertical' | 'adaptive';
+  className?: string;
 };
 
 /** A segmented control with its own state, for the gallery. */
-export function DemoSegmented({ legend, labels, initial }: DemoSegmentedProps) {
+export function DemoSegmented({
+  legend,
+  labels,
+  initial,
+  orientation,
+  className,
+}: DemoSegmentedProps) {
   const [value, setValue] = useState(labels[initial] ?? '');
   return (
     <SegmentedControl
@@ -19,6 +27,8 @@ export function DemoSegmented({ legend, labels, initial }: DemoSegmentedProps) {
       options={labels.map((label) => ({ value: label, label }))}
       value={value}
       onValueChange={setValue}
+      orientation={orientation}
+      className={className}
     />
   );
 }

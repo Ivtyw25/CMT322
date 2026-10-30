@@ -322,9 +322,12 @@ export const faqItems: FaqItem[] = [
     id: 'train-frequency',
     categoryId: 'the-line',
     question: 'How often will trains run?',
-    summary: 'The timetable will be published before the line opens.',
+    // VERIFY: About page (Figma 1:332) says every 4 minutes at opening, its "Daily commuters" tab says about every 5 minutes.
+    summary:
+      'Every 4 minutes when the line opens, and up to every 2 minutes as more people use it.',
     answer: [
-      'The timetable, including how often trains run at peak and off-peak times, will be published before the line opens.',
+      'Trains are planned to run every 4 minutes when the line opens, and up to every 2 minutes as more people use it.',
+      'The full timetable, including peak and off-peak times, will be published before the line opens.',
       'Follow a station or sign up for email updates to hear when it is announced.',
     ],
     nextSteps: [],

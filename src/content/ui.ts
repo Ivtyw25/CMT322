@@ -119,6 +119,11 @@ export const uiCopy = {
     statusLine: (status: string) => `Status: ${status}`,
   },
 
+  timeline: {
+    past: 'Done',
+    future: 'Planned',
+  },
+
   stepper: {
     label: 'Ticket status',
     completed: 'Completed',
@@ -184,4 +189,34 @@ export const uiCopy = {
   },
 
   imagePlaceholder: 'Photo not yet available',
+
+  /** Parts every docs-layout page shares (Project, Traffic, Report & Track groups). */
+  docsPage: {
+    needHelp: {
+      title: 'Need help?',
+      report: 'Report an issue',
+      track: 'Track a ticket',
+      /** e.g. "MRTCareline 1800-88-6782". Values come from getSiteInfo(). */
+      careline: (label: string, number: string) => `${label} ${number}`,
+    },
+    feedback: {
+      question: 'Was this page helpful?',
+      yes: 'Yes',
+      no: 'No',
+      thanks: 'Thanks for your feedback.',
+      reasonsLabel: 'If no, tell us why:',
+      reasons: ['Hard to find', 'Answer unclear', 'Out of date'],
+      thanksReason: "Thanks. We'll use this to improve the page.",
+    },
+    relatedPages: 'Related pages',
+  },
+
+  map: {
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    attribution: '© OpenStreetMap contributors',
+    attributionHref: 'https://www.openstreetmap.org/copyright',
+    loading: 'Loading the map',
+    unavailable: "The map couldn't load.",
+  },
 } as const;

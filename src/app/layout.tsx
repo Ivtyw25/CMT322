@@ -4,6 +4,7 @@ import { getSiteNotice } from '@/data/api/announcements';
 import { getCurrentUser } from '@/data/api/user';
 import { AnnouncerProvider } from '@/lib/announce/announcer';
 import { cn } from '@/lib/cn';
+import { FollowsProvider } from '@/lib/follows';
 import { SessionProvider } from '@/lib/session';
 import { ThemeProvider } from '@/lib/theme/theme-provider';
 import { buildShellScript } from '@/lib/theme/theme-script';
@@ -37,7 +38,9 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
       <body>
         <ThemeProvider>
           <SessionProvider user={user}>
-            <AnnouncerProvider>{children}</AnnouncerProvider>
+            <FollowsProvider accountCodes={user.followedStationCodes}>
+              <AnnouncerProvider>{children}</AnnouncerProvider>
+            </FollowsProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>

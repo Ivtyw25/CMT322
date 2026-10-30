@@ -16,10 +16,13 @@ type DocsLayoutProps = {
   currentHref: string;
   /** Groups shown in the sidebar. Defaults to Project, Traffic and Report & Track. */
   groups?: readonly DocsSidebarGroup[];
-  /** One entry per `h2` of the article, with the heading's id. */
-  onThisPage: readonly DocsAsideItem[];
-  /** The page's "Need help?" block: under the aside from 1280 px, under the article below. */
-  needHelp?: React.ReactNode;
+  /** One entry per `h2` of the article, with the heading's id. Empty: no "On this page" list. */
+  onThisPage?: readonly DocsAsideItem[];
+  /**
+   * A block for the aside column (the "Need help?" block, the follow card): under the "On this
+   * page" list from 1280 px, after the article below. It stands alone when there is no list.
+   */
+  aside?: React.ReactNode;
   /** Gallery only: show the aside at any width and pin its active item. */
   preview?: { activeId: string };
   children: React.ReactNode;
@@ -39,8 +42,8 @@ const defaultGroups: readonly DocsSidebarGroup[] = navGroupList.map((group) => (
 export function DocsLayout({
   currentHref,
   groups = defaultGroups,
-  onThisPage,
-  needHelp,
+  onThisPage = [],
+  aside,
   preview,
   children,
 }: DocsLayoutProps) {
@@ -48,6 +51,7 @@ export function DocsLayout({
     group.items.some((item) => item.href === currentHref),
   );
   const currentItem = currentGroup?.items.find((item) => item.href === currentHref);
+  const hasList = onThisPage.length > 0;
 
   return (
     <div className="flex flex-col lg:flex-row">
@@ -102,22 +106,26 @@ export function DocsLayout({
       <div className="min-w-0 flex-1 px-5 py-8 md:px-8 lg:px-14 lg:py-10">
         <div className="flex gap-14">
           <article className="max-w-article min-w-0 flex-1">{children}</article>
-          <div
-            className={cn(
-              'w-docs-aside shrink-0 flex-col gap-8',
-              preview ? 'flex' : 'hidden xl:flex',
-            )}
-          >
-            <div className="sticky top-29.25 flex max-h-[calc(100dvh-8.8125rem)] flex-col gap-8 overflow-y-auto">
-              <DocsAside items={onThisPage} previewActiveId={preview?.activeId} />
-              {needHelp ? <div className="border-t border-gray-200 pt-6">{needHelp}</div> : null}
+          {hasList || aside ? (
+            <div
+              className={cn(
+                'w-docs-aside shrink-0 flex-col gap-8',
+                preview ? 'flex' : 'hidden xl:flex',
+              )}
+            >
+              <div className="sticky top-29.25 flex max-h-[calc(100dvh-8.8125rem)] flex-col gap-8 overflow-y-auto">
+                {hasList ? (
+                  <DocsAside items={onThisPage} previewActiveId={preview?.activeId} />
+                ) : null}
+                {aside ? (
+                  <div className={cn(hasList && 'border-t border-gray-200 pt-6')}>{aside}</div>
+                ) : null}
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
-        {needHelp && !preview ? (
-          <div className="mt-10 max-w-article border-t border-gray-200 pt-6 xl:hidden">
-            {needHelp}
-          </div>
+        {aside && !preview ? (
+          <div className="mt-10 max-w-article border-t border-gray-200 pt-6 xl:hidden">{aside}</div>
         ) : null}
       </div>
     </div>

@@ -26,6 +26,7 @@ import { FieldsSection } from './_sections/fields-section';
 import { FooterSection } from './_sections/footer-section';
 import { HeaderDesktopSection } from './_sections/header-desktop-section';
 import { HeaderMobileSection } from './_sections/header-mobile-section';
+import { DocsPartsSection, FollowsSection, MapSection } from './_sections/project-parts-sections';
 import { NavPanelsSection } from './_sections/nav-panels-section';
 import { NotificationSection } from './_sections/notification-section';
 import { SectionBarSection } from './_sections/section-bar-section';
@@ -70,6 +71,9 @@ export default async function ComponentsGalleryPage() {
         <NotificationSection />
         <SectionBarSection />
         <DocsSection />
+        <DocsPartsSection />
+        <MapSection />
+        <FollowsSection />
         <FooterSection />
       </Container>
     </>

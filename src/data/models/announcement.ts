@@ -18,6 +18,9 @@ export type Announcement = {
   location: string;
   /** Main road affected, in local spelling (shown with the pin icon). */
   road: string;
+  /** Approximate position of the works, for map markers. VERIFY with the project team. */
+  lat: number;
+  lng: number;
   areaIds: AreaId[];
   stationCodes: StationCode[];
   /** ISO 8601 date, "YYYY-MM-DD". */
