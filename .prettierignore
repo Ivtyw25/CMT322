@@ -12,3 +12,4 @@ docs
 pages.json
 package-lock.json
 next-env.d.ts
+.logs/

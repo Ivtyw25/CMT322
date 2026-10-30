@@ -100,3 +100,7 @@ You will be continued with issues assigned to `ux-designer`. Update the spec, an
 - Specs written or updated
 - Key decisions for in-between breakpoints
 - Open questions for the main agent
+
+## Token budget
+
+Follow `docs/token-budget.md`: quiet commands (full logs in `.logs/`, read with grep or tail), targeted reads, small Figma reads, and the return format there.
