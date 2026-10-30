@@ -28,6 +28,10 @@ Facts that could not be confirmed. Each is also tagged `// VERIFY:` in code. Fac
 | H6 | Home vs data | announcement `sultan-azlan-shah-lane-closure` summary | Home card in Figma: "One lane each way for viaduct works." The record: "One lane closed in each direction for viaduct works." One record, one text | Resolved: record set to the Figma text (`home-data-additions.md`) |
 | H7 | Home vs data | construction update `water-mains-bayan-lepas-fiz` title | Home card in Figma: "Utility relocation at Bayan Lepas FIZ". Foundations renamed the record "Water mains moved at Bayan Lepas FIZ" | Resolved: record set back to the Figma title (`home-data-additions.md`) |
 
+## Project
+
+| # | Page / file | Key | Issue | Value kept |
+|---|---|---|---|---|
 | P1 | About, `content/project.ts` | `about.routes.tabs[1].facts` | Length and journey time for PSR-A to Penang Sentral are not in Figma or BRIEFING §8 | "To be confirmed" for both |
 | P2 | About and FAQ, `content/project.ts`, `mock/faq.ts` | `about.travelling.rows[0]`, `about.benefits.tabs[0]`, `train-frequency` | Figma says "every 4 minutes at opening" in the table and "about every 5 minutes in the early years" in the Daily commuters tab | Both Figma texts kept; FAQ answer follows the table (4 minutes) |
 | P3 | About, `mock/construction-updates.ts` | milestone `segment-2-inspection` | Figma includes the Sungai Dua Depot in the Segment 2 public inspection, but S11 Sungai Dua is on Segment 1 | Figma text kept |
