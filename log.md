@@ -120,7 +120,7 @@ Commit 3fe685a, deploy https://mutiara-connect-atb1jwqjj-ivtyw25s-projects.verce
 **Tokens:** 6 Home agents, about 62.5M cache read and 254k output (builder slices A and B plus fixes 52M, tester 9.5M, content 1.2M). The fix agent peaked at 233k context. Antigravity was paused from slice B; team agents moved to Sonnet, effort medium.
 
 ### Done
-- Home page with all 11 sections, hero search ( filters), Works in your area (announcements and road works merged), line diagram, menu-open and search-suggestion visual states, and tests/e2e/home.spec.ts.
+- Home page with all 11 sections, hero search (`?area=` filters), Works in your area (announcements and road works merged), line diagram, menu-open and search-suggestion visual states, and tests/e2e/home.spec.ts.
 - Shared: hydration-safe current-path nav on the prerendered 404 (NavCurrentAfterHydration), accordion size "roomy", cream notice bar below 1024, appearance-menu and desktop-header fixes.
 - Process (owner, 31 Oct): every suite runs on one production test build (), so verify takes about 4 minutes, down from 8–10. Testers reuse the builder's logs and check Figma by hand only where the visual diff fails.
 
