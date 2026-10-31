@@ -180,10 +180,12 @@ export function MapCanvas({
         continue;
       }
       if (previous) layer.removeLayer(previous.marker);
+      // A station marker shows its code, so its name starts with it (axe label-content-name-mismatch).
+      const name = data.code ? `${data.code} ${data.label}` : data.label;
       const marker = L.marker(latLngOf(data), {
         icon: markerIcon(data),
-        title: data.label,
-        alt: data.label,
+        title: name,
+        alt: name,
         keyboard: true,
         zIndexOffset: zOffsetOf(data),
       });
@@ -195,7 +197,7 @@ export function MapCanvas({
         key.preventDefault();
         handlers.current.onSelect?.(data.id);
       });
-      marker.once('add', () => marker.getElement()?.setAttribute('aria-label', data.label));
+      marker.once('add', () => marker.getElement()?.setAttribute('aria-label', name));
       marker.addTo(layer);
       existing.set(data.id, { marker, sig, data });
     }
