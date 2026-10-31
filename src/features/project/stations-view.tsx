@@ -34,9 +34,12 @@ function writeQuery(query: string) {
 export function StationsView({
   stations,
   initialQuery,
+  segments,
 }: {
   stations: readonly ListedStation[];
   initialQuery: string;
+  /** The line segments card, rendered on the server and shown between the field and the list. */
+  segments: React.ReactNode;
 }) {
   const router = useRouter();
   const announce = useAnnounce();
@@ -123,7 +126,8 @@ export function StationsView({
           }}
           className={cn(
             controlVariants({ tone: 'default' }),
-            'h-12.5 rounded-xl pr-12 pl-10',
+            'h-12.5 rounded-xl pl-10 type-body-s md:type-body-m',
+            query ? 'pr-12' : 'pr-4',
             '[&::-webkit-search-cancel-button]:appearance-none',
           )}
         />
@@ -139,28 +143,18 @@ export function StationsView({
         ) : null}
       </div>
 
-      <ul
-        aria-label={copy.segments.label}
-        className="grid gap-4 rounded-xl bg-gray-50 px-4 py-3.5 md:grid-cols-2"
-      >
-        {copy.segments.items.map((item) => (
-          <li key={item.segment} className="flex flex-col">
-            <p className="type-body-s-semibold text-gray-900">{item.title}</p>
-            <p className="type-body-s text-gray-600">{item.status}</p>
-          </li>
-        ))}
-      </ul>
+      {segments}
 
-      <section aria-labelledby="station-list-heading">
+      <section aria-labelledby="station-list-heading" className="md:pt-4">
         <h2 id="station-list-heading" className="sr-only">
           {copy.list.heading}
         </h2>
         {matches.length > 0 ? (
-          <LineRail variant="page" label={copy.list.label}>
+          <LineRail variant="list" label={copy.list.label}>
             {matches.map((station) => (
               <LineRailStop
                 key={station.code}
-                variant="page"
+                variant="list"
                 code={station.code}
                 title={<MatchText text={station.name} query={highlight} />}
                 description={

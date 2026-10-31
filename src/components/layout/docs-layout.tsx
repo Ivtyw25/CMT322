@@ -67,7 +67,7 @@ export function DocsLayout({
       <div className="hidden w-[calc(var(--container-docs-sidebar)+1.5rem)] shrink-0 border-r border-gray-200 lg:block">
         <nav
           aria-label={commonCopy.landmarks.sectionPages}
-          className="sticky top-29.25 flex max-h-[calc(100dvh-8.8125rem)] flex-col gap-6 overflow-y-auto px-6 py-8"
+          className="sticky top-29.25 flex max-h-[calc(100dvh-8.8125rem)] flex-col gap-6 overflow-y-auto px-6 py-9"
         >
           {groups.map((group) => (
             <div key={group.id} className="flex flex-col gap-1">
@@ -86,7 +86,7 @@ export function DocsLayout({
                         href={item.href}
                         aria-current={current ? 'page' : undefined}
                         className={cn(
-                          'block rounded-lg px-2.5 py-1.5 type-body-s transition-colors duration-(--duration-fast) ease-(--ease-standard)',
+                          'block rounded-lg px-2.5 py-2 type-body-s transition-colors duration-(--duration-fast) ease-(--ease-standard)',
                           current
                             ? 'bg-primary-50 type-body-s-semibold text-primary-700'
                             : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
@@ -103,7 +103,7 @@ export function DocsLayout({
         </nav>
       </div>
 
-      <div className="min-w-0 flex-1 px-5 py-8 md:px-8 lg:px-14 lg:py-10">
+      <div className="min-w-0 flex-1 px-5 py-7 md:px-8 lg:px-14 lg:py-12">
         <div className="flex gap-14">
           <article className="max-w-article min-w-0 flex-1">{children}</article>
           {hasList || aside ? (

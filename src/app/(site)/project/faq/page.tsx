@@ -7,6 +7,7 @@ import { uiCopy } from '@/content/ui';
 import { getFaq, getMostAskedFaq } from '@/data/api/faq';
 import { getSiteInfo } from '@/data/api/site-info';
 import { DocsPageHead } from '@/features/project/docs-page-head';
+import { DocsSectionHeading } from '@/features/project/docs-section';
 import { FaqExplorer } from '@/features/project/faq-explorer';
 import { FaqHelpCard } from '@/features/project/faq-help-card';
 
@@ -44,7 +45,12 @@ export default async function FaqPage() {
               { label: projectCopy.sectionLabel, href: routes.project.overview },
             ]}
           />
-          <FaqExplorer categories={categories} items={items} mostAsked={mostAsked} />
+          <FaqExplorer
+            categories={categories}
+            items={items}
+            mostAsked={mostAsked}
+            topicsHeading={<DocsSectionHeading id="topics" title={faq.topics.title} />}
+          />
         </div>
         <RelatedPages pages={faq.related} />
       </div>

@@ -58,7 +58,7 @@ export function FollowToggle({ code, name }: StationFollowButtonProps) {
     <Button
       variant="secondary"
       aria-pressed={following}
-      aria-label={actions.followLabel(name)}
+      aria-label={following ? `${uiCopy.station.following} ${name}` : actions.followLabel(name)}
       aria-busy={!ready || undefined}
       onClick={toggle}
       icon={

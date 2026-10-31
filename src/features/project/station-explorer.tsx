@@ -1,12 +1,11 @@
 'use client';
 
 import { MapPin } from 'lucide-react';
-import Link from 'next/link';
 import { useState } from 'react';
-import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
 import type { Station } from '@/data/models/station';
 import { RouteDiagram } from './route-diagram';
+import { DEFAULT_SERVES_CODE, StationServesCard } from './station-serves-card';
 
 export type ExplorerStation = Pick<
   Station,
@@ -14,7 +13,6 @@ export type ExplorerStation = Pick<
 >;
 
 const { stations: copy } = projectCopy.about;
-const DEFAULT_CODE = 'S13';
 
 const legendDot = 'inline-block size-3.5 rounded-full border-2 border-primary-600 bg-surface';
 
@@ -45,8 +43,8 @@ function Legend() {
 /** The route diagram and the card for the selected station. Wide screens only (the page hides it). */
 export function StationExplorer({ stations }: { stations: readonly ExplorerStation[] }) {
   const [selectedCode, setSelectedCode] = useState(
-    stations.some((station) => station.code === DEFAULT_CODE)
-      ? DEFAULT_CODE
+    stations.some((station) => station.code === DEFAULT_SERVES_CODE)
+      ? DEFAULT_SERVES_CODE
       : (stations[0]?.code ?? ''),
   );
   const selected = stations.find((station) => station.code === selectedCode);
@@ -57,28 +55,13 @@ export function StationExplorer({ stations }: { stations: readonly ExplorerStati
         <RouteDiagram stations={stations} selectedCode={selectedCode} onSelect={setSelectedCode} />
         <Legend />
       </div>
-      <div
-        aria-live="polite"
-        aria-atomic="true"
-        className="flex items-start gap-3 rounded-xl bg-primary-50 p-4"
-      >
+      <div aria-live="polite" aria-atomic="true">
         {selected ? (
-          <>
-            <span className="flex h-6 w-11 shrink-0 items-center justify-center rounded-md bg-primary-600 type-body-xs-semibold text-static-white">
-              {selected.code}
-            </span>
-            <div className="flex flex-col gap-0.5">
-              <Link
-                href={routes.project.station(selected.code)}
-                className="type-body-s-semibold text-gray-900 hover:text-primary-700 hover:underline"
-              >
-                {selected.name}
-              </Link>
-              <p className="type-body-s text-gray-700">{selected.serves || selected.subtitle}</p>
-            </div>
-          </>
+          <StationServesCard station={selected} />
         ) : (
-          <p className="type-body-s text-gray-700">{copy.selected.hint}</p>
+          <p className="rounded-xl bg-primary-50 p-4 type-body-s text-gray-700">
+            {copy.selected.hint}
+          </p>
         )}
       </div>
     </div>

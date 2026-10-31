@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import type { Careline } from '@/components/patterns/need-help-block';
 import { ButtonLink } from '@/components/ui/button-link';
 import { routes } from '@/config/routes';
@@ -8,12 +9,13 @@ const { stillNeedHelp } = projectCopy.faq;
 
 /** "Still need help?" card: replaces the generic Need help block on the FAQ page. */
 export function FaqHelpCard({ careline }: { careline: Careline }) {
+  const titleId = useId();
   return (
     <section
-      aria-labelledby="faq-help-title"
+      aria-labelledby={titleId}
       className="flex flex-col gap-3 rounded-2xl border border-gray-200 bg-gray-50 p-4"
     >
-      <h2 id="faq-help-title" className="type-body-s-semibold text-gray-900">
+      <h2 id={titleId} className="type-body-s-semibold text-gray-900">
         {stillNeedHelp.title}
       </h2>
       <p className="type-body-xs text-gray-600">{stillNeedHelp.body}</p>
@@ -26,7 +28,10 @@ export function FaqHelpCard({ careline }: { careline: Careline }) {
         </ButtonLink>
       </div>
       <p className="type-body-xs text-gray-600">
-        <a href={careline.tel} className="text-primary-700 hover:underline">
+        <a
+          href={careline.tel}
+          className="inline-flex min-h-11 items-center text-primary-700 hover:underline"
+        >
           {stillNeedHelp.careline(careline.label, careline.number)}
         </a>
       </p>

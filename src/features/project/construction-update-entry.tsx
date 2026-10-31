@@ -24,7 +24,7 @@ export function ConstructionUpdateEntry({
       <article
         id={update.id}
         aria-labelledby={titleId}
-        className="relative grid scroll-mt-32 grid-cols-[0.75rem_1fr] gap-x-4 gap-y-2 pb-10 group-last:pb-0 md:grid-cols-[7rem_0.75rem_1fr] md:gap-x-5"
+        className="relative grid scroll-mt-32 grid-cols-[0.75rem_1fr] gap-x-4 gap-y-2 pb-10 group-last:pb-0 md:grid-cols-[7rem_0.75rem_1fr] md:gap-x-5 md:pr-4"
       >
         <div className="relative col-start-1 row-span-2 row-start-1 md:col-start-2">
           <span

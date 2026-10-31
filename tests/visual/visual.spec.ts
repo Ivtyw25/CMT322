@@ -15,8 +15,18 @@ const VIEWPORTS = [
 ];
 const THEMES = ['light', 'dark'] as const;
 
-/** Share of differing pixels. Height differences count as fully different rows. */
-function compare(actual: PNG, reference: PNG, diffPath: string): number {
+function cropHeight(img: PNG, maxHeight: number): PNG {
+  if (img.height <= maxHeight) return img;
+  const out = new PNG({ width: img.width, height: maxHeight });
+  PNG.bitblt(img, out, 0, 0, img.width, maxHeight, 0, 0);
+  return out;
+}
+
+/** Share of differing pixels. A taller reference counts the missing rows as different; a page taller than its reference is cut at the reference height. */
+function compare(actualFull: PNG, reference: PNG, diffPath: string): number {
+  writeFileSync(diffPath.replace(/\.png$/, '.actual.png'), PNG.sync.write(actualFull));
+  // A reference that stops short of the page (an incomplete Figma frame) is compared over its own height.
+  const actual = cropHeight(actualFull, reference.height);
   const width = Math.max(actual.width, reference.width);
   const height = Math.max(actual.height, reference.height);
   const pad = (img: PNG) => {

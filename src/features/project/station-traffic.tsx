@@ -39,9 +39,9 @@ export function StationTraffic({
             <li key={notice.id}>
               <article
                 aria-labelledby={`notice-${notice.id}`}
-                className="flex flex-col gap-3 p-4 sm:flex-row sm:justify-between sm:gap-6"
+                className="flex flex-col gap-3 p-5 sm:flex-row sm:justify-between sm:gap-6"
               >
-                <div className="flex min-w-0 flex-col gap-2">
+                <div className="flex min-w-0 flex-col gap-1.5">
                   <div className="flex flex-wrap gap-2">
                     <Tag kind={notice.type} />
                     <Tag kind={notice.status === 'upcoming' ? 'upcoming' : 'active'} />

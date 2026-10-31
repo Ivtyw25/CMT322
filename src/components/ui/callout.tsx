@@ -30,7 +30,7 @@ export function Callout({ tone, title, children, className }: CalloutProps) {
   return (
     <div
       className={cn(
-        'flex gap-3 rounded-xl border border-primary-100 bg-primary-50 p-4 type-body-s text-gray-700',
+        'flex gap-3 rounded-xl border-l-3 border-primary-600 bg-gray-50 p-4 type-body-s text-gray-700',
         className,
       )}
     >

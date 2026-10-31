@@ -30,9 +30,10 @@ export function StationHeader({ station, stats }: StationHeaderProps) {
             { label: projectCopy.stations.sectionBarCurrent, href: routes.project.stations },
           ]}
           current={station.name}
+          tone="muted"
         />
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
-          <div className="flex min-w-0 flex-col gap-4 md:flex-row md:items-start md:gap-5">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+          <div className="flex min-w-0 flex-col gap-4 md:flex-row md:items-center md:gap-5">
             <span
               aria-hidden
               className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-600 type-heading-xs text-static-white md:size-16 md:rounded-2xl"
@@ -40,14 +41,14 @@ export function StationHeader({ station, stats }: StationHeaderProps) {
               {station.code}
             </span>
             <div className="flex min-w-0 flex-col gap-2">
-              <h1 className="type-heading-m md:type-heading-xl">
+              <h1 className="type-heading-m md:type-heading-l">
                 <span className="sr-only">{`${station.code} `}</span>
                 {station.name}
                 {station.isProvisionalName ? (
                   <span className="ml-2 type-body-l text-gray-500">{copy.header.provisional}</span>
                 ) : null}
               </h1>
-              <p className="max-w-190 type-body-m text-gray-600 md:type-body-l">{station.lede}</p>
+              <p className="max-w-190 type-body-m text-gray-600">{station.lede}</p>
               {underConstruction ? (
                 <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-warning-50 px-2.5 py-0.5 type-body-xs-medium text-warning-700">
                   <span aria-hidden className="size-1.5 rounded-full bg-warning-600" />
@@ -71,7 +72,7 @@ export function StationHeader({ station, stats }: StationHeaderProps) {
             <div
               key={stat.id}
               className={cn(
-                'flex flex-col-reverse justify-end gap-1 border-gray-200 px-5 py-4',
+                'flex flex-col-reverse justify-end gap-0.5 border-gray-200 px-5 py-4 md:px-6',
                 index % 2 === 1 && 'border-l',
                 index >= 2 && 'border-t md:border-t-0',
                 index > 0 && 'md:border-l',

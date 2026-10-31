@@ -9,18 +9,27 @@ type ChipSelectProps = Omit<React.ComponentProps<'select'>, 'className' | 'child
   /** Name for screen readers (there is no visible label). */
   label: string;
   options: readonly ChipSelectOption[];
+  /** `compact` is the 32 px chip of the Construction progress filters. */
+  density?: 'default' | 'compact';
   className?: string;
 };
 
 /** A native select styled as a filter chip, to sit beside FilterChips. */
-export function ChipSelect({ label, options, className, ...props }: ChipSelectProps) {
+export function ChipSelect({
+  label,
+  options,
+  density = 'default',
+  className,
+  ...props
+}: ChipSelectProps) {
   return (
     <div className={cn('relative inline-flex', className)}>
       <select
         aria-label={label}
         {...props}
         className={cn(
-          'hit-area cursor-pointer appearance-none rounded-full border border-gray-200 bg-surface py-1.5 pr-9 pl-3.5',
+          'hit-area cursor-pointer appearance-none rounded-full border border-gray-200 bg-surface',
+          density === 'compact' ? 'py-1.25 pr-9 pl-3' : 'py-1.5 pr-9 pl-3.5',
           'type-body-s-medium text-gray-900 transition-colors duration-(--duration-fast) ease-(--ease-standard)',
           'hover:border-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
         )}

@@ -63,12 +63,15 @@ export function StationGlance({
   return (
     <section
       aria-labelledby="station-glance"
-      className="flex flex-col gap-3 rounded-2xl border border-gray-200 bg-surface p-5"
+      className="overflow-hidden rounded-2xl border border-gray-200 bg-surface"
     >
-      <h2 id="station-glance" className="type-body-m-semibold text-gray-900">
+      <h2 id="station-glance" className="px-5 py-4 type-body-m-semibold text-gray-900">
         {glance.title}
       </h2>
-      <InfoList items={items} className="[&_dt]:w-24 [&_dt]:md:w-24" />
+      <InfoList
+        items={items}
+        className="border-b-0 [&_dd]:type-body-s [&_dd]:text-gray-900 [&_dt]:w-24 [&_dt]:type-body-s [&_dt]:text-gray-600 md:[&_dt]:w-24 [&>div]:px-5 [&>div]:py-2.5"
+      />
     </section>
   );
 }

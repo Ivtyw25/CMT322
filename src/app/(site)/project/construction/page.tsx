@@ -71,13 +71,13 @@ export default async function ConstructionPage() {
             <p>{copy.updates.note.body}</p>
             <Link
               href={routes.traffic.map}
-              className="hit-area type-body-s-medium text-primary-700 hover:underline"
+              className="hit-area type-body-s-semibold text-primary-700 hover:underline"
             >
               {copy.updates.note.link}
             </Link>
           </Callout>
           <div className="flex flex-col gap-8 border-t border-gray-200 pt-6">
-            <PageFeedback />
+            <PageFeedback icons />
             <RelatedPages pages={copy.related} />
           </div>
         </>

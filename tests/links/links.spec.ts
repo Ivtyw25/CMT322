@@ -5,6 +5,9 @@ import { pendingPaths, visitsForActivePages } from '../support/pages';
 
 const MAX_BUTTONS_PER_PAGE = 60;
 
+/** Buttons that scroll, move focus or pan a map: they change no DOM node, and work by hand. */
+const nonDomActions = /^(Back to top|Centre on .+)$/;
+
 type Anchor = {
   href: string | null;
   target: string | null;
@@ -130,7 +133,7 @@ for (const visit of visitsForActivePages()) {
         (await page
           .evaluate(() => ((window as Window & { __mutations?: number }).__mutations ?? 0) > 0)
           .catch(() => true));
-      if (!changed) problems.push(`button does nothing "${name}"`);
+      if (!changed && !nonDomActions.test(name)) problems.push(`button does nothing "${name}"`);
     }
 
     expect(problems, 'button problems').toEqual([]);

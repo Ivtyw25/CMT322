@@ -7,6 +7,7 @@ import { uiCopy } from '@/content/ui';
 import { getStations } from '@/data/api/stations';
 import { DocsPageHead } from '@/features/project/docs-page-head';
 import { StationsExplorer } from '@/features/project/stations-explorer';
+import { StationsSegments } from '@/features/project/stations-segments';
 import { StationsFollowCard } from '@/features/project/stations-follow-card';
 
 const { stations: copy } = projectCopy;
@@ -40,7 +41,7 @@ export default async function StationsPage() {
             { label: projectCopy.sectionLabel, href: routes.project.overview },
           ]}
         />
-        <StationsExplorer stations={listed} />
+        <StationsExplorer stations={listed} segments={<StationsSegments />} />
         <RelatedPages pages={copy.related} className="border-t border-gray-200 pt-8" />
       </div>
     </DocsLayout>

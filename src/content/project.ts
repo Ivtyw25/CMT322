@@ -356,8 +356,8 @@ export const projectCopy = {
     railLabel: 'About this station',
     actions: {
       follow: 'Follow station',
-      /** Accessible name of the follow button, constant in both states. */
-      followLabel: (name: string) => `Follow ${name}`,
+      /** Accessible name of the follow button; once followed it starts with the visible "Following". */
+      followLabel: (name: string) => `Follow station ${name}`,
       /** The pressed state uses uiCopy.station.following. */
       /** Live region after a change. */
       followed: (name: string) => `You are now following ${name}.`,

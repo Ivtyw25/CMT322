@@ -93,7 +93,7 @@ export default async function StationPage({ params }: StationPageProps) {
   return (
     <>
       <StationHeader station={station} stats={stats} />
-      <Container className="grid gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_clamp(18.75rem,30%,24.5rem)] lg:gap-12 lg:py-12">
+      <Container className="grid gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_clamp(18.75rem,33%,24.5rem)] lg:gap-12 lg:py-12">
         <div className="flex max-w-190 flex-col gap-12 lg:max-w-none lg:gap-14">
           <StationTraffic id="traffic" name={station.name} notices={notices} />
           <StationProgress id="progress" station={station} />

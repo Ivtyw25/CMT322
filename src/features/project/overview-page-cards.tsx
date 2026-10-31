@@ -55,7 +55,7 @@ export function OverviewPageCards() {
             <h3 id={titleId} className="type-heading-3xs text-primary-700">
               <Link
                 href={card.href}
-                className="inline-flex min-h-11 items-center hover:underline md:min-h-0"
+                className="inline-flex min-h-11 min-w-11 items-center hover:underline md:min-h-0 md:min-w-0"
               >
                 {card.title}
               </Link>

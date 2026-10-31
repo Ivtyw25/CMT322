@@ -7,7 +7,7 @@ export function AboutKeyFigures() {
       {projectCopy.about.figures.items.map((item) => (
         <div
           key={item.label}
-          className="flex flex-col-reverse gap-1 border-gray-200 px-4 odd:pl-0 even:border-l md:border-l md:px-6 md:first:border-l-0 md:first:pl-0 md:odd:pl-6"
+          className="flex flex-col-reverse gap-1 border-gray-200 px-4 odd:pl-0 even:border-l md:border-l md:px-5 md:first:border-l-0 md:first:pl-0 md:odd:pl-5"
         >
           <dt className="type-body-s text-gray-600">{item.label}</dt>
           <dd className="type-heading-xs text-primary-700 lg:type-heading-s">{item.value}</dd>

@@ -9,6 +9,7 @@ type FaqExplorerProps = {
   categories: readonly FaqCategory[];
   items: readonly FaqItem[];
   mostAsked: readonly FaqItem[];
+  topicsHeading: React.ReactNode;
 };
 
 const noUrlState: FaqUrlState = { topic: null, all: false, query: '' };

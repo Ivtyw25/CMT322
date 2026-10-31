@@ -7,7 +7,6 @@ import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import type { FaqCategory, FaqItem } from '@/data/models/faq';
 import { useAnnounce } from '@/lib/announce/announcer';
-import { DocsSection } from './docs-section';
 import { FaqAnswer } from './faq-answer';
 import { FaqQuestionText } from './faq-question-text';
 import { FaqSearchBar } from './faq-search-bar';
@@ -30,6 +29,8 @@ type FaqViewProps = {
   items: readonly FaqItem[];
   mostAsked: readonly FaqItem[];
   url: FaqUrlState;
+  /** The "Topics" `h2`, rendered on the server. */
+  topicsHeading: React.ReactNode;
 };
 
 type Mode = 'most' | 'all' | 'topic' | 'search';
@@ -52,7 +53,7 @@ function writeUrl(state: { query: string; topic: string | null; all: boolean }) 
  * Search, topics and the question list of the FAQ page. One list shows at a time: most asked,
  * all, one topic, or search results. The view lives in the URL (`?q=`, `?topic=`, `?view=all`).
  */
-export function FaqView({ categories, items, mostAsked, url }: FaqViewProps) {
+export function FaqView({ categories, items, mostAsked, url, topicsHeading }: FaqViewProps) {
   const announce = useAnnounce();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -186,7 +187,8 @@ export function FaqView({ categories, items, mostAsked, url }: FaqViewProps) {
         onQueryChange={changeQuery}
         onSubmit={() => headingRef.current?.focus()}
       />
-      <DocsSection id="topics" title={copy.topics.title} className="mt-12 lg:mt-16">
+      <section aria-labelledby="topics" className="mt-12 flex flex-col gap-5 lg:mt-16">
+        {topicsHeading}
         <FaqTopics
           categories={categories}
           counts={counts}
@@ -194,7 +196,7 @@ export function FaqView({ categories, items, mostAsked, url }: FaqViewProps) {
           onAudienceChange={changeAudience}
           activeTopic={mode === 'topic' ? topic : null}
         />
-      </DocsSection>
+      </section>
       <section aria-labelledby="questions" className="mt-12 flex flex-col gap-5 lg:mt-16">
         <div className="flex flex-col gap-1">
           <h2

@@ -37,8 +37,9 @@ async function open(page: Page, code = 'S20', options: VisitOptions = {}, width 
 }
 
 const heading = (page: Page, name: string) => page.getByRole('heading', { name, exact: true });
+const followName = (name: string) => new RegExp(`^Follow(ing| station)? ${name}$`);
 const followButton = (page: Page, name: string) =>
-  page.getByRole('button', { name: copy.actions.followLabel(name) }).first();
+  page.getByRole('button', { name: followName(name) }).first();
 const live = (page: Page) => page.locator('div[aria-live="polite"].sr-only');
 
 test.describe('station: template for all 22', () => {
@@ -309,7 +310,7 @@ test.describe('station: following', () => {
   test('the card button and the header button are the same follow state', async ({ page }) => {
     await open(page, 'S20', { signedIn: true });
     await followButton(page, 'KOMTAR').click();
-    const buttons = page.getByRole('button', { name: copy.actions.followLabel('KOMTAR') });
+    const buttons = page.getByRole('button', { name: followName('KOMTAR') });
     await expect(buttons).toHaveCount(2);
     await buttons.last().click();
     await expect(buttons.first()).toHaveAttribute('aria-pressed', 'true');

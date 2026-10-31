@@ -55,6 +55,7 @@ export default async function AboutPage() {
           breadcrumbCurrent={about.header.titleShort}
           lede={about.header.lede}
           updatedAt={about.header.updatedAt}
+          ledeSize="xl"
           breadcrumb={[
             { label: uiCopy.breadcrumb.home, href: routes.home },
             { label: projectCopy.sectionLabel, href: routes.project.overview },
@@ -100,7 +101,7 @@ export default async function AboutPage() {
           <AboutTimeline milestones={milestones} today={today} />
         </DocsSection>
         <div className="flex flex-col gap-8 border-t border-gray-200 pt-6">
-          <PageFeedback />
+          <PageFeedback icons />
           <RelatedPages pages={about.related} />
         </div>
       </div>

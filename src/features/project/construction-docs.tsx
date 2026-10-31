@@ -200,9 +200,10 @@ export function ConstructionDocs({
                 options={phaseOptions}
                 value={phase as PhaseChoice}
                 onValueChange={(next) => changeFilters(next, area)}
+                density="compact"
               />
-              <span aria-hidden className="hidden h-px w-2.5 bg-gray-300 md:block" />
               <ChipSelect
+                density="compact"
                 label={copy.updates.areaLabel}
                 value={area}
                 onChange={(event) => changeFilters(phase, event.target.value)}
