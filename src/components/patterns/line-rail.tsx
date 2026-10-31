@@ -59,8 +59,8 @@ export function LineRail({ variant = 'panel', label, children, className }: Line
 
 type LineRailStopProps = {
   variant?: LineRailVariant;
-  title: string;
-  description?: string;
+  title: React.ReactNode;
+  description?: React.ReactNode;
   /** Station code chip, e.g. "S20". */
   code?: string;
   /** Makes the whole row a link. */
@@ -121,8 +121,22 @@ export function LineRailStop({
           {title}
         </span>
         {description ? <span className="type-body-s text-gray-600">{description}</span> : null}
+        {following && variant === 'page' ? (
+          <>
+            <span className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary-50 px-2.5 py-0.5 type-body-xs-medium text-primary-700 md:hidden">
+              <Bell aria-hidden className="size-3" />
+              {uiCopy.station.following}
+            </span>
+            <span className="sr-only">{uiCopy.station.followingSr}</span>
+          </>
+        ) : null}
       </span>
-      {following ? (
+      {following && variant === 'page' ? (
+        <span className="hidden shrink-0 items-center gap-1.5 rounded-full bg-primary-50 px-2.5 py-0.5 type-body-xs-medium text-primary-700 md:inline-flex">
+          <Bell aria-hidden className="size-3" />
+          {uiCopy.station.following}
+        </span>
+      ) : following ? (
         <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-700">
           <Bell aria-hidden className="size-3.5" />
           <span className="sr-only">{uiCopy.station.followingSr}</span>

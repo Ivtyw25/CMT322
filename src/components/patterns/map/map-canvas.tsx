@@ -153,7 +153,7 @@ export function MapCanvas({
         ) : null}
       </div>
       <p className="absolute right-0 bottom-0 z-20 rounded-tl-md bg-surface px-2 py-0.5 type-body-xs text-gray-700">
-        <ExternalLink href={uiCopy.map.attributionHref} className="text-gray-700">
+        <ExternalLink href={uiCopy.map.attributionHref} className="hit-area text-gray-700">
           {uiCopy.map.attribution}
         </ExternalLink>
       </p>

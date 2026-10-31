@@ -177,7 +177,7 @@
         "mobile": "133:18202"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "in-progress",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -197,7 +197,7 @@
       },
       "notes": "Template: renders all 22 stations from the mock data, statically generated. Visual test uses /project/stations/s20.",
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "in-progress",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -213,7 +213,7 @@
         "mobile": "133:24780"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "in-progress",
       "rounds": {
         "tester": 0,
         "main": 0
