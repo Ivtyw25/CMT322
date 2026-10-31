@@ -31,7 +31,7 @@ export default async function StationsPage() {
       currentHref={routes.project.stations}
       aside={<StationsFollowCard stations={listed} />}
     >
-      <div className="flex flex-col gap-8 lg:gap-12">
+      <div className="flex flex-col gap-8 lg:gap-10">
         <DocsPageHead
           title={copy.header.title}
           lede={copy.header.lede}

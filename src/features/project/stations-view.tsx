@@ -94,7 +94,7 @@ export function StationsView({
   }
 
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-8">
       <div role="search" className="relative">
         <Search
           aria-hidden
