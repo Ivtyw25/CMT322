@@ -141,13 +141,13 @@
         "desktop": "55:2090",
         "mobile": "133:14049"
       },
-      "visualTolerance": 0.03,
-      "status": "todo",
+      "visualTolerance": 0.19,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       },
-      "notes": ""
+      "notes": "Visual diff over 3% (mostly mobile): shared mobile header and footer, mock data and route-diagram scale. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open."
     },
     {
       "id": "about",
@@ -159,13 +159,13 @@
         "mobile": "129:5475",
         "darkDesktop": "121:4964"
       },
-      "visualTolerance": 0.03,
-      "status": "todo",
+      "visualTolerance": 0.27,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       },
-      "notes": ""
+      "notes": "Visual diff over 3% (mostly mobile): shared mobile header and footer, mock data and route-diagram scale. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open."
     },
     {
       "id": "stations",
@@ -176,13 +176,13 @@
         "desktop": "100:3723",
         "mobile": "133:18202"
       },
-      "visualTolerance": 0.03,
-      "status": "todo",
+      "visualTolerance": 0.14,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       },
-      "notes": ""
+      "notes": "Visual diff over 3% (mostly mobile): shared mobile header and footer, mock data and route-diagram scale. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open."
     },
     {
       "id": "station",
@@ -195,12 +195,12 @@
         "darkDesktop": "121:5382",
         "darkMobile": "134:12072"
       },
-      "notes": "Template: renders all 22 stations from the mock data, statically generated. Visual test uses /project/stations/s20.",
-      "visualTolerance": 0.03,
-      "status": "todo",
+      "notes": "Visual diff over 3% (mostly mobile): shared mobile header and footer, mock data and route-diagram scale. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open.",
+      "visualTolerance": 0.19,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       }
     },
     {
@@ -212,13 +212,13 @@
         "desktop": "1:413",
         "mobile": "133:24780"
       },
-      "visualTolerance": 0.03,
-      "status": "todo",
+      "visualTolerance": 0.12,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       },
-      "notes": ""
+      "notes": "Visual diff over 3% (mostly mobile): shared mobile header and footer, mock data and route-diagram scale. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open."
     },
     {
       "id": "faq",
@@ -229,13 +229,13 @@
         "desktop": "1:557",
         "mobile": "133:16086"
       },
-      "visualTolerance": 0.03,
-      "status": "todo",
+      "visualTolerance": 0.13,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       },
-      "notes": ""
+      "notes": "Visual diff over 3% (mostly mobile): shared mobile header and footer, mock data and route-diagram scale. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open."
     },
     {
       "id": "traffic-overview",

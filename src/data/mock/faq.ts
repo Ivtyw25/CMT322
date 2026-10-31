@@ -74,7 +74,7 @@ export const faqItems: FaqItem[] = [
       { label: 'See all announcements', href: routes.traffic.announcements },
     ],
     keywords: ['alerts', 'email', 'notification', 'notice', 'follow station'],
-    mostAskedRank: 3,
+    mostAskedRank: 4,
     updatedAt: '2026-10-21',
   },
   {
@@ -315,7 +315,7 @@ export const faqItems: FaqItem[] = [
     ],
     nextSteps: [{ label: 'See the project timeline', href: routes.project.construction }],
     keywords: ['opening date', 'when', 'start running', '2031', 'operations'],
-    mostAskedRank: 4,
+    mostAskedRank: 3,
     updatedAt: '2026-10-21',
   },
   {

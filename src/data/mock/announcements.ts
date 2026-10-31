@@ -1,8 +1,9 @@
 import type { Announcement } from '@/data/models/announcement';
 
 /*
- * 19 traffic announcements: 3 active, 2 upcoming, 14 ended (as at 29 Oct 2026), matching the
- * Announcements tabs in Figma 1:629 (All 19, Current 3, Upcoming 2, Past 14).
+ * 21 traffic announcements: 4 active, 3 upcoming, 14 ended (as at 29 Oct 2026). Figma 1:629 shows
+ * 19 (Current 3, Upcoming 2, Past 14); the two extra KOMTAR notices are there so the KOMTAR page
+ * matches Figma 95:3102 (VERIFY).
  * The works and hazards that Home and the KOMTAR page show beside them are road-work records
  * (src/data/mock/road-works.ts), not announcements.
  */
@@ -54,6 +55,26 @@ export const announcements: Announcement[] = [
       'Rejoin Jalan Penang at the next junction.',
     ],
     publishedAt: '2026-10-13',
+  },
+  {
+    id: 'komtar-pier-works-lane',
+    type: 'construction',
+    status: 'active',
+    title: 'Left lane closed for pier works',
+    summary: 'Outside KOMTAR bus terminal. Expect slow traffic at peak hours.',
+    brief: 'Left lane closed',
+    location: 'Jalan Dr Lim Chwee Leong, George Town',
+    road: 'Jalan Dr Lim Chwee Leong',
+    lat: 5.4132,
+    lng: 100.3283,
+    areaIds: ['george-town'],
+    stationCodes: ['S20'],
+    startDate: '2026-10-05',
+    endDate: '2027-02',
+    dailyHours: null,
+    duration: 'About 5 months',
+    detour: [],
+    publishedAt: '2026-09-29', // VERIFY: invented for the KOMTAR page (Figma 95:3102)
   },
   {
     id: 'fiz-phase-3-slip-road',
@@ -123,6 +144,26 @@ export const announcements: Announcement[] = [
     duration: '2 weeks',
     detour: [],
     publishedAt: '2026-10-28',
+  },
+  {
+    id: 'komtar-crosshead-night-closure',
+    type: 'construction',
+    status: 'upcoming',
+    title: 'Night lane closure for crosshead lifting',
+    summary: 'One lane closed from 10 pm to 6 am. Allow extra time at night.',
+    brief: 'One lane closed at night',
+    location: 'Jalan Magazine, George Town',
+    road: 'Jalan Magazine',
+    lat: 5.4132,
+    lng: 100.3297,
+    areaIds: ['george-town'],
+    stationCodes: ['S20'],
+    startDate: '2026-11-03',
+    endDate: '2026-11-07',
+    dailyHours: { from: '22:00', to: '06:00' },
+    duration: '5 nights',
+    detour: [],
+    publishedAt: '2026-10-28', // VERIFY: invented for the KOMTAR page (Figma 95:3102)
   },
 
   // Ended

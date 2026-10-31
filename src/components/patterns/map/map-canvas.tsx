@@ -180,10 +180,12 @@ export function MapCanvas({
         continue;
       }
       if (previous) layer.removeLayer(previous.marker);
+      // A station marker shows its code, so its name starts with it (axe label-content-name-mismatch).
+      const name = data.code ? `${data.code} ${data.label}` : data.label;
       const marker = L.marker(latLngOf(data), {
         icon: markerIcon(data),
-        title: data.label,
-        alt: data.label,
+        title: name,
+        alt: name,
         keyboard: true,
         zIndexOffset: zOffsetOf(data),
       });
@@ -195,7 +197,7 @@ export function MapCanvas({
         key.preventDefault();
         handlers.current.onSelect?.(data.id);
       });
-      marker.once('add', () => marker.getElement()?.setAttribute('aria-label', data.label));
+      marker.once('add', () => marker.getElement()?.setAttribute('aria-label', name));
       marker.addTo(layer);
       existing.set(data.id, { marker, sig, data });
     }
@@ -375,7 +377,7 @@ export function MapCanvas({
         onCentre={centreMap}
       />
       <p className="absolute right-0 bottom-0 z-20 rounded-tl-md bg-surface px-2 py-0.5 type-body-xs text-gray-700">
-        <ExternalLink href={uiCopy.map.attributionHref} className="text-gray-700">
+        <ExternalLink href={uiCopy.map.attributionHref} className="hit-area text-gray-700">
           {uiCopy.map.attribution}
         </ExternalLink>
       </p>

@@ -11,7 +11,8 @@ export const constructionUpdates: ConstructionUpdate[] = [
     title: 'Pier caps completed along Jalan Sultan Azlan Shah',
     timelineTitle: null,
     tocLabel: 'Pier caps completed',
-    summary: 'Twelve pier caps are in place, ready for viaduct segments.',
+    summary:
+      'Twelve pier caps are now in place between the FIZ Phase 3 and Phase 4 junctions. Viaduct segment launching begins next month, mostly at night.',
     body: 'Twelve pier caps are now in place between the FIZ Phase 3 and Phase 4 junctions. Viaduct segment launching begins next month, mostly at night to limit traffic impact.',
     location: 'Jalan Sultan Azlan Shah',
     areaId: 'bayan-lepas',
