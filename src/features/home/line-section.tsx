@@ -1,9 +1,9 @@
 import { homeCopy } from '@/content/home';
 import type { Station } from '@/data/models/station';
-import { LineDiagram } from './line-diagram';
+import { LineDiagram } from '@/components/patterns/line-diagram/line-diagram';
 import { toMapStations } from './line-map-data';
 import { LinePreview } from './line-preview';
-import { LineRailView } from './line-rail-view';
+import { LineRailView } from '@/components/patterns/line-diagram/line-rail-view';
 import { HomeSection, SectionHeader } from './section-frame';
 
 const HEADING_ID = 'line-heading';

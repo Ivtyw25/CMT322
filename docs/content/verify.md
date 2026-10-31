@@ -39,3 +39,14 @@ Facts that could not be confirmed. Each is also tagged `// VERIFY:` in code. Fac
 | P5 | About, `content/project.ts` | `about.routes`, `about.travelling` | Figures cited from MRT Corp's site, not on the confirmed list: 23.67 km, about 45 minutes, 8 to 13 minutes, train frequency, 6 am to midnight, 1,000 car and 1,000 motorcycle bays, KTM Komuter and ETS at Penang Sentral | Figma values kept |
 | P6 | About, `content/project.ts` | `about.timeline.note` | Source "laluanmutiara.mymrt.com.my" has no confirmed URL; shown as plain text, not a link (BRIEFING §9) | Plain text |
 | P7 | Station template, `content/project.ts` | `station.traffic.lede`, `station.reports.lede` | Radius rules "within 1 km" (traffic) and "within 500 m" (reports) come from the KOMTAR frame; the data layer must apply the same radii | Figma values kept |
+
+## Traffic
+
+| ID | Where | Key or record | What could not be confirmed | Action |
+|---|---|---|---|---|
+| T1 | Traffic map and route view, mock data | layer counts 4 / 6 / 2 and "In this area (12)"; records `tun-dr-awang-uneven-surface` (`mock/hazards.ts`) and `jalan-gelugor-drain-works` (`mock/road-works.ts`) | Figma shows 4 road closures, 6 construction zones, 2 hazards (12). The two added records bring the totals to 4 / 6 / 2. Their text, dates and positions are invented: the "Uneven road surface" hazard (Jalan Tun Dr Awang near S09, reported 27 Oct 2026) is shown in Figma, but its wording is not. The Gelugor drain works are not in Figma. The hazard is its own record type, so Home's Bukit Jambul list is unchanged | Added both (main agent decision T1); confirm with the project team |
+| T2 | Announcements | "View notice" links | Official notice URLs are not confirmed. No notice URL field exists on the records | Builder: link to the announcement detail or leave as external placeholder (owner call) |
+| T3 | Traffic map | `map.popup.reportProblem` | Figma says "Report a problem"; the rest of the site says "Report an issue" | Kept as Figma |
+| T4 | Traffic map | `map.basemap.satellite` | Figma shows a Map/Satellite switch; OpenStreetMap has no satellite layer | Builder may drop it |
+| T5 | Traffic map | FIZ Phase 4 junction type | Map list tags it "Construction"; the announcement record has type closure | Keep Figma tag on the map card, or change the record type |
+| T6 | Route view | updated time "14:20" | Time is the design's; it should come from the data clock | Builder |

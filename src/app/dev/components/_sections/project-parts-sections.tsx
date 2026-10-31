@@ -5,6 +5,7 @@ import { LocationMap } from '@/components/patterns/map/location-map';
 import { NeedHelpBlock } from '@/components/patterns/need-help-block';
 import { PageFeedback } from '@/components/patterns/page-feedback';
 import { RelatedPages } from '@/components/patterns/related-pages';
+import { DemoTrafficMap } from '@/app/dev/components/_parts/demo-traffic-map';
 import { DemoFollows } from '@/app/dev/components/_parts/demo-follows';
 import { GallerySection, Specimen } from '@/app/dev/components/_parts/section';
 
@@ -58,6 +59,9 @@ export function MapSection() {
           interaction="full"
           className="h-60 rounded-2xl"
         />
+      </Specimen>
+      <Specimen caption={devCopy.traffic.mapCaption} className="[&>*]:w-full">
+        <DemoTrafficMap />
       </Specimen>
     </GallerySection>
   );

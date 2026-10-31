@@ -2,6 +2,7 @@
 
 import { useId } from 'react';
 import { cn } from '@/lib/cn';
+import { segmentedItemClass, segmentedTrackClass } from './segmented-styles';
 
 export type SegmentedOption<Value extends string> = {
   value: Value;
@@ -44,7 +45,7 @@ export function SegmentedControl<Value extends string>({
   const control = (
     <fieldset
       className={cn(
-        'flex gap-0.75 rounded-xl bg-gray-100 p-0.75',
+        segmentedTrackClass,
         orientation === 'horizontal' && (fullWidth ? 'w-full' : 'w-fit'),
         orientation === 'vertical' && 'w-full flex-col',
         adaptive && 'w-full flex-col @min-[41.25rem]:w-fit @min-[41.25rem]:flex-row',
@@ -56,9 +57,8 @@ export function SegmentedControl<Value extends string>({
         <label
           key={option.value}
           className={cn(
-            'hit-area relative flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-4 py-2',
-            'type-body-s-medium text-gray-700 transition-colors duration-(--duration-fast) ease-(--ease-standard)',
-            'hover:text-gray-900 has-checked:bg-surface has-checked:text-primary-700 has-checked:shadow-control',
+            segmentedItemClass,
+            'has-checked:bg-surface has-checked:text-primary-700 has-checked:shadow-control',
             'has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-600',
             fullWidth && orientation === 'horizontal' && 'flex-1',
             orientation === 'vertical' && 'min-h-11',

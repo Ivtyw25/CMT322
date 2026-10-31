@@ -32,6 +32,12 @@ import { NavPanelsSection } from './_sections/nav-panels-section';
 import { NotificationSection } from './_sections/notification-section';
 import { SectionBarSection } from './_sections/section-bar-section';
 import { TagsSection } from './_sections/tags-section';
+import {
+  LineDiagramSection,
+  PaginationSection,
+  QueryParamsSection,
+  WorkspaceSection,
+} from './_sections/traffic-parts-sections';
 import { TokensSection } from './_sections/tokens-section';
 
 export const metadata: Metadata = { title: devCopy.title, robots: { index: false } };
@@ -57,6 +63,7 @@ export default async function ComponentsGalleryPage() {
         <SwitchSection />
         <SegmentedSection />
         <TabsSection />
+        <PaginationSection />
         <ChipsSection />
         <AccordionSection />
         <BreadcrumbSection />
@@ -74,6 +81,9 @@ export default async function ComponentsGalleryPage() {
         <DocsSection />
         <DocsPartsSection />
         <MapSection />
+        <LineDiagramSection />
+        <QueryParamsSection />
+        <WorkspaceSection />
         <FollowsSection />
         <FooterSection />
       </Container>

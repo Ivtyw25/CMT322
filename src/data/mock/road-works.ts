@@ -2,7 +2,8 @@ import type { RoadWork } from '@/data/models/road-work';
 
 /*
  * Works and hazards beside the announcements. Titles and summaries of the first two and the last
- * two are from Figma (Home 37:1025, KOMTAR 95:3102); the road-plates hazard is invented.
+ * two are from Figma (Home 37:1025, KOMTAR 95:3102); the road-plates hazard and the Gelugor drain
+ * works are invented (VERIFY).
  */
 export const roadWorks: RoadWork[] = [
   {
@@ -99,5 +100,24 @@ export const roadWorks: RoadWork[] = [
     endDate: '2026-11-10',
     dailyHours: { from: '22:00', to: '06:00' },
     duration: '1 week, nights',
+  },
+
+  {
+    id: 'jalan-gelugor-drain-works',
+    kind: 'construction',
+    status: 'active',
+    title: 'Drain works beside Jalan Gelugor',
+    summary: 'One lane narrowed beside Gelugor station. Expect slow traffic in the morning.',
+    brief: 'One lane narrowed',
+    location: 'Jalan Gelugor, Gelugor',
+    road: 'Jalan Gelugor',
+    lat: 5.3694,
+    lng: 100.3118,
+    areaIds: ['gelugor'],
+    stationCodes: ['S14'],
+    startDate: '2026-10-19',
+    endDate: '2026-11-20',
+    dailyHours: { from: '09:00', to: '16:00' },
+    duration: 'About 1 month',
   },
 ];

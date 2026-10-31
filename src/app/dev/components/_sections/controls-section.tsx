@@ -1,11 +1,14 @@
 import { devCopy } from '@/content/dev';
 import { Switch } from '@/components/ui/switch';
+import { SegmentedLinks } from '@/components/ui/segmented-links';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Map, Route } from 'lucide-react';
+import { routes } from '@/config/routes';
 import { DemoChips } from '@/app/dev/components/_parts/demo-chips';
 import { DemoSegmented } from '@/app/dev/components/_parts/demo-segmented';
 import { GallerySection, Specimen } from '@/app/dev/components/_parts/section';
 
-const { samples, states, labels } = devCopy;
+const { samples, states, labels, traffic } = devCopy;
 
 type TabsDemoProps = { items: readonly string[]; width?: string };
 
@@ -78,6 +81,24 @@ export function SegmentedSection() {
           orientation="vertical"
         />
       </Specimen>
+      <Specimen caption={traffic.segmentedLinksCaption}>
+        <SegmentedLinks
+          label={traffic.segmentedLinks.label}
+          links={[
+            {
+              href: routes.traffic.route,
+              label: traffic.segmentedLinks.route,
+              icon: <Route className="size-4" />,
+              current: true,
+            },
+            {
+              href: routes.traffic.map,
+              label: traffic.segmentedLinks.map,
+              icon: <Map className="size-4" />,
+            },
+          ]}
+        />
+      </Specimen>
       <Specimen caption={states.adaptiveSwitch} className="gap-6 [&>*]:w-full">
         <DemoSegmented
           legend={states.adaptiveSwitch}
@@ -105,6 +126,22 @@ export function TabsSection() {
       </Specimen>
       <Specimen caption={states.wrapping}>
         <TabsDemo items={samples.tabsWrapping} width="w-87.5" />
+      </Specimen>
+      <Specimen caption={traffic.tabsCountCaption}>
+        <Tabs defaultValue={traffic.tabsCount[0]?.label}>
+          <TabsList aria-label={samples.fieldLabel}>
+            {traffic.tabsCount.map((tab) => (
+              <TabsTrigger key={tab.label} value={tab.label} count={tab.count}>
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {traffic.tabsCount.map((tab) => (
+            <TabsContent key={tab.label} value={tab.label} className="type-body-s text-gray-700">
+              {tab.label}
+            </TabsContent>
+          ))}
+        </Tabs>
       </Specimen>
     </GallerySection>
   );

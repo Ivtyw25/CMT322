@@ -5,7 +5,15 @@ import { cn } from '@/lib/cn';
 import { MapPlaceholder } from './map-placeholder';
 import type { LocationMapProps } from './map-types';
 
-export type { LocationMapProps, MapMarker, MapPoint } from './map-types';
+export type {
+  LocationMapProps,
+  MapLabel,
+  MapLine,
+  MapMarker,
+  MapMarkerVariant,
+  MapPoint,
+  MapZone,
+} from './map-types';
 
 const MapCanvas = dynamic(() => import('./map-canvas').then((module) => module.MapCanvas), {
   ssr: false,
