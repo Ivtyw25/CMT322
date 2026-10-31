@@ -31,7 +31,14 @@ const ACTIVE: PageStatus[] = ['in-progress', 'review', 'done', 'blocked'];
 export const activePages = manifest.pages.filter((page) => ACTIVE.includes(page.status));
 
 /** Pages whose Figma design shows a signed-in user. Tests sign in before loading them. */
-const SIGNED_IN_PAGES = new Set(['report', 'report-submitted', 'track', 'profile']);
+const SIGNED_IN_PAGES = new Set([
+  'report',
+  'report-submitted',
+  'track',
+  'profile',
+  'stations',
+  'station',
+]);
 export const needsSignIn = (pageId: string) => SIGNED_IN_PAGES.has(pageId);
 
 const stationCodes = await getStationCodes();
