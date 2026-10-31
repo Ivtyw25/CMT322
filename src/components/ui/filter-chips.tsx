@@ -32,11 +32,11 @@ export function FilterChips<Value extends string>({
             aria-pressed={pressed}
             onClick={() => onValueChange(option.value)}
             className={cn(
-              'hit-area cursor-pointer rounded-full border px-3.5 py-1.5 type-body-s-medium',
+              'hit-area cursor-pointer rounded-full border px-4 py-2 type-body-s-medium',
               'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
               pressed
                 ? 'border-gray-900 bg-gray-900 text-surface'
-                : 'border-gray-200 bg-surface text-gray-700 hover:border-gray-400',
+                : 'border-gray-300 bg-surface text-gray-700 hover:border-gray-400',
             )}
           >
             {option.label}

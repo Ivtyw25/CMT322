@@ -11,15 +11,17 @@ export function formatDate(iso: string): string {
   return day ? `${Number(day)} ${monthName} ${year}` : `${monthName} ${year}`;
 }
 
-/** "3 to 7 Nov 2026", "20 Oct to 30 Nov 2026" or "5 Oct 2026 to Feb 2027". Month-only ends are fine. */
-export function formatDateRange(start: string, end: string): string {
-  const [startYear, startMonth, startDay] = start.split('-');
-  const [endYear, endMonth, endDay] = end.split('-');
-  if (startYear !== endYear) return `${formatDate(start)} to ${formatDate(end)}`;
-  if (startMonth === endMonth && startDay && endDay) {
-    return startDay === endDay ? formatDate(end) : `${Number(startDay)} to ${formatDate(end)}`;
-  }
-  const monthName = MONTHS[Number(startMonth) - 1];
-  const startShort = startDay ? `${Number(startDay)} ${monthName}` : monthName;
-  return `${startShort} to ${formatDate(end)}`;
+/**
+ * A date range as two parts for the caller to join ("to"): "12 Oct 2026" and "Jul 2027", or
+ * "26 Oct" and "22 Nov 2026". The year is written once when both dates share it. An end with
+ * only a month ("2027-07") has no day.
+ */
+export function formatDateRange(start: string, end: string): [from: string, to: string] {
+  const startYear = start.split('-')[0];
+  const endYear = end.split('-')[0];
+  const to = formatDate(end);
+  if (startYear !== endYear) return [formatDate(start), to];
+  const [, month, day] = start.split('-');
+  const monthName = MONTHS[Number(month) - 1];
+  return [monthName ? `${Number(day)} ${monthName}` : start, to];
 }

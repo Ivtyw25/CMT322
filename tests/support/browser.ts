@@ -42,8 +42,13 @@ export async function settle(page: Page) {
         .map(
           (image) =>
             new Promise((done) => {
-              image.addEventListener('load', done, { once: true });
-              image.addEventListener('error', done, { once: true });
+              const timer = setTimeout(done, 2000);
+              const finish = () => {
+                clearTimeout(timer);
+                done(undefined);
+              };
+              image.addEventListener('load', finish, { once: true });
+              image.addEventListener('error', finish, { once: true });
             }),
         ),
     );

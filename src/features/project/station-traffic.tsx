@@ -57,7 +57,7 @@ export function StationTraffic({
                     </span>
                     <span className="flex items-center gap-1.5">
                       <Calendar aria-hidden className="size-3.5 shrink-0" />
-                      {formatDateRange(notice.startDate, notice.endDate)}
+                      {uiCopy.time.range(...formatDateRange(notice.startDate, notice.endDate))}
                     </span>
                   </div>
                 </div>

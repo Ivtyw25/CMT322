@@ -27,8 +27,8 @@ type AccordionProps = {
   openId?: string | null;
   /** Heading level of the item titles. */
   headingAs?: 'h2' | 'h3' | 'h4';
-  /** `large` is the FAQ page's question size. */
-  size?: 'default' | 'large';
+  /** `large` is the FAQ page's question size; `roomy` is Home's list (20 px rows, 10 px gap). */
+  size?: 'default' | 'large' | 'roomy';
   className?: string;
 };
 
@@ -136,7 +136,7 @@ export function Accordion({
 type AccordionItemProps = {
   entry: AccordionEntry;
   heading: 'h2' | 'h3' | 'h4';
-  size: 'default' | 'large';
+  size: 'default' | 'large' | 'roomy';
   expanded: boolean;
   onToggle: () => void;
   onFound: () => void;
@@ -180,9 +180,9 @@ function AccordionItem({
           className={cn(
             'flex min-h-11 w-full cursor-pointer items-center justify-between gap-4 text-left',
             'text-gray-900 transition-colors duration-(--duration-fast) hover:text-primary-700',
-            size === 'large'
-              ? 'py-4.5 type-body-m-semibold md:type-body-l md:font-semibold'
-              : 'py-4 type-body-m-semibold',
+            size === 'large' && 'py-4.5 type-body-m-semibold md:type-body-l md:font-semibold',
+            size === 'roomy' && ['pt-5 type-body-m-semibold', expanded ? 'pb-2.5' : 'pb-5'],
+            size === 'default' && 'py-4 type-body-m-semibold',
           )}
         >
           <span className="flex min-w-0 flex-col gap-0.5">
@@ -210,7 +210,9 @@ function AccordionItem({
         )}
       >
         <div ref={regionRef} id={regionId} className="overflow-hidden">
-          <div className="pb-4 type-body-m text-gray-700">{entry.content}</div>
+          <div className={cn('type-body-m text-gray-700', size === 'roomy' ? 'pb-5' : 'pb-4')}>
+            {entry.content}
+          </div>
         </div>
       </div>
     </div>

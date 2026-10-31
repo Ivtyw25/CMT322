@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
+import { NOT_FOUND_PATHNAME, useNavCurrent } from './nav-current';
 
 function subscribe(onChange: () => void): () => void {
   window.addEventListener('popstate', onChange);
@@ -21,5 +22,7 @@ const getBrowserPath = () =>
  */
 export function useCurrentPath(): string {
   const pathname = usePathname();
-  return useSyncExternalStore(subscribe, getBrowserPath, () => pathname);
+  // The 404 page is prerendered without the path; hydrate with what the server rendered.
+  const serverPath = useNavCurrent() ? pathname : NOT_FOUND_PATHNAME;
+  return useSyncExternalStore(subscribe, getBrowserPath, () => serverPath);
 }
