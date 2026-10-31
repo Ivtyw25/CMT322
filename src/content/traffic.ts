@@ -191,7 +191,8 @@ export const trafficCopy = {
     filters,
     diagram: {
       label: 'Diagram of the LRT Mutiara Line',
-      caption: 'Stations in line order, not to scale. Select a station to see road changes near it.',
+      caption:
+        'Stations in line order, not to scale. Select a station to see road changes near it.',
       stationButton: (code: string, name: string) => `${code} ${name}`,
       stationSelected: (code: string, name: string) => `${code} ${name}, selected`,
       stationWithChanges: (code: string, name: string, count: number) =>

@@ -80,6 +80,15 @@
 }
 
 /*
+ * Height of a workspace page (Map view, Route view): the window minus the header and notice.
+ * `--chrome-h` is kept up to date by ChromeHeight in the site shell; the rem value covers the
+ * first paint, before it runs.
+ */
+@utility workspace-height {
+  height: calc(100dvh - var(--chrome-h, 7.5rem));
+}
+
+/*
  * Shell state from the head script (src/lib/theme/theme-script.ts). Unlayered on purpose so
  * these beat any display utility. Both auth variants are rendered; CSS shows the right one
  * before first paint, and the session provider keeps data-session in sync afterwards.

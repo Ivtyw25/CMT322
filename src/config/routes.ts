@@ -55,6 +55,7 @@ export const routes = {
   },
   dev: {
     components: '/dev/components',
+    workspace: '/dev/workspace',
   },
 } as const;
 

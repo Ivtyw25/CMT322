@@ -9,15 +9,19 @@ import { RadioCard } from '@/components/ui/radio-card';
 import { Select } from '@/components/ui/select';
 import { TextInput } from '@/components/ui/text-input';
 import { Textarea } from '@/components/ui/textarea';
+import { DemoSearchInput } from '@/app/dev/components/_parts/demo-search-input';
 import { GallerySection, Specimen } from '@/app/dev/components/_parts/section';
 
-const { samples, states } = devCopy;
+const { samples, states, traffic } = devCopy;
 const errorText = uiCopy.form.errors.ticketIdInvalid;
 const columnClass = 'w-full sm:w-80';
 
 export function FieldsSection() {
   return (
     <GallerySection id="form-fields">
+      <Specimen caption={traffic.searchCaption}>
+        <DemoSearchInput />
+      </Specimen>
       <Specimen
         caption={`${states.default}, ${states.hover}, ${states.focus}, ${states.filled}`}
         className="gap-6"
