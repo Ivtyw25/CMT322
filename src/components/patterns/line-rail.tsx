@@ -74,6 +74,12 @@ type LineRailStopProps = {
   /** The page the visitor is on. */
   current?: boolean;
   onNavigate?: () => void;
+  /** Makes the whole row a toggle button (`aria-pressed` follows `selected`). Ignored with `href`. */
+  onSelect?: () => void;
+  /** Decorative symbols before the chevron (road changes near the stop). */
+  glyphs?: React.ReactNode;
+  /** Visually hidden text after the title, e.g. "2 road changes nearby". */
+  srNote?: string;
 };
 
 export function LineRailStop({
@@ -87,6 +93,9 @@ export function LineRailStop({
   selected = false,
   current = false,
   onNavigate,
+  onSelect,
+  glyphs,
+  srNote,
 }: LineRailStopProps) {
   const highlighted = selected || current;
   const body = (
@@ -115,10 +124,11 @@ export function LineRailStop({
           className={cn(
             'type-body-m-semibold',
             highlighted ? 'text-primary-700' : 'text-gray-900',
-            href && 'group-hover/stop:text-primary-700',
+            (href || onSelect) && 'group-hover/stop:text-primary-700',
           )}
         >
           {title}
+          {srNote ? <span className="sr-only">{srNote}</span> : null}
         </span>
         {description ? <span className="type-body-s text-gray-600">{description}</span> : null}
       </span>
@@ -128,7 +138,12 @@ export function LineRailStop({
           <span className="sr-only">{uiCopy.station.followingSr}</span>
         </span>
       ) : null}
-      {href && variant === 'page' ? (
+      {glyphs ? (
+        <span aria-hidden className="flex shrink-0 items-center gap-1 self-center">
+          {glyphs}
+        </span>
+      ) : null}
+      {(href || onSelect) && variant === 'page' ? (
         <ChevronRight aria-hidden className="mt-0.5 size-4.5 shrink-0 self-center text-gray-400" />
       ) : null}
     </>
@@ -148,6 +163,18 @@ export function LineRailStop({
         >
           {body}
         </Link>
+      ) : onSelect ? (
+        <button
+          type="button"
+          aria-pressed={selected}
+          onClick={onSelect}
+          className={cn(
+            'group/stop w-full cursor-pointer text-left focus-visible:-outline-offset-2',
+            rowVariants({ variant, interactive: true, selected }),
+          )}
+        >
+          {body}
+        </button>
       ) : (
         <div
           aria-current={selected ? 'true' : undefined}

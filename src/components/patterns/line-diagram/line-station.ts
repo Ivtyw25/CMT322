@@ -1,14 +1,12 @@
 import { routes } from '@/config/routes';
-import { homeCopy } from '@/content/home';
+import { lineDiagramCopy } from '@/content/line';
 import { uiCopy } from '@/content/ui';
+import { JUNCTION_CODE } from '@/data/api/line-alignment';
 import type { Station } from '@/data/models/station';
-
-/** Station code of the place where the two routes meet. */
-export const JUNCTION_CODE = 'S19';
 
 /** Spoken after the name: the provisional and junction notes ("" when neither applies). */
 export function stationNotes(station: Pick<Station, 'code' | 'isProvisionalName'>): string {
-  const copy = homeCopy.line;
+  const copy = lineDiagramCopy;
   return [
     station.isProvisionalName ? copy.provisionalSuffix : '',
     station.code === JUNCTION_CODE ? copy.junctionSuffix : '',
@@ -19,7 +17,7 @@ export function stationNotes(station: Pick<Station, 'code' | 'isProvisionalName'
 export function stationLinkLabel(
   station: Pick<Station, 'code' | 'name' | 'isProvisionalName'>,
 ): string {
-  return `${homeCopy.line.stationLabel(station.code, station.name)}${stationNotes(station)}`;
+  return `${lineDiagramCopy.stationLabel(station.code, station.name)}${stationNotes(station)}`;
 }
 
 /** The line under a station name in the rail: its landmark, or "Provisional name". */

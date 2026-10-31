@@ -42,8 +42,15 @@ export const uiCopy = {
     previous: 'Previous page',
     next: 'Next page',
     page: (page: number) => `Page ${page}`,
+    /** Between page numbers that are not next to each other. Not focusable. */
+    ellipsis: '…',
     showing: (from: number, to: number, total: number, noun: string) =>
       `Showing ${from} to ${to} of ${total} ${noun}`,
+  },
+
+  tabs: {
+    /** Read between a tab's name and its count: "Current, 3". */
+    countSeparator: ', ',
   },
 
   empty: {
@@ -75,6 +82,9 @@ export const uiCopy = {
     password: {
       show: 'Show password',
       hide: 'Hide password',
+    },
+    search: {
+      clear: 'Clear search',
     },
   },
 

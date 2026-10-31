@@ -1,3 +1,4 @@
+import { buildLineAlignment, type LineAlignment } from '@/data/api/line-alignment';
 import { stations } from '@/data/mock/stations';
 import type { Station, StationCode } from '@/data/models/station';
 
@@ -14,4 +15,12 @@ export async function getStation(code: string): Promise<Station | null> {
 
 export async function getStationCodes(): Promise<StationCode[]> {
   return (await getStations()).map((station) => station.code);
+}
+
+export type StationPoint = { code: StationCode; lat: number; lng: number };
+
+/** Station positions for drawing the line on a map, in line order. */
+export async function getLineAlignment(): Promise<LineAlignment<StationPoint>> {
+  const points = (await getStations()).map(({ code, lat, lng }) => ({ code, lat, lng }));
+  return buildLineAlignment(points);
 }
