@@ -74,18 +74,15 @@ export function SubmittedView({ ticketId, serverTicket, categories }: SubmittedV
 
   const ticket = resolved.state === 'found' ? resolved.ticket : null;
   const owner = ticket !== null && user !== null && ticket.reporterId === user.id;
-  const justSent =
-    owner &&
-    resolved.state === 'found' &&
-    resolved.fromThisBrowser &&
-    Date.now() - new Date(resolved.ticket.submittedAt).getTime() < ARRIVAL_WINDOW_MS;
+  const fromThisBrowser = resolved.state === 'found' && resolved.fromThisBrowser;
 
   useEffect(() => {
-    if (!justSent || !ticket || arrived.current) return;
+    if (!owner || !fromThisBrowser || !ticket || arrived.current) return;
+    if (Date.now() - new Date(ticket.submittedAt).getTime() >= ARRIVAL_WINDOW_MS) return;
     arrived.current = true;
     heading.current?.focus();
     announce(submitted.ticket.arrived(spokenTicketId(ticket.id)));
-  }, [justSent, ticket, announce]);
+  }, [owner, fromThisBrowser, ticket, announce]);
 
   if (resolved.state === 'loading' || status === 'loading') {
     return (

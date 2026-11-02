@@ -18,7 +18,7 @@ export function ReportContactSection({ values, update, errorOf, onBlur }: Report
       className="flex flex-col gap-5 border-t border-gray-200 pt-10"
     >
       <div className="flex flex-col gap-1.5">
-        <DocsSectionHeading id="contact" title={contact.title} />
+        <DocsSectionHeading compact id="contact" title={contact.title} />
         <p className="type-body-s text-gray-600">{contact.lede}</p>
       </div>
       <div className="grid gap-5 md:grid-cols-2">

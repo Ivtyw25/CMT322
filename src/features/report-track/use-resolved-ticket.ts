@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import type { Ticket } from '@/data/models/ticket';
 import { findSubmittedReport } from '@/lib/reports';
 
@@ -9,21 +9,29 @@ export type ResolvedTicket =
   | { state: 'missing' }
   | { state: 'found'; ticket: Ticket; fromThisBrowser: boolean };
 
+const subscribeNever = () => () => {};
+
+/** False while rendering on the server and during hydration, true afterwards. */
+function useMounted(): boolean {
+  return useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false,
+  );
+}
+
 /**
  * The ticket from the mock data when the server found one, otherwise one sent from this browser
- * (read after mount, so the server and first client render agree).
+ * (read once mounted, so the server and first client render agree).
  */
 export function useResolvedTicket(serverTicket: Ticket | null, id: string): ResolvedTicket {
-  const [stored, setStored] = useState<{ id: string; ticket: Ticket | null } | null>(null);
-
-  useEffect(() => {
-    if (serverTicket) return;
-    setStored({ id, ticket: findSubmittedReport(id) });
-  }, [serverTicket, id]);
+  const mounted = useMounted();
+  const stored = useMemo(
+    () => (mounted && !serverTicket ? findSubmittedReport(id) : null),
+    [mounted, serverTicket, id],
+  );
 
   if (serverTicket) return { state: 'found', ticket: serverTicket, fromThisBrowser: false };
-  if (stored?.id !== id) return { state: 'loading' };
-  return stored.ticket
-    ? { state: 'found', ticket: stored.ticket, fromThisBrowser: true }
-    : { state: 'missing' };
+  if (!mounted) return { state: 'loading' };
+  return stored ? { state: 'found', ticket: stored, fromThisBrowser: true } : { state: 'missing' };
 }

@@ -257,7 +257,7 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
         </Callout>
       ) : null}
 
-      <div inert={pending} className="flex flex-col gap-10">
+      <div inert={pending} className="flex flex-col gap-8 md:gap-10">
         <ReportTypeSection {...sectionProps} categories={categories} />
         <ReportDetailsSection {...sectionProps} />
         <ReportLocationSection

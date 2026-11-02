@@ -14,10 +14,10 @@ export function SubmittedTicketId({ id }: { id: string }) {
       <p aria-hidden className="type-body-s text-gray-600">
         {ticket.label}
       </p>
-      <div className="mt-1 flex flex-col items-start gap-3 md:flex-row md:items-center md:gap-4">
+      <div className="mt-1 flex flex-col items-start gap-3 min-[390px]:flex-row min-[390px]:items-center min-[390px]:gap-4">
         <p
           id={TICKET_VALUE_ID}
-          className="type-heading-xs break-all text-primary-800 min-[390px]:type-heading-s md:type-heading-m"
+          className="min-w-0 type-heading-xs text-primary-800 min-[390px]:type-heading-s md:type-heading-m lg:type-heading-l"
         >
           {id}
         </p>

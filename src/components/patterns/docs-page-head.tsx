@@ -41,7 +41,7 @@ export function DocsPageHead({
         <h1
           ref={titleRef}
           tabIndex={titleRef ? -1 : undefined}
-          className={cn('type-heading-s lg:type-heading-m', titleRef && 'outline-none')}
+          className={cn('type-heading-s lg:type-heading-m', titleRef ? 'outline-none' : undefined)}
         >
           {title}
         </h1>

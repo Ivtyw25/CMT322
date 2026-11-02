@@ -29,7 +29,7 @@ export function ReportTypeSection({
   const categoryError = errorOf('category');
   return (
     <section aria-labelledby="type" className="flex flex-col gap-5">
-      <DocsSectionHeading id="type" title={type.legend} />
+      <DocsSectionHeading compact id="type" title={type.legend} />
       <div role="radiogroup" aria-labelledby="type" className="grid gap-3 md:grid-cols-3">
         {type.options.map((option) => (
           <RadioCard
@@ -81,7 +81,7 @@ export function ReportDetailsSection({ values, update, errorOf, onBlur }: Report
       aria-labelledby="details"
       className="flex flex-col gap-5 border-t border-gray-200 pt-10"
     >
-      <DocsSectionHeading id="details" title={details.title} />
+      <DocsSectionHeading compact id="details" title={details.title} />
       <div id={reportFieldId('subject')} className="scroll-mt-35">
         <Field label={details.subject.label} error={errorOf('subject') ?? undefined}>
           <TextInput

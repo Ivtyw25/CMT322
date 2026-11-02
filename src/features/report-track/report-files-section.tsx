@@ -20,7 +20,7 @@ export function ReportFilesSection({ error, onFileCountChange, onBusyChange }: F
   return (
     <section aria-labelledby="files" className="flex flex-col gap-5 border-t border-gray-200 pt-10">
       <div className="flex flex-col gap-1.5">
-        <DocsSectionHeading id="files" title={files.title} />
+        <DocsSectionHeading compact id="files" title={files.title} />
         <p className="type-body-s text-gray-600">{files.lede}</p>
       </div>
       <div id={reportFieldId('files')} className="flex scroll-mt-35 flex-col gap-3">

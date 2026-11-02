@@ -8,7 +8,7 @@ const TIMEOUT_MS = 10_000;
 export type LocationStatus = 'idle' | 'loading' | 'denied' | 'unavailable';
 
 const subscribeNever = () => () => {};
-const supportsGeolocation = () => 'geolocation' in navigator;
+const supportsGeolocation = () => Boolean(navigator.geolocation);
 
 /** "Use my current location": one reading, 10 s timeout, no high accuracy. */
 export function useCurrentLocation(onFound: (point: ReportPoint) => void) {

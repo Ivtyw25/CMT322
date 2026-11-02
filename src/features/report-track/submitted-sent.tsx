@@ -18,6 +18,7 @@ export function SubmittedSent({
   const submitted = `${formatDate(isoDateOf(ticket.submittedAt))}, ${formatClockTime(ticket.submittedAt)}`;
   return (
     <InfoList
+      stacked
       items={[
         { id: 'type', label: rows.type, value: uiCopy.reportTypes[ticket.type] },
         { id: 'category', label: rows.category, value: category?.label ?? ticket.categoryId },

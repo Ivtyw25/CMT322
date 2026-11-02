@@ -43,6 +43,8 @@ async function fillReportForm(page: Page): Promise<void> {
   await expect(page.getByText('1.6 MB, uploaded')).toBeVisible();
   await form.getByRole('checkbox').check();
   await form.getByLabel(report.contact.email.label).focus();
+  // Focusing the field scrolled the page; the Figma frame is shot from the top.
+  await page.evaluate(() => window.scrollTo(0, 0));
 }
 
 /**
@@ -52,6 +54,24 @@ async function fillReportForm(page: Page): Promise<void> {
 export const visualStates: Record<string, VisualState[]> = {
   /** Figma shows a filled example; the form itself starts empty. A state named like its page replaces the plain shot. */
   report: [{ name: 'report', run: fillReportForm }],
+  /** The confirmation shows a skeleton until the session and the ticket are read. */
+  'report-submitted': [
+    {
+      name: 'report-submitted',
+      run: async (page) => {
+        await expect(page.locator('#ticket-id-value')).toBeVisible();
+      },
+    },
+  ],
+  /** The owner's report text appears once the session has been read. */
+  track: [
+    {
+      name: 'track',
+      run: async (page) => {
+        await expect(page.getByText('Since Monday the new hoarding')).toBeVisible();
+      },
+    },
+  ],
   home: [
     {
       name: 'home-menu-open',

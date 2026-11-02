@@ -40,10 +40,12 @@ test.describe('report submitted', () => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     await open(page, routes.reportTrack.submitted(SAMPLE_TICKET_ID));
     await page.getByRole('button', { name: submitted.ticket.copy }).click();
-    await expect(page.getByText(submitted.ticket.copied)).toBeVisible();
+    await expect(page.getByRole('button', { name: submitted.ticket.copied })).toBeVisible();
     expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(SAMPLE_TICKET_ID);
     await expect(page.getByRole('button', { name: submitted.ticket.copy })).toBeVisible();
-    await expect(page.getByText(submitted.ticket.copied)).toBeHidden({ timeout: 4000 });
+    await expect(page.getByRole('button', { name: submitted.ticket.copied })).toBeHidden({
+      timeout: 4000,
+    });
   });
 
   test('the actions go to tracking, a new report and home', async ({ page }) => {
@@ -98,9 +100,7 @@ test.describe('report submitted', () => {
 
   test('unknown IDs get the unavailable note without a log in button', async ({ page }) => {
     await open(page, routes.reportTrack.submitted('MLC-000000-0000'));
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      submitted.unavailable.heading,
-    );
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(submitted.unavailable.heading);
     await expect(page.getByText(submitted.unavailable.title)).toBeVisible();
     await expect(page.getByRole('link', { name: submitted.unavailable.login })).toHaveCount(0);
   });
@@ -108,7 +108,9 @@ test.describe('report submitted', () => {
   test('guests get the unavailable note with a log in button', async ({ page }) => {
     await open(page, routes.reportTrack.submitted(SAMPLE_TICKET_ID), false);
     await expect(page.getByText(submitted.unavailable.title)).toBeVisible();
-    await expect(page.getByRole('link', { name: submitted.unavailable.login })).toBeVisible();
+    await expect(
+      page.locator('#main').getByRole('link', { name: submitted.unavailable.login }),
+    ).toBeVisible();
     await expect(page.locator('#ticket-id-value')).toHaveCount(0);
   });
 

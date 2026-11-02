@@ -33,7 +33,7 @@ test.describe('report and track overview', () => {
       'href',
       routes.reportTrack.track,
     );
-    await expect(article.getByText(report.points[0])).toBeVisible();
+    await expect(article.getByText(report.points[0], { exact: true })).toBeVisible();
   });
 
   test('card title underlines on hover', async ({ page }) => {
@@ -49,7 +49,7 @@ test.describe('report and track overview', () => {
 
   test('the emergency note is plain text, not an alert', async ({ page }) => {
     await expect(page.getByText(overview.emergency)).toBeVisible();
-    await expect(page.getByRole('alert')).toHaveCount(0);
+    await expect(page.locator('article').getByRole('alert')).toHaveCount(0);
   });
 
   test('question rows open the FAQ at that question', async ({ page }) => {

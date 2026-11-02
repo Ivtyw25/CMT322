@@ -8,6 +8,7 @@ test.describe('mock session', () => {
   }) => {
     await prepare(page);
     await page.goto(routes.reportTrack.report);
+    await page.waitForURL(/\/login/);
     await settle(page);
     await expect(page).toHaveURL(
       new RegExp(

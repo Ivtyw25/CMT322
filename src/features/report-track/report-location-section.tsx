@@ -59,7 +59,7 @@ export function ReportLocationSection({
       className="flex flex-col gap-5 border-t border-gray-200 pt-10"
     >
       <div className="flex flex-col gap-1.5">
-        <DocsSectionHeading id="location" title={location.title} />
+        <DocsSectionHeading compact id="location" title={location.title} />
         <p className="type-body-s text-gray-600">{location.lede}</p>
       </div>
       <div id={reportFieldId('address')} className="flex scroll-mt-35 flex-col gap-2">

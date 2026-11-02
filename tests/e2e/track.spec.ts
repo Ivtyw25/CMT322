@@ -36,9 +36,7 @@ test.describe('track a ticket: search', () => {
     expect(page.url()).toContain(routes.reportTrack.track);
   });
 
-  test('a valid ID, even pasted with an en dash and spaces, opens the ticket', async ({
-    page,
-  }) => {
+  test('a valid ID, even pasted with an en dash and spaces, opens the ticket', async ({ page }) => {
     await open(page, routes.reportTrack.track);
     await page.getByLabel(track.search.label).fill('mlc–261028 – 0482');
     await page.keyboard.press('Enter');
@@ -49,7 +47,7 @@ test.describe('track a ticket: search', () => {
 
   test('a malformed ID in the address shows the error, not a 404', async ({ page }) => {
     await open(page, routes.reportTrack.ticket('abc'));
-    await expect(page.getByLabel(track.search.label)).toHaveValue('ABC');
+    await expect(page.getByLabel(track.search.label)).toHaveValue('abc');
     await expect(page.getByText(track.errors.invalid)).toBeVisible();
     await expect(page.locator('#result')).toHaveCount(0);
   });
@@ -82,7 +80,9 @@ test.describe('track a ticket: result', () => {
     await expect(page.locator('#result h2')).toBeVisible();
     await expect(page.getByText('Since Monday the new hoarding')).toHaveCount(0);
     await expect(page.getByText(track.result.privateTitle)).toBeVisible();
-    await expect(page.getByRole('link', { name: track.result.login })).toHaveAttribute(
+    await expect(
+      page.locator('#main').getByRole('link', { name: track.result.login }),
+    ).toHaveAttribute(
       'href',
       routes.account.loginReturningTo(routes.reportTrack.ticket(SAMPLE_TICKET_ID)),
     );

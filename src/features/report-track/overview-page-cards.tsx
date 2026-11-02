@@ -30,7 +30,7 @@ export function OverviewPageCards() {
             <h3 className="type-heading-3xs text-primary-700 group-hover:underline">
               <Link
                 href={href}
-                className="outline-none after:absolute after:inset-0 after:rounded-2xl"
+                className="-my-3 inline-block py-3 outline-none after:absolute after:inset-0 after:rounded-2xl"
               >
                 {card.title}
               </Link>
