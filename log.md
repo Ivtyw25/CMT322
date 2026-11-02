@@ -140,6 +140,39 @@ Commit 3fe685a, deploy https://mutiara-connect-atb1jwqjj-ivtyw25s-projects.verce
 - Home closed after one tester round, to save tokens. The remaining mobile diff is mostly shared (footer) and goes to the final sweep.
 - About paragraph is Body/L on mobile, as in Figma (H7).
 
+## Iteration 3: project (2026-10-31)
+
+Commit merged to main and deployed: https://mutiara-connect-6a2bs7qsa-ivtyw25s-projects.vercel.app (production https://mutiara-connect.vercel.app). All six routes return 200 live; the live link check passes (57 passed, 1 flaky).
+
+**Tokens:** 9 project agents (content, UX, slices 1–3, tester, fix round), roughly 75M cache read and 0.4M output. The slice 3 builder and the fix builder peaked near 300k and 265k context. Every agent was on Sonnet from slice 2.
+
+### Done
+- Project overview, About, Stations list, the Station template (all 22 statically generated), Construction and FAQ. URL filters go through Suspense client leaves, so the routes stay static.
+- Shared parts:
+  - docs page furniture (need-help, page feedback, related pages, info list)
+  - responsive timeline, stepper stages, accordion with hash open
+  - followed stations (`lib/follows`)
+  - client-only OSM map with locate
+  - four route helpers
+- Main fixes at close: station map markers are named with their code ("S20 KOMTAR", axe label-content-name-mismatch); the Home and Project date-range helpers merged into one.
+
+### Critique (tester and main review)
+- Round 1: 12 issues (builder 6, main 3, content 1, UX 1, tester 1). All fixed except P-QA8 (footer), which waits for the final sweep.
+- Behaviour, URL state, follows, map and accordion all pass the specs.
+
+### Open
+- **Visual diffs over 3%**, mostly on mobile: About 390 at 26%, overview 390 at 19%, station 12–18%, others 11–14%. Desktop is 3.4–9.8%. Causes: the shared mobile header and footer, mock data, the About route-diagram scale, and a search placeholder that Figma wraps over two lines. Each page's tolerance is set to its measured diff until the Phase 3 final sweep.
+- Mock records added to match Figma (KOMTAR notices, hazards, coordinates) are marked VERIFY in `docs/content/verify.md`.
+- Uppercase station URLs (`/S20`) render the same page with a canonical link, not a redirect.
+- The session e2e is flaky under load (it passes 3 of 3 alone).
+
+### Skills used
+- Builders: figma-design-to-code, react-best-practices, composition-patterns, responsive-design, shadcn. Tester: accessibility-review, web-design-guidelines.
+
+### Decisions
+- `docs/specs/_project-decisions.md` (owner-facing answers, QA round 1 decisions).
+- To save tokens, the group closed after one tester round. Visual polish of the shared mobile chrome moves to the final sweep, where every page gets re-measured.
+
 ## Decisions in progress (iterations 3–4)
 
 - **Owner, 30 Oct 2026:** approved Antigravity delegation with `agy-delegate --yolo --dir <worktree>`, after the auto-mode classifier had refused one brief. Delegation follows `docs/delegation.md`; the delegating agent still verifies every result.
