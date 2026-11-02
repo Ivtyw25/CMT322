@@ -34,15 +34,15 @@ When a session is near its limit, the main agent:
 
 The next session then needs only the prompt in §1.
 
-## 4. Current state (2 Nov 2026)
+## 4. Current state (3 Nov 2026)
 
 | Branch / worktree | State |
 |---|---|
-| `main` | Foundations, Home and Project (6 pages) merged, pushed and deployed. Traffic slice 1 (shared map, line diagram, pagination, tabs, workspace layout, data) is merged. |
-| `iter/4-traffic` (`mutiara-wt/traffic`) | A builder is on slice 2 (traffic-map and route-view). Next: slice 3 (overview and announcements), then the tester. Decisions: `docs/specs/_traffic-decisions.md`. |
-| `iter/5-report-track` (`mutiara-wt/report-track`) | The content writer and UX designer are running. Next: main answers the open questions and reviews `_report-track-shared.md`, then the builders. |
+| `main` | Foundations, Home, Project, Traffic and Report-track (19 pages) merged, pushed and deployed. |
+| `iter/6-account` (`mutiara-wt/account`) | Content, spec and decisions done; main merged in. A builder is on login, signup, forgot-password and profile (TEST_PORT 3600). Next: tester, fixes, close. Decisions: `docs/specs/_account-decisions.md`. |
+| `iter/7-legal-help` (`mutiara-wt/legal-help`) | One agent is writing the content and spec for terms, privacy, contact, accessibility, sitemap and not-found. Next: main answers its questions, then builder, tester, close. |
 
-Still to do: account, legal-help (one Sonnet agent writes both content and spec), and the Phase 3 final sweep. The sweep fixes the shared mobile header and footer, then re-measures every page and lowers the raised `visualTolerance` values in pages.json.
+Still to do after these: the Phase 3 final sweep. It fixes the shared mobile header and footer, R-QA1, 2, 5 and 9 (`docs/qa/report-track.md`), then re-measures every page and lowers the raised `visualTolerance` values in pages.json.
 
 ## 5. Next steps
 
