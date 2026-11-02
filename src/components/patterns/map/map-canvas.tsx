@@ -55,6 +55,9 @@ export function MapCanvas({
   focusId = null,
   focusKey = 0,
   resetBounds,
+  fitPoints,
+  fitKey = 0,
+  fitMaxZoom,
 }: LocationMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -86,6 +89,7 @@ export function MapCanvas({
     const container = containerRef.current;
     if (!container) return;
     const start = startRef.current;
+    closingByCode.current = false;
     const still = reducedMotion();
     const map = L.map(container, {
       center: [start.lat, start.lng],
@@ -140,6 +144,8 @@ export function MapCanvas({
     const zonesInMap = zoneById.current;
     return () => {
       container.removeEventListener('keydown', closeOnEscape);
+      // Taking the map down closes its popup; that is not the visitor deselecting anything.
+      closingByCode.current = true;
       map.remove();
       mapRef.current = null;
       markerLayerRef.current = null;
@@ -337,6 +343,27 @@ export function MapCanvas({
     popupRef.current?.update();
   }, [openId, popupHost]);
 
+  const fitRef = useRef({ fitPoints, fitMaxZoom });
+  useEffect(() => {
+    fitRef.current = { fitPoints, fitMaxZoom };
+  }, [fitPoints, fitMaxZoom]);
+
+  // Fit the map to `fitPoints` every time `fitKey` changes (not for key 0).
+  useEffect(() => {
+    const map = mapRef.current;
+    const { fitPoints: points, fitMaxZoom: maxZoom } = fitRef.current;
+    if (!map || !fitKey || !points || points.length === 0) return;
+    map.invalidateSize();
+    const still = reducedMotion();
+    map.fitBounds(L.latLngBounds(points.map(latLngOf)), {
+      animate: !still,
+      duration: still ? 0 : PAN_SECONDS,
+      paddingTopLeft: FIT_PADDING,
+      paddingBottomRight: FIT_PADDING,
+      maxZoom,
+    });
+  }, [fitKey]);
+
   function centreMap() {
     const map = mapRef.current;
     if (!map) return;
@@ -362,7 +389,7 @@ export function MapCanvas({
       {tiles === 'unavailable' ? (
         <MapPlaceholder
           message={unavailableText ?? uiCopy.map.unavailable}
-          className="absolute inset-0 z-10"
+          className="pointer-events-none absolute inset-0 z-10 bg-transparent"
         />
       ) : null}
       <MapControls
@@ -375,7 +402,7 @@ export function MapCanvas({
         onCentre={centreMap}
       />
       <p className="absolute right-0 bottom-0 z-20 rounded-tl-md bg-surface px-2 py-0.5 type-body-xs text-gray-700">
-        <ExternalLink href={uiCopy.map.attributionHref} className="text-gray-700">
+        <ExternalLink href={uiCopy.map.attributionHref} className="hit-area text-gray-700">
           {uiCopy.map.attribution}
         </ExternalLink>
       </p>

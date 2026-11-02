@@ -35,6 +35,26 @@ const filters = {
   },
   /** Accessible name of a layer toggle, e.g. "Road closures, 4". */
   layerCount: (name: string, count: number) => `${name}, ${count}`,
+  /** One road change of each layer, for marker names ("Road closure: Jalan ..."). */
+  layerSingular: {
+    closure: 'Road closure',
+    construction: 'Construction zone',
+    hazard: 'Traffic hazard',
+  },
+  /** Joins the two ends of a date range: "12 Oct 2026 to Jul 2027". */
+  dateRange: (from: string, to: string) => `${from} to ${to}`,
+  /** Read out politely after a filter or search changes. */
+  liveRegion: (count: number) => `${count} road ${count === 1 ? 'change' : 'changes'} shown`,
+  clearFilters: 'Clear filters',
+  /** Empty list, by what caused it. */
+  noMatch: {
+    title: 'No road changes match',
+    text: 'Try another time range or show more layers.',
+    range: 'Nothing is planned in this time range.',
+    layers: 'Turn on at least one layer to see road changes.',
+  },
+  skipToList: 'Skip to the list of road changes',
+  skipToStations: 'Skip to the stations',
 } as const;
 
 const viewSwitch = {
@@ -121,6 +141,8 @@ export const trafficCopy = {
     layout: {
       panelLabel: 'Map controls and results',
       mapLabel: 'Map of road changes along the LRT Mutiara Line',
+      /** Over the map when its tiles cannot load. */
+      unavailable: 'The map could not load. The list still shows every road change.',
       showMap: 'Show map',
       showList: 'Show list',
     },
@@ -186,7 +208,7 @@ export const trafficCopy = {
       description:
         'See road changes station by station along the LRT Mutiara Line, from Penang Sentral to PSR-A.',
     },
-    header: { title: 'Traffic map', updated },
+    header: { title: 'Route view', updated },
     viewSwitch,
     filters,
     diagram: {
@@ -194,6 +216,9 @@ export const trafficCopy = {
       caption:
         'Stations in line order, not to scale. Select a station to see road changes near it.',
       stationButton: (code: string, name: string) => `${code} ${name}`,
+      /** Rail rows with glyphs, read out after the station name. */
+      changesNearby: (count: number) =>
+        `${count} road ${count === 1 ? 'change' : 'changes'} nearby`,
       stationSelected: (code: string, name: string) => `${code} ${name}, selected`,
       stationWithChanges: (code: string, name: string, count: number) =>
         `${code} ${name}, ${count} road ${count === 1 ? 'change' : 'changes'} nearby`,
@@ -210,6 +235,12 @@ export const trafficCopy = {
         hazard: 'Traffic hazard',
       },
     },
+    search: {
+      noMatchTitle: (query: string) => `No station matches “${query}”`,
+      noMatchHint: 'Try the station code, for example S09.',
+      count: (count: number) => `${count} ${count === 1 ? 'station' : 'stations'}`,
+      listLabel: 'Stations',
+    },
     stationList: {
       label: 'Stations from Penang Sentral to PSR-A',
       select: (name: string) => `Show road changes near ${name}`,
@@ -220,6 +251,8 @@ export const trafficCopy = {
       clearLabel: (name: string) => `Clear selection of ${name}`,
       prompt: 'Choose a station on the diagram to see road changes near it.',
       changesTitle: (count: number) => `Road changes near this station (${count})`,
+      lineTitle: (count: number) => `Road changes on the line (${count})`,
+      emptyNear: (name: string) => `No road changes near ${name} in this time range.`,
       viewStation: 'View station page',
       empty: {
         title: 'No road changes near this station',

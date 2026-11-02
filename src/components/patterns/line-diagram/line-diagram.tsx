@@ -1,7 +1,7 @@
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { lineDiagramCopy } from '@/content/line';
-import type { Station, StationCode } from '@/data/models/station';
+import type { StationCode } from '@/data/models/station';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { cn } from '@/lib/cn';
 import { LineDiagramArt } from './line-diagram-art';
@@ -21,7 +21,7 @@ import {
   stationLayouts,
   type StationLayout,
 } from './line-diagram-layout';
-import { stationHref, stationLinkLabel, stationNotes } from './line-station';
+import { stationHref, stationLinkLabel, stationNotes, type LineStation } from './line-station';
 
 /** Extra room around circle and label, so the focus ring does not touch them. */
 const ARM = 6;
@@ -58,7 +58,7 @@ function StationStop({
   onSelect,
   markers,
   describe,
-}: SelectProps & { station: Station; layout: StationLayout }) {
+}: SelectProps & { station: LineStation; layout: StationLayout }) {
   const { x, y, radius, border, label, junction, branch } = layout;
   const box = boxOf(layout);
   const select = mode === 'select';
@@ -220,7 +220,7 @@ function DefaultLegend() {
 }
 
 type LineDiagramProps = {
-  stations: readonly Station[];
+  stations: readonly LineStation[];
   /** `link` (default): each station links to its page. `select`: each is a toggle button. */
   mode?: LineMode;
   selectedCode?: StationCode | null;

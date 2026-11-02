@@ -265,7 +265,7 @@
       },
       "visualTolerance": 0.08,
       "notes": "Leaflet + OpenStreetMap (owner decision). Tiles differ from the Figma drawing; compare panel, controls, pop-up and legend, not the basemap.",
-      "status": "todo",
+      "status": "in-progress",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -282,7 +282,7 @@
       },
       "notes": "Figma shows S09 Bukit Jambul selected. Support ?station=<code>.",
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "in-progress",
       "rounds": {
         "tester": 0,
         "main": 0

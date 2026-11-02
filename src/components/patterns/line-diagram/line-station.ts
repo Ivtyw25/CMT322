@@ -4,6 +4,9 @@ import { uiCopy } from '@/content/ui';
 import { JUNCTION_CODE } from '@/data/api/line-alignment';
 import type { Station } from '@/data/models/station';
 
+/** The parts of a station the diagram and the rail use. A full `Station` fits. */
+export type LineStation = Pick<Station, 'code' | 'name' | 'subtitle' | 'isProvisionalName'>;
+
 /** Spoken after the name: the provisional and junction notes ("" when neither applies). */
 export function stationNotes(station: Pick<Station, 'code' | 'isProvisionalName'>): string {
   const copy = lineDiagramCopy;

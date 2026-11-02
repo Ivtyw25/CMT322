@@ -2,9 +2,10 @@ export type MapPoint = { lat: number; lng: number };
 
 /**
  * `code` is a station-code chip, `dot` a plain dot (both unchanged). `closure` and `hazard` are
- * 22 px glyphs on a 44 px hit area: a no-entry circle and a warning triangle.
+ * 22 px glyphs on a 44 px hit area: a no-entry circle and a warning triangle. `zone` is the 10 px
+ * amber centre of a construction zone, on the same hit area.
  */
-export type MapMarkerVariant = 'code' | 'dot' | 'closure' | 'hazard';
+export type MapMarkerVariant = 'code' | 'dot' | 'closure' | 'hazard' | 'zone';
 
 export type MapMarker = MapPoint & {
   id: string;
@@ -75,4 +76,9 @@ export type LocationMapProps = {
   focusKey?: number;
   /** The reset button fits the map to these points (24 px padding). Default: `center` and `zoom`. */
   resetBounds?: readonly MapPoint[];
+  /** Fit the map to these points (24 px padding) each time `fitKey` changes. Key 0 does nothing. */
+  fitPoints?: readonly MapPoint[];
+  fitKey?: number;
+  /** Closest zoom a fit may reach, so one marker does not zoom to the street. */
+  fitMaxZoom?: number;
 };
