@@ -48,11 +48,6 @@ export const uiCopy = {
       `Showing ${from} to ${to} of ${total} ${noun}`,
   },
 
-  tabs: {
-    /** Read between a tab's name and its count: "Current, 3". */
-    countSeparator: ', ',
-  },
-
   empty: {
     title: 'Nothing to show yet',
     body: 'Check back later, or choose another filter.',

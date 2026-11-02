@@ -35,6 +35,26 @@ const filters = {
   },
   /** Accessible name of a layer toggle, e.g. "Road closures, 4". */
   layerCount: (name: string, count: number) => `${name}, ${count}`,
+  /** One road change of each layer, for marker names ("Road closure: Jalan ..."). */
+  layerSingular: {
+    closure: 'Road closure',
+    construction: 'Construction zone',
+    hazard: 'Traffic hazard',
+  },
+  /** Joins the two ends of a date range: "12 Oct 2026 to Jul 2027". */
+  dateRange: (from: string, to: string) => `${from} to ${to}`,
+  /** Read out politely after a filter or search changes. */
+  liveRegion: (count: number) => `${count} road ${count === 1 ? 'change' : 'changes'} shown`,
+  clearFilters: 'Clear filters',
+  /** Empty list, by what caused it. */
+  noMatch: {
+    title: 'No road changes match',
+    text: 'Try another time range or show more layers.',
+    range: 'Nothing is planned in this time range.',
+    layers: 'Turn on at least one layer to see road changes.',
+  },
+  skipToList: 'Skip to the list of road changes',
+  skipToStations: 'Skip to the stations',
 } as const;
 
 const viewSwitch = {
@@ -84,6 +104,14 @@ export const trafficCopy = {
       title: 'Road changes this week',
       listLabel: 'Road changes this week',
       seeAll: 'See all announcements',
+      viewOnMap: 'View on map',
+      /** Full name of the "View on map" link, for screen readers. */
+      viewOnMapNamed: (title: string) => `View on map: ${title}`,
+      locationLabel: 'Location',
+      datesLabel: 'Dates',
+      dateRange: (from: string, to: string) => `${from} to ${to}`,
+      dateRangeHours: (from: string, to: string, fromHour: string, toHour: string) =>
+        `${from} to ${to}, ${fromHour} to ${toHour}`,
       empty: {
         title: 'No road changes this week',
         body: 'We have no closures or works to report right now. Check the traffic map for later changes.',
@@ -106,6 +134,8 @@ export const trafficCopy = {
     faq: {
       title: 'Popular questions',
       seeAll: 'See all questions',
+      /** Keeps these item ids apart from the FAQ page's own anchors. */
+      idPrefix: 'traffic-faq-',
     },
   },
 
@@ -121,6 +151,8 @@ export const trafficCopy = {
     layout: {
       panelLabel: 'Map controls and results',
       mapLabel: 'Map of road changes along the LRT Mutiara Line',
+      /** Over the map when its tiles cannot load. */
+      unavailable: 'The map could not load. The list still shows every road change.',
       showMap: 'Show map',
       showList: 'Show list',
     },
@@ -186,7 +218,7 @@ export const trafficCopy = {
       description:
         'See road changes station by station along the LRT Mutiara Line, from Penang Sentral to PSR-A.',
     },
-    header: { title: 'Traffic map', updated },
+    header: { title: 'Route view', updated },
     viewSwitch,
     filters,
     diagram: {
@@ -194,6 +226,9 @@ export const trafficCopy = {
       caption:
         'Stations in line order, not to scale. Select a station to see road changes near it.',
       stationButton: (code: string, name: string) => `${code} ${name}`,
+      /** Rail rows with glyphs, read out after the station name. */
+      changesNearby: (count: number) =>
+        `${count} road ${count === 1 ? 'change' : 'changes'} nearby`,
       stationSelected: (code: string, name: string) => `${code} ${name}, selected`,
       stationWithChanges: (code: string, name: string, count: number) =>
         `${code} ${name}, ${count} road ${count === 1 ? 'change' : 'changes'} nearby`,
@@ -210,6 +245,12 @@ export const trafficCopy = {
         hazard: 'Traffic hazard',
       },
     },
+    search: {
+      noMatchTitle: (query: string) => `No station matches “${query}”`,
+      noMatchHint: 'Try the station code, for example S09.',
+      count: (count: number) => `${count} ${count === 1 ? 'station' : 'stations'}`,
+      listLabel: 'Stations',
+    },
     stationList: {
       label: 'Stations from Penang Sentral to PSR-A',
       select: (name: string) => `Show road changes near ${name}`,
@@ -220,6 +261,8 @@ export const trafficCopy = {
       clearLabel: (name: string) => `Clear selection of ${name}`,
       prompt: 'Choose a station on the diagram to see road changes near it.',
       changesTitle: (count: number) => `Road changes near this station (${count})`,
+      lineTitle: (count: number) => `Road changes on the line (${count})`,
+      emptyNear: (name: string) => `No road changes near ${name} in this time range.`,
       viewStation: 'View station page',
       empty: {
         title: 'No road changes near this station',
@@ -241,6 +284,7 @@ export const trafficCopy = {
     },
     header: {
       title: 'Traffic announcements',
+      breadcrumb: 'Announcements',
       lede: 'Planned closures and diversions, with the dates and duration of each.',
     },
     tabs: {
@@ -249,10 +293,9 @@ export const trafficCopy = {
       current: 'Current',
       upcoming: 'Upcoming',
       past: 'Past',
-      /** Accessible name of a tab with its count, e.g. "Current, 3 announcements". */
-      withCount: (name: string, count: number) => `${name}, ${count} announcements`,
     },
     filters: {
+      groupLabel: 'Filter announcements',
       areaLabel: 'Area',
       allAreas: 'All areas',
       searchLabel: 'Search a road or area',
@@ -271,7 +314,11 @@ export const trafficCopy = {
         end: 'End',
         duration: 'Duration',
         notice: 'Official notice',
+        map: 'Map',
       },
+      viewNoticeLabel: 'View notice',
+      viewOnMapLabel: 'View on map',
+      linked: 'Linked announcement',
       /** Row labels in the mobile card layout. */
       card: {
         location: 'Location',
@@ -279,12 +326,21 @@ export const trafficCopy = {
         duration: 'Duration',
       },
       dateRange: (start: string, end: string) => `${start} to ${end}`,
-      viewNotice: (title: string) => `View notice for ${title}`,
-      viewOnMap: (title: string) => `View ${title} on map`,
+      viewNotice: (title: string) => `View notice: ${title}`,
+      viewOnMap: (title: string) => `View on map: ${title}`,
     },
     pagination: {
-      noun: 'announcements',
+      label: 'Announcements pages',
       pageSize: 6,
+      summary: (from: number, to: number, total: number) =>
+        `Showing ${from} to ${to} of ${total} announcements`,
+      summaryEmpty: 'Showing 0 announcements',
+      changed: (page: number, pages: number, from: number, to: number, total: number) =>
+        `Page ${page} of ${pages}. Showing ${from} to ${to} of ${total} announcements.`,
+    },
+    notFound: {
+      text: 'We could not find that announcement. Showing all announcements.',
+      dismiss: 'Dismiss this message',
     },
     empty: {
       all: {
@@ -312,6 +368,7 @@ export const trafficCopy = {
     error: {
       title: 'We could not load announcements',
       body: 'Check your connection and try again.',
+      contact: 'Contact us',
     },
     loading: 'Loading announcements…',
   },
