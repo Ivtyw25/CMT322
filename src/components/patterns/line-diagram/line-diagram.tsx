@@ -288,7 +288,9 @@ export function LineDiagram({
   return (
     <div className="relative" style={{ width: DIAGRAM_WIDTH, height: DIAGRAM_HEIGHT }}>
       <LineDiagramArt />
-      {mode === 'select' ? <WorksSegments stations={stations} markersByStation={markersByStation} /> : null}
+      {mode === 'select' ? (
+        <WorksSegments stations={stations} markersByStation={markersByStation} />
+      ) : null}
       {depotLayouts.map((depot) => (
         <span
           key={`${depot.x}-${depot.y}`}
