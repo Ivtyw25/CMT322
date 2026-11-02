@@ -50,7 +50,6 @@ export default async function TrafficOverviewPage() {
           <Breadcrumb
             items={[{ label: uiCopy.breadcrumb.home, href: routes.home }]}
             current={copy.header.title}
-            tone="link"
           />
           <h1 className="type-heading-s lg:type-heading-m">{copy.header.title}</h1>
           <p className="max-w-175 type-body-l text-gray-600 lg:type-body-xl">{copy.header.lede}</p>

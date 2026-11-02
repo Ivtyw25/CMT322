@@ -22,7 +22,7 @@ export function RelatedPages({
   const titleId = useId();
   return (
     <section aria-labelledby={titleId} className={cn('flex flex-col gap-3', className)}>
-      <h2 id={titleId} className="type-heading-2xs text-gray-900">
+      <h2 id={titleId} className="type-body-s-semibold text-gray-900">
         {title}
       </h2>
       <ul className="divide-y divide-gray-200 border-y border-gray-200">

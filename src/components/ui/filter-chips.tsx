@@ -10,6 +10,8 @@ type FilterChipsProps<Value extends string> = {
   options: readonly FilterChipOption<Value>[];
   value: Value;
   onValueChange: (value: Value) => void;
+  /** `compact` is the 32 px chip of the Construction progress filters. */
+  density?: 'default' | 'compact';
   className?: string;
 };
 
@@ -19,6 +21,7 @@ export function FilterChips<Value extends string>({
   options,
   value,
   onValueChange,
+  density = 'default',
   className,
 }: FilterChipsProps<Value>) {
   return (
@@ -32,7 +35,8 @@ export function FilterChips<Value extends string>({
             aria-pressed={pressed}
             onClick={() => onValueChange(option.value)}
             className={cn(
-              'hit-area cursor-pointer rounded-full border px-4 py-2 type-body-s-medium',
+              'hit-area cursor-pointer rounded-full border type-body-s-medium',
+              density === 'compact' ? 'px-3 py-1.25' : 'px-4 py-2',
               'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
               pressed
                 ? 'border-gray-900 bg-gray-900 text-surface'

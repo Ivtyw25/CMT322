@@ -10,12 +10,12 @@ type BreadcrumbProps = {
   items: readonly BreadcrumbItem[];
   /** The current page: plain text, never truncated. */
   current: string;
-  /** `link` shows the parent levels as primary links and the current page in a darker grey (Figma Traffic pages). */
-  tone?: 'muted' | 'link';
+  /** `muted` is the grey trail on the station page band. */
+  tone?: 'primary' | 'muted';
   className?: string;
 };
 
-export function Breadcrumb({ items, current, tone = 'muted', className }: BreadcrumbProps) {
+export function Breadcrumb({ items, current, tone = 'primary', className }: BreadcrumbProps) {
   return (
     <nav aria-label={commonCopy.landmarks.breadcrumb} className={className}>
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 type-body-s">
@@ -24,8 +24,10 @@ export function Breadcrumb({ items, current, tone = 'muted', className }: Breadc
             <Link
               href={item.href}
               className={cn(
-                'hit-area transition-colors duration-(--duration-fast) hover:text-primary-700 hover:underline',
-                tone === 'link' ? 'text-primary-700' : 'text-gray-600',
+                'hit-area transition-colors duration-(--duration-fast) hover:underline',
+                tone === 'muted'
+                  ? 'text-gray-600 hover:text-primary-700'
+                  : 'text-primary-700 hover:text-primary-800',
               )}
             >
               {item.label}
@@ -33,7 +35,7 @@ export function Breadcrumb({ items, current, tone = 'muted', className }: Breadc
             <ChevronRight aria-hidden className="size-3.5 text-gray-400" />
           </li>
         ))}
-        <li className={tone === 'link' ? 'text-gray-700' : 'text-gray-900'} aria-current="page">
+        <li className="text-gray-900" aria-current="page">
           {current}
         </li>
       </ol>

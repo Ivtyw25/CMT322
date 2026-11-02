@@ -204,6 +204,10 @@ export const projectCopy = {
         S05: ['Bayan Lepas FIZ'],
       },
       depot: 'Depot',
+      groupLabel: 'Stations along the line',
+      keyboardHint: 'Use the arrow keys to move along the line.',
+      /** Accessible name of a stop, e.g. "S13 Jalan Universiti". */
+      stopName: (code: string, name: string) => `${code} ${name}`,
       selected: {
         hint: 'Select a station on the diagram to see what it serves.',
         link: (name: string) => `Open the ${name} station page`,
@@ -291,6 +295,8 @@ export const projectCopy = {
       noResultsStatus: (query: string) => `No stations match ${query}`,
       emptyTitle: (query: string) => `No station matches “${query}”`,
       emptyBody: 'Check the spelling, or search by station code, for example S20.',
+      emptyNoQuery: 'No stations to show.',
+      showAll: 'Show all stations',
     },
     segments: {
       label: 'Line segments',
@@ -304,6 +310,7 @@ export const projectCopy = {
       ],
     },
     list: {
+      heading: 'All stations',
       label: 'Stations in line order, from Penang Sentral to PSR-A',
       /** Accessible name of each row link, e.g. "S20 KOMTAR". */
       rowLabel: (code: string, name: string) => `${code} ${name}`,
@@ -344,9 +351,13 @@ export const projectCopy = {
     },
     header: {
       codeLabel: (code: string) => `Station code ${code}`,
+      provisional: '(provisional)',
     },
+    railLabel: 'About this station',
     actions: {
       follow: 'Follow station',
+      /** Accessible name of the follow button; once followed it starts with the visible "Following". */
+      followLabel: (name: string) => `Follow station ${name}`,
       /** The pressed state uses uiCopy.station.following. */
       /** Live region after a change. */
       followed: (name: string) => `You are now following ${name}.`,
@@ -379,6 +390,8 @@ export const projectCopy = {
         announcements: 'All announcements',
         map: 'Open the traffic map',
       },
+      /** Hidden suffix after "View notice" and "View on map". */
+      actionSuffix: (title: string) => `: ${title}`,
     },
     construction: {
       title: 'Construction progress',
@@ -405,6 +418,7 @@ export const projectCopy = {
       ledeNotStarted: 'There is no worksite here yet. The map shows the station location.',
       mapLabel: (name: string) => `Map of the area around ${name} station`,
       link: 'Open full traffic map',
+      centreLabel: (name: string) => `Centre on ${name}`,
     },
     reports: {
       title: 'Reports near this station',
@@ -495,6 +509,19 @@ export const projectCopy = {
         `Photo ${index} of ${total}: ${title}`,
       count: (shown: number, total: number) => `Showing ${shown} of ${total} updates`,
       allLoaded: 'You have reached the oldest update.',
+      loading: 'Loading older updates…',
+      /** Hidden line in an entry: photos are placeholders for now. */
+      photosNote: (count: number) =>
+        count === 1 ? '1 photo, not yet available' : `${count} photos, not yet available`,
+      /** Polite status after a filter changes. */
+      status: {
+        shown: (count: number) => (count === 1 ? 'Showing 1 update' : `Showing ${count} updates`),
+        filtered: (count: number, filters: string) =>
+          count === 1
+            ? `Showing 1 update for ${filters}`
+            : `Showing ${count} updates for ${filters}`,
+        none: 'No updates match these filters',
+      },
       empty: {
         title: 'No updates match these filters',
         body: 'Choose another type of work or area to see more site updates.',
@@ -557,6 +584,23 @@ export const projectCopy = {
       /** Heading when one topic is open. */
       showingTopic: (topic: string) => `Questions about ${topic.toLowerCase()}`,
       backToAll: 'Back to all topics',
+    },
+    view: {
+      results: (query: string) => `Results for “${query}”`,
+      showMostAsked: 'Show most asked questions',
+      /** Completes "Show all 22 …". */
+      nouns: 'questions',
+      topicEmpty: 'No questions in this topic yet.',
+      status: {
+        mostAsked: (count: number) => `Showing ${count} most asked questions`,
+        all: (count: number) => `Showing all ${count} questions`,
+        topic: (count: number, topic: string) =>
+          `Showing ${count} questions about ${topic.toLowerCase()}`,
+        matches: (count: number, query: string) =>
+          count === 1 ? `1 question matches “${query}”` : `${count} questions match “${query}”`,
+        none: (query: string) => `No questions match “${query}”`,
+        topics: (count: number) => `Showing ${count} topics`,
+      },
     },
     mostAsked: {
       title: 'Most asked this month',

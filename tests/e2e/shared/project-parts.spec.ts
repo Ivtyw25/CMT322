@@ -29,7 +29,7 @@ test.describe('accordion additions', () => {
   test('an item can show an eyebrow and start open', async ({ page }) => {
     await openGallery(page);
     const box = specimen(page, 'accordion', states.eyebrowDefaultOpen);
-    await expect(box.getByText(samples.accordionEyebrow)).toHaveCount(3);
+    await expect(box.getByText(samples.accordionEyebrow, { exact: true })).toHaveCount(3);
     const buttons = box.getByRole('button');
     await expect(buttons.nth(0)).toHaveAttribute('aria-expanded', 'true');
     await expect(buttons.nth(1)).toHaveAttribute('aria-expanded', 'false');

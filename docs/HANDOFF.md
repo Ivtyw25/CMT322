@@ -34,27 +34,16 @@ When a session is near its limit, the main agent:
 
 The next session then needs only the prompt in §1.
 
-## 4. Current state (30 Oct 2026)
+## 4. Current state (2 Nov 2026)
 
 | Branch / worktree | State |
 |---|---|
-| `main` (`C:\Users\Ivantham\CMT322`) | Foundations merged and deployed. Local commits since the last push are listed in `git log origin/main..main`. |
-| `iter/2-home` (`C:\Users\Ivantham\mutiara-wt\home`) | Slice A (sections 1–4) done. Slice B (sections 5–11, `tests/e2e/home.spec.ts`, menu-open visual state) is committed as a wip; not yet verified. |
-| `iter/3-project` (`C:\Users\Ivantham\mutiara-wt\project`) | Content and the six UX specs are done. Slice 1 (shared component changes, routes, map, data fields from `_project-decisions.md`) is committed as a wip; not yet verified. |
+| `main` | Foundations, Home and Project (6 pages) merged, pushed and deployed. Traffic slice 1 (shared map, line diagram, pagination, tabs, workspace layout, data) is merged. |
+| `iter/4-traffic` (`mutiara-wt/traffic`) | A builder is on slice 2 (traffic-map and route-view). Next: slice 3 (overview and announcements), then the tester. Decisions: `docs/specs/_traffic-decisions.md`. |
+| `iter/5-report-track` (`mutiara-wt/report-track`) | The content writer and UX designer are running. Next: main answers the open questions and reviews `_report-track-shared.md`, then the builders. |
 
-Groups still to do after these: traffic, report-track, account, legal-help (including 404), then the Phase 3 final sweep.
+Still to do: account, legal-help (one Sonnet agent writes both content and spec), and the Phase 3 final sweep. The sweep fixes the shared mobile header and footer, then re-measures every page and lowers the raised `visualTolerance` values in pages.json.
 
 ## 5. Next steps
 
-1. **Home slice B:** a fresh builder finishes it in the home worktree. It must:
-   - make sure `src/features/home/works-items.ts` merges road works, so the Bukit Jambul list matches Figma
-   - recheck that the "buk" search shows 3 results
-   - run `npm run verify:quick` (TEST_PORT 3100)
-2. **Home close:**
-   - the tester runs
-   - fix rounds (at most 3) and the main review
-   - merge `--no-ff` to `main`, verify, push, `vercel deploy --prod --yes`, smoke test
-   - log entry with a Tokens line, then remove the worktree
-3. **Project slice 1:** a fresh builder checks the slice against `_project-decisions.md`, makes `verify:quick` green (TEST_PORT 3200) and keeps the gallery working. The main agent merges the shared changes to `main`, then merges `main` into `iter/2-home` if home is still open.
-4. **Project pages:** builders take one slice per page (overview + about, stations + station, construction, faq). Then the tester, the fixes and the close, as for home.
-5. Then the remaining groups in `pages.json` order, and the Phase 3 final sweep.
+Follow PLAN §5 for each open group, with the token rules in `docs/token-budget.md`: one tester pass per group, the tester reuses the builder's verify logs, and a fresh agent for each fix round.

@@ -36,3 +36,12 @@ All are additive and backwards compatible. The existing gallery and Home must ke
 | `patterns/stepper` | `variant="stages"` |
 | New `patterns/map/` | Minimal client-only Leaflet map (`next/dynamic`, `ssr: false`): centre, zoom, markers, visible OSM attribution, locate (re-centre) button. Traffic extends it in iteration 4. |
 | Data | `lat`/`lng` on announcements and road works (VERIFY), plus `getStationFollows` isn't needed (follows are client-side) |
+
+## QA round 1 decisions (main agent)
+
+- **P-QA3, KOMTAR data:** add records so S20 shows what Figma shows: 3 notices and 2 active changes. Use the Figma text. Mark them VERIFY. Home's Works list for Bukit Jambul must not change.
+- **P-QA6, wording:** use the Figma wording for the Overview "Latest update" body and the third popular question, so the pages match Figma. Update docs/content/project.md.
+- **P-QA7, About on mobile:** sections 6–9 stay on mobile. They are on desktop, and hiding content on mobile would be worse. The Figma mobile frame is incomplete: it stops after the rail. Add the station card below the rail as Figma shows it. The visual test compares only the height of the reference when the reference is shorter than the page.
+- **P-QA8, footer:** goes to the Phase 3 final sweep, with Home's footer item.
+- **P-QA9, links:** allow "Back to top" and the map locate button in tests/links as known non-DOM actions.
+- **P-QA12, client leaves:** do it. Keep static headings and topic copy server-rendered.

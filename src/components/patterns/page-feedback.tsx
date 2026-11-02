@@ -1,6 +1,6 @@
 'use client';
 
-import { CircleCheck } from 'lucide-react';
+import { CircleCheck, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { uiCopy } from '@/content/ui';
 import { cn } from '@/lib/cn';
@@ -20,11 +20,13 @@ type PageFeedbackProps = {
   thanksReason?: string;
   /** Extra text after the buttons, e.g. "Last updated 22 Oct 2026". Hidden once thanked. */
   trailing?: React.ReactNode;
+  /** Thumbs on the Yes and No buttons, as on the docs pages. */
+  icons?: boolean;
   className?: string;
 };
 
 const answerClass = cn(
-  'hit-area inline-flex cursor-pointer items-center justify-center rounded-lg border px-4',
+  'hit-area inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border px-4',
   'type-body-s-semibold transition-colors duration-(--duration-fast) ease-(--ease-standard)',
   'border-gray-300 bg-surface text-gray-800 hover:border-gray-400 hover:bg-gray-50',
   'aria-pressed:border-gray-900 aria-pressed:bg-gray-900 aria-pressed:text-surface',
@@ -43,6 +45,7 @@ export function PageFeedback({
   reasons = uiCopy.docsPage.feedback.reasons,
   thanksReason = uiCopy.docsPage.feedback.thanksReason,
   trailing,
+  icons = false,
   className,
 }: PageFeedbackProps) {
   const [status, setStatus] = useState<FeedbackStatus>('asking');
@@ -85,6 +88,7 @@ export function PageFeedback({
               onClick={() => choose('thanks')}
               className={cn(answerClass, size === 'sm' ? 'h-8' : 'h-8.5')}
             >
+              {icons ? <ThumbsUp aria-hidden className="size-4" /> : null}
               {feedback.yes}
             </button>
             <button
@@ -93,6 +97,7 @@ export function PageFeedback({
               onClick={() => choose('reasons')}
               className={cn(answerClass, size === 'sm' ? 'h-8' : 'h-8.5')}
             >
+              {icons ? <ThumbsDown aria-hidden className="size-4" /> : null}
               {feedback.no}
             </button>
           </div>
