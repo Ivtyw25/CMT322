@@ -104,6 +104,10 @@ for (const visit of visitsForActivePages()) {
         .trim()
         .slice(0, 50);
       const before = page.url();
+      const focusBefore = await page.evaluate(
+        () => document.activeElement?.outerHTML.slice(0, 200) ?? '',
+      );
+      const scrollBefore = await page.evaluate(() => window.scrollY);
       const invalidForm = await button.evaluate((el) => {
         const b = el as HTMLButtonElement;
         return b.type === 'submit' && !!b.form && !b.form.checkValidity();
@@ -127,6 +131,11 @@ for (const visit of visitsForActivePages()) {
       const changed =
         page.url() !== before ||
         invalidForm ||
+        (await page.evaluate(() => window.scrollY)) !== scrollBefore ||
+        (await page.evaluate(
+          (prev) => (document.activeElement?.outerHTML.slice(0, 200) ?? '') !== prev,
+          focusBefore,
+        )) ||
         (await page
           .evaluate(() => ((window as Window & { __mutations?: number }).__mutations ?? 0) > 0)
           .catch(() => true));

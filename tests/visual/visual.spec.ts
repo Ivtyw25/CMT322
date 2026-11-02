@@ -38,6 +38,8 @@ async function capture(page: Page) {
   return PNG.sync.read(await page.screenshot({ fullPage: true, animations: 'disabled' }));
 }
 
+const WORKSPACE_PAGES = new Set(['traffic-map', 'route-view']);
+
 mkdirSync(DIFF_DIR, { recursive: true });
 
 for (const manifestPage of activePages) {
@@ -56,13 +58,17 @@ for (const manifestPage of activePages) {
         test(file, async ({ page }) => {
           test.skip(!existsSync(referencePath), `no Figma reference ${file}`);
           await prepare(page, { theme, signedIn: needsSignIn(manifestPage.id) });
-          await page.setViewportSize(viewport);
+          const reference = PNG.sync.read(readFileSync(referencePath));
+          // Workspace pages fill the viewport (no footer), so match the Figma frame height.
+          const fillsViewport = viewport.width >= 1024 && WORKSPACE_PAGES.has(manifestPage.id);
+          await page.setViewportSize(
+            fillsViewport ? { width: viewport.width, height: reference.height } : viewport,
+          );
           await page.goto(url);
           await settle(page);
           await shot.run(page);
           const rects = await maskRects(page);
           const actual = await capture(page);
-          const reference = PNG.sync.read(readFileSync(referencePath));
           paintMasks(actual, rects);
           paintMasks(reference, rects);
           const ratio = compare(actual, reference, join(DIFF_DIR, file));
