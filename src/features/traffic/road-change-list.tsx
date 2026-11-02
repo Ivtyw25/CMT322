@@ -34,6 +34,9 @@ type RoadChangeListProps = {
   mode: 'select' | 'link';
   selectedId?: string | null;
   onSelect?: (id: string) => void;
+  /** Select mode: the item under the mouse, and its change. The map halos that marker. */
+  hoveredId?: string | null;
+  onHover?: (id: string | null) => void;
   emptyText: string;
   onClearFilters: () => void;
 };
@@ -47,6 +50,8 @@ export function RoadChangeList({
   mode,
   selectedId,
   onSelect,
+  hoveredId,
+  onHover,
   emptyText,
   onClearFilters,
 }: RoadChangeListProps) {
@@ -78,12 +83,19 @@ export function RoadChangeList({
                   id={`road-change-${entry.id}`}
                   aria-pressed={selectedId === entry.id}
                   onClick={() => onSelect?.(entry.id)}
+                  onPointerEnter={(event) => {
+                    if (event.pointerType === 'mouse') onHover?.(entry.id);
+                  }}
+                  onPointerLeave={() => onHover?.(null)}
                   className={cn(
                     cardClass,
                     'hit-area cursor-pointer',
                     selectedId === entry.id
                       ? 'border-primary-300 bg-primary-50'
-                      : 'border-transparent hover:bg-gray-50',
+                      : cn(
+                          'border-transparent hover:bg-gray-50',
+                          hoveredId === entry.id && 'bg-gray-50',
+                        ),
                   )}
                 >
                   <CardBody entry={entry} />

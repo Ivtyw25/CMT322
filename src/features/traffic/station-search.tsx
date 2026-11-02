@@ -3,7 +3,7 @@
 import { SearchInput } from '@/components/ui/search-input';
 import { useId, useState } from 'react';
 import { trafficCopy } from '@/content/traffic';
-import { normaliseQuery } from '@/features/home/search-match';
+import { normaliseQuery } from '@/lib/search/normalise';
 import { cn } from '@/lib/cn';
 import type { RouteStation } from './route-station';
 

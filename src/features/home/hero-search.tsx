@@ -9,7 +9,8 @@ import { homeCopy } from '@/content/home';
 import { uiCopy } from '@/content/ui';
 import type { SearchEntry } from '@/data/models/search';
 import { cn } from '@/lib/cn';
-import { MIN_QUERY_LENGTH, matchEntries, normaliseQuery } from './search-match';
+import { normaliseQuery } from '@/lib/search/normalise';
+import { MIN_QUERY_LENGTH, matchEntries } from './search-match';
 import { SEARCH_LISTBOX_ID, SEARCH_PANEL_ID, SearchPanel, searchOptionId } from './search-panel';
 import { revealWorks, scrollBehavior } from './works-anchor';
 

@@ -5,6 +5,7 @@ import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { prepare, settle } from '../support/browser';
 import { activePages, needsSignIn, urlsFor } from '../support/pages';
+import { maskRects, paintMasks } from './masks';
 import { visualStates } from './states';
 
 const REFERENCE_DIR = join(process.cwd(), 'tests', 'visual', 'reference');
@@ -59,11 +60,12 @@ for (const manifestPage of activePages) {
           await page.goto(url);
           await settle(page);
           await shot.run(page);
-          const ratio = compare(
-            await capture(page),
-            PNG.sync.read(readFileSync(referencePath)),
-            join(DIFF_DIR, file),
-          );
+          const rects = await maskRects(page);
+          const actual = await capture(page);
+          const reference = PNG.sync.read(readFileSync(referencePath));
+          paintMasks(actual, rects);
+          paintMasks(reference, rects);
+          const ratio = compare(actual, reference, join(DIFF_DIR, file));
           test
             .info()
             .annotations.push({ type: 'diff', description: `${(ratio * 100).toFixed(2)}%` });

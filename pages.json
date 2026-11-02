@@ -247,7 +247,7 @@
         "mobile": "133:26630"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "in-progress",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -299,7 +299,7 @@
       },
       "notes": "Desktop table becomes cards on mobile.",
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "in-progress",
       "rounds": {
         "tester": 0,
         "main": 0

@@ -1,3 +1,5 @@
+'use client';
+
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { uiCopy } from '@/content/ui';
@@ -9,6 +11,11 @@ type PaginationProps = {
   pageCount: number;
   /** The address of a page, e.g. `(n) => '/traffic/announcements?page=' + n`. */
   hrefFor: (page: number) => string;
+  /**
+   * Called instead of following the link on a plain click, so the page can update in place
+   * (scroll, focus). Modified clicks still open the link.
+   */
+  onNavigate?: (page: number) => void;
   /** Name of the navigation landmark. Default: "Pagination". */
   label?: string;
   className?: string;
@@ -44,23 +51,39 @@ const idleClass = 'hover:bg-gray-50 hover:text-gray-900';
 const currentClass = 'border-primary-600 bg-primary-600 text-static-white';
 const disabledClass = 'border-gray-100 bg-gray-100 text-gray-400';
 
+type NavigateHandler = (event: React.MouseEvent<HTMLAnchorElement>, page: number) => void;
+
 function StepLink({
   href,
   label,
+  page,
+  onNavigate,
   children,
 }: {
   href: string | null;
   label: string;
+  page: number;
+  onNavigate: NavigateHandler;
   children: React.ReactNode;
 }) {
   return (
     <li>
       {href ? (
-        <Link href={href} aria-label={label} className={cn(itemClass, idleClass)}>
+        <Link
+          href={href}
+          aria-label={label}
+          onClick={(event) => onNavigate(event, page)}
+          className={cn(itemClass, idleClass)}
+        >
           {children}
         </Link>
       ) : (
-        <span aria-label={label} aria-disabled="true" className={cn(itemClass, disabledClass)}>
+        <span
+          role="img"
+          aria-label={label}
+          aria-disabled="true"
+          className={cn(itemClass, disabledClass)}
+        >
           {children}
         </span>
       )}
@@ -76,14 +99,26 @@ export function Pagination({
   page,
   pageCount,
   hrefFor,
+  onNavigate,
   label = uiCopy.pagination.label,
   className,
 }: PaginationProps) {
   if (pageCount <= 1) return null;
+  const handleClick: NavigateHandler = (event, target) => {
+    const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+    if (!onNavigate || modified || event.button !== 0) return;
+    event.preventDefault();
+    onNavigate(target);
+  };
   return (
     <nav aria-label={label} className={className}>
       <ol className="flex flex-wrap items-center gap-1.5">
-        <StepLink href={page > 1 ? hrefFor(page - 1) : null} label={uiCopy.pagination.previous}>
+        <StepLink
+          href={page > 1 ? hrefFor(page - 1) : null}
+          page={page - 1}
+          onNavigate={handleClick}
+          label={uiCopy.pagination.previous}
+        >
           <ChevronLeft aria-hidden className="size-4" />
         </StepLink>
         {pageEntries(page, pageCount).map((entry) =>
@@ -101,6 +136,7 @@ export function Pagination({
                 href={hrefFor(entry.page)}
                 aria-label={uiCopy.pagination.page(entry.page)}
                 aria-current={entry.page === page ? 'page' : undefined}
+                onClick={(event) => handleClick(event, entry.page)}
                 className={cn(itemClass, entry.page === page ? currentClass : idleClass)}
               >
                 {entry.page}
@@ -108,7 +144,12 @@ export function Pagination({
             </li>
           ),
         )}
-        <StepLink href={page < pageCount ? hrefFor(page + 1) : null} label={uiCopy.pagination.next}>
+        <StepLink
+          href={page < pageCount ? hrefFor(page + 1) : null}
+          page={page + 1}
+          onNavigate={handleClick}
+          label={uiCopy.pagination.next}
+        >
           <ChevronRight aria-hidden className="size-4" />
         </StepLink>
       </ol>

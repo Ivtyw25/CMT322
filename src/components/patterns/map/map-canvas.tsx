@@ -49,6 +49,8 @@ export function MapCanvas({
   lines = [],
   labels = [],
   selectedId = null,
+  hoveredId = null,
+  onHover,
   onSelect,
   onDeselect,
   renderPopup,
@@ -71,7 +73,7 @@ export function MapCanvas({
   const closingByCode = useRef(false);
   const wantedId = useRef<string | null>(null);
   const startRef = useRef({ lat: center.lat, lng: center.lng, zoom });
-  const handlers = useRef({ onSelect, onDeselect });
+  const handlers = useRef({ onSelect, onDeselect, onHover });
   const itemsRef = useRef<readonly (MapPoint & { id: string })[]>([]);
   const [tiles, setTiles] = useState<TileStatus>('loading');
   const [zoomLevel, setZoomLevel] = useState(zoom);
@@ -81,8 +83,8 @@ export function MapCanvas({
   const hasPopup = Boolean(renderPopup);
 
   useEffect(() => {
-    handlers.current = { onSelect, onDeselect };
-  }, [onSelect, onDeselect]);
+    handlers.current = { onSelect, onDeselect, onHover };
+  }, [onSelect, onDeselect, onHover]);
 
   // The map is created once; the effects below follow later changes to the props.
   useEffect(() => {
@@ -194,6 +196,8 @@ export function MapCanvas({
         zIndexOffset: zOffsetOf(data),
       });
       marker.on('click', () => handlers.current.onSelect?.(data.id));
+      marker.on('mouseover', () => handlers.current.onHover?.(data.id));
+      marker.on('mouseout', () => handlers.current.onHover?.(null));
       // Leaflet turns Enter into a click only for popups; a marker is a button, so Space works too.
       marker.on('keydown', (event) => {
         const key = (event as L.LeafletKeyboardEvent).originalEvent;
@@ -215,6 +219,13 @@ export function MapCanvas({
       entry.marker.setZIndexOffset(selected ? SELECTED_Z_OFFSET : zOffsetOf(entry.data));
     }
   }, [markers, selectedId]);
+
+  // Hover: the small halo, set from the list or by the pointer on the marker itself.
+  useEffect(() => {
+    for (const [id, entry] of markerById.current) {
+      entry.marker.getElement()?.setAttribute('data-hovered', String(id === hoveredId));
+    }
+  }, [markers, hoveredId]);
 
   useEffect(() => {
     const layer = zoneLayerRef.current;

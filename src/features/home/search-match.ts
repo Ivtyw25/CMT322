@@ -1,4 +1,5 @@
 import type { SearchEntry, SearchEntryKind } from '@/data/models/search';
+import { normalise, normaliseQuery } from '@/lib/search/normalise';
 
 export const MIN_QUERY_LENGTH = 2;
 const MAX_PER_GROUP = 4;
@@ -11,27 +12,6 @@ export type SearchMatch = {
 };
 
 export type SearchGroup = { kind: SearchEntryKind; matches: SearchMatch[] };
-
-type Normalised = { text: string; origin: number[] };
-
-/** Lower case, no diacritics, "-" as a space, runs of spaces collapsed. `origin` maps back to the input. */
-function normalise(input: string): Normalised {
-  let text = '';
-  const origin: number[] = [];
-  for (let index = 0; index < input.length; index += 1) {
-    const char = (input[index] ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
-    for (const piece of char === '-' ? ' ' : char) {
-      if (piece === ' ' && (text.endsWith(' ') || text === '')) continue;
-      text += piece;
-      origin.push(index);
-    }
-  }
-  return { text: text.trimEnd(), origin };
-}
-
-export function normaliseQuery(query: string): string {
-  return normalise(query).text;
-}
 
 /** Lower is better: label starts with the query, a label word does, the label contains it, only the detail does. */
 function rank(label: string, detail: string, query: string): { score: number; at: number } | null {

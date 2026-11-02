@@ -65,6 +65,10 @@ export type LocationMapProps = {
   labels?: readonly MapLabel[];
   /** The marker or zone that is selected (halo, on top, popup open). */
   selectedId?: string | null;
+  /** The marker that is hovered, e.g. from its list item: a small halo, no popup. */
+  hoveredId?: string | null;
+  /** The pointer entered a marker (its id) or left it (null). Mouse only. */
+  onHover?: (id: string | null) => void;
   /** A marker or zone was clicked, or chosen with Enter. */
   onSelect?: (id: string) => void;
   /** The empty map was clicked, or the popup was closed. */

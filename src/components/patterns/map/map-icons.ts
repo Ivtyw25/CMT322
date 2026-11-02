@@ -6,7 +6,7 @@ const TRIANGLE_PATH =
   'm21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01';
 
 const HALO =
-  '<span class="absolute size-11 rounded-full bg-static-on-navy-100 opacity-0 transition-opacity duration-(--duration-fast) group-data-[selected=true]:opacity-100"></span>';
+  '<span class="absolute size-11 rounded-full bg-static-on-navy-100 opacity-0 transition-[opacity,scale] duration-(--duration-fast) group-data-[hovered=true]:scale-75 group-data-[hovered=true]:opacity-100 group-data-[selected=true]:scale-100 group-data-[selected=true]:opacity-100"></span>';
 
 function glyphHtml(variant: 'closure' | 'hazard' | 'zone'): string {
   const glyph =
@@ -29,7 +29,7 @@ export function zOffsetOf(marker: MapMarker): number {
   return Z_OFFSET[variantOf(marker)];
 }
 
-/** The Leaflet icon of a marker. Selection is a `data-selected` attribute on the icon element. */
+/** The Leaflet icon of a marker. Selection and hover are `data-selected` and `data-hovered` attributes on the icon element. */
 export function markerIcon(marker: MapMarker): L.DivIcon {
   const variant = variantOf(marker);
   if (variant === 'closure' || variant === 'hazard' || variant === 'zone') {

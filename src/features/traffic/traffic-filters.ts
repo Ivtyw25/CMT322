@@ -1,5 +1,5 @@
 import type { TrafficLayer } from '@/data/models/traffic-item';
-import { normaliseQuery } from '@/features/home/search-match';
+import { normaliseQuery } from '@/lib/search/normalise';
 import type { TrafficEntry } from './traffic-entry';
 
 /** Time windows. No window (`null`) shows every road change that has not ended. */

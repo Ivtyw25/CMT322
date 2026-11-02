@@ -60,6 +60,7 @@ export function MapView({ entries, stations, alignment, updatedAt }: MapViewProp
   const { params, when, hidden, setWhen, toggleLayer } = useTrafficParams();
   const [query, setQuery] = useState(() => params.get('q')?.slice(0, MAX_QUERY_LENGTH) ?? '');
   const focusParam = params.get('focus');
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [pan, setPan] = useState<{ id: string; key: number } | null>(
     focusParam ? { id: focusParam, key: 1 } : null,
   );
@@ -218,6 +219,8 @@ export function MapView({ entries, stations, alignment, updatedAt }: MapViewProp
           mode="select"
           selectedId={selectedId}
           onSelect={select}
+          hoveredId={hoveredId}
+          onHover={setHoveredId}
           emptyText={emptyTextOf(cause)}
           onClearFilters={clearFilters}
         />
@@ -250,6 +253,8 @@ export function MapView({ entries, stations, alignment, updatedAt }: MapViewProp
           fitKey={fit.key}
           fitMaxZoom={FIT_MAX_ZOOM}
           selectedId={selectedId}
+          hoveredId={hoveredId}
+          onHover={setHoveredId}
           onSelect={(id) => params.set({ focus: id })}
           onDeselect={() => params.set({ focus: null })}
           renderPopup={(id) => {

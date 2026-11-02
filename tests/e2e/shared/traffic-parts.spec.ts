@@ -74,11 +74,11 @@ test.describe('tabs with counts', () => {
     await openGallery(page);
     await whenHydrated(page, 'section:has(#tabs) [role="tab"]');
     const box = specimen(page, 'tabs', traffic.tabsCountCaption);
-    const first = box.getByRole('tab', { name: 'Current, 3' });
+    const first = box.getByRole('tab', { name: 'Current 3' });
     await expect(first).toHaveAttribute('aria-selected', 'true');
     await first.focus();
     await page.keyboard.press('ArrowRight');
-    await expect(box.getByRole('tab', { name: 'Upcoming, 2' })).toHaveAttribute(
+    await expect(box.getByRole('tab', { name: 'Upcoming 2' })).toHaveAttribute(
       'aria-selected',
       'true',
     );

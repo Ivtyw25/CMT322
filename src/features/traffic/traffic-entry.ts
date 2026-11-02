@@ -4,7 +4,7 @@ import type { StationCode } from '@/data/models/station';
 import type { TrafficItem, TrafficLayer } from '@/data/models/traffic-item';
 import { formatDate, formatDateRange } from '@/lib/format/dates';
 import { formatHourRange } from '@/lib/format/times';
-import { normaliseQuery } from '@/features/home/search-match';
+import { normaliseQuery } from '@/lib/search/normalise';
 
 /** A road change as the traffic panel, map and diagram use it: the record plus its display text. */
 export type TrafficEntry = {

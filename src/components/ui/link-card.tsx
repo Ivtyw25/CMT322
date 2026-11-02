@@ -10,6 +10,8 @@ type LinkCardProps = {
   titleAs?: 'h2' | 'h3' | 'h4';
   /** The card for the page's current topic: highlighted, and its link has `aria-current`. */
   selected?: boolean;
+  /** Id of the text that describes the card (its description); read after the link's name. */
+  describedBy?: string;
   children?: React.ReactNode;
   className?: string;
 };
@@ -24,6 +26,7 @@ export function LinkCard({
   media,
   titleAs: Title = 'h3',
   selected = false,
+  describedBy,
   children,
   className,
 }: LinkCardProps) {
@@ -44,6 +47,7 @@ export function LinkCard({
         <Link
           href={href}
           aria-current={selected ? 'true' : undefined}
+          aria-describedby={describedBy}
           className="inline-flex min-h-11 items-center outline-none after:absolute after:inset-0 after:rounded-xl md:min-h-0"
         >
           {title}

@@ -1,28 +1,26 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { routes } from '@/config/routes';
-import { Pagination } from '@/components/ui/pagination';
 import { devCopy } from '@/content/dev';
 import { getStations } from '@/data/api/stations';
+import { DemoPagination } from '@/app/dev/components/_parts/demo-pagination';
 import { DemoLineSelect } from '@/app/dev/components/_parts/demo-line-select';
 import { DemoQueryParams } from '@/app/dev/components/_parts/demo-query-params';
 import { GallerySection, Specimen } from '@/app/dev/components/_parts/section';
 
 const copy = devCopy.traffic;
 
-const hrefFor = (page: number) => `${routes.dev.components}?page=${page}#pagination`;
-
 export function PaginationSection() {
   return (
     <GallerySection id="pagination">
       <Specimen caption={copy.paginationFew}>
-        <Pagination page={2} pageCount={5} hrefFor={hrefFor} label={copy.paginationLabel} />
+        <DemoPagination page={2} pageCount={5} label={copy.paginationLabel} />
       </Specimen>
       <Specimen caption={copy.paginationMany}>
-        <Pagination page={6} pageCount={12} hrefFor={hrefFor} label={copy.paginationLabel} />
+        <DemoPagination page={6} pageCount={12} label={copy.paginationLabel} />
       </Specimen>
       <Specimen caption={copy.paginationEnd}>
-        <Pagination page={12} pageCount={12} hrefFor={hrefFor} label={copy.paginationLabel} />
+        <DemoPagination page={12} pageCount={12} label={copy.paginationLabel} />
       </Specimen>
     </GallerySection>
   );

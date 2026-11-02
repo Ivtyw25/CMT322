@@ -1,7 +1,6 @@
 'use client';
 
 import { Tabs as TabsPrimitive } from 'radix-ui';
-import { uiCopy } from '@/content/ui';
 import { cn } from '@/lib/cn';
 
 /**
@@ -37,16 +36,12 @@ export function TabsTrigger({ className, count, children, ...props }: TabsTrigge
         counted && 'px-2 data-[state=active]:bg-primary-50',
         className,
       )}
-      aria-label={
-        counted && typeof children === 'string'
-          ? `${children}${uiCopy.tabs.countSeparator}${count}`
-          : undefined
-      }
       {...props}
     >
       {children}
+      {counted ? ' ' : null}
       {counted ? (
-        <span className="ml-2 inline-block rounded-full bg-gray-100 px-2 py-0.5 align-middle type-body-xs-medium text-gray-700 tabular-nums">
+        <span className="ml-1 inline-block rounded-full bg-gray-100 px-2 py-0.5 align-middle type-body-xs-medium text-gray-700 tabular-nums">
           {count}
         </span>
       ) : null}

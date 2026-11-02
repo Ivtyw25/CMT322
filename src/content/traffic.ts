@@ -104,6 +104,14 @@ export const trafficCopy = {
       title: 'Road changes this week',
       listLabel: 'Road changes this week',
       seeAll: 'See all announcements',
+      viewOnMap: 'View on map',
+      /** Full name of the "View on map" link, for screen readers. */
+      viewOnMapNamed: (title: string) => `View on map: ${title}`,
+      locationLabel: 'Location',
+      datesLabel: 'Dates',
+      dateRange: (from: string, to: string) => `${from} to ${to}`,
+      dateRangeHours: (from: string, to: string, fromHour: string, toHour: string) =>
+        `${from} to ${to}, ${fromHour} to ${toHour}`,
       empty: {
         title: 'No road changes this week',
         body: 'We have no closures or works to report right now. Check the traffic map for later changes.',
@@ -126,6 +134,8 @@ export const trafficCopy = {
     faq: {
       title: 'Popular questions',
       seeAll: 'See all questions',
+      /** Keeps these item ids apart from the FAQ page's own anchors. */
+      idPrefix: 'traffic-faq-',
     },
   },
 
@@ -282,10 +292,9 @@ export const trafficCopy = {
       current: 'Current',
       upcoming: 'Upcoming',
       past: 'Past',
-      /** Accessible name of a tab with its count, e.g. "Current, 3 announcements". */
-      withCount: (name: string, count: number) => `${name}, ${count} announcements`,
     },
     filters: {
+      groupLabel: 'Filter announcements',
       areaLabel: 'Area',
       allAreas: 'All areas',
       searchLabel: 'Search a road or area',
@@ -304,7 +313,11 @@ export const trafficCopy = {
         end: 'End',
         duration: 'Duration',
         notice: 'Official notice',
+        map: 'Map',
       },
+      viewNoticeLabel: 'View notice',
+      viewOnMapLabel: 'View on map',
+      linked: 'Linked announcement',
       /** Row labels in the mobile card layout. */
       card: {
         location: 'Location',
@@ -312,12 +325,21 @@ export const trafficCopy = {
         duration: 'Duration',
       },
       dateRange: (start: string, end: string) => `${start} to ${end}`,
-      viewNotice: (title: string) => `View notice for ${title}`,
-      viewOnMap: (title: string) => `View ${title} on map`,
+      viewNotice: (title: string) => `View notice: ${title}`,
+      viewOnMap: (title: string) => `View on map: ${title}`,
     },
     pagination: {
-      noun: 'announcements',
+      label: 'Announcements pages',
       pageSize: 6,
+      summary: (from: number, to: number, total: number) =>
+        `Showing ${from} to ${to} of ${total} announcements`,
+      summaryEmpty: 'Showing 0 announcements',
+      changed: (page: number, pages: number, from: number, to: number, total: number) =>
+        `Page ${page} of ${pages}. Showing ${from} to ${to} of ${total} announcements.`,
+    },
+    notFound: {
+      text: 'We could not find that announcement. Showing all announcements.',
+      dismiss: 'Dismiss this message',
     },
     empty: {
       all: {
@@ -345,6 +367,7 @@ export const trafficCopy = {
     error: {
       title: 'We could not load announcements',
       body: 'Check your connection and try again.',
+      contact: 'Contact us',
     },
     loading: 'Loading announcements…',
   },
