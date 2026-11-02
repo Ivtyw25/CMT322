@@ -1,4 +1,5 @@
-import type { Station, StationCode } from '@/data/models/station';
+import type { StationCode } from '@/data/models/station';
+import type { LineStation } from './line-station';
 
 /** What a station can show on the diagram and the rail: a road change of this layer nearby. */
 export type LineMarkerKind = 'closure' | 'construction' | 'hazard';
@@ -15,7 +16,7 @@ export type StationState = {
 };
 
 /** Accessible name of a station in `select` mode. Without it the name is "S20 KOMTAR" plus notes. */
-export type DescribeStation = (station: Station, state: StationState) => string;
+export type DescribeStation = (station: LineStation, state: StationState) => string;
 
 /** At most two glyph types per station, so a busy station stays readable. */
 export const MAX_GLYPHS = 2;

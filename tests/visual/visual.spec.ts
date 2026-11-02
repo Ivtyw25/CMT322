@@ -5,6 +5,7 @@ import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { prepare, settle } from '../support/browser';
 import { activePages, needsSignIn, urlsFor } from '../support/pages';
+import { maskRects, paintMasks } from './masks';
 import { visualStates } from './states';
 
 const REFERENCE_DIR = join(process.cwd(), 'tests', 'visual', 'reference');
@@ -47,6 +48,8 @@ async function capture(page: Page) {
   return PNG.sync.read(await page.screenshot({ fullPage: true, animations: 'disabled' }));
 }
 
+const WORKSPACE_PAGES = new Set(['traffic-map', 'route-view']);
+
 mkdirSync(DIFF_DIR, { recursive: true });
 
 for (const manifestPage of activePages) {
@@ -65,15 +68,20 @@ for (const manifestPage of activePages) {
         test(file, async ({ page }) => {
           test.skip(!existsSync(referencePath), `no Figma reference ${file}`);
           await prepare(page, { theme, signedIn: needsSignIn(manifestPage.id) });
-          await page.setViewportSize(viewport);
+          const reference = PNG.sync.read(readFileSync(referencePath));
+          // Workspace pages fill the viewport (no footer), so match the Figma frame height.
+          const fillsViewport = viewport.width >= 1024 && WORKSPACE_PAGES.has(manifestPage.id);
+          await page.setViewportSize(
+            fillsViewport ? { width: viewport.width, height: reference.height } : viewport,
+          );
           await page.goto(url);
           await settle(page);
           await shot.run(page);
-          const ratio = compare(
-            await capture(page),
-            PNG.sync.read(readFileSync(referencePath)),
-            join(DIFF_DIR, file),
-          );
+          const rects = await maskRects(page);
+          const actual = await capture(page);
+          paintMasks(actual, rects);
+          paintMasks(reference, rects);
+          const ratio = compare(actual, reference, join(DIFF_DIR, file));
           test
             .info()
             .annotations.push({ type: 'diff', description: `${(ratio * 100).toFixed(2)}%` });

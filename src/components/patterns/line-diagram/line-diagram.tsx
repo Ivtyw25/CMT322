@@ -1,7 +1,7 @@
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { lineDiagramCopy } from '@/content/line';
-import type { Station, StationCode } from '@/data/models/station';
+import type { StationCode } from '@/data/models/station';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { cn } from '@/lib/cn';
 import { LineDiagramArt } from './line-diagram-art';
@@ -21,7 +21,7 @@ import {
   stationLayouts,
   type StationLayout,
 } from './line-diagram-layout';
-import { stationHref, stationLinkLabel, stationNotes } from './line-station';
+import { stationHref, stationLinkLabel, stationNotes, type LineStation } from './line-station';
 
 /** Extra room around circle and label, so the focus ring does not touch them. */
 const ARM = 6;
@@ -50,6 +50,46 @@ function glyphTop(layout: StationLayout, boxTop: number): number {
   return labelAbove ? y + radius + 2 - boxTop : y - radius - 18 - boxTop;
 }
 
+/** Road works colour the straight stretch of rail from their station to the next one amber. */
+function WorksSegments({
+  stations,
+  markersByStation,
+}: {
+  stations: readonly LineStation[];
+  markersByStation?: MarkersByStation;
+}) {
+  const segments = stations.flatMap((station, index) => {
+    const next = stations[index + 1];
+    const from = stationLayouts[station.code];
+    const to = next ? stationLayouts[next.code] : undefined;
+    const straight = from && to && (from.x === to.x || from.y === to.y);
+    return markersByStation?.[station.code]?.includes('construction') && straight
+      ? [{ code: station.code, from, to }]
+      : [];
+  });
+  if (segments.length === 0) return null;
+  return (
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute inset-0"
+      width={DIAGRAM_WIDTH}
+      height={DIAGRAM_HEIGHT}
+    >
+      {segments.map(({ code, from, to }) => (
+        <line
+          key={code}
+          x1={from.x}
+          y1={from.y}
+          x2={to.x}
+          y2={to.y}
+          className="stroke-warning-600"
+          strokeWidth="11.1299"
+        />
+      ))}
+    </svg>
+  );
+}
+
 function StationStop({
   station,
   layout,
@@ -58,12 +98,12 @@ function StationStop({
   onSelect,
   markers,
   describe,
-}: SelectProps & { station: Station; layout: StationLayout }) {
+}: SelectProps & { station: LineStation; layout: StationLayout }) {
   const { x, y, radius, border, label, junction, branch } = layout;
   const box = boxOf(layout);
   const select = mode === 'select';
   const selected = select && selectedCode === station.code;
-  const glyphs = select ? visibleMarkers(markers) : [];
+  const glyphs = select ? visibleMarkers(markers).filter((kind) => kind !== 'construction') : [];
   const halo = Math.max(44, radius * 2 + 8);
   const rootClass = 'group absolute block rounded-xl';
   const rootStyle = { left: box.left, top: box.top, width: box.width, height: box.height };
@@ -220,7 +260,7 @@ function DefaultLegend() {
 }
 
 type LineDiagramProps = {
-  stations: readonly Station[];
+  stations: readonly LineStation[];
   /** `link` (default): each station links to its page. `select`: each is a toggle button. */
   mode?: LineMode;
   selectedCode?: StationCode | null;
@@ -248,6 +288,9 @@ export function LineDiagram({
   return (
     <div className="relative" style={{ width: DIAGRAM_WIDTH, height: DIAGRAM_HEIGHT }}>
       <LineDiagramArt />
+      {mode === 'select' ? (
+        <WorksSegments stations={stations} markersByStation={markersByStation} />
+      ) : null}
       {depotLayouts.map((depot) => (
         <span
           key={`${depot.x}-${depot.y}`}

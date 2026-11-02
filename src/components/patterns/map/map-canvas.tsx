@@ -50,6 +50,8 @@ export function MapCanvas({
   lines = [],
   labels = [],
   selectedId = null,
+  hoveredId = null,
+  onHover,
   onSelect,
   onDeselect,
   renderPopup,
@@ -59,6 +61,9 @@ export function MapCanvas({
   pin,
   panEnabled = true,
   overlay,
+  fitPoints,
+  fitKey = 0,
+  fitMaxZoom,
 }: LocationMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -72,7 +77,7 @@ export function MapCanvas({
   const closingByCode = useRef(false);
   const wantedId = useRef<string | null>(null);
   const startRef = useRef({ lat: center.lat, lng: center.lng, zoom });
-  const handlers = useRef({ onSelect, onDeselect });
+  const handlers = useRef({ onSelect, onDeselect, onHover });
   const itemsRef = useRef<readonly (MapPoint & { id: string })[]>([]);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [tiles, setTiles] = useState<TileStatus>('loading');
@@ -83,14 +88,15 @@ export function MapCanvas({
   const hasPopup = Boolean(renderPopup);
 
   useEffect(() => {
-    handlers.current = { onSelect, onDeselect };
-  }, [onSelect, onDeselect]);
+    handlers.current = { onSelect, onDeselect, onHover };
+  }, [onSelect, onDeselect, onHover]);
 
   // The map is created once; the effects below follow later changes to the props.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
     const start = startRef.current;
+    closingByCode.current = false;
     const still = reducedMotion();
     const map = L.map(container, {
       center: [start.lat, start.lng],
@@ -146,6 +152,8 @@ export function MapCanvas({
     const zonesInMap = zoneById.current;
     return () => {
       container.removeEventListener('keydown', closeOnEscape);
+      // Taking the map down closes its popup; that is not the visitor deselecting anything.
+      closingByCode.current = true;
       map.remove();
       mapRef.current = null;
       setMapInstance(null);
@@ -197,6 +205,8 @@ export function MapCanvas({
         zIndexOffset: zOffsetOf(data),
       });
       marker.on('click', () => handlers.current.onSelect?.(data.id));
+      marker.on('mouseover', () => handlers.current.onHover?.(data.id));
+      marker.on('mouseout', () => handlers.current.onHover?.(null));
       // Leaflet turns Enter into a click only for popups; a marker is a button, so Space works too.
       marker.on('keydown', (event) => {
         const key = (event as L.LeafletKeyboardEvent).originalEvent;
@@ -218,6 +228,13 @@ export function MapCanvas({
       entry.marker.setZIndexOffset(selected ? SELECTED_Z_OFFSET : zOffsetOf(entry.data));
     }
   }, [markers, selectedId]);
+
+  // Hover: the small halo, set from the list or by the pointer on the marker itself.
+  useEffect(() => {
+    for (const [id, entry] of markerById.current) {
+      entry.marker.getElement()?.setAttribute('data-hovered', String(id === hoveredId));
+    }
+  }, [markers, hoveredId]);
 
   useEffect(() => {
     const layer = zoneLayerRef.current;
@@ -346,6 +363,27 @@ export function MapCanvas({
     popupRef.current?.update();
   }, [openId, popupHost]);
 
+  const fitRef = useRef({ fitPoints, fitMaxZoom });
+  useEffect(() => {
+    fitRef.current = { fitPoints, fitMaxZoom };
+  }, [fitPoints, fitMaxZoom]);
+
+  // Fit the map to `fitPoints` every time `fitKey` changes (not for key 0).
+  useEffect(() => {
+    const map = mapRef.current;
+    const { fitPoints: points, fitMaxZoom: maxZoom } = fitRef.current;
+    if (!map || !fitKey || !points || points.length === 0) return;
+    map.invalidateSize();
+    const still = reducedMotion();
+    map.fitBounds(L.latLngBounds(points.map(latLngOf)), {
+      animate: !still,
+      duration: still ? 0 : PAN_SECONDS,
+      paddingTopLeft: FIT_PADDING,
+      paddingBottomRight: FIT_PADDING,
+      maxZoom,
+    });
+  }, [fitKey]);
+
   function centreMap() {
     const map = mapRef.current;
     if (!map) return;
@@ -371,7 +409,7 @@ export function MapCanvas({
       {tiles === 'unavailable' ? (
         <MapPlaceholder
           message={unavailableText ?? uiCopy.map.unavailable}
-          className="absolute inset-0 z-10"
+          className="pointer-events-none absolute inset-0 z-10 bg-transparent"
         />
       ) : null}
       <MapControls

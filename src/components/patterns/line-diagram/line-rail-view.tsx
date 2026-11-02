@@ -1,11 +1,11 @@
 import { LineRail, LineRailStop } from '@/components/patterns/line-rail';
-import type { Station, StationCode } from '@/data/models/station';
+import type { StationCode } from '@/data/models/station';
 import { LineMarkerGlyph } from './line-marker-glyph';
 import { visibleMarkers, type LineMode, type MarkersByStation } from './line-markers';
-import { stationDescription, stationHref } from './line-station';
+import { stationDescription, stationHref, type LineStation } from './line-station';
 
 type LineRailViewProps = {
-  stations: readonly Station[];
+  stations: readonly LineStation[];
   /** `link` (default): each stop links to its page. `select`: each is a toggle button. */
   mode?: LineMode;
   selectedCode?: StationCode | null;

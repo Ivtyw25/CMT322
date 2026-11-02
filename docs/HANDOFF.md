@@ -34,18 +34,16 @@ When a session is near its limit, the main agent:
 
 The next session then needs only the prompt in §1.
 
-## 4. Current state (31 Oct 2026)
+## 4. Current state (2 Nov 2026)
 
 | Branch / worktree | State |
 |---|---|
-| `main` | Foundations and Home merged, pushed and deployed. |
-| `iter/3-project` (`mutiara-wt/project`) | Slices 1 (shared, merged to main) and 2 (overview, about, faq) are committed. A builder is doing slice 3 (stations, station, construction). Then one tester pass covers all six pages. |
-| `iter/4-traffic` (`mutiara-wt/traffic`) | The content writer and UX designer are running. Next: main reviews `docs/specs/_traffic-shared.md`, then the builder. |
+| `main` | Foundations, Home and Project (6 pages) merged, pushed and deployed. Traffic slice 1 (shared map, line diagram, pagination, tabs, workspace layout, data) is merged. |
+| `iter/4-traffic` (`mutiara-wt/traffic`) | A builder is on slice 2 (traffic-map and route-view). Next: slice 3 (overview and announcements), then the tester. Decisions: `docs/specs/_traffic-decisions.md`. |
+| `iter/5-report-track` (`mutiara-wt/report-track`) | The content writer and UX designer are running. Next: main answers the open questions and reviews `_report-track-shared.md`, then the builders. |
 
-Groups still to do: report-track, account, legal-help (including 404), then the Phase 3 final sweep. The final sweep also fixes the shared mobile footer height (Home Open item in log.md).
+Still to do: account, legal-help (one Sonnet agent writes both content and spec), and the Phase 3 final sweep. The sweep fixes the shared mobile header and footer, then re-measures every page and lowers the raised `visualTolerance` values in pages.json.
 
 ## 5. Next steps
 
-1. **Project:** when slice 3 hands back, commit it. The tester then tests all six pages once (tester.md "Faster test routine"). Then fixes, close, merge, deploy and log.
-2. **Traffic:** review the specs and shared changes, then a builder per slice, the tester, and close.
-3. Then report-track, account, legal-help (one Sonnet agent writes both content and spec for this small group), and the Phase 3 final sweep.
+Follow PLAN §5 for each open group, with the token rules in `docs/token-budget.md`: one tester pass per group, the tester reuses the builder's verify logs, and a fresh agent for each fix round.

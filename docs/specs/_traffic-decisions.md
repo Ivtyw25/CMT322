@@ -26,3 +26,16 @@ These win over the page specs and the content file where they differ.
 ## Shared changes (`_traffic-shared.md` §1)
 
 All 9 are approved, if they are additive and backwards compatible. The Home and Project pages and the gallery must keep working. Promote the line diagram to patterns only if Home then uses the same component. Never keep two copies.
+
+## Slice 1 follow-ups (main agent)
+
+- **Map counts:** the default time filter on the map is the one that makes Figma's counts true: every item that hasn't ended gives 4 closures, 6 construction zones and 2 hazards ("In this area (12)"). "Happening now" is a filter option, not the default.
+- **"Road changes this week":** earliest first, as in decision 9. Whatever the data then gives is accepted, even where it differs from Figma (FIZ Phase 3 rather than Phase 4).
+- **Marker colours:** closures use `danger-600`. The tester checks hazard and works markers against Figma, in light and dark.
+
+## Slice 2 follow-ups (main agent)
+
+- **Map in visual tests:** the OSM basemap can never match Figma's drawn map. The visual test masks the map canvas (the tile and marker panes) on every page that has a map, so it compares the page around the map. Add mask support to tests/visual once, driven by a selector list.
+- **Dependency direction:** `normaliseQuery` moves from features/home to `src/lib/` (for example, lib/search). Features never import from other features.
+- **Hover-halo sync** between list and marker: build it, since the spec has it.
+- **Route diagram scale:** fine as is, if labels are at least 12 px at 1440. If they're smaller, use a larger viewBox scale.

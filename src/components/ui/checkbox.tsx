@@ -3,7 +3,8 @@ import { useId } from 'react';
 import { cn } from '@/lib/cn';
 
 type CheckboxProps = Omit<React.ComponentProps<'input'>, 'type' | 'className' | 'children'> & {
-  label: string;
+  /** Text, or text with a swatch and a count (the traffic layer toggles). */
+  label: React.ReactNode;
   /** Error message shown under the box; sets `aria-invalid`. */
   error?: string;
   className?: string;

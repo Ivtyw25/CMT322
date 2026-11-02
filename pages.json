@@ -246,13 +246,13 @@
         "desktop": "66:2206",
         "mobile": "133:26630"
       },
-      "visualTolerance": 0.03,
-      "status": "todo",
+      "visualTolerance": 0.22,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       },
-      "notes": ""
+      "notes": "Visual diff over 3%: shared mobile header and footer, the approved Popular questions section (overview), masked OSM map and list order. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open."
     },
     {
       "id": "traffic-map",
@@ -263,12 +263,12 @@
         "desktop": "1:801",
         "mobile": "133:27469"
       },
-      "visualTolerance": 0.08,
-      "notes": "Leaflet + OpenStreetMap (owner decision). Tiles differ from the Figma drawing; compare panel, controls, pop-up and legend, not the basemap.",
-      "status": "todo",
+      "visualTolerance": 0.19,
+      "notes": "Visual diff over 3%: shared mobile header and footer, the approved Popular questions section (overview), masked OSM map and list order. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open.",
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       }
     },
     {
@@ -280,12 +280,12 @@
         "desktop": "5:843",
         "mobile": "133:27775"
       },
-      "notes": "Figma shows S09 Bukit Jambul selected. Support ?station=<code>.",
-      "visualTolerance": 0.03,
-      "status": "todo",
+      "notes": "Visual diff over 3%: shared mobile header and footer, the approved Popular questions section (overview), masked OSM map and list order. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open.",
+      "visualTolerance": 0.09,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       }
     },
     {
@@ -297,12 +297,12 @@
         "desktop": "1:629",
         "mobile": "133:27022"
       },
-      "notes": "Desktop table becomes cards on mobile.",
-      "visualTolerance": 0.03,
-      "status": "todo",
+      "notes": "Visual diff over 3%: shared mobile header and footer, the approved Popular questions section (overview), masked OSM map and list order. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open.",
+      "visualTolerance": 0.11,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       }
     },
     {

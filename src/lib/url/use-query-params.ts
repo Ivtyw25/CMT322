@@ -1,4 +1,4 @@
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 /** A change to the query string: a value sets a param, `null` or `undefined` removes it. */
 export type QueryParamUpdate = Readonly<Record<string, string | null | undefined>>;
@@ -12,16 +12,20 @@ export type QueryParamWriteOptions = {
  * Reads and writes the query string of the current page, for filters that must be shareable.
  * `defaults` lists the value each param has when it is absent: writing the default (or an empty
  * string) removes the param, so addresses stay short. The hash is kept and the page does not scroll.
+ * `get` reads the address as rendered; `read` reads it right now, for code that writes twice in a row.
  *
  * Reads the address with `useSearchParams`, so the component using it must sit under `<Suspense>`.
  */
 export function useQueryParams(defaults: Readonly<Record<string, string>> = {}) {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   function get(key: string): string | null {
     return searchParams.get(key);
+  }
+
+  function read(key: string): string | null {
+    return new URLSearchParams(window.location.search).get(key);
   }
 
   function set(partial: QueryParamUpdate, { mode = 'replace' }: QueryParamWriteOptions = {}) {
@@ -36,9 +40,11 @@ export function useQueryParams(defaults: Readonly<Record<string, string>> = {}) 
     }
     const query = next.toString();
     const url = `${pathname}${query ? `?${query}` : ''}${window.location.hash}`;
-    if (mode === 'push') router.push(url, { scroll: false });
-    else router.replace(url, { scroll: false });
+    // The native history calls are part of the Next.js router: `useSearchParams` follows them at
+    // once, with no round trip to the server and no scroll.
+    if (mode === 'push') window.history.pushState(null, '', url);
+    else window.history.replaceState(null, '', url);
   }
 
-  return { get, set };
+  return { get, read, set };
 }

@@ -2,9 +2,10 @@ export type MapPoint = { lat: number; lng: number };
 
 /**
  * `code` is a station-code chip, `dot` a plain dot (both unchanged). `closure` and `hazard` are
- * 22 px glyphs on a 44 px hit area: a no-entry circle and a warning triangle.
+ * 22 px glyphs on a 44 px hit area: a no-entry circle and a warning triangle. `zone` is the 10 px
+ * amber centre of a construction zone, on the same hit area.
  */
-export type MapMarkerVariant = 'code' | 'dot' | 'closure' | 'hazard';
+export type MapMarkerVariant = 'code' | 'dot' | 'closure' | 'hazard' | 'zone';
 
 export type MapMarker = MapPoint & {
   id: string;
@@ -76,6 +77,10 @@ export type LocationMapProps = {
   labels?: readonly MapLabel[];
   /** The marker or zone that is selected (halo, on top, popup open). */
   selectedId?: string | null;
+  /** The marker that is hovered, e.g. from its list item: a small halo, no popup. */
+  hoveredId?: string | null;
+  /** The pointer entered a marker (its id) or left it (null). Mouse only. */
+  onHover?: (id: string | null) => void;
   /** A marker or zone was clicked, or chosen with Enter. */
   onSelect?: (id: string) => void;
   /** The empty map was clicked, or the popup was closed. */
@@ -93,4 +98,9 @@ export type LocationMapProps = {
   panEnabled?: boolean;
   /** Content over the bottom edge of the map (a button at each side). It takes pointer events. */
   overlay?: React.ReactNode;
+  /** Fit the map to these points (24 px padding) each time `fitKey` changes. Key 0 does nothing. */
+  fitPoints?: readonly MapPoint[];
+  fitKey?: number;
+  /** Closest zoom a fit may reach, so one marker does not zoom to the street. */
+  fitMaxZoom?: number;
 };

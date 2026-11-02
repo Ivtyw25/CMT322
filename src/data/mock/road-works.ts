@@ -7,7 +7,7 @@ import type { RoadWork } from '@/data/models/road-work';
  */
 export const roadWorks: RoadWork[] = [
   {
-    id: 'komtar-pier-works-lane',
+    id: 'komtar-pier-works-lane-roadwork',
     kind: 'construction',
     status: 'active',
     title: 'Left lane closed for pier works',
@@ -65,7 +65,7 @@ export const roadWorks: RoadWork[] = [
   },
 
   {
-    id: 'komtar-crosshead-night-closure',
+    id: 'komtar-crosshead-night-closure-roadwork',
     kind: 'construction',
     status: 'upcoming',
     title: 'Night lane closure for crosshead lifting',
