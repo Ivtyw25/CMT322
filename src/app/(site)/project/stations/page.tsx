@@ -5,7 +5,7 @@ import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import { getStations } from '@/data/api/stations';
-import { DocsPageHead } from '@/features/project/docs-page-head';
+import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { StationsExplorer } from '@/features/project/stations-explorer';
 import { StationsSegments } from '@/features/project/stations-segments';
 import { StationsFollowCard } from '@/features/project/stations-follow-card';

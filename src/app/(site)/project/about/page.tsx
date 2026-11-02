@@ -15,8 +15,8 @@ import { AboutKeyFigures } from '@/features/project/about-key-figures';
 import { AboutRoutes } from '@/features/project/about-routes';
 import { AboutTimeline } from '@/features/project/about-timeline';
 import { AboutTravelling } from '@/features/project/about-travelling';
-import { DocsPageHead } from '@/features/project/docs-page-head';
-import { DocsSection } from '@/features/project/docs-section';
+import { DocsPageHead } from '@/components/patterns/docs-page-head';
+import { DocsSection } from '@/components/patterns/docs-section';
 import { StationExplorer } from '@/features/project/station-explorer';
 import { StationRail } from '@/features/project/station-rail';
 

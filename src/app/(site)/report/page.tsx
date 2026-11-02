@@ -5,7 +5,7 @@ import { reportTrackCopy } from '@/content/report-track';
 import { uiCopy } from '@/content/ui';
 import { getReportCategories } from '@/data/api/tickets';
 import { getStations } from '@/data/api/stations';
-import { DocsPageHead } from '@/features/project/docs-page-head';
+import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { ReportAside } from '@/features/report-track/report-aside';
 import { ReportForm } from '@/features/report-track/report-form';
 

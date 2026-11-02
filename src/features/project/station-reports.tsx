@@ -5,7 +5,7 @@ import { projectCopy } from '@/content/project';
 import type { Station } from '@/data/models/station';
 import type { Ticket, TicketStatus } from '@/data/models/ticket';
 import { formatDate } from '@/lib/format/dates';
-import { DocsSection } from './docs-section';
+import { DocsSection } from '@/components/patterns/docs-section';
 
 const { reports: copy } = projectCopy.station;
 

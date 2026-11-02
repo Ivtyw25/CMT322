@@ -6,8 +6,8 @@ import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import { getFaq, getMostAskedFaq } from '@/data/api/faq';
 import { getSiteInfo } from '@/data/api/site-info';
-import { DocsPageHead } from '@/features/project/docs-page-head';
-import { DocsSectionHeading } from '@/features/project/docs-section';
+import { DocsPageHead } from '@/components/patterns/docs-page-head';
+import { DocsSectionHeading } from '@/components/patterns/docs-section';
 import { FaqExplorer } from '@/features/project/faq-explorer';
 import { FaqHelpCard } from '@/features/project/faq-help-card';
 

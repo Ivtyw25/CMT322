@@ -3,7 +3,7 @@
 import { CircleAlert } from 'lucide-react';
 import { FileUpload } from '@/components/ui/file-upload';
 import { reportTrackCopy } from '@/content/report-track';
-import { DocsSectionHeading } from '@/features/project/docs-section';
+import { DocsSectionHeading } from '@/components/patterns/docs-section';
 import { reportFieldId } from './report-values';
 
 const { files } = reportTrackCopy.report;

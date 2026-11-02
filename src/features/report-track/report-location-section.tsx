@@ -6,7 +6,7 @@ import { Field } from '@/components/ui/field';
 import { TextInput } from '@/components/ui/text-input';
 import { LocationMap, type MapPoint } from '@/components/patterns/map/location-map';
 import { reportTrackCopy } from '@/content/report-track';
-import { DocsSectionHeading } from '@/features/project/docs-section';
+import { DocsSectionHeading } from '@/components/patterns/docs-section';
 import type { ReportSectionProps } from './report-section-props';
 import type { LocationStatus } from './use-current-location';
 import {

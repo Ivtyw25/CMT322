@@ -34,7 +34,10 @@ const overview = {
   },
   header: {
     title: 'Report & Track',
-    lede: 'Tell the authority about construction problems near you, then follow your report until it is resolved. Log in or create an account to report an issue. You do not need an account to track a ticket.',
+    lede: 'Tell the authority about construction problems near you, then follow your report until it is resolved.',
+    /** Shown to guests only, after the lede. */
+    ledeGuest:
+      'Log in or create an account to report an issue. You do not need an account to track a ticket.',
     ledeShort: 'Report a construction problem near you, then follow it until it is resolved.',
   },
   pages: {
@@ -75,16 +78,19 @@ const overview = {
     seeAll: 'See all FAQs',
     items: [
       {
+        faqId: 'missing-detour-sign',
         question: 'Who handles my report after I submit it?',
         answer:
           'The authority reviews it first, then passes it to the project developer’s site team if the works caused the problem. Replies appear on your ticket.',
       },
       {
+        faqId: 'property-damage',
         question: 'How do I check the status of my report?',
         answer:
           'Open Track a ticket and enter your ticket ID. It starts with MLC and is in your confirmation email.',
       },
       {
+        faqId: 'noise-dust',
         question: 'Do I need an account to report an issue?',
         answer:
           'Yes. A free account lets us send you updates by email. You can track a ticket without an account.',
@@ -282,7 +288,10 @@ const submitted = {
     hint: 'Keep this ID. You need it to check the status of your report.',
     copy: 'Copy ID',
     copied: 'Copied',
-    copyFailed: 'Could not copy. Select the ID and copy it by hand.',
+    copyFailed: 'Could not copy. The ticket ID is selected: press Ctrl+C or copy it from the menu.',
+    copyFailedTouch: 'Could not copy. The ticket ID is selected: touch and hold to copy it.',
+    copiedAnnounce: 'Ticket ID copied',
+    arrived: (spokenId: string) => `Report submitted. Your ticket ID is ${spokenId}.`,
   },
   next: {
     title: 'What happens next',
@@ -325,6 +334,12 @@ const submitted = {
     action: 'Track a ticket',
   },
   loading: 'Loading your confirmation…',
+  unavailable: {
+    title: 'We can’t show this confirmation',
+    body: 'Log in with the account that sent the report, or track a ticket with its ID.',
+    heading: 'Report confirmation',
+    login: 'Log in',
+  },
 } as const;
 
 const track = {
@@ -344,6 +359,7 @@ const track = {
     report: 'Your report',
   },
   search: {
+    formLabel: 'Find a ticket',
     label: 'Ticket ID',
     placeholder: 'MLC-261028-0482',
     hint: 'It starts with MLC and is in your confirmation email.',
@@ -369,7 +385,18 @@ const track = {
     action: 'Try another ticket ID',
   },
   loading: 'Looking up your ticket…',
+  noscript:
+    'Search needs JavaScript. Add the ticket ID to the address instead: /track/MLC-261028-0482.',
+  announce: {
+    found: (id: string, status: string) => `Ticket ${id}: ${status}`,
+    missing: (id: string) => `No ticket found for ${id}`,
+  },
   result: {
+    privateTitle: 'Report details are private',
+    privateBody: 'Log in with the account that sent this report to see what was sent.',
+    login: 'Log in',
+    attachmentAlt: (n: number, total: number) => `Attachment ${n} of ${total}`,
+    earlier: (n: number) => (n === 1 ? 'Show 1 earlier update' : `Show ${n} earlier updates`),
     submittedOn: (date: string) => `Submitted ${date}`,
     status: { title: 'Status' },
     updates: {

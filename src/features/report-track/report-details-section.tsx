@@ -7,7 +7,7 @@ import { TextInput } from '@/components/ui/text-input';
 import { Textarea } from '@/components/ui/textarea';
 import { reportTrackCopy } from '@/content/report-track';
 import type { ReportCategory } from '@/data/models/ticket';
-import { DocsSectionHeading } from '@/features/project/docs-section';
+import { DocsSectionHeading } from '@/components/patterns/docs-section';
 import type { ReportSectionProps } from './report-section-props';
 import { reportFieldId } from './report-values';
 

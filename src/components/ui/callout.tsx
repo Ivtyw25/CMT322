@@ -5,7 +5,7 @@ export type CalloutTone = 'info' | 'warning' | 'success' | 'danger';
 
 type CalloutProps = {
   tone: CalloutTone;
-  /** Bold first line next to the icon. Always shown for warning, success and danger. */
+  /** Bold first line next to the icon. Without it the other tones show the icon beside the text. */
   title?: string;
   /** Element of the title. The error summary uses `h2`. */
   titleAs?: 'p' | 'h2' | 'h3';
@@ -41,6 +41,24 @@ export function Callout({
   children,
   className,
 }: CalloutProps) {
+  if (!title && tone !== 'info') {
+    const { Icon, box, text } = iconed[tone];
+    return (
+      <div
+        id={id}
+        ref={ref}
+        tabIndex={tabIndex}
+        className={cn(
+          'flex gap-3 rounded-xl border-l-3 p-4 type-body-s text-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
+          box,
+          className,
+        )}
+      >
+        <Icon aria-hidden className={cn('mt-0.5 size-4.5 shrink-0', text)} />
+        <div>{children}</div>
+      </div>
+    );
+  }
   if (tone === 'info') {
     return (
       <div

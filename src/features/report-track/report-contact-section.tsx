@@ -4,7 +4,7 @@ import { Mail } from 'lucide-react';
 import { Field } from '@/components/ui/field';
 import { TextInput } from '@/components/ui/text-input';
 import { reportTrackCopy } from '@/content/report-track';
-import { DocsSectionHeading } from '@/features/project/docs-section';
+import { DocsSectionHeading } from '@/components/patterns/docs-section';
 import type { ReportSectionProps } from './report-section-props';
 import { reportFieldId } from './report-values';
 

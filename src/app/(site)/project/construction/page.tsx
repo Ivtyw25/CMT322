@@ -12,7 +12,7 @@ import { getToday } from '@/data/api/clock';
 import { getConstructionUpdates, getMilestones } from '@/data/api/construction';
 import { getSiteInfo } from '@/data/api/site-info';
 import { ConstructionExplorer } from '@/features/project/construction-explorer';
-import { DocsPageHead } from '@/features/project/docs-page-head';
+import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { milestoneDate } from '@/features/project/milestone-date';
 import Link from 'next/link';
 
