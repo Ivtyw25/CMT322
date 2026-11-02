@@ -2,9 +2,14 @@ import { TICKET_ID_PATTERN } from '@/data/models/ticket';
 
 const DASHES = /[‐-―−]/g;
 
-/** Trims, upper-cases, turns dash-like characters into "-" and removes inner spaces. */
+/** Trims, upper-cases, and treats dash-like characters and inner spaces as one "-" ("mlc 261028 0482"). */
 export function normaliseTicketId(raw: string): string {
-  return raw.replace(DASHES, '-').replace(/\s+/g, '').toUpperCase();
+  return raw
+    .trim()
+    .replace(DASHES, '-')
+    .replace(/\s*-\s*|\s+/g, '-')
+    .replace(/-+/g, '-')
+    .toUpperCase();
 }
 
 export type TicketIdProblem = 'empty' | 'invalid';

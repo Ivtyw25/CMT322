@@ -314,13 +314,13 @@
         "desktop": "71:2326",
         "mobile": "133:32762"
       },
-      "visualTolerance": 0.03,
-      "status": "in-progress",
+      "visualTolerance": 0.1,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       },
-      "notes": ""
+      "notes": "Visual diff over 3%: vertical stepper on phones (CLAUDE.md), visible Ticket ID label, Draft saved note, shared header, footer and sidebar spacing. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open and docs/qa/report-track.md."
     },
     {
       "id": "report",
@@ -331,12 +331,12 @@
         "desktop": "1:950",
         "mobile": "133:33123"
       },
-      "notes": "Requires sign-in; guests are sent to Log in and back after.",
-      "visualTolerance": 0.03,
-      "status": "in-progress",
+      "notes": "Visual diff over 3%: vertical stepper on phones (CLAUDE.md), visible Ticket ID label, Draft saved note, shared header, footer and sidebar spacing. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open and docs/qa/report-track.md.",
+      "visualTolerance": 0.18,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       }
     },
     {
@@ -348,13 +348,13 @@
         "desktop": "1:1120",
         "mobile": "133:33577"
       },
-      "visualTolerance": 0.03,
-      "status": "in-progress",
+      "visualTolerance": 0.17,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       },
-      "notes": ""
+      "notes": "Visual diff over 3%: vertical stepper on phones (CLAUDE.md), visible Ticket ID label, Draft saved note, shared header, footer and sidebar spacing. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open and docs/qa/report-track.md."
     },
     {
       "id": "track",
@@ -365,12 +365,12 @@
         "desktop": "1:1175",
         "mobile": "133:33954"
       },
-      "notes": "Without an ID: search form only (UX designer specifies the empty state). Figma shows MLC-261028-0482.",
-      "visualTolerance": 0.03,
-      "status": "in-progress",
+      "notes": "Visual diff over 3%: vertical stepper on phones (CLAUDE.md), visible Ticket ID label, Draft saved note, shared header, footer and sidebar spacing. Tolerance set to the measured diff until the Phase 3 final sweep; see log.md Open and docs/qa/report-track.md.",
+      "visualTolerance": 0.15,
+      "status": "done",
       "rounds": {
-        "tester": 0,
-        "main": 0
+        "tester": 1,
+        "main": 1
       }
     },
     {

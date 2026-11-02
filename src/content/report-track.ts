@@ -46,7 +46,7 @@ const overview = {
       {
         id: 'report',
         title: 'Report an issue',
-        body: 'Send a complaint, feedback or a question, with photos and the exact location.',
+        body: 'Send a complaint, feedback or a general inquiry, with photos and the exact location.',
         points: ['Complaint', 'Feedback', 'General inquiry'],
       },
       {
