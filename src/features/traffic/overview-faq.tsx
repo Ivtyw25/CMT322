@@ -26,8 +26,8 @@ export function OverviewFaq({
     ),
   }));
   return (
-    <section aria-labelledby={headingId} className="flex flex-col gap-6">
-      <h2 id={headingId} tabIndex={-1} className="type-heading-xs lg:type-heading-s">
+    <section aria-labelledby={headingId} className="flex flex-col gap-4">
+      <h2 id={headingId} tabIndex={-1} className="type-heading-xs">
         {copy.title}
       </h2>
       <Accordion items={entries} headingAs="h3" />

@@ -78,12 +78,7 @@ function StepLink({
           {children}
         </Link>
       ) : (
-        <span
-          role="img"
-          aria-label={label}
-          aria-disabled="true"
-          className={cn(itemClass, disabledClass)}
-        >
+        <span role="img" aria-label={label} className={cn(itemClass, disabledClass)}>
           {children}
         </span>
       )}

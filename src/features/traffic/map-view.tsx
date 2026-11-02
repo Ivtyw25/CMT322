@@ -42,13 +42,19 @@ const LIST_ID = 'road-changes-list';
 const MAP_ID = 'traffic-map';
 const SEARCH_DELAY_MS = 300;
 const DESKTOP_QUERY = '(min-width: 1024px)';
-/** Stations named on the map at the first zoom; the rest from zoom 14. */
-const KEY_STATIONS = new Set(['S31', 'S20', 'S19', 'S13', 'S09', 'S03', 'A01']);
+/** Stations named on the map at the first zoom (KOMTAR, next to Macallum, waits for zoom 12); the rest from zoom 14. */
+const KEY_STATIONS = new Set(['S31', 'S19', 'S13', 'S09', 'S03', 'A01']);
 const LABEL_ZOOM_KEY = 11;
+const LABEL_ZOOM_NEARBY = 12;
 const LABEL_ZOOM_ALL = 14;
 const START_ZOOM = 11;
 const ZONE_RADIUS_M = 150;
 const FIT_MAX_ZOOM = 15;
+
+function labelZoomOf(code: string): number {
+  if (code === 'S20') return LABEL_ZOOM_NEARBY;
+  return KEY_STATIONS.has(code) ? LABEL_ZOOM_KEY : LABEL_ZOOM_ALL;
+}
 
 function reducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -149,7 +155,7 @@ export function MapView({ entries, stations, alignment, updatedAt }: MapViewProp
         lat: station.lat,
         lng: station.lng,
         text: `${station.code} ${station.name}`,
-        minZoom: KEY_STATIONS.has(station.code) ? LABEL_ZOOM_KEY : LABEL_ZOOM_ALL,
+        minZoom: labelZoomOf(station.code),
       }))
     : [];
 

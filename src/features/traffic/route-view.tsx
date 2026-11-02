@@ -148,8 +148,8 @@ export function RouteView({ entries, stations, updatedAt }: RouteViewProps) {
               label={copy.stationList.label}
             />
           </div>
-          <div className="hidden min-[1440px]:flex min-[1440px]:flex-col min-[1440px]:gap-8">
-            <FitToWidth width={DIAGRAM_WIDTH} height={DIAGRAM_HEIGHT}>
+          <div className="mx-auto hidden w-full max-w-225 min-[1440px]:flex min-[1440px]:flex-col min-[1440px]:gap-8">
+            <FitToWidth width={DIAGRAM_WIDTH} height={DIAGRAM_HEIGHT} minScale={0.75}>
               <LineDiagram
                 stations={stations}
                 mode="select"

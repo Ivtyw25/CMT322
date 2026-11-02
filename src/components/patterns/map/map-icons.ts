@@ -53,7 +53,7 @@ export function markerIcon(marker: MapMarker): L.DivIcon {
 export function labelIcon(label: MapLabel): L.DivIcon {
   const element = document.createElement('span');
   element.className =
-    'absolute -translate-x-1/2 -translate-y-1/2 rounded-md bg-static-white px-2 py-1 type-body-xs-semibold whitespace-nowrap text-static-navy shadow-map-control';
+    'absolute translate-x-4 -translate-y-1/2 rounded-md bg-static-white px-2 py-1 type-body-xs-semibold whitespace-nowrap text-static-navy shadow-map-control';
   element.textContent = label.text;
   return L.divIcon({ html: element, className: 'overflow-visible', iconSize: [0, 0] });
 }

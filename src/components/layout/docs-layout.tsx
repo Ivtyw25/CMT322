@@ -77,7 +77,7 @@ export function DocsLayout({
               >
                 {group.label}
               </p>
-              <ul aria-labelledby={`docs-group-${group.id}`} className="flex flex-col">
+              <ul aria-labelledby={`docs-group-${group.id}`} className="flex flex-col gap-0.5">
                 {group.items.map((item) => {
                   const current = item.href === currentHref;
                   return (
@@ -86,7 +86,7 @@ export function DocsLayout({
                         href={item.href}
                         aria-current={current ? 'page' : undefined}
                         className={cn(
-                          'block rounded-lg px-2.5 py-1.5 type-body-s transition-colors duration-(--duration-fast) ease-(--ease-standard)',
+                          'block rounded-lg px-2.5 py-1.75 type-body-s transition-colors duration-(--duration-fast) ease-(--ease-standard)',
                           current
                             ? 'bg-primary-50 type-body-s-semibold text-primary-700'
                             : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',

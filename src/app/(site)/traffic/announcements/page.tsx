@@ -32,7 +32,8 @@ export default async function TrafficAnnouncementsPage() {
               { label: uiCopy.breadcrumb.home, href: routes.home },
               { label: trafficCopy.overview.header.title, href: routes.traffic.overview },
             ]}
-            current={copy.header.title}
+            current={copy.header.breadcrumb}
+            tone="link"
           />
           <h1 className="type-heading-s lg:type-heading-m">{copy.header.title}</h1>
           <p className="max-w-180 type-body-l text-gray-600 lg:type-body-xl">{copy.header.lede}</p>

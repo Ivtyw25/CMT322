@@ -1,4 +1,3 @@
-import { TriangleAlert } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import type { LineMarkerKind } from './line-markers';
 
@@ -28,9 +27,16 @@ export function LineMarkerGlyph({ kind, className }: { kind: LineMarkerKind; cla
     );
   }
   return (
-    <TriangleAlert
-      aria-hidden
-      className={cn('size-4 fill-danger-100 text-danger-600', className)}
-    />
+    <svg aria-hidden viewBox="0 0 16 16" className={cn('size-4 text-danger-600', className)}>
+      <path
+        d="M8 1.5 15 14H1z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M8 6v4" stroke="var(--color-static-white)" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="8" cy="12" r="0.9" fill="var(--color-static-white)" />
+    </svg>
   );
 }

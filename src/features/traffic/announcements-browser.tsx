@@ -273,7 +273,7 @@ export function AnnouncementsBrowser({ rows, areaOptions }: AnnouncementsBrowser
               value={area}
               onChange={(event) => changeArea(event.target.value)}
               options={[{ value: '', label: copy.filters.allAreas }, ...areaOptions]}
-              className="md:w-60"
+              className="md:w-28"
             />
             <div role="search" className="md:flex-1 xl:w-70 xl:flex-none">
               <SearchInput

@@ -24,3 +24,6 @@ Copy in `src/content/traffic.ts` (`trafficCopy.overview`, `.map`, `.route`, `.an
 - Every empty and error state is written for each tab, the area and search filter, the map list, the route view and the overview list.
 - Layer toggle counts (4 closures, 6 construction zones, 2 hazards, 12 in the area) are computed by the builder from records. See VERIFY T1: the data gives 10, not 12.
 - Route stop lines (for example "KTM Butterworth, ferry terminal, Rapid Penang bus terminal") are each station's `subtitle`. No new records.
+
+## QA round 1: announcement summaries (T-QA9)
+All 18 announcement summaries longer than Figma's one-liner were shortened to about 50 characters or fewer in `src/data/mock/announcements.ts`. Facts, dates and places are unchanged; only the wording is shorter. "One lane each way for viaduct works." was already short and is kept. Example: "Traffic is diverted from 10 pm to 6 am while viaduct segments are lifted into place." is now "Diverted from 10 pm to 6 am for viaduct lifting."

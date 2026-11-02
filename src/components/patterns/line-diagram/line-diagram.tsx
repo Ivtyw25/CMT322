@@ -50,6 +50,46 @@ function glyphTop(layout: StationLayout, boxTop: number): number {
   return labelAbove ? y + radius + 2 - boxTop : y - radius - 18 - boxTop;
 }
 
+/** Road works colour the straight stretch of rail from their station to the next one amber. */
+function WorksSegments({
+  stations,
+  markersByStation,
+}: {
+  stations: readonly LineStation[];
+  markersByStation?: MarkersByStation;
+}) {
+  const segments = stations.flatMap((station, index) => {
+    const next = stations[index + 1];
+    const from = stationLayouts[station.code];
+    const to = next ? stationLayouts[next.code] : undefined;
+    const straight = from && to && (from.x === to.x || from.y === to.y);
+    return markersByStation?.[station.code]?.includes('construction') && straight
+      ? [{ code: station.code, from, to }]
+      : [];
+  });
+  if (segments.length === 0) return null;
+  return (
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute inset-0"
+      width={DIAGRAM_WIDTH}
+      height={DIAGRAM_HEIGHT}
+    >
+      {segments.map(({ code, from, to }) => (
+        <line
+          key={code}
+          x1={from.x}
+          y1={from.y}
+          x2={to.x}
+          y2={to.y}
+          className="stroke-warning-600"
+          strokeWidth="11.1299"
+        />
+      ))}
+    </svg>
+  );
+}
+
 function StationStop({
   station,
   layout,
@@ -63,7 +103,7 @@ function StationStop({
   const box = boxOf(layout);
   const select = mode === 'select';
   const selected = select && selectedCode === station.code;
-  const glyphs = select ? visibleMarkers(markers) : [];
+  const glyphs = select ? visibleMarkers(markers).filter((kind) => kind !== 'construction') : [];
   const halo = Math.max(44, radius * 2 + 8);
   const rootClass = 'group absolute block rounded-xl';
   const rootStyle = { left: box.left, top: box.top, width: box.width, height: box.height };
@@ -248,6 +288,7 @@ export function LineDiagram({
   return (
     <div className="relative" style={{ width: DIAGRAM_WIDTH, height: DIAGRAM_HEIGHT }}>
       <LineDiagramArt />
+      {mode === 'select' ? <WorksSegments stations={stations} markersByStation={markersByStation} /> : null}
       {depotLayouts.map((depot) => (
         <span
           key={`${depot.x}-${depot.y}`}

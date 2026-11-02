@@ -12,6 +12,8 @@ type LinkCardProps = {
   selected?: boolean;
   /** Id of the text that describes the card (its description); read after the link's name. */
   describedBy?: string;
+  /** `link`: a larger primary-blue title (Figma Traffic overview cards). */
+  titleTone?: 'default' | 'link';
   children?: React.ReactNode;
   className?: string;
 };
@@ -27,6 +29,7 @@ export function LinkCard({
   titleAs: Title = 'h3',
   selected = false,
   describedBy,
+  titleTone = 'default',
   children,
   className,
 }: LinkCardProps) {
@@ -43,7 +46,14 @@ export function LinkCard({
       )}
     >
       {media}
-      <Title className="type-body-s-semibold text-gray-900 transition-colors duration-(--duration-fast) group-hover:text-primary-700">
+      <Title
+        className={cn(
+          'transition-colors duration-(--duration-fast) group-hover:text-primary-700',
+          titleTone === 'link'
+            ? 'type-body-m-semibold text-primary-700'
+            : 'type-body-s-semibold text-gray-900',
+        )}
+      >
         <Link
           href={href}
           aria-current={selected ? 'true' : undefined}

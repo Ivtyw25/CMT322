@@ -31,8 +31,8 @@ export function OverviewRoadChanges({
   items: readonly Announcement[];
 }) {
   return (
-    <section aria-labelledby={headingId} className="flex flex-col gap-6">
-      <h2 id={headingId} tabIndex={-1} className="type-heading-xs lg:type-heading-s">
+    <section aria-labelledby={headingId} className="flex flex-col gap-4">
+      <h2 id={headingId} tabIndex={-1} className="type-heading-xs">
         {copy.title}
       </h2>
       <div className="flex flex-col gap-3">
@@ -47,7 +47,7 @@ export function OverviewRoadChanges({
             className="divide-y divide-gray-200 border-y border-gray-200"
           >
             {items.map((item) => (
-              <li key={item.id} className="flex items-start justify-between gap-4 py-4">
+              <li key={item.id} className="flex items-center justify-between gap-4 py-4">
                 <div className="flex min-w-0 flex-col items-start gap-1.5">
                   <Tag kind={item.status} />
                   <h3 className="type-body-m-semibold text-gray-900">{item.title}</h3>

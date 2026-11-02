@@ -15,8 +15,8 @@ const CARD_TARGETS: Record<(typeof copy.cards)[number]['id'], { href: string; ic
 /** "Pages in this section": one link card for each Traffic page (Figma 66:2206). */
 export function OverviewPageCards({ headingId }: { headingId: string }) {
   return (
-    <section aria-labelledby={headingId} className="flex flex-col gap-6">
-      <h2 id={headingId} tabIndex={-1} className="type-heading-xs lg:type-heading-s">
+    <section aria-labelledby={headingId} className="flex flex-col gap-4">
+      <h2 id={headingId} tabIndex={-1} className="type-heading-xs">
         {copy.title}
       </h2>
       <ul className="grid gap-4 md:grid-cols-3 md:gap-3 lg:gap-4">
@@ -29,10 +29,11 @@ export function OverviewPageCards({ headingId }: { headingId: string }) {
                 href={href}
                 title={card.title}
                 titleAs="h3"
+                titleTone="link"
                 describedBy={bodyId}
-                className="w-full gap-3 p-4 xl:p-5"
+                className="w-full gap-3 p-5"
                 media={
-                  <span className="flex size-9 items-center justify-center rounded-lg bg-primary-50 text-primary-700 xl:size-10">
+                  <span className="flex size-9 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
                     <Icon aria-hidden className="size-5" />
                   </span>
                 }

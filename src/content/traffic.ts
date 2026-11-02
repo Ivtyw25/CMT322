@@ -284,6 +284,7 @@ export const trafficCopy = {
     },
     header: {
       title: 'Traffic announcements',
+      breadcrumb: 'Announcements',
       lede: 'Planned closures and diversions, with the dates and duration of each.',
     },
     tabs: {

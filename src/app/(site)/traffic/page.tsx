@@ -45,11 +45,12 @@ export default async function TrafficOverviewPage() {
       onThisPage={onThisPage}
       aside={<NeedHelpBlock careline={siteInfo.careline} />}
     >
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-14">
         <header className="flex flex-col gap-4">
           <Breadcrumb
             items={[{ label: uiCopy.breadcrumb.home, href: routes.home }]}
             current={copy.header.title}
+            tone="link"
           />
           <h1 className="type-heading-s lg:type-heading-m">{copy.header.title}</h1>
           <p className="max-w-175 type-body-l text-gray-600 lg:type-body-xl">{copy.header.lede}</p>
