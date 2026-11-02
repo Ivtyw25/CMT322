@@ -206,6 +206,38 @@ Merged to main and deployed: https://mutiara-connect-eoc6wujri-ivtyw25s-projects
 ### Decisions
 - `docs/specs/_traffic-decisions.md` (T1, T2, the UX answers, the slice follow-ups).
 
+## Iteration 5: report-track (2026-11-03)
+
+Merged to main and deployed: https://mutiara-connect-eo2k18we2-ivtyw25s-projects.vercel.app (production https://mutiara-connect.vercel.app). All five routes return 200 live, including ticket MLC-261028-0482.
+
+**Tokens:** 6 agents (content, UX, slices 1–2, a pre-test fix round, tester), all on Sonnet. The slice builders peaked at 210–300k context. One run hit the 5-hour limit and resumed from a wip commit. The fix round ran before the tester, because the verify failures were concrete; that saved a tester round.
+
+### Done
+- Report and track overview, the report form, the Submitted page and Track (search and result).
+- The form:
+  - validation on blur and on submit, with a focused error summary
+  - upload: drag and drop, keyboard, limits, remove
+  - a map pin and `?station=` pre-fill
+  - a browser draft and the pending state
+  - new tickets kept in this browser
+- Track: ID validation (spaces and dashes accepted), the status stepper and the updates timeline. Owner-only fields show for the signed-in owner only.
+- Shared:
+  - file-upload, tag, callout tones, radio-card, error-summary
+  - stepper stages layout, and the map pin mode (its own file)
+  - DocsPageHead and DocsSection moved to components/patterns, so no feature imports another
+  - `ReportType` is now complaint, feedback and inquiry (Figma, R1)
+
+### Critique (tester and main review)
+- 9 issues: builder 4, UX 3, content 1, main 1, all minor except R-QA7. Two were fixed by main, and two were accepted. R-QA1, 2, 5 and 9 (tap targets on the map and shell, the tiles-error text, the static "On this page") go to the final sweep.
+- R-QA7: guest /report sends people to /login, which is a 404 until the account group lands next.
+
+### Open
+- Visual diffs over 3%: report 7–17%, submitted 11–16%, track 10–14%, overview 6–9%. Causes: the vertical stepper on phones (the CLAUDE.md rule over the Figma phone frame), the visible Ticket ID label, the Draft saved note, and the shared chrome. Tolerances are set to the measured diffs until the final sweep.
+- There are no design tokens for the 40/48 ticket ID or the 28/36 ticket title; the nearest heading tokens are used.
+
+### Decisions
+- `docs/specs/_report-track-decisions.md` (R1, R2, R5, the UX answers).
+
 ## Decisions in progress (iterations 3–4)
 
 - **Owner, 30 Oct 2026:** approved Antigravity delegation with `agy-delegate --yolo --dir <worktree>`, after the auto-mode classifier had refused one brief. Delegation follows `docs/delegation.md`; the delegating agent still verifies every result.
