@@ -8,7 +8,7 @@ export type StepEntry = {
   id: string;
   label: string;
   state: StepState;
-  /** `stages` only: a line under the label ("Completed Mar 2025"). */
+  /** A line under the label ("Completed Mar 2025", "28 Oct, 14:41"). */
   detail?: string;
 };
 
@@ -22,9 +22,12 @@ type StepperProps = {
   steps: readonly StepEntry[];
   /**
    * `status` is the ticket status row (vertical below 1024 px). `stages` is a list that stays
-   * vertical at every width, with a detail line per step (station construction stages).
+   * vertical at every width, with a detail line per step (station construction stages). Both
+   * variants show a step's `detail` under its label.
    */
   variant?: 'status' | 'stages';
+  /** `status` only: colour of the completed steps and the lines between them. */
+  tone?: 'primary' | 'success';
   /** Name of the list for screen readers. Defaults to "Ticket status". */
   label?: string;
   className?: string;
@@ -86,7 +89,17 @@ function StageList({ steps, label = uiCopy.stepper.label, className }: StepListP
   );
 }
 
-function StatusSteps({ steps, label = uiCopy.stepper.label, className }: StepListProps) {
+const completeTone = {
+  primary: { line: 'bg-primary-600', dot: 'border-primary-600 bg-primary-600' },
+  success: { line: 'bg-success-600', dot: 'border-success-600 bg-success-600' },
+} as const;
+
+function StatusSteps({
+  steps,
+  label = uiCopy.stepper.label,
+  tone = 'primary',
+  className,
+}: StepListProps) {
   return (
     <ol aria-label={label} className={cn('flex flex-col lg:flex-row', className)}>
       {steps.map((step) => (
@@ -99,7 +112,9 @@ function StatusSteps({ steps, label = uiCopy.stepper.label, className }: StepLis
             aria-hidden
             className={cn(
               'absolute top-7 -bottom-1 left-3.5 w-0.5 -translate-x-1/2 group-last:hidden',
-              step.state === 'complete' ? 'bg-primary-600' : 'bg-gray-300',
+              step.state === 'complete'
+                ? completeTone[tone].line
+                : 'border-l-2 border-dotted border-gray-300 lg:border-t-2 lg:border-l-0',
               'lg:top-3.5 lg:right-0 lg:bottom-auto lg:left-7 lg:h-0.5 lg:w-auto lg:translate-x-0 lg:-translate-y-1/2',
             )}
           />
@@ -107,7 +122,7 @@ function StatusSteps({ steps, label = uiCopy.stepper.label, className }: StepLis
             aria-hidden
             className={cn(
               'relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full border-2',
-              step.state === 'complete' && 'border-primary-600 bg-primary-600 text-static-white',
+              step.state === 'complete' && [completeTone[tone].dot, 'text-static-white'],
               step.state === 'current' && 'border-primary-600 bg-surface',
               step.state === 'upcoming' && 'border-gray-300 bg-surface',
             )}
@@ -126,6 +141,7 @@ function StatusSteps({ steps, label = uiCopy.stepper.label, className }: StepLis
             >
               {step.label}
             </span>
+            {step.detail ? <span className="type-body-xs text-gray-600">{step.detail}</span> : null}
             <span className="sr-only">{stateLabel[step.state]}</span>
           </span>
         </li>

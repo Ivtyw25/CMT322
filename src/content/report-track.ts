@@ -15,7 +15,8 @@ const shared = {
     title: 'Emergency or immediate danger?',
     body: 'Call 999. This form is not monitored around the clock.',
     /** Banner version for the overview page. */
-    bodyShort: 'Emergency or immediate danger? Call 999. Reports are not monitored around the clock.',
+    bodyShort:
+      'Emergency or immediate danger? Call 999. Reports are not monitored around the clock.',
   },
   breadcrumb: {
     section: 'Report & Track',
@@ -56,9 +57,15 @@ const overview = {
   howItWorks: {
     title: 'How it works',
     steps: [
-      { title: 'Log in and submit', body: 'Describe the problem, add photos and pin the location.' },
+      {
+        title: 'Log in and submit',
+        body: 'Describe the problem, add photos and pin the location.',
+      },
       { title: 'Get your ticket ID', body: 'It appears on screen and arrives in your email.' },
-      { title: 'The authority reviews it', body: 'The status moves from Pending review to In progress.' },
+      {
+        title: 'The authority reviews it',
+        body: 'The status moves from Pending review to In progress.',
+      },
       { title: 'See the outcome', body: 'Resolution details appear when you track the ticket.' },
     ],
   },
@@ -130,6 +137,8 @@ const report = {
       placeholder: 'Sum up the problem in a few words',
       hint: 'For example: Driveway blocked by site hoarding.',
       errorEmpty: 'Enter a subject',
+      errorShort: 'Use at least 5 characters for the subject',
+      min: 5,
       errorLong: 'Use 100 characters or fewer for the subject',
       max: 100,
     },
@@ -142,7 +151,18 @@ const report = {
       errorLong: 'Use 1000 characters or fewer for the description',
       min: 20,
       max: 1000,
+      counter: (used: number, max: number) => `${used} of ${max} characters`,
+      charactersLeft: (left: number) => `${left} characters left`,
+      limitReached: 'Character limit reached',
+      /** The count starts to warn at this many characters. */
+      warnFrom: 900,
     },
+  },
+  draft: {
+    restored: (time: string) => `We restored your draft from ${time}.`,
+    photosNote: 'Photos are not saved in a draft. Add them again if you need them.',
+    startOver: 'Start over',
+    saved: 'Draft saved in this browser',
   },
   location: {
     title: 'Location',
@@ -161,31 +181,23 @@ const report = {
         'We could not get your location. Allow location access in your browser, or type the address.',
       errorUnavailable: 'Location is not available on this device. Type the address instead.',
       attribution: '© OpenStreetMap contributors',
+      dropPin: 'Drop a pin at the map centre',
+      pinLabel: (lat: string, lng: string) =>
+        `Report location pin, ${lat}, ${lng}. Use the arrow keys to move it.`,
+      pinSetNear: (station: string) => `Pin set near ${station}`,
+      pinSetCurrent: 'Pin set to your current location',
+      addressNear: (station: string) => `Near ${station}`,
+      addressAtStation: (station: string) => `${station} station`,
+      stationChip: (code: string, station: string) => `Near ${code} ${station} station`,
+      removeStation: 'Remove station',
     },
   },
   files: {
     title: 'Photos and files',
     lede: 'Photos help the team understand the problem faster.',
-    dropzone: {
-      prefix: 'Drag files here or',
-      browse: 'browse',
-      rules: 'JPG, PNG or PDF, up to 10 MB each, maximum 5 files',
-    },
     maxFiles: 5,
     maxMb: 10,
-    status: {
-      uploading: (name: string, percent: number) => `Uploading ${name}, ${percent}%`,
-      uploaded: (size: string) => `${size}, uploaded`,
-    },
-    remove: (name: string) => `Remove ${name}`,
-    errors: {
-      tooBig: (name: string, maxMb: number) =>
-        `${name} is larger than ${maxMb} MB. Choose a smaller file.`,
-      wrongType: (name: string) => `${name} is not a JPG, PNG or PDF. Choose another file.`,
-      tooMany: (maxFiles: number) =>
-        `You can add up to ${maxFiles} files. Remove one to add another.`,
-      failed: (name: string) => `${name} did not upload. Check your connection and try again.`,
-    },
+    waitUploading: 'Wait for your photos to finish uploading.',
   },
   contact: {
     title: 'Your contact details',
@@ -210,7 +222,8 @@ const report = {
   },
   actions: {
     submit: 'Submit report',
-    submitting: 'Sending your report…',
+    submitting: 'Sending report…',
+    sending: 'Sending your report',
     cancel: 'Cancel',
   },
   errorSummary: {
@@ -218,8 +231,8 @@ const report = {
     intro: 'Fix these before you send your report:',
   },
   errors: {
-    submitFailed:
-      'We could not send your report. Your details are still here. Check your connection and try again.',
+    submitFailedTitle: 'We could not send your report',
+    submitFailed: 'Your answers are still here. Check your connection and try again.',
   },
   /** Right sidebar. */
   next: {

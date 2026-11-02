@@ -333,7 +333,7 @@
       },
       "notes": "Requires sign-in; guests are sent to Log in and back after.",
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "in-progress",
       "rounds": {
         "tester": 0,
         "main": 0

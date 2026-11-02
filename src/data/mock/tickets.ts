@@ -184,7 +184,7 @@ export const tickets: Ticket[] = [
   },
   {
     id: 'MLC-260714-0088',
-    type: 'suggestion',
+    type: 'feedback',
     categoryId: 'other',
     title: 'Add a crossing point on the USM gate detour',
     description:
@@ -233,7 +233,7 @@ export const tickets: Ticket[] = [
   },
   {
     id: 'MLC-260608-0041',
-    type: 'hazard',
+    type: 'complaint',
     categoryId: 'road-damage',
     title: 'Loose road plate on Jalan Gelugor',
     description:
