@@ -173,6 +173,39 @@ Commit merged to main and deployed: https://mutiara-connect-6a2bs7qsa-ivtyw25s-p
 - `docs/specs/_project-decisions.md` (owner-facing answers, QA round 1 decisions).
 - To save tokens, the group closed after one tester round. Visual polish of the shared mobile chrome moves to the final sweep, where every page gets re-measured.
 
+## Iteration 4: traffic (2026-11-02)
+
+Merged to main and deployed: https://mutiara-connect-eoc6wujri-ivtyw25s-projects.vercel.app (production https://mutiara-connect.vercel.app). All four routes return 200 live.
+
+**Tokens:** 7 traffic agents (content, UX, slices 1–3, tester, fix round), each on Sonnet with effort medium. The slice builders peaked at 280–320k context. Two runs hit the 5-hour usage limit and resumed from saved transcripts (wip commits kept the work).
+
+### Done
+- Traffic overview, Traffic map, Route view and Announcements. Map and Route view use a new workspace layout without the footer. The map comes first on mobile.
+- Behaviour:
+  - filters in the URL (replace)
+  - list and marker selection, with a hover halo both ways
+  - deep links to an announcement (`#id`)
+  - tab counts, and pagination of 6
+- Shared:
+  - map markers, legend, popups, controls and zones, with a visual-test mask for the OSM canvas
+  - the line diagram promoted to patterns (Home uses it too)
+  - client-side pagination, tabs with counts, segmented links, search input
+  - hazard records, and `normaliseQuery` moved to `lib/search` (no cross-feature imports)
+- Main fixes at close:
+  - two KOMTAR road works shared ids with announcements after the project merge, so they were renamed (`-roadwork`)
+  - breadcrumb and docs sidebar conflicts were resolved to the project versions
+
+### Critique (tester and main review)
+- Round 1: 13 issues (builder 8, content 1, UX 1, tester 3). All fixed or accepted.
+
+### Open
+- Visual diffs over 3%: overview 21% (accepted Popular questions section, about +400 px), map 11–18%, announcements 8–11%, route view 6–9%. Tolerances are set to the measured diffs until the Phase 3 final sweep. There are no dark Figma references for traffic.
+- Traffic sidebar rows use the project pitch (py-2), not the 36 px the traffic fix used.
+- Shared e2e flakes under load: tabs arrow keys, header-menu placement, Home URL writes and session. Each passes 3 of 3 alone.
+
+### Decisions
+- `docs/specs/_traffic-decisions.md` (T1, T2, the UX answers, the slice follow-ups).
+
 ## Decisions in progress (iterations 3–4)
 
 - **Owner, 30 Oct 2026:** approved Antigravity delegation with `agy-delegate --yolo --dir <worktree>`, after the auto-mode classifier had refused one brief. Delegation follows `docs/delegation.md`; the delegating agent still verifies every result.
