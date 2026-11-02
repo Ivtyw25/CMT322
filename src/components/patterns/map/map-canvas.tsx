@@ -8,6 +8,7 @@ import { ExternalLink } from '@/components/ui/external-link';
 import { uiCopy } from '@/content/ui';
 import { MapControls } from './map-controls';
 import { labelIcon, markerIcon, SELECTED_Z_OFFSET, variantOf, zOffsetOf } from './map-icons';
+import { MapPinLayer } from './map-pin-layer';
 import { MapPlaceholder } from './map-placeholder';
 import type { LocationMapProps, MapMarker, MapPoint, MapZone } from './map-types';
 
@@ -57,6 +58,9 @@ export function MapCanvas({
   focusId = null,
   focusKey = 0,
   resetBounds,
+  pin,
+  panEnabled = true,
+  overlay,
   fitPoints,
   fitKey = 0,
   fitMaxZoom,
@@ -75,6 +79,7 @@ export function MapCanvas({
   const startRef = useRef({ lat: center.lat, lng: center.lng, zoom });
   const handlers = useRef({ onSelect, onDeselect, onHover });
   const itemsRef = useRef<readonly (MapPoint & { id: string })[]>([]);
+  const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [tiles, setTiles] = useState<TileStatus>('loading');
   const [zoomLevel, setZoomLevel] = useState(zoom);
   const [popupHost, setPopupHost] = useState<HTMLElement | null>(null);
@@ -101,7 +106,7 @@ export function MapCanvas({
       zoomControl: false,
       attributionControl: false,
       scrollWheelZoom: interaction === 'full',
-      dragging: interaction === 'full' || !L.Browser.mobile,
+      dragging: panEnabled && (interaction === 'full' || !L.Browser.mobile),
       zoomAnimation: !still,
       fadeAnimation: !still,
       markerZoomAnimation: !still,
@@ -137,6 +142,7 @@ export function MapCanvas({
     }).setContent(host);
     setPopupHost(host);
     mapRef.current = map;
+    setMapInstance(map);
     // Leaflet closes a popup on Escape only while the map itself has focus, not a marker.
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && popupRef.current?.isOpen()) map.closePopup(popupRef.current);
@@ -150,6 +156,7 @@ export function MapCanvas({
       closingByCode.current = true;
       map.remove();
       mapRef.current = null;
+      setMapInstance(null);
       markerLayerRef.current = null;
       zoneLayerRef.current = null;
       lineLayerRef.current = null;
@@ -158,7 +165,7 @@ export function MapCanvas({
       markersInMap.clear();
       zonesInMap.clear();
     };
-  }, [interaction]);
+  }, [interaction, panEnabled]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -414,6 +421,12 @@ export function MapCanvas({
         centreLabel={centreLabel}
         onCentre={centreMap}
       />
+      {pin ? <MapPinLayer map={mapInstance} pin={pin} /> : null}
+      {overlay ? (
+        <div className="pointer-events-none absolute inset-x-3 bottom-8 z-20 flex items-end justify-between gap-2 *:pointer-events-auto">
+          {overlay}
+        </div>
+      ) : null}
       <p className="absolute right-0 bottom-0 z-20 rounded-tl-md bg-surface px-2 py-0.5 type-body-xs text-gray-700">
         <ExternalLink href={uiCopy.map.attributionHref} className="hit-area text-gray-700">
           {uiCopy.map.attribution}

@@ -55,10 +55,10 @@ mkdirSync(DIFF_DIR, { recursive: true });
 for (const manifestPage of activePages) {
   if (!manifestPage.figma.desktop && !manifestPage.figma.mobile) continue;
   const url = urlsFor(manifestPage.id)[0] ?? '/';
-  const shots = [
-    { name: manifestPage.id, run: async (_page: Page) => {} },
-    ...(visualStates[manifestPage.id] ?? []),
-  ];
+  const ownStates = visualStates[manifestPage.id] ?? [];
+  const shots = ownStates.some((state) => state.name === manifestPage.id)
+    ? ownStates
+    : [{ name: manifestPage.id, run: async (_page: Page) => {} }, ...ownStates];
 
   for (const shot of shots) {
     for (const viewport of VIEWPORTS) {

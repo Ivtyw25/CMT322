@@ -4,7 +4,7 @@ import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import type { Station } from '@/data/models/station';
-import { DocsSection } from './docs-section';
+import { DocsSection } from '@/components/patterns/docs-section';
 
 const { worksites: copy } = projectCopy.station;
 const MAP_ZOOM = 16;

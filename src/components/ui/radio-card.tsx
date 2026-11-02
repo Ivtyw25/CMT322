@@ -7,14 +7,15 @@ type RadioCardProps = Omit<React.ComponentProps<'input'>, 'type' | 'className' |
 };
 
 /**
- * Selectable card on a native radio. Cards that share a `name` form one group, so the arrow
- * keys move the selection. Wrap the group in a fieldset with a legend.
+ * Selectable card on a native radio, with the round indicator of the Figma card. Cards that share
+ * a `name` form one group, so the arrow keys move the selection. Wrap the group in a fieldset with
+ * a legend.
  */
 export function RadioCard({ label, description, className, ...props }: RadioCardProps) {
   return (
     <label
       className={cn(
-        'relative flex min-h-11 cursor-pointer flex-col gap-1 rounded-xl border border-gray-300 bg-surface p-4',
+        'relative flex min-h-11 cursor-pointer items-start gap-3 rounded-xl border border-gray-300 bg-surface p-4',
         'transition-colors duration-(--duration-fast) ease-(--ease-standard) hover:border-gray-400',
         'has-checked:border-primary-600 has-checked:bg-primary-50',
         'has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-600',
@@ -22,9 +23,19 @@ export function RadioCard({ label, description, className, ...props }: RadioCard
         className,
       )}
     >
-      <input type="radio" className="sr-only" {...props} />
-      <span className="type-body-s-semibold text-gray-900">{label}</span>
-      {description ? <span className="type-body-s text-gray-600">{description}</span> : null}
+      <input type="radio" className="peer sr-only" {...props} />
+      <span
+        aria-hidden
+        className={cn(
+          'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-gray-400 bg-surface',
+          'peer-checked:border-primary-600 peer-checked:bg-primary-600',
+          'peer-checked:after:size-1.5 peer-checked:after:rounded-full peer-checked:after:bg-static-white',
+        )}
+      />
+      <span className="flex flex-col gap-1">
+        <span className="type-body-s-semibold text-gray-900">{label}</span>
+        {description ? <span className="type-body-xs text-gray-600">{description}</span> : null}
+      </span>
     </label>
   );
 }

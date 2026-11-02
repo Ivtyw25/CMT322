@@ -6,7 +6,7 @@ import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import type { Announcement } from '@/data/models/announcement';
 import { formatDateRange } from '@/lib/format/dates';
-import { DocsSection } from './docs-section';
+import { DocsSection } from '@/components/patterns/docs-section';
 
 const { traffic: copy } = projectCopy.station;
 

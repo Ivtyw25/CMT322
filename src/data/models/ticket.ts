@@ -5,7 +5,7 @@ export type TicketId = `MLC-${string}-${string}`;
 export const TICKET_ID_PATTERN = /^MLC-\d{6}-\d{4}$/;
 
 export type TicketStatus = 'submitted' | 'pending' | 'in-progress' | 'resolved';
-export type ReportType = 'complaint' | 'hazard' | 'suggestion';
+export type ReportType = 'complaint' | 'feedback' | 'inquiry';
 
 export type ReportCategoryId =
   | 'blocked-access'

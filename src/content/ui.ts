@@ -84,21 +84,22 @@ export const uiCopy = {
   },
 
   upload: {
-    choose: 'Choose photos',
-    dropHint: 'or drag them here',
+    dropPrefix: 'Drag files here or',
+    browse: 'browse',
+    dropActive: 'Drop files to add them',
+    maxReached: (maxFiles: number) => `Maximum ${maxFiles} files added. Remove one to add another.`,
     rules: (maxFiles: number, maxMb: number) =>
-      `Up to ${maxFiles} photos, JPG or PNG, ${maxMb} MB each.`,
+      `JPG, PNG or PDF, up to ${maxMb} MB each, maximum ${maxFiles} files`,
     progress: (fileName: string, percent: number) => `Uploading ${fileName}, ${percent}%`,
-    done: (fileName: string) => `${fileName} uploaded`,
+    uploaded: (size: string) => `${size}, uploaded`,
+    removed: (fileName: string) => `${fileName} removed`,
     remove: (fileName: string) => `Remove ${fileName}`,
     errors: {
       tooBig: (fileName: string, maxMb: number) =>
-        `${fileName} is larger than ${maxMb} MB. Choose a smaller photo.`,
-      wrongType: (fileName: string) => `${fileName} is not a JPG or PNG. Choose a photo file.`,
+        `${fileName} is larger than ${maxMb} MB. Choose a smaller file.`,
+      wrongType: (fileName: string) => `${fileName} is not a JPG, PNG or PDF.`,
       tooMany: (maxFiles: number) =>
-        `You can add up to ${maxFiles} photos. Remove one to add another.`,
-      failed: (fileName: string) =>
-        `${fileName} did not upload. Check your connection and try again.`,
+        `You can add up to ${maxFiles} files. Remove one to add another.`,
     },
   },
 
@@ -113,9 +114,10 @@ export const uiCopy = {
     pending: 'Pending',
     inProgress: 'In progress',
     resolved: 'Resolved',
+    submitted: 'Submitted',
   },
 
-  /** Ticket status words outside the tags (stepper, update log). "Submitted" shows the Pending tag. */
+  /** Ticket status words outside the tags (stepper, update log). */
   ticketStatus: {
     submitted: 'Submitted',
     pending: 'Pending review',
@@ -139,8 +141,8 @@ export const uiCopy = {
 
   reportTypes: {
     complaint: 'Complaint',
-    hazard: 'Hazard',
-    suggestion: 'Suggestion',
+    feedback: 'Feedback',
+    inquiry: 'General inquiry',
     /** e.g. "Complaint, blocked access". */
     withCategory: (type: string, category: string) => `${type}, ${category}`,
   },

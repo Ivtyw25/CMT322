@@ -6,7 +6,7 @@ import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import type { Station, StationStage } from '@/data/models/station';
 import { formatDate } from '@/lib/format/dates';
-import { DocsSection } from './docs-section';
+import { DocsSection } from '@/components/patterns/docs-section';
 
 const { construction: copy } = projectCopy.station;
 const MAX_UPDATES = 3;

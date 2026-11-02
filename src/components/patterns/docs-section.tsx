@@ -1,14 +1,19 @@
 import { cn } from '@/lib/cn';
 
-type DocsSectionHeadingProps = { id: string; title: string };
+type DocsSectionHeadingProps = {
+  id: string;
+  title: string;
+  /** Stays at the smaller step from 1024 px up (the report form's sections). */
+  compact?: boolean;
+};
 
 /** The `h2` of a docs section. It takes focus from the "On this page" list. */
-export function DocsSectionHeading({ id, title }: DocsSectionHeadingProps) {
+export function DocsSectionHeading({ id, title, compact = false }: DocsSectionHeadingProps) {
   return (
     <h2
       id={id}
       tabIndex={-1}
-      className="scroll-mt-32 type-heading-2xs outline-none lg:type-heading-xs"
+      className={cn('scroll-mt-32 type-heading-2xs outline-none', !compact && 'lg:type-heading-xs')}
     >
       {title}
     </h2>

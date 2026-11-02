@@ -50,3 +50,16 @@ Facts that could not be confirmed. Each is also tagged `// VERIFY:` in code. Fac
 | T4 | Traffic map | `map.basemap.satellite` | Figma shows a Map/Satellite switch; OpenStreetMap has no satellite layer | Builder may drop it |
 | T5 | Traffic map | FIZ Phase 4 junction type | Map list tags it "Construction"; the announcement record has type closure | Keep Figma tag on the map card, or change the record type |
 | T6 | Route view | updated time "14:20" | Time is the design's; it should come from the data clock | Builder |
+
+## Report and track
+
+| ID | Where | Key or record | What could not be confirmed | Action |
+|---|---|---|---|---|
+| R1 | Report form | `report.type.options` | Figma shows Complaint, Feedback and General inquiry. Model `ReportType` has complaint, hazard, suggestion, and `uiCopy.reportTypes` follows it. Copy uses ids complaint, feedback, inquiry | Main agent: align model and `uiCopy.reportTypes` with Figma |
+| R2 | Overview, form | `overview.header.lede`, `report.loginRequired` | Figma says log in to report or track. Nav copy says guests can track. Copy follows nav | Confirm with owner |
+| R3 | Submitted | `next.steps.pending.detail` | "Usually within 1 working day" is Figma's, not a confirmed service level | Keep; confirm |
+| R4 | Mock ticket 0482 | Penang Island City Council, "within 3 working days" | Authority name and timing are Figma's, not confirmed | Keep as Figma |
+| R5 | Report form | `files.dropzone.rules` | Figma allows JPG, PNG or PDF, 10 MB, 5 files. `uiCopy.upload` says JPG or PNG only | Builder: use `report.files` |
+| R6 | Form, overview | emergency notice | "Call 999" and "not monitored around the clock" are Figma's | Confirm with owner |
+| R7 | Overview | `faq.items` answers | Questions are Figma's. Answers are new, no matching FAQ records. Hand-over to the site team is inferred from ticket 0482 | Confirm; consider linking FAQ records |
+| R8 | Submitted | `email.body` | "mutiaraconnect.my/track" is Figma's. Only help@mutiaraconnect.my is a confirmed domain use | Keep |

@@ -12,6 +12,7 @@ export const tagKinds = [
   'pending',
   'inProgress',
   'resolved',
+  'submitted',
 ] as const;
 export type TagKind = (typeof tagKinds)[number];
 
@@ -25,6 +26,7 @@ const tagVariants = cva(
         success: 'bg-success-50 text-success-700',
         info: 'bg-primary-50 text-primary-700',
         neutral: 'bg-gray-100 text-gray-600',
+        submitted: 'bg-gray-100 text-gray-700',
       },
     },
   },
@@ -36,6 +38,7 @@ const dotTone = {
   success: 'bg-success-600',
   info: 'bg-primary-600',
   neutral: 'bg-gray-500',
+  submitted: 'bg-gray-500',
 } as const;
 
 const toneOf = {
@@ -48,9 +51,10 @@ const toneOf = {
   pending: 'warning',
   inProgress: 'info',
   resolved: 'success',
+  submitted: 'submitted',
 } as const satisfies Record<TagKind, keyof typeof dotTone>;
 
-/** One of the nine fixed status tags. The label always carries the meaning; never recolour. */
+/** One of the ten fixed status tags. The label always carries the meaning; never recolour. */
 export function Tag({ kind, className }: { kind: TagKind; className?: string }) {
   const tone = toneOf[kind];
   return (

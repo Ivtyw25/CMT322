@@ -43,6 +43,18 @@ export type MapLabel = MapPoint & {
   minZoom: number;
 };
 
+/** Report-location pin mode of `LocationMap`: a pin the visitor places, drags and nudges. */
+export type MapPinOptions = {
+  /** Where the pin is. Null: no pin yet. */
+  point: MapPoint | null;
+  /** The visitor placed, dragged or nudged the pin. */
+  onChange: (point: MapPoint) => void;
+  /** Name of the pin for screen readers, with the coordinates and how to move it. */
+  label: (point: MapPoint) => string;
+  /** Name of the keyboard button that drops a pin at the map centre. */
+  dropLabel: string;
+};
+
 export type LocationMapProps = {
   center: MapPoint;
   zoom: number;
@@ -80,6 +92,12 @@ export type LocationMapProps = {
   focusKey?: number;
   /** The reset button fits the map to these points (24 px padding). Default: `center` and `zoom`. */
   resetBounds?: readonly MapPoint[];
+  /** Pin mode: a click or tap places a pin. Without it the map has no pin. */
+  pin?: MapPinOptions;
+  /** False: dragging never pans the map, so one finger scrolls the page. Default true. */
+  panEnabled?: boolean;
+  /** Content over the bottom edge of the map (a button at each side). It takes pointer events. */
+  overlay?: React.ReactNode;
   /** Fit the map to these points (24 px padding) each time `fitKey` changes. Key 0 does nothing. */
   fitPoints?: readonly MapPoint[];
   fitKey?: number;

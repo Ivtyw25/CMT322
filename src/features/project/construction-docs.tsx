@@ -12,7 +12,7 @@ import type { ConstructionPhase, ConstructionUpdate } from '@/data/models/constr
 import { useAnnounce } from '@/lib/announce/announcer';
 import { formatDate } from '@/lib/format/dates';
 import { ConstructionUpdateEntry } from './construction-update-entry';
-import { DocsSection } from './docs-section';
+import { DocsSection } from '@/components/patterns/docs-section';
 
 const { construction: copy } = projectCopy;
 const PAGE_SIZE = 4;

@@ -5,7 +5,7 @@ import { formatDate } from '@/lib/format/dates';
 
 type DocsPageHeadProps = {
   title: string;
-  lede: string;
+  lede: React.ReactNode;
   /** Levels above the page, starting with Home. */
   breadcrumb: readonly BreadcrumbItem[];
   /** The breadcrumb label of this page. Defaults to the title. */
@@ -14,6 +14,10 @@ type DocsPageHeadProps = {
   updatedAt?: string;
   /** `xl` is the larger lede of the About page (18 px, 20 px from 1024 px). */
   ledeSize?: 'l' | 'xl';
+  /** Decorative icon left of the `h1` (the check circle of "Report submitted"). */
+  titleIcon?: React.ReactNode;
+  /** Makes the `h1` focusable by code (`tabIndex={-1}`, no ring) so a page can move focus to it. */
+  titleRef?: React.Ref<HTMLHeadingElement>;
   children?: React.ReactNode;
 };
 
@@ -25,12 +29,23 @@ export function DocsPageHead({
   breadcrumbCurrent = title,
   updatedAt,
   ledeSize = 'l',
+  titleIcon,
+  titleRef,
   children,
 }: DocsPageHeadProps) {
   return (
     <header className="flex flex-col gap-4">
       <Breadcrumb items={breadcrumb} current={breadcrumbCurrent} />
-      <h1 className="type-heading-s lg:type-heading-m">{title}</h1>
+      <div className={cn(titleIcon && 'flex items-center gap-4')}>
+        {titleIcon}
+        <h1
+          ref={titleRef}
+          tabIndex={titleRef ? -1 : undefined}
+          className={cn('type-heading-s lg:type-heading-m', titleRef ? 'outline-none' : undefined)}
+        >
+          {title}
+        </h1>
+      </div>
       <p
         className={cn(
           'max-w-170 text-gray-600',

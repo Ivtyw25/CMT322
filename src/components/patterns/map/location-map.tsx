@@ -11,6 +11,7 @@ export type {
   MapLine,
   MapMarker,
   MapMarkerVariant,
+  MapPinOptions,
   MapPoint,
   MapZone,
 } from './map-types';

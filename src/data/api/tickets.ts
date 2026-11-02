@@ -1,7 +1,7 @@
 import { reportCategories } from '@/data/mock/report-categories';
 import { tickets } from '@/data/mock/tickets';
 import type { StationCode } from '@/data/models/station';
-import type { ReportCategory, Ticket } from '@/data/models/ticket';
+import type { ReportCategory, Ticket, TicketId } from '@/data/models/ticket';
 
 const newestFirst = (a: Ticket, b: Ticket) => b.updatedAt.localeCompare(a.updatedAt);
 
@@ -24,4 +24,9 @@ export async function getTicketsNearStation(code: StationCode): Promise<Ticket[]
 /** Report form "Category" options, in display order. */
 export async function getReportCategories(): Promise<ReportCategory[]> {
   return reportCategories;
+}
+
+/** The ID of every ticket in the mock data, for generating the track pages ahead of time. */
+export async function getTicketIds(): Promise<TicketId[]> {
+  return tickets.map((ticket) => ticket.id);
 }
