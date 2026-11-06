@@ -127,7 +127,7 @@ export async function SiteFooter({ newsletterPreview, className }: SiteFooterPro
               <Link
                 key={link.href}
                 href={link.href}
-                className="hit-area type-body-xs-medium text-static-white hover:underline focus-visible:outline-static-white @min-[48rem]:text-static-on-navy-100"
+                className="hit-area type-body-xs-medium text-static-white hover:underline focus-visible:outline-static-white @min-[48rem]:font-normal @min-[48rem]:text-static-on-navy-100"
               >
                 {link.label}
               </Link>

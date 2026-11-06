@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { useState, useSyncExternalStore, useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { ChevronRight, X } from 'lucide-react';
 import { routes, profileSections } from '@/config/routes';
 import { accountCopy } from '@/content/account';
 import { accountUiCopy } from '@/content/account-ui';
 import { uiCopy } from '@/content/ui';
 import { Button } from '@/components/ui/button';
+import { ButtonLink } from '@/components/ui/button-link';
+import { Container } from '@/components/layout/container';
 import { Switch } from '@/components/ui/switch';
 import { Tag } from '@/components/ui/tag';
 import { ConfirmDialog } from '@/components/ui/dialog';
@@ -29,7 +31,7 @@ import { AccountSectionBar } from './account-section-bar';
 import { ProfileDetails } from './profile-details';
 import { ProfileSecurity } from './profile-security';
 import { AccountSidebar } from './account-sidebar';
-import { ProfileCard } from './profile-card';
+import { ProfileCard, profileRow, profileRowAction } from './profile-card';
 
 const subscribe = () => () => {};
 const browserReady = () => true;
@@ -102,17 +104,16 @@ export function ProfilePage({
     id,
     label: navLabels[index] ?? copy.nav.label,
   }));
-  const card = 'rounded-xl border border-gray-200 bg-surface p-5 md:p-6';
 
   return (
     <div className="wrap-anywhere">
       <header className="border-b border-gray-200 bg-gray-50">
-        <div className="mx-auto max-w-content px-5 py-8 md:px-8 lg:py-10">
+        <Container className="py-8 lg:py-10">
           <Breadcrumb
             items={[{ label: uiCopy.breadcrumb.home, href: routes.home }]}
             current={copy.breadcrumb}
           />
-          <div className="mt-6 flex flex-col items-start gap-5 md:flex-row md:items-center">
+          <div className="mt-5 flex flex-col items-start gap-5 md:flex-row md:items-center">
             <span
               aria-hidden
               className="flex size-18 shrink-0 items-center justify-center rounded-full bg-primary-600 type-heading-xs text-static-white"
@@ -121,7 +122,7 @@ export function ProfilePage({
             </span>
             <div className="min-w-0 flex-1">
               <h1 className="type-heading-s lg:type-heading-m">{name}</h1>
-              <div className="mt-2 flex flex-col gap-4 type-body-s text-gray-600 md:flex-row md:flex-wrap md:gap-x-4 md:gap-y-2">
+              <div className="mt-1 flex flex-col gap-4 type-body-s text-gray-600 md:flex-row md:flex-wrap md:gap-x-4 md:gap-y-2">
                 <p>{email}</p>
                 <p>{copy.header.memberSince(profile.memberSince)}</p>
               </div>
@@ -130,9 +131,9 @@ export function ProfilePage({
               {copy.header.logOut}
             </Button>
           </div>
-        </div>
+        </Container>
       </header>
-      <div className="mx-auto flex max-w-content gap-16 px-5 pb-8 md:px-8 lg:py-12">
+      <Container className="flex gap-16 pb-8 lg:py-12">
         <aside className="hidden w-docs-sidebar shrink-0 lg:block">
           <div className="sticky top-32">
             <AccountSidebar items={items} />
@@ -141,8 +142,7 @@ export function ProfilePage({
         <div className="min-w-0 flex-1">
           <AccountSectionBar items={items} />
           <div className="flex max-w-article flex-col gap-6">
-            <ProfileCard id="profile" title={copy.details.title} className={card}>
-              <p className="type-body-s text-gray-600">{copy.details.lede}</p>
+            <ProfileCard id="profile" title={copy.details.title} lede={copy.details.lede}>
               <ProfileDetails
                 details={details}
                 areas={areas}
@@ -150,15 +150,26 @@ export function ProfilePage({
                 announce={setMessage}
               />
             </ProfileCard>
-            <ProfileCard id="reports" title={copy.reports.title} className={card}>
+            <ProfileCard
+              id="reports"
+              title={copy.reports.title}
+              lede={copy.reports.lede}
+              action={
+                allTickets.length ? (
+                  <ButtonLink variant="secondary" href={routes.reportTrack.track}>
+                    {copy.reports.viewAll}
+                  </ButtonLink>
+                ) : null
+              }
+            >
               <div
-                className="grid grid-cols-2 gap-3 sm:grid-cols-3"
+                className="grid grid-cols-2 gap-3 px-5 pb-5 sm:grid-cols-3 md:px-6"
                 aria-label={copy.reports.countsLabel}
               >
                 {(['pending', 'inProgress', 'resolved'] as const).map((status) => (
                   <div
                     key={status}
-                    className={`rounded-lg p-4 ${status === 'pending' ? 'bg-warning-50 text-warning-700' : status === 'inProgress' ? 'bg-primary-50 text-primary-700' : 'bg-success-50 text-success-700'}`}
+                    className={`rounded-lg px-4 py-3.5 ${status === 'pending' ? 'bg-warning-50 text-warning-700' : status === 'inProgress' ? 'bg-primary-50 text-primary-700' : 'bg-success-50 text-success-700'}`}
                   >
                     <p className="type-heading-s">
                       {
@@ -178,11 +189,11 @@ export function ProfilePage({
                 <Link
                   key={ticket.id}
                   href={routes.reportTrack.ticket(ticket.id)}
-                  className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-gray-200 p-4 hover:bg-gray-50"
+                  className="flex items-center justify-between gap-3 border-t border-gray-200 px-5 py-4 last:rounded-b-xl hover:bg-gray-50 md:px-6"
                 >
                   <span className="min-w-0">
-                    <span className="block type-body-s-semibold wrap-anywhere">{ticket.title}</span>
-                    <span className="mt-2 block type-body-xs text-gray-600">
+                    <span className="block type-body-s-medium wrap-anywhere">{ticket.title}</span>
+                    <span className="block type-body-xs text-gray-600">
                       {copy.reports.meta(
                         ticket.id,
                         formatDate(ticket.updatedAt.slice(0, 10)),
@@ -190,39 +201,59 @@ export function ProfilePage({
                       )}
                     </span>
                   </span>
-                  <Tag kind={ticket.status === 'in-progress' ? 'inProgress' : ticket.status} />
+                  <span className="flex shrink-0 items-center gap-4">
+                    <Tag kind={ticket.status === 'in-progress' ? 'inProgress' : ticket.status} />
+                    <ChevronRight aria-hidden className="hidden size-4 text-gray-400 md:block" />
+                  </span>
                 </Link>
               ))}
-              {!allTickets.length ? <p className="type-body-m">{copy.reports.empty.body}</p> : null}
-              <Link
-                href={allTickets.length ? routes.reportTrack.track : routes.reportTrack.report}
-                className="inline-flex min-h-11 items-center type-body-s-semibold text-primary-700"
-              >
-                {allTickets.length ? copy.reports.viewAll : copy.reports.empty.action}
-              </Link>
+              {!allTickets.length ? (
+                <div className="space-y-2 border-t border-gray-200 px-5 py-4 md:px-6">
+                  <p className="type-body-m">{copy.reports.empty.body}</p>
+                  <Link
+                    href={routes.reportTrack.report}
+                    className="inline-flex min-h-11 items-center type-body-s-semibold text-primary-700"
+                  >
+                    {copy.reports.empty.action}
+                  </Link>
+                </div>
+              ) : null}
             </ProfileCard>
-            <ProfileCard id="stations" title={copy.stations.title} className={card}>
-              <p className="type-body-s text-gray-600">{copy.stations.lede}</p>
-              <ul className="flex flex-col gap-3 md:flex-row md:flex-wrap">
+            <ProfileCard
+              id="stations"
+              title={copy.stations.title}
+              lede={copy.stations.lede}
+              action={
+                <ButtonLink ref={addStation} variant="secondary" href={routes.project.stations}>
+                  {copy.stations.add}
+                </ButtonLink>
+              }
+            >
+              <ul className="flex flex-col gap-3 px-5 pb-5 md:flex-row md:flex-wrap md:gap-2.5 md:px-6">
                 {stations
                   .filter((station) => follows.isFollowing(station.code))
                   .map((station) => (
                     <li
                       key={station.code}
-                      className="flex min-w-0 items-center justify-between gap-2 rounded-lg border border-gray-200 p-3 md:max-w-80"
+                      className="flex min-w-0 items-center justify-between gap-2.5 rounded-lg border border-gray-200 py-2 pr-2 pl-3 md:max-w-80"
                     >
                       <Link
                         href={routes.project.station(station.code)}
-                        className="flex min-h-11 min-w-0 flex-col justify-center type-body-s-semibold wrap-anywhere"
+                        className="flex min-h-11 min-w-0 items-center gap-2.5"
                       >
-                        <span className="mr-2 text-primary-700">{station.code}</span>
-                        {station.name}
-                        <span className="mt-1 block type-body-xs text-gray-500">
-                          {station.area}
+                        <span className="rounded bg-primary-600 px-1.5 py-0.5 type-body-xs-semibold text-static-white">
+                          {station.code}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block type-body-s-medium wrap-anywhere">
+                            {station.name}
+                          </span>
+                          <span className="block type-body-xs text-gray-500">{station.area}</span>
                         </span>
                       </Link>
                       <Button
                         variant="ghost"
+                        className="px-2"
                         aria-label={copy.stations.remove(station.name)}
                         onClick={(event) => {
                           const row = event.currentTarget.closest('li');
@@ -245,39 +276,35 @@ export function ProfilePage({
                   ))}
               </ul>
               {!follows.codes.length ? (
-                <p className="type-body-m">{copy.stations.empty.body}</p>
+                <p className="px-5 pb-5 type-body-m md:px-6">{copy.stations.empty.body}</p>
               ) : null}
               {removed ? (
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    follows.follow(removed.code);
-                    setMessage(copy.stations.added(removed.name));
-                    setRemoved(null);
-                  }}
-                >
-                  {copy.stations.undo}
-                </Button>
+                <div className="px-5 pb-3 md:px-6">
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      follows.follow(removed.code);
+                      setMessage(copy.stations.added(removed.name));
+                      setRemoved(null);
+                    }}
+                  >
+                    {copy.stations.undo}
+                  </Button>
+                </div>
               ) : null}
-              <Link
-                ref={addStation}
-                href={routes.project.stations}
-                className="inline-flex min-h-11 items-center type-body-s-semibold text-primary-700"
-              >
-                {copy.stations.add}
-              </Link>
             </ProfileCard>
-            <ProfileCard id="notifications" title={copy.notifications.title} className={card}>
-              <p className="type-body-s wrap-anywhere text-gray-600">
-                {copy.notifications.lede(email)}
-              </p>
+            <ProfileCard
+              id="notifications"
+              title={copy.notifications.title}
+              lede={copy.notifications.lede(email)}
+            >
               {(
                 Object.keys(profile.notifications) as (keyof AccountProfile['notifications'])[]
               ).map((id) => (
-                <div key={id} className="space-y-2 border-t border-gray-200 pt-4">
+                <div key={id} className="border-t border-gray-200 px-5 py-4 md:px-6">
                   <Switch
                     label={copy.notifications.items[id].label}
-                    aria-describedby={`notification-${id}`}
+                    description={copy.notifications.items[id].hint}
                     checked={overrides.notifications?.[id] ?? profile.notifications[id]}
                     onCheckedChange={(checked) => {
                       saveProfile({
@@ -290,25 +317,23 @@ export function ProfilePage({
                       setMessage(copy.notifications.saved);
                     }}
                   />
-                  <p id={`notification-${id}`} className="type-body-s text-gray-500">
-                    {copy.notifications.items[id].hint}
-                  </p>
                 </div>
               ))}
               {!follows.codes.length ? (
-                <p className="type-body-s text-gray-500">{copy.notifications.noStationsNote}</p>
+                <p className="border-t border-gray-200 px-5 py-4 type-body-s text-gray-500 md:px-6">
+                  {copy.notifications.noStationsNote}
+                </p>
               ) : null}
             </ProfileCard>
-            <ProfileCard id="security" title={copy.security.title} className={card}>
+            <ProfileCard id="security" title={copy.security.title} lede={copy.security.lede}>
               <ProfileSecurity profile={profile} announce={setMessage} />
             </ProfileCard>
-            <ProfileCard id="privacy" title={copy.privacy.title} className={card}>
-              <p className="type-body-s text-gray-600">{copy.privacy.lede}</p>
-              <div className="space-y-3">
-                <p className="type-body-s-semibold">{copy.privacy.download.title}</p>
-                <p className="type-body-s text-gray-500">{copy.privacy.download.hint}</p>
+            <ProfileCard id="privacy" title={copy.privacy.title} lede={copy.privacy.lede}>
+              <div className={profileRow}>
+                <p className="type-body-s-medium">{copy.privacy.download.label}</p>
                 <Button
-                  variant="secondary"
+                  variant="ghost"
+                  className={profileRowAction}
                   disabled={requested}
                   onClick={() => {
                     setRequested(true);
@@ -317,31 +342,45 @@ export function ProfilePage({
                 >
                   {requested ? accountUiCopy.requested : copy.privacy.download.request}
                 </Button>
+                <div className="col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-start-1">
+                  <p className="type-body-m">{copy.privacy.download.title}</p>
+                  <p className="type-body-xs text-gray-500">{copy.privacy.download.hint}</p>
+                </div>
               </div>
-              <Link
-                href={routes.legal.terms}
-                className="inline-flex min-h-11 items-center type-body-s text-primary-700"
-              >
-                {copy.privacy.terms.value}
-              </Link>
+              <div className={profileRow}>
+                <p className="type-body-s-medium">{copy.privacy.terms.label}</p>
+                <Link
+                  href={routes.legal.terms}
+                  className={`${profileRowAction} inline-flex min-h-11 min-w-11 items-center justify-end type-body-s-semibold text-primary-700 hover:underline md:min-h-0 md:min-w-0`}
+                >
+                  {copy.privacy.terms.view}
+                </Link>
+                <p className="col-span-2 row-start-2 type-body-m md:col-span-1 md:col-start-2 md:row-start-1">
+                  {copy.privacy.terms.value}
+                </p>
+              </div>
             </ProfileCard>
-            <section className={card}>
-              <h2 className="type-body-m-semibold text-danger-700">{copy.delete.title}</h2>
-              <p className="mt-3 type-body-s text-gray-600">{copy.delete.body}</p>
-              <Button
-                variant="secondary"
-                className="mt-5 text-danger-700"
-                onClick={() => setDeleting(true)}
-              >
-                {copy.delete.action}
-              </Button>
-            </section>
+            <ProfileCard
+              id="delete-account"
+              tone="danger"
+              title={copy.delete.title}
+              lede={copy.delete.body}
+              action={
+                <Button
+                  variant="secondary"
+                  className="text-danger-700"
+                  onClick={() => setDeleting(true)}
+                >
+                  {copy.delete.action}
+                </Button>
+              }
+            />
             <p role="status" className="type-body-s text-success-700">
               {message}
             </p>
           </div>
         </div>
-      </div>
+      </Container>
       <ConfirmDialog
         open={deleting}
         title={copy.delete.confirm.title}

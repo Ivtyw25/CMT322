@@ -9,6 +9,7 @@ import { ConfirmDialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/field';
 import { PasswordInput } from '@/components/ui/password-input';
 import { PasswordRules } from '@/components/ui/password-rules';
+import { profileRow, profileRowAction } from './profile-card';
 import type { AccountProfile } from '@/data/models/account';
 import { authDelay, validPassword } from '@/lib/auth/auth';
 
@@ -70,22 +71,21 @@ export function ProfileSecurity({
     setDialog(null);
   }
   return (
-    <div className="divide-y divide-gray-200">
-      <div className="space-y-3 py-4">
-        <div className="flex justify-between gap-3">
-          <p className="type-body-s-semibold">{copy.password.label}</p>
-          <Button
-            id="change-password"
-            variant="ghost"
-            disabled={editing}
-            onClick={() => setEditing(true)}
-          >
-            {copy.password.change}
-          </Button>
-        </div>
+    <div>
+      <div className={profileRow}>
+        <p className="type-body-s-medium">{copy.password.label}</p>
+        <Button
+          id="change-password"
+          variant="ghost"
+          className={profileRowAction}
+          disabled={editing}
+          onClick={() => setEditing(true)}
+        >
+          {copy.password.change}
+        </Button>
         {editing ? (
           <form
-            className="space-y-4"
+            className="col-span-2 row-start-2 mt-2 space-y-4 md:col-span-1 md:col-start-2"
             onSubmit={submit}
             onKeyDown={(event) => {
               if (event.key === 'Escape' && !pending) closeEditor();
@@ -126,46 +126,51 @@ export function ProfileSecurity({
             </div>
           </form>
         ) : (
-          <>
-            <p>{accountUiCopy.passwordDots}</p>
-            <p className="type-body-s text-gray-500">
+          <div className="col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-start-1">
+            <p className="type-body-s text-gray-900">{accountUiCopy.passwordDots}</p>
+            <p className="type-body-xs text-gray-500">
               {copy.password.lastChanged(
                 changed ? accountUiCopy.justNow : profile.passwordLastChanged,
               )}
             </p>
-          </>
+          </div>
         )}
       </div>
-      <div className="space-y-2 py-4">
-        <p className="type-body-s-semibold">{copy.google.label}</p>
-        <p className="type-body-m wrap-anywhere">
-          {connected ? profile.googleEmail : copy.google.notConnected}
-        </p>
+      <div className={profileRow}>
+        <p className="type-body-s-medium">{copy.google.label}</p>
         <Button
-          variant="secondary"
+          variant="ghost"
+          className={profileRowAction}
           onClick={() => (connected ? setDialog('google') : setConnected(true))}
         >
           {connected ? copy.google.disconnect : copy.google.connect}
         </Button>
+        <p className="col-span-2 row-start-2 type-body-s wrap-anywhere text-gray-900 md:col-span-1 md:col-start-2 md:row-start-1">
+          {connected ? profile.googleEmail : copy.google.notConnected}
+          {connected ? (
+            <span className="ml-2 type-body-xs text-success-700">{copy.google.connected}</span>
+          ) : null}
+        </p>
       </div>
-      <div className="space-y-3 py-4">
-        <p className="type-body-s-semibold">{copy.devices.label}</p>
-        {profile.devices
-          .filter((device) => device.current || otherDevices)
-          .map((device) => (
-            <p className="type-body-s text-gray-600" key={device.name}>
-              {device.current
-                ? copy.devices.current(device.name)
-                : copy.devices.also(device.name, device.lastActive)}
-            </p>
-          ))}
+      <div className={profileRow}>
+        <p className="type-body-s-medium">{copy.devices.label}</p>
         {otherDevices ? (
-          <Button variant="secondary" onClick={() => setDialog('devices')}>
+          <Button variant="ghost" className={profileRowAction} onClick={() => setDialog('devices')}>
             {copy.devices.logOutOthers}
           </Button>
-        ) : (
-          <p className="type-body-s text-gray-600">{copy.devices.none}</p>
-        )}
+        ) : null}
+        <div className="col-span-2 row-start-2 space-y-1 md:col-span-1 md:col-start-2 md:row-start-1">
+          {profile.devices
+            .filter((device) => device.current || otherDevices)
+            .map((device) => (
+              <p className="type-body-s text-gray-900 not-first:text-gray-600" key={device.name}>
+                {device.current
+                  ? copy.devices.current(device.name)
+                  : copy.devices.also(device.name, device.lastActive)}
+              </p>
+            ))}
+          {otherDevices ? null : <p className="type-body-s text-gray-600">{copy.devices.none}</p>}
+        </div>
       </div>
       <ConfirmDialog
         open={dialog !== null}

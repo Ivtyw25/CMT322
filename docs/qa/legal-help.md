@@ -44,3 +44,22 @@ No credentials or environment files were read. No commits, pushes or deployments
 ## Production recheck (4 November 2026)
 
 The earlier Google Fonts build blocker and fallback-font limitation are historical. The current source bundles Inter and Poppins through `next/font/local`, and the main agent supplied an existing production server on port 3610. Consolidated link and accessibility outcomes for that snapshot are tracked in `docs/qa/production-validation.md`; the earlier round's results do not imply that the new production checks have passed.
+
+## Legal-help fix round (6 November 2026)
+
+Measured on a dev server (port 3702, bundled fonts), light frames, same suite and unchanged references and tolerances. Before = first run this round; after = last run. Run-to-run noise is about 0.1 point.
+
+| Frame | Before | After | Change made |
+| --- | ---: | ---: | --- |
+| Sitemap 1440 | 13.39% | 6.37% | Link rows 30 px pitch from lg (44 px kept below lg), 14 px link text, aside body 12 px; the page is no longer 150 px taller than the frame |
+| Sitemap 390 | 23.00% | 22.89% | 14 px link text. Rows stay 44 px (approved), so the page is still about 590 px taller than the frame |
+| About 1440 | 7.19% | 7.17% | none needed |
+| About 390 | 25.82% | 25.99% | no change. The Figma frame stops after the station list, so the footer in the reference lines up with our later sections. Not fixable without removing spec sections |
+| Project overview 1440 | 6.85% | 6.69% | none |
+| Project overview 390 | 16.14% | 15.41% | Popular questions rows use 14 px text on phones (as Figma). Remaining difference is the approved 44 px list rows |
+| Terms 1440 / 390 | 35.56% / 41.49% | 35.52% / 41.53% | none. The reference holds longer, operational-service copy; truthful prototype copy stays |
+| Privacy 1440 / 390 | 13.01% / 10.50% | 12.97% / 10.26% | none, copy length |
+| Contact 1440 / 390 | 11.19% / 14.75% | 11.05% / 14.67% | none, added prototype notes and wrapped copy |
+| Accessibility 1440 / 390 | 8.85% / 14.98% | 8.80% / 14.83% | none |
+
+Shared changes: desktop notice text is now vertically centred in the bar (it sat 5 px high); site footer legal links use regular weight from 48 rem as in Figma; help aside card body is 12 px. The 404 has no Figma frame. None of these frames reaches the 3% goal. What is left is copy length and the approved 44 px rows, not geometry. The About 390 reference is an incomplete frame.

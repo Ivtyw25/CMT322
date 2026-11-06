@@ -291,3 +291,9 @@ Merged to main and deployed: https://mutiara-connect-eo2k18we2-ivtyw25s-projects
 
 - All affected visual comparisons still exceed the 3% final target. Keep references/tolerances unchanged and retain truthful prototype copy and 44px controls. Further measured layout work and a full green verify remain necessary before publication.
 - The updated grouped quick runner passed typecheck, lint, tokens and 127 browser tests (native exit code 0): `.logs/resume-quick-grouped.log`. Earlier quick checks omitted the account/legal-help group suites; the original default-port attempt was blocked by occupied port 3100.
+
+## Decision: match Figma for account and legal-help (2026-11-06)
+
+**Owner decision:** the 10 account and legal-help pages must match the Figma design itself, not pass by raised tolerances. Figma copy replaces the shorter prototype copy where they differ, and Figma row spacing wins over loosened 44 px rows. Tap targets stay accessible through hit-area extensions that do not change the visual layout. Frames that cannot match (incomplete Figma frame, no dark frame) are recorded under Open.
+
+Verify before this round (port 3300): typecheck, lint, tokens, build, e2e 443, links 98, a11y 196 pass; responsive passes after the profile "View" target fix; visual fails on the 10 new pages (login/signup/forgot 390 12–14%, profile 8–11%, terms 36–42%, privacy/contact/accessibility 9–15%, sitemap 390 23%). Station 1440 failed once under load and passed alone.

@@ -14,12 +14,12 @@ export function SitemapPage({ siteInfo }: { siteInfo: SiteInfo }) {
             <h2 id={group.id} className="type-body-m-semibold">
               {group.label}
             </h2>
-            <ul className="flex flex-col border-t-2 border-primary-600 pt-1">
+            <ul className="flex flex-col border-t-2 border-primary-600 pt-1 lg:pt-1.5">
               {group.items.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="inline-flex min-h-11 min-w-11 items-center py-2 type-body-m-medium text-primary-700 hover:underline"
+                    className="inline-flex min-h-11 min-w-11 items-center py-2 type-body-s-medium text-primary-700 hover:underline lg:min-h-0 lg:py-1.25"
                   >
                     {item.label}
                   </Link>

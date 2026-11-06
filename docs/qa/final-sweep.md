@@ -57,3 +57,7 @@ Every case passed the repository assertions for document overflow, clipped leaf 
 No additional responsive source or test fixes are required from this run. The earlier FS1/FS2 fixes remain integrated. Full output is recorded in `.logs/final-responsive.log`; the run used a separate artifact directory to avoid collisions with other agents' checks. Visual fidelity and the other final verification suites remain the root agent's integration responsibility.
 
 Runner note: Playwright's final summary is `441 passed (16.1m)` with no test failure blocks. The outer PowerShell command nevertheless reported exit code 1; redirected stderr includes its `NativeCommandError` envelope for the NO_COLOR/FORCE_COLOR warning. The native process exit code was not captured separately. Future wrappers should preserve `$LASTEXITCODE` explicitly; this pass was not repeated solely to investigate the shell envelope.
+
+## Fix round, 6 November 2026
+
+Re-verified R-QA1, R-QA2, R-QA5 and R-QA9 on a fresh dev server (port 3702): the existing regressions pass (8 of 8: mobile map controls and pin at 44 px, tile-error text clear of the pin, guest and unknown-ID Submitted without "On this page", header and notice buttons at 44 px). Shared geometry fixes: desktop notice text centring, footer legal link weight. Visual before and after per frame is in `docs/qa/legal-help.md`. Sitemap 1440 fell from 13.39% to 6.37%; Project overview 390 from 16.14% to 15.41%; About 390 stays near 26% because its Figma frame is truncated. References and tolerances untouched.

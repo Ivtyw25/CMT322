@@ -100,7 +100,7 @@ export function NotificationBar({ notice, preview }: NotificationBarProps) {
               className={cn('size-4.5 text-warning-700', overHero && 'lg:text-static-white')}
             />
           </span>
-          <div className="flex min-h-7.5 min-w-0 flex-1 flex-col items-start justify-center gap-0.5 type-body-s @min-[64rem]:block">
+          <div className="flex min-h-7.5 min-w-0 flex-1 flex-col items-start justify-center gap-0.5 type-body-s @min-[64rem]:block @min-[64rem]:min-h-0 @min-[64rem]:self-center">
             <span
               className={cn(
                 'type-body-s-semibold text-warning-700 @min-[64rem]:hidden',

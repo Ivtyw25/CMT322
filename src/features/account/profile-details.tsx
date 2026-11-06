@@ -8,8 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { TextInput } from '@/components/ui/text-input';
 import { Select } from '@/components/ui/select';
+import { profileRow, profileRowAction } from './profile-card';
 import type { Area } from '@/data/models/area';
 import { authDelay, validEmail } from '@/lib/auth/auth';
+import { Check } from 'lucide-react';
 import { saveProfile, type ProfileChanges } from '@/lib/profile/profile';
 
 type DetailKey = 'name' | 'email' | 'phone' | 'homeArea';
@@ -68,20 +70,17 @@ export function ProfileDetails({
   }
 
   return (
-    <div className="divide-y divide-gray-200">
+    <div>
       {(['name', 'email', 'phone', 'homeArea'] as const).map((field) => (
-        <div
-          key={field}
-          className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 py-4 md:grid-cols-[10rem_minmax(0,1fr)_auto] md:py-1"
-        >
+        <div key={field} className={profileRow}>
           <div className="contents">
-            <span className="type-body-s-semibold">{copy.rows[field].label}</span>
+            <span className="type-body-s-medium">{copy.rows[field].label}</span>
             <Button
               ref={(node) => {
                 triggers.current[field] = node;
               }}
               variant="ghost"
-              className="col-start-2 row-start-1 md:col-start-3"
+              className={profileRowAction}
               disabled={editing !== null || languageEditing}
               onClick={() => {
                 setValue(
@@ -138,25 +137,33 @@ export function ProfileDetails({
               </div>
             </form>
           ) : (
-            <div className="col-span-2 row-start-2 min-w-0 type-body-m wrap-anywhere text-gray-700 md:col-span-1 md:col-start-2 md:row-start-1">
-              {field === 'homeArea'
-                ? (areas.find((area) => area.id === details[field])?.label ?? details[field])
-                : details[field] || copy.rows.phone.empty}
-              {field === 'email' ? (
-                <span className="ml-3 inline-block rounded-full bg-gray-100 px-2 py-1 type-body-xs">
-                  {verified ? copy.rows.email.verified : copy.rows.email.unverified}
-                </span>
+            <div className="col-span-2 row-start-2 min-w-0 wrap-anywhere md:col-span-1 md:col-start-2 md:row-start-1">
+              <p className="type-body-s text-gray-900">
+                {field === 'homeArea'
+                  ? (areas.find((area) => area.id === details[field])?.label ?? details[field])
+                  : details[field] || copy.rows.phone.empty}
+                {field === 'email' ? (
+                  <span
+                    className={`ml-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 align-middle type-body-xs-medium ${verified ? 'bg-success-50 text-success-700' : 'bg-gray-100 text-gray-700'}`}
+                  >
+                    {verified ? <Check aria-hidden className="size-3" /> : null}
+                    {verified ? copy.rows.email.verified : copy.rows.email.unverified}
+                  </span>
+                ) : null}
+              </p>
+              {field === 'phone' || field === 'homeArea' ? (
+                <p className="type-body-xs text-gray-500">{copy.rows[field].hint}</p>
               ) : null}
             </div>
           )}
         </div>
       ))}
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 py-4 md:grid-cols-[10rem_minmax(0,1fr)_auto] md:py-1">
-        <p className="type-body-s-semibold">{copy.rows.language.label}</p>
+      <div className={profileRow}>
+        <p className="type-body-s-medium">{copy.rows.language.label}</p>
         <Button
           ref={languageTrigger}
           variant="ghost"
-          className="col-start-2 row-start-1 md:col-start-3"
+          className={profileRowAction}
           disabled={editing !== null || languageEditing}
           onClick={() => setLanguageEditing(true)}
         >
@@ -185,8 +192,8 @@ export function ProfileDetails({
             </Button>
           </div>
         ) : (
-          <div className="col-span-2 row-start-2 space-y-1 md:col-span-1 md:col-start-2 md:row-start-1">
-            <p className="type-body-m">{copy.languages.en}</p>
+          <div className="col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-start-1">
+            <p className="type-body-s text-gray-900">{copy.languages.en}</p>
             <p className="type-body-xs text-gray-500">{accountUiCopy.languageSoon}</p>
           </div>
         )}

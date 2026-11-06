@@ -172,8 +172,8 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
       heading={copy.panel.heading}
       illustration={signup ? 'signup' : 'login'}
       footer={footer}
+      notice={<p className="rounded-lg bg-gray-50 p-3 type-body-xs text-gray-600">{extra.demo}</p>}
     >
-      <p className="mb-5 rounded-lg bg-gray-50 p-3 type-body-xs text-gray-600">{extra.demo}</p>
       {!reset && status !== 'guest' ? (
         <div aria-busy="true" className="space-y-6">
           {[1, 2, 3].map((i) => (
@@ -322,7 +322,7 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
               ) : null}
             </Field>
             {!reset ? (
-              <div className="space-y-2">
+              <div className={signup ? 'space-y-1.5' : 'space-y-5'}>
                 <div className="relative">
                   <Field
                     label={accountCopy.login.fields.password.label}
@@ -394,14 +394,14 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
               {accountCopy.forgotPassword.note}
             </Callout>
           ) : (
-            <div className="mt-5 rounded-lg bg-gray-50 p-4 text-center">
+            <div className="mt-5 rounded-lg bg-gray-50 px-7.5 py-3.5 text-center">
               <Link
                 href={routes.home}
-                className="inline-flex min-h-11 items-center type-body-s-semibold text-primary-700"
+                className="-my-3 inline-flex min-h-11 items-center type-body-s-semibold text-primary-700"
               >
                 {accountCopy.login.guest.action}
               </Link>
-              <p className="mt-1 type-body-xs text-gray-600">{accountCopy.login.guest.body}</p>
+              <p className="type-body-xs text-gray-600">{accountCopy.login.guest.body}</p>
             </div>
           )}
         </>

@@ -13,13 +13,13 @@ export function HelpAside({
   return (
     <section className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4">
       <h2 className="type-body-s-semibold">{copy.title}</h2>
-      <p className="type-body-s text-gray-600">{copy.body}</p>
+      <p className="type-body-xs text-gray-600">{copy.body}</p>
       <ButtonLink href={action.href} fullWidth>
         {action.label}
       </ButtonLink>
       <a
         href={siteInfo.careline.tel}
-        className="inline-flex min-h-11 items-center type-body-xs text-primary-700 hover:underline"
+        className="inline-flex min-h-11 items-center type-body-xs text-primary-700 hover:underline lg:min-h-0"
       >
         {siteInfo.careline.label} {siteInfo.careline.number}
       </a>

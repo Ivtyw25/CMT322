@@ -6,17 +6,27 @@ import { cn } from '@/lib/cn';
 
 type SwitchProps = Omit<SwitchPrimitive.SwitchProps, 'className' | 'children'> & {
   label: string;
+  /** Secondary line under the label. With it the label sits first and the switch at the end. */
+  description?: string;
   className?: string;
 };
 
 /** Labelled on/off setting (Figma 91:2963 / 91:2965). Space toggles; the label is clickable. */
-export function Switch({ label, className, id, ...props }: SwitchProps) {
+export function Switch({ label, description, className, id, ...props }: SwitchProps) {
   const generated = useId();
   const switchId = id ?? generated;
+  const descriptionId = `${switchId}-description`;
   return (
-    <div className={cn('flex min-h-11 items-center gap-3 md:min-h-0', className)}>
+    <div
+      className={cn(
+        'flex min-h-11 items-center gap-3 md:min-h-0',
+        description && 'flex-row-reverse justify-between gap-6',
+        className,
+      )}
+    >
       <SwitchPrimitive.Root
         id={switchId}
+        aria-describedby={description ? descriptionId : undefined}
         className={cn(
           'hit-area relative h-6 w-10 shrink-0 cursor-pointer rounded-full bg-gray-300',
           'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
@@ -34,9 +44,20 @@ export function Switch({ label, className, id, ...props }: SwitchProps) {
           )}
         />
       </SwitchPrimitive.Root>
-      <label htmlFor={switchId} className="cursor-pointer type-body-s-medium text-gray-900">
-        {label}
-      </label>
+      {description ? (
+        <div className="min-w-0">
+          <label htmlFor={switchId} className="cursor-pointer type-body-s-medium text-gray-900">
+            {label}
+          </label>
+          <p id={descriptionId} className="type-body-xs text-gray-500">
+            {description}
+          </p>
+        </div>
+      ) : (
+        <label htmlFor={switchId} className="cursor-pointer type-body-s-medium text-gray-900">
+          {label}
+        </label>
+      )}
     </div>
   );
 }

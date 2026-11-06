@@ -35,3 +35,28 @@ Result: **required functional fixes completed in the fresh fix round; final visu
 Validation: `npm run typecheck` and targeted ESLint passed. `.logs/account-fix-final.log` records **16/16 account and shared-session tests passing**. `.logs/account-nav-final.log` independently records the mobile pointer/keyboard/current-state regression passing. The sticky reopen test clicks the painted viewport bounds because Playwright's locator action scrolls a sticky control to its original layout box before pointer events; assertions remain unchanged. An earlier broad dev/HMR run was superseded for account; its unrelated segmented-control keyboard failure is left to root verification. Root has since integrated local fonts and is running consolidated verification; this builder does not claim its result.
 
 Approved behaviors retained: empty resting auth forms; demo credentials; unlimited resend after each 30s cooldown; ordinary delete confirmation without typed text; delete signs out and goes Home without notice; Add a station links to Stations; latest three reports; one mock session provider.
+
+## Fix round 4 Nov+ (6 November 2026)
+
+Scope: visual differences for login, signup, forgot password and profile (desktop 1440, light). References and the 3% tolerance are unchanged. Measured on the dev server (port 3701) with `tests/visual` (`.logs/auth-fix-run.log`, counts by `.logs/counts-auth.mjs`).
+
+| Frame | Before | After |
+| --- | ---: | ---: |
+| Login desktop light | 9.70% | 2.17% |
+| Signup desktop light | 15.14% | 1.93% |
+| Forgot password desktop light | 8.66% | 2.12% |
+| Profile desktop light | 22.01% | 8.42% |
+| Login / signup / forgot / profile mobile light (not targeted) | 13.19 / 13.63 / 11.92 / 22.44% | 13.28 / 13.85 / 12.06 / 10.97% |
+
+What changed, from Figma metadata (frames 4:959, 78:2530, 100:4081, 92:2963):
+- Auth shell: columns are 712/728 as in Figma (were 50/50); form column is vertically centred between logo and legal line without extra padding, so content starts at y 154 (login), 117 (signup), 278 (forgot); legal line sits at y 842 in a 600 px box (it wrapped before); panel heading breaks as designed ("Your reports, / all in one place", "Stay ahead of / road changes") at y 200; sign-up illustration is offset 14 px as in Figma.
+- The prototype notice (truthful copy kept) no longer pushes the form down at 1024 px and above: it sits right of the logo row. Below 1024 px it stays above the heading.
+- Form rhythm: 20 px between login password, keep-me-logged-in and button; 6 px for the sign-up hint; guest panel is 88 px with a 44 px hit area on its link.
+- Profile: container is 1200 px wide with the Figma gutters; cards now have head (title, lede, optional action) plus divided rows, label/value/action columns of 180 / flexible / auto, hints under phone, home area and language, notification switches at the row end with the hint beneath the label, security and privacy rows in columns, "View all tickets", "Add a station" and "Delete account" as header actions, station chips with code badge, sidebar rows 34 px high with a 44 px hit area. `Switch` gained an optional `description` prop (backwards compatible); `ProfileCard` takes `lede` and `action`.
+- Remaining profile difference: the approved latest three reports (Figma shows one) push all lower cards 86 px down, plus the shared footer (prefilled newsletter email, other builder). The Google "G" mark beside "Connected" is not rendered because only the full button artwork exists in the brand folder.
+- Google button: official artwork is kept at 180 x 40 and centred; Figma shows a 400 px wide button, which would need stretched artwork, so it is not matched.
+- Mobile: the notice above the heading still shifts the form (about 90 px) against the 390 frames; mobile differences are unchanged within 0.2 points for auth and improved for profile.
+
+Dark references: none of the six auth dark references can be generated. `docs/BRIEFING.md` lists the only dark Figma frames (D01, D02, D13 and the two mobile ones: Home, About, KOMTAR) and `pages.json` has no dark frame for login, signup, forgot password or profile. No reference was fabricated; those dark visual cases stay skipped.
+
+Checks (dev server 3701): typecheck pass; check:tokens pass; ESLint on changed files clean (the repository-wide `npm run lint` also scans untracked `.next-3702` build output and reports thousands of unrelated errors); account e2e plus session spec 18 passed; accessibility 16 passed; responsive 36 passed (four pages, nine widths).

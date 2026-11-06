@@ -49,10 +49,10 @@ export function AccountSidebar({ items }: { items: readonly Section[] }) {
 
   return (
     <nav aria-label={accountCopy.account.nav.label}>
-      <p className="mb-2 px-3 type-body-xs-semibold text-gray-500">
+      <p className="mb-0.5 flex h-6 items-center px-2.5 type-body-xs-semibold text-gray-500">
         {accountCopy.account.nav.label}
       </p>
-      <ul className="flex flex-col">
+      <ul className="flex flex-col gap-0.5">
         {items.map((item, index) => {
           const Icon = icons[index] ?? UserRound;
           return (
@@ -61,7 +61,7 @@ export function AccountSidebar({ items }: { items: readonly Section[] }) {
                 href={`#${item.id}`}
                 aria-current={item.id === active ? 'true' : undefined}
                 className={cn(
-                  'flex min-h-11 items-center gap-3 rounded-lg px-3 type-body-s',
+                  'hit-area flex min-h-8.5 items-center gap-2.5 rounded-lg px-2.5 type-body-s',
                   item.id === active
                     ? 'bg-primary-50 type-body-s-semibold text-primary-700'
                     : 'text-gray-600 hover:bg-gray-50',
