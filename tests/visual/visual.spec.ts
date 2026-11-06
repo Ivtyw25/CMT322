@@ -88,7 +88,10 @@ for (const manifestPage of activePages) {
           expect(
             ratio,
             `pixel difference vs Figma (diff in tests/visual/__diff__/${file})`,
-          ).toBeLessThanOrEqual(manifestPage.visualTolerance);
+          ).toBeLessThanOrEqual(
+            manifestPage.visualToleranceByWidth?.[String(viewport.width)] ??
+              manifestPage.visualTolerance,
+          );
         });
       }
     }

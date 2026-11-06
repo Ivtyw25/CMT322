@@ -22,7 +22,14 @@ export function Hero({ searchIndex }: { searchIndex: readonly SearchEntry[] }) {
       className="relative min-h-155.5 md:min-h-160 lg:h-200 lg:min-h-0"
     >
       <div aria-hidden className="absolute inset-0 overflow-hidden bg-static-navy">
-        <Image src={heroPhoto} alt="" fill priority sizes="100vw" className="object-cover" />
+        <Image
+          src={heroPhoto}
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 767px) max(100vw, 1160px), (max-width: 1023px) max(100vw, 1193px), max(100vw, 1491px)"
+          className="object-cover"
+        />
         <div className="absolute inset-0 bg-hero-scrim" />
         <div className="absolute inset-x-0 top-0 h-55 bg-nav-scrim" />
       </div>

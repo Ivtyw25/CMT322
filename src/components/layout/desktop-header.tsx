@@ -24,6 +24,7 @@ import type { ThemePreference } from '@/lib/theme/theme';
 import type { ShellData } from './shell-data';
 import { useNavCurrent } from '@/lib/navigation/nav-current';
 import { useOverHero } from './use-over-hero';
+import { useShellUser } from './use-shell-user';
 
 export type HeaderVariant = 'solid' | 'transparent';
 
@@ -50,6 +51,7 @@ const AUTH_PATHS: readonly string[] = [
 ];
 
 export function DesktopHeader({ data, preview, className }: DesktopHeaderProps) {
+  const user = useShellUser(data.user, Boolean(preview));
   const pathname = usePathname();
   const currentPath = useCurrentPath();
   const { signOut, status } = useSession();
@@ -315,7 +317,7 @@ export function DesktopHeader({ data, preview, className }: DesktopHeaderProps) 
             {!preview || preview.auth === 'signed-in' ? (
               <div data-auth={preview ? undefined : 'signed-in'} className="flex">
                 <AccountMenu
-                  user={data.user}
+                  user={user}
                   onHero={onHero}
                   open={accountIsOpen}
                   onOpenChange={(next) => {

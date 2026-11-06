@@ -10,7 +10,7 @@ import { Logo } from './logo';
 import { NewsletterForm } from './newsletter-form';
 
 const footerLink =
-  'hit-area flex min-h-11 items-center type-body-s text-static-on-navy-200 transition-colors duration-(--duration-fast) hover:text-static-white hover:underline focus-visible:outline-static-white @min-[48rem]:min-h-0';
+  'hit-area flex items-center type-body-s text-static-on-navy-200 transition-colors duration-(--duration-fast) hover:text-static-white hover:underline focus-visible:outline-static-white';
 
 const contactLink =
   'hit-area type-body-s-semibold text-static-white hover:underline focus-visible:outline-static-white';
@@ -36,13 +36,13 @@ export async function SiteFooter({ newsletterPreview, className }: SiteFooterPro
       <div className="px-5 pt-10 pb-8 @min-[48rem]:px-8 @min-[64rem]:px-10 @min-[64rem]:pt-16">
         <div className="mx-auto flex max-w-content flex-col gap-7 @min-[48rem]:gap-8 @min-[64rem]:gap-10">
           <div className="flex flex-col gap-7 @min-[48rem]:gap-8 @min-[64rem]:flex-row @min-[64rem]:gap-14">
-            <div className="flex flex-col gap-5 @min-[64rem]:w-90 @min-[64rem]:shrink-0">
+            <div className="flex flex-col gap-7 @min-[48rem]:gap-5 @min-[64rem]:w-90 @min-[64rem]:shrink-0">
               <Logo tone="onDark" />
               <p className="type-body-s text-static-on-navy-200">{footerCopy.description}</p>
               <ul className="flex flex-col gap-3">
                 <li className="flex items-start gap-2.5 @min-[48rem]:gap-3">
                   <Phone aria-hidden className="mt-0.5 size-4.5 shrink-0 text-static-on-navy-100" />
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex flex-col gap-0 @min-[48rem]:gap-0.5">
                     <a href={siteInfo.careline.tel} className={contactLink}>
                       <span className="sr-only">{footerCopy.contact.carelineLabel}: </span>
                       {siteInfo.careline.label} {siteInfo.careline.number}
@@ -54,7 +54,7 @@ export async function SiteFooter({ newsletterPreview, className }: SiteFooterPro
                 </li>
                 <li className="flex items-start gap-2.5 @min-[48rem]:gap-3">
                   <Mail aria-hidden className="mt-0.5 size-4.5 shrink-0 text-static-on-navy-100" />
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex flex-col gap-0 @min-[48rem]:gap-0.5">
                     <a href={siteInfo.email.href} className={contactLink}>
                       <span className="sr-only">{footerCopy.contact.emailLabel}: </span>
                       {siteInfo.email.address}
@@ -72,9 +72,9 @@ export async function SiteFooter({ newsletterPreview, className }: SiteFooterPro
               className="grid grid-cols-2 gap-x-6 gap-y-7 @min-[48rem]:grid-cols-4 @min-[48rem]:gap-8 @min-[64rem]:flex-1"
             >
               {footerCopy.columns.map((column) => (
-                <div key={column.id} className="flex min-w-0 flex-col gap-1 @min-[48rem]:gap-3">
+                <div key={column.id} className="flex min-w-0 flex-col gap-2.5 @min-[48rem]:gap-3">
                   <h2 className="type-body-s-semibold text-static-white">{column.title}</h2>
-                  <ul className="flex flex-col @min-[48rem]:gap-3">
+                  <ul className="flex flex-col gap-2.5 @min-[48rem]:gap-3">
                     {column.links.map((link) => (
                       <li key={link.href}>
                         <Link href={link.href} className={footerLink}>
@@ -127,7 +127,7 @@ export async function SiteFooter({ newsletterPreview, className }: SiteFooterPro
               <Link
                 key={link.href}
                 href={link.href}
-                className="hit-area type-body-xs-medium text-static-white hover:underline focus-visible:outline-static-white @min-[48rem]:text-static-on-navy-100"
+                className="hit-area type-body-xs-medium text-static-white hover:underline focus-visible:outline-static-white @min-[48rem]:font-normal @min-[48rem]:text-static-on-navy-100"
               >
                 {link.label}
               </Link>

@@ -23,6 +23,8 @@ type DocsLayoutProps = {
    * page" list from 1280 px, after the article below. It stands alone when there is no list.
    */
   aside?: React.ReactNode;
+  /** A rule above the aside block and the wider gap that goes with it. Off for an aside that is already a card. */
+  asideDivider?: boolean;
   /** Gallery only: show the aside at any width and pin its active item. */
   preview?: { activeId: string };
   children: React.ReactNode;
@@ -44,6 +46,7 @@ export function DocsLayout({
   groups = defaultGroups,
   onThisPage = [],
   aside,
+  asideDivider = true,
   preview,
   children,
 }: DocsLayoutProps) {
@@ -109,23 +112,38 @@ export function DocsLayout({
           {hasList || aside ? (
             <div
               className={cn(
-                'w-docs-aside shrink-0 flex-col gap-8',
+                'w-docs-aside shrink-0 flex-col',
+                asideDivider ? 'gap-8' : 'gap-6',
                 preview ? 'flex' : 'hidden xl:flex',
               )}
             >
-              <div className="sticky top-29.25 flex max-h-[calc(100dvh-8.8125rem)] flex-col gap-8 overflow-y-auto">
+              <div
+                className={cn(
+                  'sticky top-29.25 flex max-h-[calc(100dvh-8.8125rem)] flex-col overflow-y-auto',
+                  asideDivider ? 'gap-8' : 'gap-6',
+                )}
+              >
                 {hasList ? (
                   <DocsAside items={onThisPage} previewActiveId={preview?.activeId} />
                 ) : null}
                 {aside ? (
-                  <div className={cn(hasList && 'border-t border-gray-200 pt-6')}>{aside}</div>
+                  <div className={cn(asideDivider && hasList && 'border-t border-gray-200 pt-6')}>
+                    {aside}
+                  </div>
                 ) : null}
               </div>
             </div>
           ) : null}
         </div>
         {aside && !preview ? (
-          <div className="mt-10 max-w-article border-t border-gray-200 pt-6 xl:hidden">{aside}</div>
+          <div
+            className={cn(
+              'max-w-article xl:hidden',
+              asideDivider ? 'mt-10 border-t border-gray-200 pt-6' : 'mt-6',
+            )}
+          >
+            {aside}
+          </div>
         ) : null}
       </div>
     </div>

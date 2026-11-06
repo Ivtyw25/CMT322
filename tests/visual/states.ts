@@ -2,6 +2,8 @@ import { expect, type Page } from '@playwright/test';
 import { homeCopy } from '@/content/home';
 import { navCopy, navGroups } from '@/content/nav';
 import { reportTrackCopy } from '@/content/report-track';
+import { accountCopy } from '@/content/account';
+import { notificationCopy } from '@/content/notifications';
 
 export type VisualState = { name: string; run: (page: Page) => Promise<void> };
 
@@ -52,6 +54,44 @@ async function fillReportForm(page: Page): Promise<void> {
  * Reference files: <name>--<width>--<theme>.png. The home team fills in the steps.
  */
 export const visualStates: Record<string, VisualState[]> = {
+  profile: [
+    {
+      name: 'profile',
+      run: async (page) => {
+        const dismiss = page.getByRole('button', { name: notificationCopy.dismiss });
+        if (await dismiss.isVisible()) await dismiss.click();
+        await page.evaluate(() => window.scrollTo(0, 0));
+      },
+    },
+  ],
+  login: [
+    {
+      name: 'login',
+      run: async (page) => {
+        await page
+          .getByLabel(accountCopy.login.fields.email.label, { exact: true })
+          .fill('meiling.tan@example.com');
+        await page
+          .getByLabel(accountCopy.login.fields.password.label, { exact: true })
+          .fill('Mutiara123');
+        await page.getByLabel(accountCopy.login.fields.keepLoggedIn).uncheck();
+        await page.getByRole('heading', { level: 1 }).click();
+        await page.evaluate(() => window.scrollTo(0, 0));
+      },
+    },
+  ],
+  'forgot-password': [
+    {
+      name: 'forgot-password',
+      run: async (page) => {
+        await page
+          .getByLabel(accountCopy.forgotPassword.fields.email.label, { exact: true })
+          .fill('meiling.tan@example.com');
+        await page.getByRole('heading', { level: 1 }).click();
+        await page.evaluate(() => window.scrollTo(0, 0));
+      },
+    },
+  ],
   /** Figma shows a filled example; the form itself starts empty. A state named like its page replaces the plain shot. */
   report: [{ name: 'report', run: fillReportForm }],
   /** The confirmation shows a skeleton until the session and the ticket are read. */

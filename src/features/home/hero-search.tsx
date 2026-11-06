@@ -101,7 +101,7 @@ export function HeroSearch({ entries }: { entries: readonly SearchEntry[] }) {
     } else if (entry.kind === 'road') {
       router.push(routes.traffic.routeAt(entry.stationCode));
     } else {
-      router.replace(routes.homeWorksIn(entry.areaId), { scroll: false });
+      window.history.replaceState(null, '', routes.homeWorksIn(entry.areaId));
       revealWorks();
     }
   }

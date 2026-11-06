@@ -109,7 +109,7 @@ export function ReportLocationSection({
                   loading={locating}
                   onClick={locate.onLocate}
                   icon={<LocateFixed aria-hidden className="size-4" />}
-                  className="px-3 py-2 whitespace-nowrap shadow-control"
+                  className="min-h-11 px-3 py-2 whitespace-nowrap shadow-control lg:min-h-0"
                 >
                   {locating ? location.map.locating : location.map.useMyLocation}
                 </Button>

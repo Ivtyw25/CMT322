@@ -31,13 +31,13 @@ export function RelatedPages({
             <Link
               href={page.href}
               className={cn(
-                '-mx-3 flex min-h-17.75 items-center justify-between gap-4 rounded-lg px-3 py-3',
+                '-mx-3 flex items-center justify-between gap-4 rounded-lg px-3 py-3.5',
                 'transition-colors duration-(--duration-fast) ease-(--ease-standard) hover:bg-gray-50',
                 'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-600',
               )}
             >
               <span className="flex min-w-0 flex-col gap-0.5">
-                <span className="type-body-m-semibold text-primary-700">{page.label}</span>
+                <span className="type-body-s-semibold text-primary-700">{page.label}</span>
                 <span className="type-body-s text-gray-600">{page.description}</span>
               </span>
               <ChevronRight aria-hidden className="size-4 shrink-0 text-gray-400" />

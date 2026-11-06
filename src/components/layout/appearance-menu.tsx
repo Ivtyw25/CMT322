@@ -76,10 +76,11 @@ export function AppearanceMenu({
           // The saved choice is only known in the browser; the label updates after hydration.
           suppressHydrationWarning
           aria-label={copy.buttonLabel(copy.options[selected].label)}
-          variant={compact ? 'plain' : 'outline'}
+          variant="outline"
           className={cn(
+            compact && 'hit-area',
             onHero && 'text-static-white hover:bg-static-glass',
-            onHero && !compact && 'border-static-white hover:border-static-white',
+            onHero && 'border-static-white hover:border-static-white',
             onHero &&
               'data-[state=open]:border-surface data-[state=open]:bg-surface data-[state=open]:text-primary-700',
           )}

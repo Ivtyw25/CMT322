@@ -14,6 +14,8 @@ export type ManifestPage = {
   group: string;
   status: PageStatus;
   visualTolerance: number;
+  /** Per-viewport override, keyed by width, for a frame with a logged Figma defect. */
+  visualToleranceByWidth?: Record<string, number>;
   figma: {
     desktop: string | null;
     mobile: string | null;

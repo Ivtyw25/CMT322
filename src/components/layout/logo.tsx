@@ -40,10 +40,12 @@ export function Logo({
       <Image
         src={logoMark}
         alt=""
-        sizes="44px"
+        sizes="56px"
         // 44 px and on every page: loading it at once keeps the footer logo from popping in.
         loading="eager"
-        className={cn('shrink-0 rounded-full', compact ? 'size-9' : 'size-11')}
+        // The PNG includes transparent padding. Default: a 56 px image with -6 px margins keeps the
+        // 44 px footprint and paints the mark at 44 px. Compact: 36 px footprint, mark about 36 px.
+        className={cn('shrink-0 rounded-full', compact ? '-m-1 size-11' : '-m-1.5 size-14')}
       />
       <span
         className={cn(

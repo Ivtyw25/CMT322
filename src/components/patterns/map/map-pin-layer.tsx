@@ -43,9 +43,9 @@ function pinIcon(): L.DivIcon {
   return L.divIcon({
     html: element,
     className:
-      'rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
-    iconSize: [40, 40],
-    iconAnchor: [20, 20],
+      'flex items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
+    iconSize: [44, 44],
+    iconAnchor: [22, 22],
   });
 }
 
@@ -140,7 +140,7 @@ export function MapPinLayer({ map, pin }: MapPinLayerProps) {
         if (centre) pin.onChange({ lat: centre.lat, lng: centre.lng });
       }}
       className={cn(
-        'hit-area absolute top-3 left-3 z-20 flex size-7 cursor-pointer items-center justify-center rounded-md border border-gray-300',
+        'hit-area absolute top-3 left-3 z-20 flex size-11 cursor-pointer items-center justify-center rounded-md border border-gray-300 lg:size-7',
         'bg-surface text-gray-700 shadow-control transition-colors duration-(--duration-fast) hover:bg-gray-50',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
       )}

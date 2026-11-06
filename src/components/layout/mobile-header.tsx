@@ -19,6 +19,7 @@ import { Logo } from './logo';
 import { MobileDrawer } from './mobile-drawer';
 import type { ShellData } from './shell-data';
 import { useOverHero } from './use-over-hero';
+import { useShellUser } from './use-shell-user';
 
 /** Regions of the page that stop taking focus while the drawer is open. */
 const INERT_SELECTOR = '[data-shell-inert]';
@@ -36,6 +37,7 @@ export type MobileHeaderPreview = {
 type MobileHeaderProps = { data: ShellData; preview?: MobileHeaderPreview; className?: string };
 
 export function MobileHeader({ data, preview, className }: MobileHeaderProps) {
+  const user = useShellUser(data.user, Boolean(preview));
   const pathname = usePathname();
   const currentPath = useCurrentPath();
   const { signOut } = useSession();
@@ -122,10 +124,10 @@ export function MobileHeader({ data, preview, className }: MobileHeaderProps) {
           <Link
             data-auth={preview ? undefined : 'signed-in'}
             href={routes.account.profile}
-            aria-label={navCopy.mobile.profileLink(data.user.fullName)}
+            aria-label={navCopy.mobile.profileLink(user.fullName)}
             // Initials drawn with CSS: the label already names the person, so no visible text to match.
-            data-initials={data.user.initials}
-            className="hit-area flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-100 type-body-xs-semibold text-primary-700 transition-colors duration-(--duration-fast) before:content-[attr(data-initials)] hover:bg-primary-200"
+            data-initials={user.initials}
+            className="hit-area flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-100 type-body-xs-semibold text-primary-700 transition-colors duration-(--duration-fast) before:content-[attr(data-initials)] hover:bg-primary-200"
           />
         ) : null}
         <IconButton
@@ -135,7 +137,7 @@ export function MobileHeader({ data, preview, className }: MobileHeaderProps) {
           aria-expanded={menuOpen}
           aria-controls={menuId}
           onClick={() => setOpenedOn(liveOpen ? null : pathname)}
-          className={cn(onHero && 'text-static-white hover:bg-static-glass')}
+          className={cn('size-11', onHero && 'text-static-white hover:bg-static-glass')}
         >
           {menuOpen ? (
             <X aria-hidden className="size-5" />
@@ -147,7 +149,7 @@ export function MobileHeader({ data, preview, className }: MobileHeaderProps) {
       {menuOpen ? (
         <MobileDrawer
           id={menuId}
-          user={data.user}
+          user={user}
           pathname={preview?.currentPath ?? pathname}
           currentPath={currentPath}
           onNavigate={close}

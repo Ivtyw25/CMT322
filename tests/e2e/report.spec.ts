@@ -332,6 +332,42 @@ test.describe('report: photos and files', () => {
 });
 
 test.describe('report: location and the map', () => {
+  test('mobile map controls have 44 px targets', async ({ page }) => {
+    await open(page, routes.reportTrack.report, 390);
+    for (const label of [
+      uiCopy.map.zoomIn,
+      uiCopy.map.zoomOut,
+      report.location.map.dropPin,
+      report.location.map.useMyLocation,
+    ]) {
+      const button = page.getByRole('button', { name: label, exact: true });
+      await expect(button).toBeVisible();
+      const box = await button.boundingBox();
+      expect(box?.width).toBeGreaterThanOrEqual(44);
+      expect(box?.height).toBeGreaterThanOrEqual(44);
+    }
+    await page.getByRole('button', { name: report.location.map.dropPin }).click();
+    await expect(pinMarker(page)).toBeVisible();
+    const pinBox = await pinMarker(page).boundingBox();
+    expect(pinBox?.width).toBeGreaterThanOrEqual(44);
+    expect(pinBox?.height).toBeGreaterThanOrEqual(44);
+  });
+
+  test('failed tile text stays clear of a centred pin on mobile', async ({ page }) => {
+    await open(page, routes.reportTrack.report, 390);
+    await page.unroute(/tile\.openstreetmap\.org/);
+    await page.route(/tile\.openstreetmap\.org/, (route) => route.abort());
+    await page.reload();
+    const map = mapRegion(page);
+    const error = map.locator('..').getByRole('status');
+    await expect(error).toHaveText(uiCopy.map.unavailable);
+    await page.getByRole('button', { name: report.location.map.dropPin }).click();
+    const messageBox = await error.boundingBox();
+    const pinBox = await pinMarker(page).boundingBox();
+    expect(messageBox).not.toBeNull();
+    expect(pinBox).not.toBeNull();
+    expect(messageBox!.y + messageBox!.height).toBeLessThanOrEqual(pinBox!.y);
+  });
   test('a click on the map sets the pin, the readout and a blank address', async ({ page }) => {
     await open(page);
     await expect(mapRegion(page)).toBeVisible();

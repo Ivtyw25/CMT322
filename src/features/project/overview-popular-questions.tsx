@@ -18,7 +18,7 @@ export function OverviewPopularQuestions({ items }: { items: readonly FaqItem[] 
             <li key={item.id}>
               <Link
                 href={routes.project.faqItem(item.id)}
-                className="flex min-h-12.25 items-start justify-between gap-4 py-3 type-body-m text-gray-900 transition-colors duration-(--duration-fast) hover:bg-gray-50 hover:text-primary-700 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-600"
+                className="flex min-h-12.25 items-start justify-between gap-4 py-3 type-body-s text-gray-900 transition-colors duration-(--duration-fast) hover:bg-gray-50 hover:text-primary-700 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-600 md:type-body-m"
               >
                 <span>{item.question}</span>
                 <ChevronRight aria-hidden className="mt-1 size-4 shrink-0 text-gray-400" />

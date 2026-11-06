@@ -33,7 +33,12 @@ export default defineConfig({
     { name: 'responsive', testDir: './tests/responsive' },
     { name: 'links', testDir: './tests/links' },
     { name: 'a11y', testDir: './tests/a11y' },
-    { name: 'visual', testDir: './tests/visual', timeout: 120_000 },
+    {
+      name: 'visual',
+      testDir: './tests/visual',
+      timeout: 120_000,
+      use: { launchOptions: { args: ['--disable-lcd-text'] } },
+    },
   ],
   webServer: process.env.BASE_URL
     ? undefined

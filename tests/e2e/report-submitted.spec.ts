@@ -31,6 +31,11 @@ test.describe('report submitted', () => {
       page.getByRole('list', { name: 'Ticket status' }).getByRole('listitem'),
     ).toHaveCount(4);
     await expect(page.getByText('Driveway blocked by site hoarding').first()).toBeVisible();
+    const contents = page.getByRole('navigation', { name: 'On this page' });
+    await expect(contents.getByRole('link')).toHaveCount(4);
+    for (const link of await contents.getByRole('link').all()) {
+      await expect(page.locator((await link.getAttribute('href'))!)).toBeAttached();
+    }
   });
 
   test('Copy ID puts the ID on the clipboard and says Copied for two seconds', async ({
@@ -103,6 +108,7 @@ test.describe('report submitted', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(submitted.unavailable.heading);
     await expect(page.getByText(submitted.unavailable.title)).toBeVisible();
     await expect(page.getByRole('link', { name: submitted.unavailable.login })).toHaveCount(0);
+    await expect(page.getByRole('navigation', { name: 'On this page' })).toHaveCount(0);
   });
 
   test('guests get the unavailable note with a log in button', async ({ page }) => {
@@ -112,6 +118,7 @@ test.describe('report submitted', () => {
       page.locator('#main').getByRole('link', { name: submitted.unavailable.login }),
     ).toBeVisible();
     await expect(page.locator('#ticket-id-value')).toHaveCount(0);
+    await expect(page.getByRole('navigation', { name: 'On this page' })).toHaveCount(0);
   });
 
   test('has no horizontal scroll at 320 px', async ({ page }) => {

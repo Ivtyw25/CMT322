@@ -63,3 +63,19 @@ Facts that could not be confirmed. Each is also tagged `// VERIFY:` in code. Fac
 | R6 | Form, overview | emergency notice | "Call 999" and "not monitored around the clock" are Figma's | Confirm with owner |
 | R7 | Overview | `faq.items` answers | Questions are Figma's. Answers are new, no matching FAQ records. Hand-over to the site team is inferred from ticket 0482 | Confirm; consider linking FAQ records |
 | R8 | Submitted | `email.body` | "mutiaraconnect.my/track" is Figma's. Only help@mutiaraconnect.my is a confirmed domain use | Keep |
+
+## Legal and help pages, Figma copy (6 Nov 2026)
+
+All kept exactly as Figma shows. Confirm before any real use:
+- `legalHelpCopy.terms.sections` 5: tickets may close after 14 days without a reply.
+- `terms` 6 and 12: content licence, limit of liability, Malaysian consumer law statement.
+- `terms` 9 and `privacy` 5, 8: Personal Data Protection Act 2010 rights and the 21-day reply time.
+- `terms` 11: closing an account closes open tickets.
+- `terms` 14: governing law and courts of Malaysia.
+- `privacy` 4: resolved tickets kept for two years.
+- `privacy` 6: analytics cookies only with consent. The prototype sets none.
+- `privacy` 7: data "encrypted when sent and stored". The prototype stores data in the browser only.
+- `contact` email and `accessibility` 4 and note: replies in 3 and 5 working days.
+- `accessibility` standard: WCAG 2.1 AA and MYDS claims.
+- Terms and privacy dates: "Last updated 29 October 2026. Effective from 1 November 2026."
+- Terms 3, privacy 1: Google sign-in is described as real; the site's Google button is simulated.
