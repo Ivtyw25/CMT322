@@ -46,10 +46,13 @@ export function Switch({ label, description, className, id, ...props }: SwitchPr
       </SwitchPrimitive.Root>
       {description ? (
         <div className="min-w-0">
-          <label htmlFor={switchId} className="cursor-pointer type-body-s-medium text-gray-900">
+          <label
+            htmlFor={switchId}
+            className="block cursor-pointer type-body-s-medium text-gray-900"
+          >
             {label}
           </label>
-          <p id={descriptionId} className="type-body-xs text-gray-500">
+          <p id={descriptionId} className="mt-0.5 type-body-xs text-gray-500">
             {description}
           </p>
         </div>

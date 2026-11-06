@@ -28,10 +28,10 @@ test('policy section navigation focuses the matching heading', async ({ page }) 
   await page.goto(routes.legal.privacy);
   await page
     .getByRole('navigation', { name: 'On this page' })
-    .getByRole('link', { name: '6. Cookies and browser storage' })
+    .getByRole('link', { name: '6. Cookies' })
     .click();
   await expect(page).toHaveURL(/#storage$/);
-  await expect(page.getByRole('heading', { name: '6. Cookies and browser storage' })).toBeFocused();
+  await expect(page.getByRole('heading', { name: '6. Cookies' })).toBeFocused();
 });
 
 test('contact destinations and the sitemap use the shared routes', async ({ page }) => {
@@ -82,7 +82,9 @@ for (const width of [390, 1440]) {
   });
 }
 
-test('legal and help pages show group breadcrumbs and relevant help actions', async ({ page }) => {
+test('help pages show a group breadcrumb, legal pages go straight to Home and relevant help actions', async ({
+  page,
+}) => {
   await prepare(page);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(routes.legal.privacy);
@@ -90,7 +92,7 @@ test('legal and help pages show group breadcrumbs and relevant help actions', as
     page
       .getByRole('navigation', { name: 'Breadcrumb' })
       .getByRole('link', { name: 'Legal', exact: true }),
-  ).toHaveAttribute('href', routes.legal.terms);
+  ).toHaveCount(0);
   await page.goto(routes.help.accessibility);
   await expect(
     page

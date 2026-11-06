@@ -34,7 +34,7 @@ export function DocsPageHead({
   children,
 }: DocsPageHeadProps) {
   return (
-    <header className="flex flex-col gap-4">
+    <header className="flex flex-col gap-3.5">
       <Breadcrumb items={breadcrumb} current={breadcrumbCurrent} />
       <div className={cn(titleIcon && 'flex items-center gap-4')}>
         {titleIcon}

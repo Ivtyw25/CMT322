@@ -17,8 +17,16 @@ test('mobile header and notice buttons have 44 px targets', async ({ page }) => 
     page.getByRole('button', { name: notificationCopy.dismiss }),
   ]) {
     await expect(button).toBeVisible();
-    const box = await button.boundingBox();
-    expect(box?.width).toBeGreaterThanOrEqual(44);
-    expect(box?.height).toBeGreaterThanOrEqual(44);
+    // A `hit-area` control may look smaller; its ::after grows the tap area to 44 px.
+    const target = await button.evaluate((el) => {
+      const rect = el.getBoundingClientRect();
+      const after = el.classList.contains('hit-area') ? getComputedStyle(el, '::after') : null;
+      return {
+        width: Math.max(rect.width, after ? parseFloat(after.width) : 0),
+        height: Math.max(rect.height, after ? parseFloat(after.height) : 0),
+      };
+    });
+    expect(target.width).toBeGreaterThanOrEqual(44);
+    expect(target.height).toBeGreaterThanOrEqual(44);
   }
 });

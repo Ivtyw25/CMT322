@@ -8,18 +8,21 @@ export function SitemapPage({ siteInfo }: { siteInfo: SiteInfo }) {
   const copy = legalHelpCopy.sitemap;
   return (
     <HelpPageFrame href={routes.help.sitemap} {...copy} sections={[]} siteInfo={siteInfo}>
-      <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-x-6 gap-y-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-y-8">
         {copy.groups.map((group) => (
-          <section key={group.id} aria-labelledby={group.id} className="flex flex-col gap-2">
-            <h2 id={group.id} className="type-body-m-semibold">
+          <section key={group.id} aria-labelledby={group.id} className="flex flex-col gap-2.5">
+            <h2
+              id={group.id}
+              className="border-b-2 border-primary-600 pb-2 type-body-m-semibold text-gray-900"
+            >
               {group.label}
             </h2>
-            <ul className="flex flex-col border-t-2 border-primary-600 pt-1 lg:pt-1.5">
+            <ul className="flex flex-col items-start gap-2.5">
               {group.items.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="inline-flex min-h-11 min-w-11 items-center py-2 type-body-s-medium text-primary-700 hover:underline lg:min-h-0 lg:py-1.25"
+                    className="hit-area block type-body-s-medium text-primary-700 hover:underline"
                   >
                     {item.label}
                   </Link>

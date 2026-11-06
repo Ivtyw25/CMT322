@@ -150,19 +150,19 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
   const legal = signup ? accountCopy.signup.legal : accountCopy.login.legal;
   const footer = reset ? (
     <>
-      {accountCopy.forgotPassword.help.text}{' '}
-      <Link href={routes.help.contact} className="text-primary-700 underline">
+      <span>{accountCopy.forgotPassword.help.text}</span>
+      <Link href={routes.help.contact} className="hit-area text-primary-700">
         {accountCopy.forgotPassword.help.link}
       </Link>
     </>
   ) : (
     <>
-      {legal.prefix}{' '}
-      <Link href={routes.legal.terms} className="text-primary-700 underline">
+      <span>{legal.prefix}</span>
+      <Link href={routes.legal.terms} className="hit-area text-primary-700">
         {legal.terms}
-      </Link>{' '}
-      {legal.and}{' '}
-      <Link href={routes.legal.privacy} className="text-primary-700 underline">
+      </Link>
+      <span>{legal.and}</span>
+      <Link href={routes.legal.privacy} className="hit-area text-primary-700">
         {legal.privacy}
       </Link>
     </>
@@ -172,7 +172,7 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
       heading={copy.panel.heading}
       illustration={signup ? 'signup' : 'login'}
       footer={footer}
-      notice={<p className="rounded-lg bg-gray-50 p-3 type-body-xs text-gray-600">{extra.demo}</p>}
+      notice={<p className="type-body-xs text-gray-600">{extra.demo}</p>}
     >
       {!reset && status !== 'guest' ? (
         <div aria-busy="true" className="space-y-6">
@@ -236,7 +236,7 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
       ) : (
         <>
           <h1 className="type-heading-xs lg:type-heading-s">{copy.header.title}</h1>
-          <p className="mt-2 mb-5 type-body-m text-gray-600">{copy.header.lede}</p>
+          <p className="mt-1.5 mb-5 type-body-m text-gray-600">{copy.header.lede}</p>
           {!reset ? (
             <>
               <GoogleButton
@@ -244,10 +244,13 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
                 disabled={pending}
                 onClick={google}
               />
-              <div aria-hidden className="my-5 flex items-center gap-3 type-body-xs text-gray-500">
-                <span className="h-px flex-1 bg-gray-200" />
-                {accountCopy.login.or}
-                <span className="h-px flex-1 bg-gray-200" />
+              <div
+                aria-hidden
+                className="my-5 flex h-4.5 items-start border-t border-gray-200 type-body-xs text-gray-500 lg:items-center lg:gap-3 lg:border-t-0"
+              >
+                <span className="hidden h-px flex-1 bg-gray-200 lg:block" />
+                <span className="hidden lg:inline">{accountCopy.login.or}</span>
+                <span className="hidden h-px flex-1 bg-gray-200 lg:block" />
               </div>
             </>
           ) : null}
@@ -352,7 +355,7 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
                     <Link
                       href={authLink(routes.account.forgotPassword, next)}
                       onClick={() => rememberEmail(email)}
-                      className="absolute -top-3 right-0 inline-flex min-h-11 items-center type-body-s-medium text-primary-700"
+                      className="hit-area absolute top-0 right-0 inline-flex h-5 items-center type-body-s-medium text-primary-700"
                     >
                       {accountCopy.login.actions.forgotPassword}
                     </Link>
@@ -367,7 +370,10 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
                     </p>
                   )
                 ) : (
-                  <Checkbox label={accountCopy.login.fields.keepLoggedIn} />
+                  <Checkbox
+                    className="[&_label]:hit-area [&_label]:min-h-5"
+                    label={accountCopy.login.fields.keepLoggedIn}
+                  />
                 )}
               </div>
             ) : null}
@@ -394,14 +400,16 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
               {accountCopy.forgotPassword.note}
             </Callout>
           ) : (
-            <div className="mt-5 rounded-lg bg-gray-50 px-7.5 py-3.5 text-center">
+            <div className="mt-5 rounded-lg bg-gray-50 px-4 py-3.5 text-center lg:px-7.5">
               <Link
                 href={routes.home}
-                className="-my-3 inline-flex min-h-11 items-center type-body-s-semibold text-primary-700"
+                className="hit-area mx-auto block w-fit type-body-s-semibold text-primary-700"
               >
                 {accountCopy.login.guest.action}
               </Link>
-              <p className="type-body-xs text-gray-600">{accountCopy.login.guest.body}</p>
+              <p className="mt-1 text-left type-body-xs text-gray-600 lg:text-center">
+                {accountCopy.login.guest.body}
+              </p>
             </div>
           )}
         </>

@@ -61,3 +61,23 @@ Runner note: Playwright's final summary is `441 passed (16.1m)` with no test fai
 ## Fix round, 6 November 2026
 
 Re-verified R-QA1, R-QA2, R-QA5 and R-QA9 on a fresh dev server (port 3702): the existing regressions pass (8 of 8: mobile map controls and pin at 44 px, tile-error text clear of the pin, guest and unknown-ID Submitted without "On this page", header and notice buttons at 44 px). Shared geometry fixes: desktop notice text centring, footer legal link weight. Visual before and after per frame is in `docs/qa/legal-help.md`. Sitemap 1440 fell from 13.39% to 6.37%; Project overview 390 from 16.14% to 15.41%; About 390 stays near 26% because its Figma frame is truncated. References and tolerances untouched.
+
+## Final visual fix round, 6 November 2026
+
+| Frame | Before | After | Tolerance |
+|---|---|---|---|
+| report-track-overview 390 light | 10.55% | passes (under 10%) | 10% |
+| report-submitted 390 light | 17.34% (when the aside divider was restored) | passes | 17% |
+| terms 390 light | 4.60% | 3.83% | 3% |
+| privacy 390 light | 4.05% | 3.43% | 3% |
+| accessibility 390 light | 10.35% | 3.38% alone, 3.65% under load | 3% |
+| account frames (login, signup, forgot-password, profile, 1440 and 390) | pass | pass | 3% |
+
+**1. report-track-overview regression.** Cause: this round's `docs-layout.tsx` removed the divider above the aside ("Need help?") and cut the gap to 24 px. The Figma frames for Report & Track keep the divider (border-top, 24 px padding, 40 px top margin), and so do most docs pages. The legal-help card aside has none. `DocsLayout` now takes `asideDivider` (default true, Figma docs pages); the legal-help frame and Report Submitted pass `false`, which is what their frames and references measure. Page height went from 3036 to 3077 px (Figma 3087). The footer was not the cause: its heading, link and contact offsets match Figma to the pixel.
+
+**2. terms and privacy 390.** Verified by measurement, not assumed. Colours, left edges, line positions and block offsets match the references. Remaining differences: (a) the references are greyscale-antialiased, the test browser used sub-pixel (LCD) antialiasing, so the visual project now launches Chromium with `--disable-lcd-text` (about 0.7 points); (b) Figma's Inter renders lines 1 to 2 px wider or narrower than the bundled Inter, a glyph-advance difference between font builds that no token can change; (c) one real mismatch, fixed: the breadcrumb. Figma uses 6 px gaps around the chevron (we had 8) and gray-700 for the current page (we had gray-900); `breadcrumb.tsx` now matches. Newsletter card copy ("Choose your area...") and a 2 px shorter footer card come from deliberate choices (no area select on mobile, 44 px tap input). These frames stay slightly over 3%.
+
+**3. accessibility 390.** The bullet now reads "Choose Light, Dark or System appearance. The site remembers your choice." (true: the theme choice is saved per browser) and wraps to two lines like Figma's bullet. Every row up to the footer now aligns with the reference (shift 0); only the footer is 2 px shorter, as above. Also changed: the mobile theme button uses the bordered outline style of the Figma header (40 px, hit area keeps 44 px). Noted in `docs/content/legal-help.md`.
+
+Runs (port 3701, dev server): typecheck, lint, check:tokens pass; visual 54 passed and the 3 frames above over 3%; e2e for the touched pages 237 passed.
+Responsive 446 passed, a11y 200 passed (same run).

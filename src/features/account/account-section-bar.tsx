@@ -60,7 +60,7 @@ export function AccountSectionBar({ items }: { items: readonly Section[] }) {
         window.history.pushState(window.history.state, '', href);
         setClicked({ id, scroll: window.scrollY });
       }}
-      className="-mx-5 mb-6 md:-mx-8"
+      className="-mx-5 mb-7 min-[390px]:-mx-8"
     />
   );
 }

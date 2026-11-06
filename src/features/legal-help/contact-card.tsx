@@ -15,9 +15,9 @@ export function ContactCard({
   return (
     <Link
       href={href}
-      className="flex flex-col gap-2 rounded-xl border border-gray-200 p-5 transition-colors hover:bg-gray-50"
+      className="flex flex-col gap-1.5 rounded-2xl border border-gray-200 p-5 transition-colors hover:bg-gray-50"
     >
-      <span className="flex items-center gap-3">
+      <span className="flex items-center gap-2.5">
         <span className="text-primary-600">{icon}</span>
         <span className="flex-1 type-body-m-semibold text-gray-900">{title}</span>
         <ChevronRight aria-hidden className="size-4 shrink-0 text-gray-400" />

@@ -18,9 +18,9 @@ type BreadcrumbProps = {
 export function Breadcrumb({ items, current, tone = 'primary', className }: BreadcrumbProps) {
   return (
     <nav aria-label={commonCopy.landmarks.breadcrumb} className={className}>
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 type-body-s">
+      <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 type-body-s">
         {items.map((item) => (
-          <li key={item.href} className="flex items-center gap-2">
+          <li key={item.href} className="flex items-center gap-1.5">
             <Link
               href={item.href}
               className={cn(
@@ -35,7 +35,7 @@ export function Breadcrumb({ items, current, tone = 'primary', className }: Brea
             <ChevronRight aria-hidden className="size-3.5 text-gray-400" />
           </li>
         ))}
-        <li className="text-gray-900" aria-current="page">
+        <li className="text-gray-700" aria-current="page">
           {current}
         </li>
       </ol>

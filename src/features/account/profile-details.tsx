@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { TextInput } from '@/components/ui/text-input';
 import { Select } from '@/components/ui/select';
-import { profileRow, profileRowAction } from './profile-card';
+import { profileLabel, profileRow, profileRowAction } from './profile-card';
 import type { Area } from '@/data/models/area';
 import { authDelay, validEmail } from '@/lib/auth/auth';
 import { Check } from 'lucide-react';
@@ -74,7 +74,7 @@ export function ProfileDetails({
       {(['name', 'email', 'phone', 'homeArea'] as const).map((field) => (
         <div key={field} className={profileRow}>
           <div className="contents">
-            <span className="type-body-s-medium">{copy.rows[field].label}</span>
+            <span className={profileLabel}>{copy.rows[field].label}</span>
             <Button
               ref={(node) => {
                 triggers.current[field] = node;
@@ -104,7 +104,7 @@ export function ProfileDetails({
               onKeyDown={(event) => {
                 if (event.key === 'Escape' && !pending) close();
               }}
-              className="col-span-2 row-start-2 mt-2 space-y-3 md:col-start-2"
+              className="col-span-2 row-start-3 mt-2 space-y-3 md:col-start-2 md:row-start-2"
               noValidate
             >
               <Field label={copy.edit.fields[field]} error={error || undefined}>
@@ -137,14 +137,16 @@ export function ProfileDetails({
               </div>
             </form>
           ) : (
-            <div className="col-span-2 row-start-2 min-w-0 wrap-anywhere md:col-span-1 md:col-start-2 md:row-start-1">
-              <p className="type-body-s text-gray-900">
-                {field === 'homeArea'
-                  ? (areas.find((area) => area.id === details[field])?.label ?? details[field])
-                  : details[field] || copy.rows.phone.empty}
+            <div className="col-start-1 row-start-2 min-w-0 wrap-anywhere md:col-start-2 md:row-start-1">
+              <p className="flex items-center gap-2 type-body-s text-gray-900">
+                <span className="min-w-0">
+                  {field === 'homeArea'
+                    ? (areas.find((area) => area.id === details[field])?.label ?? details[field])
+                    : details[field] || copy.rows.phone.empty}
+                </span>
                 {field === 'email' ? (
                   <span
-                    className={`ml-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 align-middle type-body-xs-medium ${verified ? 'bg-success-50 text-success-700' : 'bg-gray-100 text-gray-700'}`}
+                    className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 type-body-xs-medium ${verified ? 'bg-success-50 text-success-700' : 'bg-gray-100 text-gray-700'}`}
                   >
                     {verified ? <Check aria-hidden className="size-3" /> : null}
                     {verified ? copy.rows.email.verified : copy.rows.email.unverified}
@@ -152,14 +154,14 @@ export function ProfileDetails({
                 ) : null}
               </p>
               {field === 'phone' || field === 'homeArea' ? (
-                <p className="type-body-xs text-gray-500">{copy.rows[field].hint}</p>
+                <p className="mt-0.5 type-body-xs text-gray-500">{copy.rows[field].hint}</p>
               ) : null}
             </div>
           )}
         </div>
       ))}
       <div className={profileRow}>
-        <p className="type-body-s-medium">{copy.rows.language.label}</p>
+        <p className={profileLabel}>{copy.rows.language.label}</p>
         <Button
           ref={languageTrigger}
           variant="ghost"
@@ -170,7 +172,7 @@ export function ProfileDetails({
           {uiCopy.actions.change}
         </Button>
         {languageEditing ? (
-          <div className="col-span-2 space-y-3 md:col-start-2">
+          <div className="col-span-2 row-start-3 space-y-3 md:col-start-2 md:row-start-2">
             <Field label={copy.edit.fields.language} hint={accountUiCopy.languageSoon}>
               <Select
                 autoFocus
@@ -192,9 +194,9 @@ export function ProfileDetails({
             </Button>
           </div>
         ) : (
-          <div className="col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-start-1">
+          <div className="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
             <p className="type-body-s text-gray-900">{copy.languages.en}</p>
-            <p className="type-body-xs text-gray-500">{accountUiCopy.languageSoon}</p>
+            <p className="mt-0.5 type-body-xs text-gray-500">{copy.rows.language.hint}</p>
           </div>
         )}
       </div>

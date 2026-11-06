@@ -60,3 +60,29 @@ What changed, from Figma metadata (frames 4:959, 78:2530, 100:4081, 92:2963):
 Dark references: none of the six auth dark references can be generated. `docs/BRIEFING.md` lists the only dark Figma frames (D01, D02, D13 and the two mobile ones: Home, About, KOMTAR) and `pages.json` has no dark frame for login, signup, forgot password or profile. No reference was fabricated; those dark visual cases stay skipped.
 
 Checks (dev server 3701): typecheck pass; check:tokens pass; ESLint on changed files clean (the repository-wide `npm run lint` also scans untracked `.next-3702` build output and reports thousands of unrelated errors); account e2e plus session spec 18 passed; accessibility 16 passed; responsive 36 passed (four pages, nine widths).
+
+## Fix round: match Figma for account pages (6 November 2026)
+
+Owner decision of 6 Nov applied: the pages follow Figma; accessibility stays through `hit-area` extensions. References and tolerance unchanged. Measured with `tests/visual` against the shared dev server (port 3702: a second dev server cannot start in the same folder while the other builder's server owns `.next`). Counts by `.logs/counts2.mjs`.
+
+| Frame (light) | Before | After |
+| --- | ---: | ---: |
+| Login 1440 / 390 | 2.17 / 13.28% | 1.89 / 2.87% |
+| Signup 1440 / 390 | 1.93 / 13.85% | 2.11 / 2.33% |
+| Forgot password 1440 / 390 | 2.12 / 12.06% | 1.96 / 2.18% |
+| Profile 1440 / 390 | 8.42 / 10.97% | 1.15 / 2.90% |
+
+Causes found and fixed:
+- Auth 390: the Figma frames have no prototype notice; ours sat above the heading. It now sits under the legal line (below the fold, truthful copy kept). The divider has no "or" on mobile (Figma draws a plain 1 px line) and 18 px height. Google button was 44 px high (now 40 px with a 44 px hit area); checkbox, "Forgot password?", guest link and legal links use `hit-area` instead of 44 px boxes; guest hint is left-aligned on mobile with 16 px padding; legal line is four items with 4/8 px gaps and no underline; form column starts at y 96.
+- Logo (shared): the PNG has transparent padding, so the mark painted 33 px instead of 44. Default size now uses a 56 px image with -6 px margins (same 44 px footprint). This also corrects the header and footer logos.
+- Profile: rows are 16 px padded with a 2 px gap between title and hint (were 71 px, Figma 73); Switch label is a block (was a 24 px line box); trailing empty status paragraph added a 24 px flex gap above the footer; privacy values use body-s; station chips 60 px with a 44 px hit area on the link and a grey X; devices hint is 12 px; "View all tickets" is the ghost link style; one latest report (was three); danger card has the light red border; mobile uses the stacked row layout, 32 px gutters, 2-column stats, stacked latest-report row (tag and chevron below), action beside the title for My reports only.
+- Shared footer: mobile link rows 30 px apart (hit areas keep 44 px), heading gap 10 px, contact and logo gaps as in the mobile frame.
+
+Residual (not fixed, by design):
+- Google sign-in button stays 180 x 40 official artwork; Figma shows a 350/400 px wide button, and the artwork may not be stretched.
+- The "Connected" row has no Google "G" mark (only full button artwork exists).
+- Latest report title: Figma profile frames say "Hoarding blocking driveway on Jalan Penang"; the mock ticket (also used by the track frames) says "Driveway blocked by site hoarding". The mobile title is given a two-line minimum height so the layout matches the Figma row; the wording differs.
+- Station subtitle for S13 is "USM, Gelugor" (data); Figma "Gelugor". Newsletter on mobile keeps its truthful copy (no area select) and the signed-in prefilled email; Figma shows the signed-out form. Mobile header icon chrome (theme button border, avatar size) is the shared header, untouched.
+- Email value breaks as "example.c/om" at 390; Figma breaks after the dot.
+
+Checks (BASE_URL 3702): typecheck, check:tokens and ESLint/Prettier on touched files pass; account e2e 19 passed, a11y 16 passed, responsive 36 passed, visual for these four pages 8 passed.

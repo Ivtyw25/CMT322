@@ -186,6 +186,7 @@ export function SubmittedView({ ticketId, serverTicket, categories }: SubmittedV
           : []
       }
       aside={<ReportNeedHelp />}
+      asideDivider={false}
     >
       {content}
     </DocsLayout>

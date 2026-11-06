@@ -63,3 +63,19 @@ Measured on a dev server (port 3702, bundled fonts), light frames, same suite an
 | Accessibility 1440 / 390 | 8.85% / 14.98% | 8.80% / 14.83% | none |
 
 Shared changes: desktop notice text is now vertically centred in the bar (it sat 5 px high); site footer legal links use regular weight from 48 rem as in Figma; help aside card body is 12 px. The 404 has no Figma frame. None of these frames reaches the 3% goal. What is left is copy length and the approved 44 px rows, not geometry. The About 390 reference is an incomplete frame.
+
+## Match-Figma round (6 November 2026, after the copy change)
+
+Dev server on port 3702, light frames, references and tolerances unchanged. Before = measured at the start of this round (copy change already in); the figures in the earlier table predate it.
+
+| Frame | Before | After | Cause and change |
+| --- | ---: | ---: | --- |
+| Terms 1440 / 390 | 2.08 / 4.60 | 2.08 / 4.60 | `updated`, `note`, `after`, `aside` already rendered. 390: text 1 px narrower than Figma per word (about 4% uniform text anti-aliasing), geometry equal |
+| Privacy 1440 / 390 | 1.96 / 4.05 | 1.96 / 4.05 | same as Terms |
+| Contact 1440 / 390 | 1.46 / 16.81 | 1.47 / 16.82 | 390: Figma lays out "Track a ticket" (172 px) and "Announcements" (152 px) cards with a broken auto-layout (icon, title and chevron wrap onto separate lines). The page is 122 px shorter than the frame, so the footer is misaligned and about 40% of footer pixels differ. Not replicated, see below |
+| Accessibility 1440 / 390 | 1.76 / 10.36 | 1.86 / 10.35 | 390: Figma's list item "Switch between English and Bahasa Melayu" wraps to two lines. Our truthful copy ("Choose Light, Dark or System appearance", the site has no language switch) fits one line. That 24 px offset shifts the whole footer. Every section position before it matches Figma to the pixel |
+| Sitemap 1440 / 390 | 5.35 / 7.94 | 1.28 / 2.84 | Removed the extra "Forgot password" link (Figma lists three links under Your account, it cost 30 px); lede, Home and Contact related descriptions set to Figma copy; sitemap now has its Figma sidebar card (Can't find a page?) |
+
+Other changes: the help sidebar card ends with "MRTCareline 1800-88-6782, 24 hours" as in Figma (copy moved to `legalHelpCopy.aside.careline`, no longer the shared docs-page string). `demo` paragraph is no longer rendered.
+
+Needs an owner call: to match Contact 390 the two Figma cards would need the broken stacked layout. I did not copy it, because it puts the icon and chevron on their own lines. Doing so would remove most of the 16.8%.

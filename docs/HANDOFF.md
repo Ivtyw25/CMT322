@@ -34,7 +34,9 @@ When a session is near its limit, the main agent:
 
 The next session then needs only the prompt in §1.
 
-## 4. Current state (3 Nov 2026)
+## 4. Current state (6 Nov 2026)
+
+**Update 6 Nov:** account and legal-help are merged to `main` and marked `done` (log.md iteration 6). Only the Phase 3 final sweep remains. The 3–4 Nov notes below are history.
 
 | Branch / worktree | State |
 |---|---|

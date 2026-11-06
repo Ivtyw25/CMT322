@@ -9,7 +9,8 @@ import { ConfirmDialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/field';
 import { PasswordInput } from '@/components/ui/password-input';
 import { PasswordRules } from '@/components/ui/password-rules';
-import { profileRow, profileRowAction } from './profile-card';
+import { cn } from '@/lib/cn';
+import { profileLabel, profileRow, profileRowAction } from './profile-card';
 import type { AccountProfile } from '@/data/models/account';
 import { authDelay, validPassword } from '@/lib/auth/auth';
 
@@ -73,7 +74,7 @@ export function ProfileSecurity({
   return (
     <div>
       <div className={profileRow}>
-        <p className="type-body-s-medium">{copy.password.label}</p>
+        <p className={profileLabel}>{copy.password.label}</p>
         <Button
           id="change-password"
           variant="ghost"
@@ -85,7 +86,7 @@ export function ProfileSecurity({
         </Button>
         {editing ? (
           <form
-            className="col-span-2 row-start-2 mt-2 space-y-4 md:col-span-1 md:col-start-2"
+            className="col-span-2 row-start-3 mt-2 space-y-4 md:col-span-1 md:col-start-2 md:row-start-2"
             onSubmit={submit}
             onKeyDown={(event) => {
               if (event.key === 'Escape' && !pending) closeEditor();
@@ -126,9 +127,9 @@ export function ProfileSecurity({
             </div>
           </form>
         ) : (
-          <div className="col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-start-1">
+          <div className="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
             <p className="type-body-s text-gray-900">{accountUiCopy.passwordDots}</p>
-            <p className="type-body-xs text-gray-500">
+            <p className="mt-0.5 type-body-xs text-gray-500">
               {copy.password.lastChanged(
                 changed ? accountUiCopy.justNow : profile.passwordLastChanged,
               )}
@@ -137,7 +138,7 @@ export function ProfileSecurity({
         )}
       </div>
       <div className={profileRow}>
-        <p className="type-body-s-medium">{copy.google.label}</p>
+        <p className={profileLabel}>{copy.google.label}</p>
         <Button
           variant="ghost"
           className={profileRowAction}
@@ -145,25 +146,32 @@ export function ProfileSecurity({
         >
           {connected ? copy.google.disconnect : copy.google.connect}
         </Button>
-        <p className="col-span-2 row-start-2 type-body-s wrap-anywhere text-gray-900 md:col-span-1 md:col-start-2 md:row-start-1">
-          {connected ? profile.googleEmail : copy.google.notConnected}
+        <div className="col-start-1 row-start-2 flex min-w-0 flex-col gap-3 type-body-s wrap-anywhere text-gray-900 md:col-start-2 md:row-start-1 md:flex-row md:items-center md:gap-2">
+          <p>{connected ? profile.googleEmail : copy.google.notConnected}</p>
           {connected ? (
-            <span className="ml-2 type-body-xs text-success-700">{copy.google.connected}</span>
+            <p className="min-h-5 type-body-xs text-success-700">{copy.google.connected}</p>
           ) : null}
-        </p>
+        </div>
       </div>
-      <div className={profileRow}>
-        <p className="type-body-s-medium">{copy.devices.label}</p>
+      <div className={cn(profileRow, 'grid-cols-1 md:grid-cols-[11.25rem_minmax(0,1fr)_auto]')}>
+        <p className={profileLabel}>{copy.devices.label}</p>
         {otherDevices ? (
-          <Button variant="ghost" className={profileRowAction} onClick={() => setDialog('devices')}>
+          <Button
+            variant="ghost"
+            className={`${profileRowAction} col-start-1 row-span-1 row-start-3 mt-3 justify-self-start md:col-start-3 md:row-span-1 md:row-start-1 md:mt-0 md:justify-self-auto`}
+            onClick={() => setDialog('devices')}
+          >
             {copy.devices.logOutOthers}
           </Button>
         ) : null}
-        <div className="col-span-2 row-start-2 space-y-1 md:col-span-1 md:col-start-2 md:row-start-1">
+        <div className="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
           {profile.devices
             .filter((device) => device.current || otherDevices)
             .map((device) => (
-              <p className="type-body-s text-gray-900 not-first:text-gray-600" key={device.name}>
+              <p
+                className="type-body-s text-gray-900 not-first:mt-0.5 not-first:type-body-xs not-first:text-gray-500"
+                key={device.name}
+              >
                 {device.current
                   ? copy.devices.current(device.name)
                   : copy.devices.also(device.name, device.lastActive)}

@@ -1,16 +1,29 @@
-import { DocsSection } from '@/components/patterns/docs-section';
-import { legalHelpCopy, type HelpSection } from '@/content/legal-help';
-import type { SiteInfo } from '@/data/models/site-info';
+import { DocsSectionHeading } from '@/components/patterns/docs-section';
 import type { RelatedPage } from '@/components/patterns/related-pages';
+import { legalHelpCopy, type HelpAsideCopy, type HelpSection } from '@/content/legal-help';
+import type { SiteInfo } from '@/data/models/site-info';
+import { HelpNote } from './help-note';
 import { HelpPageFrame } from './help-page-frame';
 
 type PolicyCopy = {
   title: string;
   lede: string;
+  updated?: string;
   sections: readonly HelpSection[];
   summary?: readonly string[];
+  aside?: HelpAsideCopy;
   related: readonly RelatedPage[];
 };
+
+function BulletList({ items }: { items: readonly string[] }) {
+  return (
+    <ul className="list-disc pl-6">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
+}
 
 export function PolicyPage({
   copy,
@@ -24,9 +37,9 @@ export function PolicyPage({
   return (
     <HelpPageFrame href={href} {...copy} siteInfo={siteInfo}>
       {copy.summary ? (
-        <div className="flex flex-col gap-3 rounded-lg border-l-2 border-primary-600 bg-primary-50 p-5">
-          <p className="type-body-s-semibold text-primary-700">{legalHelpCopy.summaryTitle}</p>
-          <ul className="list-disc space-y-2 pl-5 type-body-s text-gray-700">
+        <div className="flex flex-col gap-2.5 rounded-lg border-l-3 border-primary-600 bg-primary-50 px-4 py-5 type-body-s lg:px-6">
+          <p className="type-body-s-semibold text-primary-800">{legalHelpCopy.summaryTitle}</p>
+          <ul className="list-disc pl-5.25 text-gray-800">
             {copy.summary.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -34,20 +47,25 @@ export function PolicyPage({
         </div>
       ) : null}
       {copy.sections.map((section) => (
-        <DocsSection key={section.id} id={section.id} title={section.title}>
-          <div className="flex flex-col gap-4 type-body-m text-gray-700">
-            {section.paragraphs?.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-            {section.bullets ? (
-              <ul className="list-disc space-y-2 pl-5">
-                {section.bullets.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-        </DocsSection>
+        <section key={section.id} aria-labelledby={section.id} className="flex flex-col gap-4">
+          <DocsSectionHeading id={section.id} title={section.title} />
+          {section.paragraphs?.map((paragraph) => (
+            <p key={paragraph} className="type-body-m text-gray-700">
+              {paragraph}
+            </p>
+          ))}
+          {section.bullets ? (
+            <div className="type-body-m text-gray-700">
+              <BulletList items={section.bullets} />
+            </div>
+          ) : null}
+          {section.after?.map((paragraph) => (
+            <p key={paragraph} className="type-body-m text-gray-700">
+              {paragraph}
+            </p>
+          ))}
+          {section.note ? <HelpNote tone={section.note.tone}>{section.note.text}</HelpNote> : null}
+        </section>
       ))}
     </HelpPageFrame>
   );

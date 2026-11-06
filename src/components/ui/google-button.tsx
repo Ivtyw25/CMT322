@@ -16,7 +16,7 @@ export function GoogleButton({
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      className="rounded flex min-h-11 w-full cursor-pointer items-center justify-center disabled:opacity-50"
+      className="hit-area flex h-10 w-full cursor-pointer items-center justify-center disabled:opacity-50"
     >
       <Image src={google} alt="" width={180} height={40} unoptimized />
     </button>

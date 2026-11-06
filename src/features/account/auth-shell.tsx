@@ -18,15 +18,17 @@ export function AuthShell({
 }) {
   return (
     <div className="grid min-h-dvh lg:grid-cols-[712fr_728fr]">
-      <div className="relative flex min-h-dvh flex-col px-5 py-5 md:px-8 lg:px-14 lg:py-10">
-        <Logo />
-        <div className="mx-auto flex w-full max-w-100 flex-1 flex-col justify-center py-8 lg:py-0">
-          <div className="mb-5 lg:absolute lg:top-10 lg:right-14 lg:mb-0 lg:w-96">{notice}</div>
-          {children}
+      <div className="flex flex-col">
+        <div className="relative flex min-h-dvh flex-col px-5 pt-5 pb-15 md:px-8 lg:px-14 lg:py-10">
+          <Logo />
+          <div className="mx-auto flex w-full max-w-100 flex-1 flex-col justify-start py-8 lg:justify-center lg:py-0">
+            {children}
+          </div>
+          <div className="mx-auto flex w-full max-w-100 flex-wrap justify-center gap-x-1 gap-y-2 text-center type-body-xs text-gray-500 lg:max-w-150">
+            {footer}
+          </div>
         </div>
-        <div className="mx-auto w-full max-w-100 text-center type-body-xs text-gray-500 lg:max-w-150">
-          {footer}
-        </div>
+        <div className="px-5 py-4 text-center md:px-8">{notice}</div>
       </div>
       <aside
         aria-hidden
