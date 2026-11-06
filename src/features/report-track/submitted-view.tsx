@@ -2,6 +2,7 @@
 
 import { Check } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { DocsLayout } from '@/components/layout/docs-layout';
 import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { DocsSection } from '@/components/patterns/docs-section';
 import { Stepper, type StepEntry } from '@/components/patterns/stepper';
@@ -16,6 +17,7 @@ import { formatShortDateTime } from '@/lib/format/date-time';
 import { givenName } from '@/lib/format/person';
 import { spokenTicketId } from '@/lib/reports';
 import { useSession } from '@/lib/session';
+import { ReportNeedHelp } from './report-need-help';
 import { SubmittedEmail } from './submitted-email';
 import { SubmittedSent } from './submitted-sent';
 import { SubmittedSkeleton } from './submitted-skeleton';
@@ -84,8 +86,9 @@ export function SubmittedView({ ticketId, serverTicket, categories }: SubmittedV
     announce(submitted.ticket.arrived(spokenTicketId(ticket.id)));
   }, [owner, fromThisBrowser, ticket, announce]);
 
+  let content: React.ReactNode;
   if (resolved.state === 'loading' || status === 'loading') {
-    return (
+    content = (
       <div className="flex flex-col gap-10">
         <DocsPageHead
           title={submitted.header.title}
@@ -96,10 +99,8 @@ export function SubmittedView({ ticketId, serverTicket, categories }: SubmittedV
         <SubmittedSkeleton />
       </div>
     );
-  }
-
-  if (!ticket || !owner || !user) {
-    return (
+  } else if (!ticket || !owner || !user) {
+    content = (
       <div className="flex flex-col gap-8">
         <DocsPageHead
           title={submitted.unavailable.heading}
@@ -125,49 +126,68 @@ export function SubmittedView({ ticketId, serverTicket, categories }: SubmittedV
         </div>
       </div>
     );
+  } else {
+    content = (
+      <div className="flex flex-col gap-10">
+        <DocsPageHead
+          title={submitted.header.title}
+          lede={submitted.header.lede(givenName(user.name), user.email)}
+          breadcrumb={breadcrumb}
+          breadcrumbCurrent={breadcrumbCurrent}
+          titleRef={heading}
+          titleIcon={
+            <span
+              aria-hidden
+              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-success-600 text-static-white"
+            >
+              <Check className="size-6" strokeWidth={3} />
+            </span>
+          }
+        />
+        <SubmittedTicketId id={ticket.id} />
+        <DocsSection id="what-happens-next" title={submitted.next.title}>
+          <Stepper steps={nextSteps(ticket)} tone="success" />
+        </DocsSection>
+        <DocsSection id="what-you-sent" title={submitted.sent.title}>
+          <SubmittedSent
+            ticket={ticket}
+            category={categories.find((category) => category.id === ticket.categoryId)}
+          />
+        </DocsSection>
+        <DocsSection id="confirmation-email" title={submitted.email.title}>
+          <SubmittedEmail ticket={ticket} name={user.name} address={user.email} />
+        </DocsSection>
+        <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center">
+          <ButtonLink href={routes.reportTrack.ticket(ticket.id)}>
+            {submitted.actions.track}
+          </ButtonLink>
+          <ButtonLink variant="secondary" href={routes.reportTrack.report}>
+            {submitted.actions.another}
+          </ButtonLink>
+          <ButtonLink variant="ghost" href={routes.home} className="justify-center md:px-2">
+            {submitted.actions.home}
+          </ButtonLink>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col gap-10">
-      <DocsPageHead
-        title={submitted.header.title}
-        lede={submitted.header.lede(givenName(user.name), user.email)}
-        breadcrumb={breadcrumb}
-        breadcrumbCurrent={breadcrumbCurrent}
-        titleRef={heading}
-        titleIcon={
-          <span
-            aria-hidden
-            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-success-600 text-static-white"
-          >
-            <Check className="size-6" strokeWidth={3} />
-          </span>
-        }
-      />
-      <SubmittedTicketId id={ticket.id} />
-      <DocsSection id="what-happens-next" title={submitted.next.title}>
-        <Stepper steps={nextSteps(ticket)} tone="success" />
-      </DocsSection>
-      <DocsSection id="what-you-sent" title={submitted.sent.title}>
-        <SubmittedSent
-          ticket={ticket}
-          category={categories.find((category) => category.id === ticket.categoryId)}
-        />
-      </DocsSection>
-      <DocsSection id="confirmation-email" title={submitted.email.title}>
-        <SubmittedEmail ticket={ticket} name={user.name} address={user.email} />
-      </DocsSection>
-      <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center">
-        <ButtonLink href={routes.reportTrack.ticket(ticket.id)}>
-          {submitted.actions.track}
-        </ButtonLink>
-        <ButtonLink variant="secondary" href={routes.reportTrack.report}>
-          {submitted.actions.another}
-        </ButtonLink>
-        <ButtonLink variant="ghost" href={routes.home} className="justify-center md:px-2">
-          {submitted.actions.home}
-        </ButtonLink>
-      </div>
-    </div>
+    <DocsLayout
+      currentHref={routes.reportTrack.report}
+      onThisPage={
+        owner && status === 'signed-in'
+          ? [
+              { id: 'ticket-id', label: submitted.onThisPage.ticket },
+              { id: 'what-happens-next', label: submitted.onThisPage.next },
+              { id: 'what-you-sent', label: submitted.onThisPage.sent },
+              { id: 'confirmation-email', label: submitted.onThisPage.email },
+            ]
+          : []
+      }
+      aside={<ReportNeedHelp />}
+    >
+      {content}
+    </DocsLayout>
   );
 }

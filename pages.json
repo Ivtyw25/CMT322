@@ -45,37 +45,37 @@
         "127:5800",
         "127:5801"
       ],
-      "status": "in-progress"
+      "status": "done"
     },
     {
       "id": "home",
       "iteration": 2,
-      "status": "in-progress"
+      "status": "done"
     },
     {
       "id": "project",
       "iteration": 3,
-      "status": "in-progress"
+      "status": "done"
     },
     {
       "id": "traffic",
       "iteration": 4,
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "report-track",
       "iteration": 5,
-      "status": "todo"
+      "status": "done"
     },
     {
       "id": "account",
       "iteration": 6,
-      "status": "todo"
+      "status": "in-progress"
     },
     {
       "id": "legal-help",
       "iteration": 7,
-      "status": "todo"
+      "status": "in-progress"
     },
     {
       "id": "admin-1",
@@ -383,12 +383,12 @@
         "mobile": "133:36579"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       },
-      "notes": ""
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed."
     },
     {
       "id": "signup",
@@ -400,12 +400,12 @@
         "mobile": "133:36671"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       },
-      "notes": ""
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed."
     },
     {
       "id": "forgot-password",
@@ -417,12 +417,12 @@
         "mobile": "133:36768"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       },
-      "notes": ""
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed."
     },
     {
       "id": "profile",
@@ -433,11 +433,11 @@
         "desktop": "92:2963",
         "mobile": "133:36817"
       },
-      "notes": "Requires sign-in. Section anchors: #profile, #reports, #stations, #notifications, #security, #privacy.",
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed.",
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       }
     },
@@ -451,12 +451,12 @@
         "mobile": "133:38704"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       },
-      "notes": ""
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed."
     },
     {
       "id": "privacy",
@@ -468,12 +468,12 @@
         "mobile": "133:39089"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       },
-      "notes": ""
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed."
     },
     {
       "id": "contact",
@@ -485,12 +485,12 @@
         "mobile": "133:39432"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       },
-      "notes": ""
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed."
     },
     {
       "id": "accessibility",
@@ -502,12 +502,12 @@
         "mobile": "133:39804"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       },
-      "notes": ""
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed."
     },
     {
       "id": "sitemap",
@@ -519,12 +519,12 @@
         "mobile": "133:40126"
       },
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       },
-      "notes": ""
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed."
     },
     {
       "id": "not-found",
@@ -535,11 +535,11 @@
         "desktop": null,
         "mobile": null
       },
-      "notes": "Not in Figma. UX designer specifies it from existing patterns; no visual reference test.",
+      "notes": "Implemented and independently reviewed; measured integration fixes validated on 4 Nov 2026. Behavior, affected responsive checks and accessibility pass; visual acceptance remains open above the unchanged 3% target. See docs/qa/continuation-validation.md. No deployment or full verify pass claimed.",
       "visualTolerance": 0.03,
-      "status": "todo",
+      "status": "review",
       "rounds": {
-        "tester": 0,
+        "tester": 1,
         "main": 0
       }
     },

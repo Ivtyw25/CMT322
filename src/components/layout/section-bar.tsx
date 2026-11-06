@@ -19,6 +19,8 @@ type SectionBarProps = {
   items: readonly SectionBarItem[];
   /** Route of the current page, for the highlighted row. */
   currentHref: string;
+  /** Optional section selection side effect; ordinary page navigation is unchanged. */
+  onSelect?: (href: string, event: React.MouseEvent<HTMLAnchorElement>) => void;
   /** Gallery only: open or closed, and no sticky position. */
   preview?: { open: boolean };
   className?: string;
@@ -30,6 +32,7 @@ export function SectionBar({
   pageLabel,
   items,
   currentHref,
+  onSelect,
   preview,
   className,
 }: SectionBarProps) {
@@ -56,7 +59,7 @@ export function SectionBar({
     if (event.key === 'Escape' && open) {
       event.preventDefault();
       setOpenedOn(null);
-      buttonRef.current?.focus();
+      buttonRef.current?.focus({ preventScroll: true });
     }
   }
 
@@ -73,6 +76,12 @@ export function SectionBar({
         type="button"
         aria-expanded={open}
         aria-controls={open ? panelId : undefined}
+        onPointerDown={(event) => {
+          if (event.button !== 0) return;
+          // Native pointer focus can scroll a sticky control to its original layout position.
+          event.preventDefault();
+          event.currentTarget.focus({ preventScroll: true });
+        }}
         onClick={() => setOpenedOn(open ? null : pathname)}
         className={cn(
           'flex min-h-11 w-full cursor-pointer items-center gap-1.5 border-b border-gray-200 bg-gray-50 px-5 py-3 text-left @min-[48rem]:px-8',
@@ -108,7 +117,10 @@ export function SectionBar({
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={() => setOpenedOn(null)}
+                    onClick={(event) => {
+                      setOpenedOn(null);
+                      onSelect?.(item.href, event);
+                    }}
                     aria-current={current ? 'page' : undefined}
                     className={cn(
                       '-mx-2 flex min-h-11 items-center gap-2 rounded-lg px-2 py-2.5 transition-colors duration-(--duration-fast) hover:bg-gray-50 focus-visible:-outline-offset-2',

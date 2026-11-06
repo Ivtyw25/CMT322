@@ -49,7 +49,7 @@ export default async function AboutPage() {
       ]}
       aside={<NeedHelpBlock careline={siteInfo.careline} />}
     >
-      <div className="flex flex-col gap-12 lg:gap-16">
+      <div className="flex flex-col gap-8 md:gap-12 lg:gap-16">
         <DocsPageHead
           title={about.header.title}
           breadcrumbCurrent={about.header.titleShort}

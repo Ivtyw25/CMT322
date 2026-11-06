@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ExternalLink } from '@/components/ui/external-link';
 import { uiCopy } from '@/content/ui';
+import { cn } from '@/lib/cn';
 import { MapControls } from './map-controls';
 import { labelIcon, markerIcon, SELECTED_Z_OFFSET, variantOf, zOffsetOf } from './map-icons';
 import { MapPinLayer } from './map-pin-layer';
@@ -409,7 +410,10 @@ export function MapCanvas({
       {tiles === 'unavailable' ? (
         <MapPlaceholder
           message={unavailableText ?? uiCopy.map.unavailable}
-          className="pointer-events-none absolute inset-0 z-10 bg-transparent"
+          className={cn(
+            'pointer-events-none absolute inset-0 z-10 bg-transparent',
+            pin && 'justify-start px-15 pt-3 [&>svg]:hidden',
+          )}
         />
       ) : null}
       <MapControls

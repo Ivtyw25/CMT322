@@ -78,6 +78,7 @@ export function AppearanceMenu({
           aria-label={copy.buttonLabel(copy.options[selected].label)}
           variant={compact ? 'plain' : 'outline'}
           className={cn(
+            compact && 'size-11',
             onHero && 'text-static-white hover:bg-static-glass',
             onHero && !compact && 'border-static-white hover:border-static-white',
             onHero &&

@@ -246,3 +246,48 @@ Merged to main and deployed: https://mutiara-connect-eo2k18we2-ivtyw25s-projects
 - **Shared `Container`:** got `gutter="wide"` (32 px at 390, Home and station hero rows) in place of a page-local duplicate. **Hero scrim:** now 90deg, per Figma 37:1028.
 - **Project decisions:** `docs/specs/_project-decisions.md` (URL filters via `useSearchParams` in client leaves so the routes stay static; followed stations in `lib/follows`, storage key `mlc-follows`; OSM only, no satellite toggle; four new route helpers).
 - **Owner, 30 Oct 2026, to save tokens:** team agents switched to Sonnet with effort medium; the main agent stays on Opus with effort medium (never above high). Antigravity delegation is paused (quota used up). Mechanical work may go to a short-lived Haiku agent. Handoff steps for a new session are in `docs/HANDOFF.md`.
+
+## Codex continuation: account, legal/help and shared sweep (2026-11-03)
+
+**State:** implementation and independent review in the existing workspace; no push or deployment.
+**Tokens:** not measured by the legacy Claude usage script for this Codex session. The owner requested the saved subagent workflow; separate account, legal/help and shared-sweep reviewers supplied one batched report each, followed by fresh fix builders. Antigravity stayed paused.
+
+### Implemented
+- Connected login, signup, reset and profile, using the existing mock session and approved account decisions. Added local profile edits, report counts, follows, notification preferences, security controls and plain account-deletion confirmation.
+- Connected terms, privacy, contact, accessibility and sitemap, plus recovery links for 404 pages. Prototype copy distinguishes simulated reports, sign-in and email from a real service.
+- Preserved the earlier shared mobile/map/submitted-report changes, and corrected auth, profile, sitemap and 404 touch targets.
+
+### Independent review and fix round
+- Account: blocked-storage sign-in, section navigation and password descriptions/error associations; see docs/qa/account.md.
+- Legal/help: nested station 404 duplicated the site shell; group breadcrumbs and relevant help-card destinations; see docs/qa/legal-help.md.
+- Shared: the tile-error regression used a descendant locator for a sibling overlay; the draggable pin needed a 44px target; see docs/qa/final-sweep.md.
+- Concurrent broad Playwright runners initially shared their default artifact directory. That run is incomplete and not evidence of clean site-wide verification. Subsequent focused runners use distinct output directories.
+
+### Verification and remaining work
+- Initial full verify passed typecheck, lint and token checks, then failed while fetching Inter/Poppins from Google Fonts. The offline-font fix is investigating cached originals rather than substituting fonts.
+- Before the batched fixes: targeted behavior 72/73 passed (one confirmed map-test locator defect); focused responsive rerun 10/10 passed at320/390px.
+- The original 186-check account/legal matrix completed126 passes,18 skips and42 failures. It predates several fixes and used fallback fonts; it is not the final acceptance result. All18 light reference comparisons failed3%. Keep tolerances unchanged until measured and resolved or explicitly accepted.
+- Final integrated verification, intended-font visual comparison, shared chrome polish, commit/push/deployment and production smoke testing remain pending. See docs/HANDOFF.md for the live state.
+
+## Continuation: integrate measured layout fixes (2026-11-04)
+
+**State:** local implementation and validation; account/legal-help remain in review. No push or deployment. Detailed scope and evidence: `docs/qa/continuation-validation.md`.
+
+### Changed
+
+- Integrated pending Home history/image, account/profile, Sitemap and Project mobile layout fixes.
+- Fixed the auth illustration stretching with taller forms: the desktop panel now stays within the viewport while the form scrolls. Added a geometric regression alongside the form-width check.
+- Corrected two Home test locators and the works-only count. Native history, Back, preserved query/hash state and filtered rendering without JavaScript pass.
+- Fixed quick verification's suite discovery: existing group suites are included and deduplicated alongside individual page suites, with two workers for browser checks.
+
+### Verified
+
+- Production build passed. Typecheck, lint and tokens passed.
+- Final account/Home behavior: 59 passed. Affected responsive checks: 81 passed. Account/Sitemap axe checks: 20 passed; final auth-only axe rerun: 12 passed.
+- Previous stable baseline's complete link crawl finished 98 passed.
+- Affected visuals: 13 passed, 17 missing-reference skips, 10 failed. Final auth follow-up still fails six light references. Login desktop difference improved from 17.89% to 9.70%; Sitemap desktop from 24.38% to 13.26%; Project overview mobile from 18.80% to 15.88%. About mobile did not improve (25.82%).
+
+### Open
+
+- All affected visual comparisons still exceed the 3% final target. Keep references/tolerances unchanged and retain truthful prototype copy and 44px controls. Further measured layout work and a full green verify remain necessary before publication.
+- The updated grouped quick runner passed typecheck, lint, tokens and 127 browser tests (native exit code 0): `.logs/resume-quick-grouped.log`. Earlier quick checks omitted the account/legal-help group suites; the original default-port attempt was blocked by occupied port 3100.

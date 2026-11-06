@@ -63,6 +63,7 @@ docs/specs/ docs/content/ docs/qa/   UX specs, content notes, QA reports, one fi
 - **Server components by default.** `'use client'` only on the interactive leaf. Pages fetch with `await getX()` from `@/data/api` and pass plain props down.
 - **Copy objects:** `export const <group>Copy = { … } as const`. Copy that needs a value is a function: `resultCount: (n: number) => \`${n} results\``. Records never live in copy.
 - **Styling:** Tailwind utilities on tokens only. Type: `type-<style>` utilities (`type-heading-s lg:type-heading-l`), mobile first. Variants with `cva` in the component file; merge with `cn()`. No `dark:` colour variants: tokens swap per theme.
+- **Fonts:** `styles/fonts.ts` loads the original Inter and Poppins assets through `next/font/local` from `assets/fonts`, so builds do not need Google Fonts network access. Licence notices and provenance: `docs/fonts.md`.
 - **Breakpoints:** Tailwind defaults. Below `lg` (1024 px) the mobile header shows. Content width `max-w-content` (1200 px) with `px-5 md:px-8 lg:px-10`; docs pages: sidebar `w-docs-sidebar`, article `max-w-article`, aside `w-docs-aside`.
 - **Primitives:** shadcn/ui (Radix) for behaviour, restyled to Figma with tokens. Run `npx shadcn add <name>`, then restyle; discard any change it makes to `globals.css`.
 - **Icons:** `lucide-react`, stroke 2. Decorative icons `aria-hidden`.

@@ -141,7 +141,7 @@ export function NotificationBar({ notice, preview }: NotificationBarProps) {
             aria-label={notificationCopy.dismiss}
             onClick={dismiss}
             className={cn(
-              'hit-area flex size-7.5 shrink-0 cursor-pointer items-center justify-center rounded-md',
+              'hit-area flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-md @min-[64rem]:size-7.5',
               'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
               'text-gray-600 hover:bg-warning-100',
               overHero &&

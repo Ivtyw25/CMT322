@@ -12,7 +12,7 @@ import { getStations } from '@/data/api/stations';
 import { getCurrentUser } from '@/data/api/user';
 import { toWorksItems } from '@/features/home/works-items';
 import { formatDate } from '@/lib/format/dates';
-import { prepare, settle } from '../support/browser';
+import { prepare, settle, whenHydrated } from '../support/browser';
 
 const [areas, announcements, roadWorks, stations, updates, faqItems, siteInfo, user] =
   await Promise.all([
@@ -266,6 +266,63 @@ test.describe('home: works in your area', () => {
       worksSection(page).getByRole('link', { name: homeCopy.works.allAnnouncements.label }),
     ).toHaveAttribute('href', homeCopy.works.allAnnouncements.href);
   });
+});
+
+test('area changes update native history and filters without a server navigation', async ({
+  page,
+}) => {
+  await visit(page, `${routes.home}?source=shared#works`);
+  await whenHydrated(page, `a[href="${routes.homeWorksIn('bukit-jambul')}"]`);
+  await page.route('**/*', (route) =>
+    route.request().headers()['rsc'] === '1' ? route.abort() : route.continue(),
+  );
+  const tryChip = page.locator(`a[href="${routes.homeWorksIn('bukit-jambul')}"]`);
+  const address = await tryChip.evaluate((link: HTMLAnchorElement) => {
+    link.click();
+    return window.location.search + window.location.hash;
+  });
+  expect(address).toBe('?area=bukit-jambul#works');
+  await expect(worksSection(page).getByRole('button', { name: bukitJambul.label })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await page.goBack();
+  await expect(page).toHaveURL(/\?source=shared#works$/);
+  await expect(
+    worksSection(page).getByRole('button', { name: uiCopy.filters.allAreas }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  const chip = worksSection(page).getByRole('button', { name: bukitJambul.label });
+  expect(
+    await chip.evaluate((button: HTMLButtonElement) => {
+      button.click();
+      return window.location.search + window.location.hash;
+    }),
+  ).toBe('?source=shared&area=bukit-jambul#works');
+  for (const [index, item] of firstThree('bukit-jambul').entries()) {
+    await expect(workTitles(page).nth(index)).toHaveText(item.title);
+  }
+});
+
+test('area links retain server-rendered filtered works without JavaScript', async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+  try {
+    const page = await context.newPage();
+    await page.goto(`${routes.home}?area=butterworth`);
+    await expect(page.getByText(homeCopy.works.empty.title(butterworth.label))).toBeVisible();
+    await page.locator(`a[href="${routes.homeWorksIn('bukit-jambul')}"]`).click();
+    await expect(page).toHaveURL(/\?area=bukit-jambul#works$/);
+    await expect(
+      worksSection(page).getByRole('list').getByRole('heading', { level: 3 }),
+    ).toHaveCount(firstThree('bukit-jambul').length);
+    for (const [index, item] of firstThree('bukit-jambul').entries()) {
+      await expect(workTitles(page).nth(index)).toHaveText(item.title);
+    }
+  } finally {
+    await context.close();
+  }
 });
 
 test.describe('home: works sign-up card', () => {

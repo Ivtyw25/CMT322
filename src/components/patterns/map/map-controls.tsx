@@ -5,7 +5,7 @@ import { uiCopy } from '@/content/ui';
 import { cn } from '@/lib/cn';
 
 type MapControlsProps = {
-  /** `full` maps get the 40 px controls of the traffic map; snippets keep the 28 px ones. */
+  /** Desktop full maps use 40 px controls, snippets 28 px; mobile controls are 44 px. */
   large: boolean;
   zoomInDisabled: boolean;
   zoomOutDisabled: boolean;
@@ -31,7 +31,7 @@ export function MapControls({
   centreLabel,
   onCentre,
 }: MapControlsProps) {
-  const size = large ? 'size-10 rounded-lg' : 'size-7 rounded-md';
+  const size = large ? 'size-11 rounded-lg lg:size-10' : 'size-11 rounded-md lg:size-7';
   return (
     <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
       <button

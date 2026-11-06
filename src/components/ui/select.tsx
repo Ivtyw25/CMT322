@@ -5,7 +5,7 @@ import { cn } from '@/lib/cn';
 import { controlVariants } from './control-styles';
 import { useFieldControl } from './field';
 
-export type SelectOption = { value: string; label: string };
+export type SelectOption = { value: string; label: string; disabled?: boolean };
 
 type SelectProps = Omit<React.ComponentProps<'select'>, 'className' | 'children'> & {
   options: readonly SelectOption[];
@@ -23,7 +23,12 @@ export function Select({ options, className, ...props }: SelectProps) {
         className={cn(controlVariants({ tone }), 'cursor-pointer appearance-none pr-10')}
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value} className="bg-surface text-gray-900">
+          <option
+            key={option.value}
+            value={option.value}
+            disabled={option.disabled}
+            className="bg-surface text-gray-900"
+          >
             {option.label}
           </option>
         ))}

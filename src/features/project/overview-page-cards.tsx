@@ -52,7 +52,7 @@ export function OverviewPageCards() {
             >
               <Icon className="size-4.5" />
             </span>
-            <h3 id={titleId} className="type-heading-3xs text-primary-700">
+            <h3 id={titleId} className="-my-2.5 type-heading-3xs text-primary-700 md:my-0">
               <Link
                 href={card.href}
                 className="inline-flex min-h-11 min-w-11 items-center hover:underline md:min-h-0 md:min-w-0"

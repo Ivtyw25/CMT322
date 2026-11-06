@@ -6,9 +6,12 @@ export const MOCK_USER_ID = 'user-meiling';
 
 export type SessionStatus = 'loading' | 'guest' | 'signed-in';
 
+// A successful explicit sign-in still lasts for this page view when browser storage is blocked.
+let temporaryUserId: string | null = null;
+
 export function readSessionUserId(): string | null {
   const raw = readStorage('local', SESSION_STORAGE_KEY);
-  if (!raw) return null;
+  if (!raw) return temporaryUserId;
   try {
     const parsed: unknown = JSON.parse(raw);
     if (typeof parsed === 'object' && parsed !== null && 'userId' in parsed) {
@@ -21,10 +24,13 @@ export function readSessionUserId(): string | null {
 }
 
 export function writeSession(userId: string): void {
-  writeStorage('local', SESSION_STORAGE_KEY, JSON.stringify({ userId }));
+  const raw = JSON.stringify({ userId });
+  writeStorage('local', SESSION_STORAGE_KEY, raw);
+  temporaryUserId = readStorage('local', SESSION_STORAGE_KEY) === raw ? null : userId;
 }
 
 export function clearSession(): void {
+  temporaryUserId = null;
   removeStorage('local', SESSION_STORAGE_KEY);
 }
 
@@ -38,7 +44,10 @@ export function notifySessionChange(): void {
 export function subscribeToSession(onChange: () => void): () => void {
   listeners.add(onChange);
   const onStorage = (event: StorageEvent) => {
-    if (event.key === SESSION_STORAGE_KEY || event.key === null) onChange();
+    if (event.key === SESSION_STORAGE_KEY || event.key === null) {
+      temporaryUserId = null;
+      onChange();
+    }
   };
   window.addEventListener('storage', onStorage);
   return () => {

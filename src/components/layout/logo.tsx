@@ -43,7 +43,9 @@ export function Logo({
         sizes="44px"
         // 44 px and on every page: loading it at once keeps the footer logo from popping in.
         loading="eager"
-        className={cn('shrink-0 rounded-full', compact ? 'size-9' : 'size-11')}
+        // The PNG includes transparent padding: keep a 36 px layout footprint while
+        // displaying its painted mark at the mobile design's approximately 36 px.
+        className={cn('size-11 shrink-0 rounded-full', compact && '-m-1')}
       />
       <span
         className={cn(

@@ -1,10 +1,9 @@
 'use client';
 
 import { CalendarCheck } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { startTransition, useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { FilterChips } from '@/components/ui/filter-chips';
-import { routes } from '@/config/routes';
+import { useQueryParams } from '@/lib/url/use-query-params';
 import { homeCopy } from '@/content/home';
 import { uiCopy } from '@/content/ui';
 import type { AreaId } from '@/data/models/area';
@@ -15,6 +14,9 @@ import { WorksSubscribe } from './works-subscribe';
 const MAX_ITEMS = 3;
 const ALL = 'all';
 type AreaChoice = AreaId | typeof ALL;
+const subscribeHydration = () => () => {};
+const browserReady = () => true;
+const serverReady = () => false;
 
 export type WorksAreaOption = { id: AreaId; label: string };
 
@@ -31,17 +33,15 @@ type WorksAreaProps = {
  */
 export function WorksArea({ areas, items, initialArea }: WorksAreaProps) {
   const copy = homeCopy.works;
-  const router = useRouter();
-  const [selected, setSelected] = useState<AreaChoice>(initialArea ?? ALL);
-  const [seenInitial, setSeenInitial] = useState(initialArea);
-  const [announcedChoice, setAnnouncedChoice] = useState<AreaChoice>(selected);
+  const query = useQueryParams();
+  const hydrated = useSyncExternalStore(subscribeHydration, browserReady, serverReady);
+  // Keep the server-rendered list tied to the validated request prop, including with
+  // JavaScript disabled. After hydration, native history and Back drive the same list.
+  const selected: AreaChoice = hydrated
+    ? (areas.find((option) => option.id === query.get('area'))?.id ?? ALL)
+    : (initialArea ?? ALL);
+  const [announcedChoice, setAnnouncedChoice] = useState<AreaChoice>(initialArea ?? ALL);
   const [announcement, setAnnouncement] = useState('');
-
-  // The URL changed from outside (search, a Try chip, the back button): follow it.
-  if (seenInitial !== initialArea) {
-    setSeenInitial(initialArea);
-    setSelected(initialArea ?? ALL);
-  }
 
   const area = areas.find((option) => option.id === selected) ?? null;
   const areaLabel = area?.label ?? copy.allAreasInSentence;
@@ -56,10 +56,7 @@ export function WorksArea({ areas, items, initialArea }: WorksAreaProps) {
   }
 
   function choose(next: AreaChoice) {
-    setSelected(next);
-    const url =
-      next === ALL ? routes.home : `${routes.home}?${new URLSearchParams({ area: next })}`;
-    startTransition(() => router.replace(url, { scroll: false }));
+    query.set({ area: next === ALL ? null : next });
   }
 
   return (

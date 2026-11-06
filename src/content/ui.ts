@@ -75,6 +75,7 @@ export const uiCopy = {
     },
     characterCount: (count: number, max: number) => `${count} of ${max} characters`,
     password: {
+      capsLock: 'Caps Lock is on',
       show: 'Show password',
       hide: 'Hide password',
     },
