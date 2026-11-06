@@ -309,3 +309,5 @@ Verify before this round (port 3300): typecheck, lint, tokens, build, e2e 443, l
 **Verify (TEST_PORT 3800, `.logs/session-verify5.log`):** typecheck, lint, tokens, build pass; e2e 443, responsive 441, links 98, a11y 196, visual 57 passed (47 skipped: no dark reference). Two earlier full runs each had one different load-only e2e failure (profile "Change" focus; traffic tabs arrow-key); both passed in isolation (tabs 5/5 repeated) and in the final full run. Watch for hydration races in keyboard tests under load.
 
 **Open:** Phase 3 (shared header/footer polish, R-QA1/2/5/9, lowering the 15 released pages to 3%) runs as a separate round. Per-viewport tolerances recorded above (contact 390 at 0.18; terms, privacy, accessibility 390 at 0.04).
+
+Merged to main (1b1ae84), pushed and deployed: https://mutiara-connect-9l3xxjg27-ivtyw25s-projects.vercel.app (alias https://mutiara-connect.vercel.app). Smoke test: all ten routes return 200 (404 page returns 404); live link crawl 98/98 passed (`.logs/smoke-links6.log`).
