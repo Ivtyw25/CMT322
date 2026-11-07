@@ -152,7 +152,7 @@ Used by the docs-style pages whose frames show a left sidebar (About, Constructi
 Footer by width:
 | Width | Layout |
 |---|---|
-| <768 | Mobile frame 127:5801: brand stacked; doormat 2 × 2 grid (Project, Traffic / Report & Track, Help); newsletter in a `static-glass-subtle` box with email field and full-width "Get updates" button (no area select, as designed); social pills wrap; no "Back to top"; legal row wraps (copyright, then links). Footer links keep the 30 px row pitch and get `hit-area`. |
+| <768 | Mobile frame 127:5801: brand stacked; doormat 2 × 2 grid (Project, Traffic / Report & Track, Help); newsletter in a `static-glass-subtle` box with email field and full-width area select (owner decision 2026-11-07) and full-width "Get updates" button; social pills wrap; no "Back to top"; legal row wraps (copyright, then links). Footer links keep the 30 px row pitch and get `hit-area`. |
 | 768–1023 | **Decision:** brand block full width on top; doormat in 4 columns below it; newsletter text full width, then the desktop form row (email flexible, area select, button) below it; social row wraps with "Back to top" at the end; legal row on one line. |
 | ≥1024 | Desktop frame 1:127: brand 360 px + doormat (4 flex columns, gap 32); newsletter row (text left, form right: email 280, area select, button); social row; legal row. |
 
@@ -181,7 +181,7 @@ Footer by width:
 | Section bar | click | Open/close page list | closed, open (chevron up), hover bg `gray-100`, focus-visible | Enter/Space; Esc | |
 | Footer links, tel, mailto | click | Navigate / call / email | default, hover underline, focus-visible `static-white` ring | Enter | tel/mailto are not external links (no new tab) |
 | Newsletter email | type | Value; clears its error on change | default, hover, focus (`shadow-focus`), filled, error, disabled (while sending) | — | `type="email"`, `name="email"`, `autocomplete="email"`, `spellcheck="false"`, visually hidden label "Email address" |
-| Newsletter area select (≥768) | change | Area value | default, hover, focus, disabled | native select keys | Native `<select>` with explicit `surface` bg and `gray-900` text; label "Area" visually hidden; default "All areas" |
+| Newsletter area select (all widths) | change | Area value | default, hover, focus, disabled | native select keys | Native `<select>` with explicit `surface` bg and `gray-900` text; label "Area" visually hidden; default "All areas" |
 | "Get updates" | click / Enter in field | Validate, send, show result | default, hover, focus-visible, loading ("Signing you up…", spinner), disabled during send | Enter submits | Secondary style on navy (Figma) |
 | Back to top | click | Scroll to top (smooth; instant if reduced motion), then focus moves to the header logo link | default, hover bg `static-glass`, focus-visible `static-white` ring | Enter/Space | `button`, `chevron-up` icon; ≥768 only |
 | Social pills | none | none | static only | not focusable | Plain text |

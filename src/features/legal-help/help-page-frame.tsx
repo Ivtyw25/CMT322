@@ -2,9 +2,9 @@ import { DocsLayout } from '@/components/layout/docs-layout';
 import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { RelatedPages, type RelatedPage } from '@/components/patterns/related-pages';
 import { routes } from '@/config/routes';
-import { legalHelpCopy, type HelpAsideCopy } from '@/content/legal-help';
+import { legalHelpCopy } from '@/content/legal-help';
 import type { SiteInfo } from '@/data/models/site-info';
-import { HelpAside } from './help-aside';
+import { HelpQuestions } from './help-questions';
 
 type HelpPageFrameProps = {
   href: string;
@@ -12,7 +12,6 @@ type HelpPageFrameProps = {
   lede: string;
   sections: readonly { id: string; title: string }[];
   related: readonly RelatedPage[];
-  aside?: HelpAsideCopy;
   updated?: string;
   siteInfo: SiteInfo;
   children: React.ReactNode;
@@ -24,7 +23,6 @@ export function HelpPageFrame({
   lede,
   sections,
   related,
-  aside,
   updated,
   siteInfo,
   children,
@@ -32,28 +30,12 @@ export function HelpPageFrame({
   const group = legalHelpCopy.groups.find((candidate) =>
     candidate.items.some((item) => item.href === href),
   );
-  const action =
-    href === routes.help.accessibility || href === routes.help.sitemap
-      ? { href: routes.help.contact, label: legalHelpCopy.aside.contact }
-      : { href: routes.project.faq, label: legalHelpCopy.aside.faq };
   return (
     <DocsLayout
       currentHref={href}
       groups={legalHelpCopy.groups}
-      asideDivider={false}
       onThisPage={sections.map((section) => ({ id: section.id, label: section.title }))}
-      aside={
-        <HelpAside
-          siteInfo={siteInfo}
-          aside={
-            aside ?? {
-              title: legalHelpCopy.aside.title,
-              body: legalHelpCopy.aside.body,
-              primary: action,
-            }
-          }
-        />
-      }
+      aside={<HelpQuestions siteInfo={siteInfo} />}
     >
       <div className="flex flex-col gap-8 lg:gap-12">
         <DocsPageHead

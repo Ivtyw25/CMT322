@@ -1,35 +1,33 @@
 import './line-flow.css';
+import { branchSpan, flowStyle, mainSpan, type FlowStyle } from './line-flow-style';
 
-type FlowStyle = React.CSSProperties & { '--flow-from': number };
+/** Lengths of the three paths below, measured with getTotalLength(), for the flow timing. */
+const LENGTH = { main: 1865.14, toS31: 191.52, toS20: 185.05 };
+const ROUTE = LENGTH.main + Math.max(LENGTH.toS31, LENGTH.toS20);
 
 /**
  * The track, in flow order from A01: the main line A01 to S19 (drawn end to start), then the
- * two short lines from S19 to S31 (end to start) and to S20 (start to end). `--flow-from` -1 fills
- * a path from its end, 1 from its start (see line-flow.css).
+ * two short lines from S19 to S31 (end to start) and to S20 (start to end).
  */
 const LINE_SEGMENTS: readonly {
   id: string;
   d: string;
-  part: 'main' | 'branch';
   flow: FlowStyle;
 }[] = [
   {
     id: 'main',
-    part: 'main',
     d: 'M178.106 167.876H929.375C975.749 167.876 1005.43 197.556 1005.43 239.293V451.689C1005.43 505.483 975.749 546.293 929.375 546.293H281.057',
-    flow: { '--flow-from': -1 },
+    flow: flowStyle({ ...mainSpan(LENGTH.main, ROUTE), from: -1 }),
   },
   {
     id: 'to-s31',
-    part: 'branch',
     d: 'M63.0967 41.7372C64.9517 74.1994 68.6616 89.0393 72.3716 100.169C89.0665 140.979 129.876 163.239 178.106 167.876',
-    flow: { '--flow-from': -1 },
+    flow: flowStyle({ ...branchSpan(LENGTH.main, LENGTH.toS31, ROUTE), from: -1 }),
   },
   {
     id: 'to-s20',
-    part: 'branch',
     d: 'M178.106 167.876C120.601 178.079 68.6616 222.598 63.0967 294.943',
-    flow: { '--flow-from': 1 },
+    flow: flowStyle({ ...branchSpan(LENGTH.main, LENGTH.toS20, ROUTE), from: 1 }),
   },
 ];
 
@@ -60,7 +58,6 @@ export function LineDiagramArt() {
           d={segment.d}
           pathLength={1}
           className="line-flow fill-none"
-          data-part={segment.part}
           style={segment.flow}
           strokeWidth="11.1299"
           strokeLinecap="round"

@@ -1,61 +1,63 @@
 /*
- * Home Route view (owner decision 2026-11-07): the line fills like water from A01 along the main
- * line to S19, then to S31 and S20, turning from shallow to deep blue; then it drains back the
- * same way to A01, and repeats. One 12 s cycle shared by every segment, so they stay in step.
+ * Route view water (owner decision 2026-11-07): the line fills like water from A01 along the main
+ * line to S19 and carries straight on into both branches (to S31 and to S20) at the same speed,
+ * turning from shallow to deep blue; then it drains back the same way to A01, and repeats.
+ *
  * LineFlow sets data-flow on an ancestor: "ready" (empty), "on" (playing), "paused" (off screen).
- * Without it (no JS, Traffic Route view) the line is simply drawn.
+ * That ancestor animates one water level, --flow-level, from 0 (empty) to 1 (whole route full)
+ * and back, at a constant speed. Each path knows its share of the route (--flow-start to
+ * --flow-end, see line-flow-style.ts) and shows how far the level has got through it. Because a
+ * single level drives every path, there is no pause or restart where the branches begin.
+ * Without data-flow (no JS, reduced motion, Traffic Route view) the line is simply drawn.
  */
+@property --flow-level {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
 .line-flow {
   stroke: var(--color-primary-700);
 }
 
+[data-flow='on'],
+[data-flow='paused'] {
+  animation: line-flow-level 12s linear infinite;
+}
+
 [data-flow] .line-flow {
   stroke-dasharray: 1 1;
-  stroke-dashoffset: var(--flow-from);
+  stroke-dashoffset: calc(
+    var(--flow-from, 1) *
+      clamp(
+        0,
+        (var(--flow-end, 1) - var(--flow-level)) / (var(--flow-end, 1) - var(--flow-start, 0)),
+        1
+      )
+  );
 }
 
 [data-flow='on'] .line-flow,
 [data-flow='paused'] .line-flow {
-  animation:
-    line-flow-colour 12s linear infinite,
-    line-flow-main 12s var(--ease-standard) infinite;
+  animation: line-flow-colour 12s linear infinite;
 }
 
-[data-flow] .line-flow[data-part='branch'] {
-  animation-name: line-flow-colour, line-flow-branch;
-}
-
+[data-flow='paused'],
 [data-flow='paused'] .line-flow {
   animation-play-state: paused;
 }
 
-/* Fill 0–35 %, full 35–65 %, drain 65–100 %. */
-@keyframes line-flow-main {
+/* Fill 0–40 %, full 40–60 %, drain 60–100 %. */
+@keyframes line-flow-level {
   0% {
-    stroke-dashoffset: var(--flow-from);
+    --flow-level: 0;
   }
-  35%,
-  65% {
-    stroke-dashoffset: 0;
+  40%,
+  60% {
+    --flow-level: 1;
   }
   100% {
-    stroke-dashoffset: var(--flow-from);
-  }
-}
-
-/* Fill after the main line (35–48 %), drain before it (52–65 %). */
-@keyframes line-flow-branch {
-  0%,
-  35% {
-    stroke-dashoffset: var(--flow-from);
-  }
-  48%,
-  52% {
-    stroke-dashoffset: 0;
-  }
-  65%,
-  100% {
-    stroke-dashoffset: var(--flow-from);
+    --flow-level: 0;
   }
 }
 
@@ -70,9 +72,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-flow] .line-flow,
-  [data-flow] .line-flow[data-part='branch'] {
+  [data-flow],
+  [data-flow] .line-flow {
     animation: none;
+  }
+  [data-flow] .line-flow {
     stroke-dasharray: none;
     stroke-dashoffset: 0;
   }

@@ -42,7 +42,8 @@ test.describe('footer newsletter', () => {
   }) => {
     const input = form(page).getByLabel(copy.emailLabel);
     await input.fill('visitor@example.com');
-    await form(page).getByLabel(copy.areaLabel).selectOption({ label: copy.allAreasOption });
+    await form(page).getByLabel(copy.areaLabel).click();
+    await page.getByRole('option', { name: copy.allAreasOption, exact: true }).click();
     await form(page).getByRole('button', { name: copy.submit }).click();
     await expect(form(page).getByRole('button', { name: copy.submitting })).toHaveAttribute(
       'aria-busy',
@@ -79,11 +80,11 @@ test.describe('footer newsletter', () => {
 test.describe('footer on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test('has no area select', async ({ page }) => {
+  test('lets the visitor choose an area', async ({ page }) => {
     await prepare(page);
     await page.goto(routes.project.overview);
     await settle(page);
     const footer = page.getByRole('contentinfo');
-    await expect(footer.getByLabel(copy.areaLabel)).toBeHidden();
+    await expect(footer.getByLabel(copy.areaLabel)).toBeVisible();
   });
 });

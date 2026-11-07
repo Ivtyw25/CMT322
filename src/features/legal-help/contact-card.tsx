@@ -15,7 +15,7 @@ export function ContactCard({
   return (
     <Link
       href={href}
-      className="flex flex-col gap-1.5 rounded-2xl border border-gray-200 p-5 transition-colors hover:bg-gray-50"
+      className="flex h-full flex-col gap-1.5 rounded-2xl border border-gray-200 p-5 transition-colors hover:bg-gray-50"
     >
       <span className="flex items-center gap-2.5">
         <span className="text-primary-600">{icon}</span>

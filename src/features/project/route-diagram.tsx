@@ -59,12 +59,7 @@ function StopLabel({ station, selected, hovered }: LabelProps) {
         : y - ((all.length - 1) * LINE_HEIGHT) / 2 + 4;
   if (interchange) {
     return (
-      <text
-        x={x - 41}
-        y={y + 42}
-        className="fill-primary-800 type-body-m-semibold"
-        textAnchor="start"
-      >
+      <text x={x - 41} y={y + 42} className="fill-gray-700 type-body-m-semibold" textAnchor="start">
         {lines.join(' ')}
       </text>
     );

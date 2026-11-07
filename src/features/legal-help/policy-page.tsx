@@ -1,6 +1,6 @@
 import { DocsSectionHeading } from '@/components/patterns/docs-section';
 import type { RelatedPage } from '@/components/patterns/related-pages';
-import { legalHelpCopy, type HelpAsideCopy, type HelpSection } from '@/content/legal-help';
+import { legalHelpCopy, type HelpSection } from '@/content/legal-help';
 import type { SiteInfo } from '@/data/models/site-info';
 import { HelpNote } from './help-note';
 import { HelpPageFrame } from './help-page-frame';
@@ -11,7 +11,6 @@ type PolicyCopy = {
   updated?: string;
   sections: readonly HelpSection[];
   summary?: readonly string[];
-  aside?: HelpAsideCopy;
   related: readonly RelatedPage[];
 };
 

@@ -1,4 +1,5 @@
 import { BRANCH_CODE, JUNCTION_CODE } from '@/data/api/line-alignment';
+import { branchSpan, mainSpan, type FlowSpan } from './line-flow-style';
 
 /** Width of the zigzag viewBox. Everything is placed in these units and scales with the container. */
 export const ZIGZAG_WIDTH = 1000;
@@ -30,9 +31,9 @@ export type ZigzagNode<Station> = {
 
 export type ZigzagPath = {
   id: 'main' | 'tail' | 'stub';
-  /** The main line fills first; the two branches fill from the junction after it. */
-  part: 'main' | 'branch';
   d: string;
+  /** Its share of the route for the water flow: the main line first, then both branches at once. */
+  flow: FlowSpan;
 };
 
 export type ZigzagLayout<Station> = {
@@ -48,22 +49,37 @@ export type ZigzagLayout<Station> = {
 
 type Point = { x: number; y: number; row: number };
 
-/** One continuous path through the points: straight along a row, a half ellipse at each U-turn. */
-function pathThrough(points: readonly Point[], rowHeight: number, reach: number): string {
+/** Length of half an ellipse with these radii (Ramanujan's approximation). */
+function halfEllipseLength(a: number, b: number): number {
+  return (Math.PI / 2) * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)));
+}
+
+/**
+ * One continuous path through the points: straight along a row, a half ellipse at each U-turn.
+ * Also returns its length, which times the water flow.
+ */
+function pathThrough(
+  points: readonly Point[],
+  rowHeight: number,
+  reach: number,
+): { d: string; length: number } {
   const [first, ...rest] = points;
-  if (!first) return '';
+  if (!first) return { d: '', length: 0 };
   let previous = first;
+  let length = 0;
   const parts = [`M${first.x} ${first.y}`];
   for (const point of rest) {
     if (point.row === previous.row) {
       parts.push(`L${point.x} ${point.y}`);
+      length += Math.abs(point.x - previous.x);
     } else {
       const sweep = previous.row % 2 === 0 ? 1 : 0;
       parts.push(`A${reach} ${rowHeight / 2} 0 0 ${sweep} ${point.x} ${point.y}`);
+      length += halfEllipseLength(reach, rowHeight / 2);
     }
     previous = point;
   }
-  return parts.join('');
+  return { d: parts.join(''), length };
 }
 
 /**
@@ -115,19 +131,27 @@ export function zigzagLayout<Station extends { code: string }>(
     if (point) nodes.push({ station, x: point.x, y: point.y });
   });
 
+  const mainPath = pathThrough(points.slice(0, main.length), rowHeight, reach);
+  const tailPath =
+    junction && tail.length > 0
+      ? pathThrough(points.slice(main.length - 1), rowHeight, reach)
+      : null;
+  const stubPath =
+    junction && stubPoint
+      ? { d: `M${junction.x} ${junction.y}L${stubPoint.x} ${stubPoint.y}`, length: rowHeight }
+      : null;
+  const route = mainPath.length + Math.max(tailPath?.length ?? 0, stubPath?.length ?? 0);
+
   const paths: ZigzagPath[] = [
-    { id: 'main', part: 'main', d: pathThrough(points.slice(0, main.length), rowHeight, reach) },
+    { id: 'main', d: mainPath.d, flow: { ...mainSpan(mainPath.length, route), from: 1 } },
   ];
-  if (junction && tail.length > 0) {
-    const tailPoints = points.slice(main.length - 1);
-    paths.push({ id: 'tail', part: 'branch', d: pathThrough(tailPoints, rowHeight, reach) });
+  if (tailPath) {
+    const span = branchSpan(mainPath.length, tailPath.length, route);
+    paths.push({ id: 'tail', d: tailPath.d, flow: { ...span, from: 1 } });
   }
-  if (junction && stubPoint) {
-    paths.push({
-      id: 'stub',
-      part: 'branch',
-      d: `M${junction.x} ${junction.y}L${stubPoint.x} ${stubPoint.y}`,
-    });
+  if (stubPath) {
+    const span = branchSpan(mainPath.length, stubPath.length, route);
+    paths.push({ id: 'stub', d: stubPath.d, flow: { ...span, from: 1 } });
   }
 
   return {

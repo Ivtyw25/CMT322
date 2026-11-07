@@ -137,7 +137,7 @@ export function NewsletterForm({ areas, preview }: NewsletterFormProps) {
               label={copy.areaLabel}
               hideLabel
               tone="onNavy"
-              className="hidden @min-[48rem]:block @min-[48rem]:w-52 @min-[48rem]:shrink-0"
+              className="@min-[48rem]:w-52 @min-[48rem]:shrink-0"
             >
               <MenuSelect
                 name="area"

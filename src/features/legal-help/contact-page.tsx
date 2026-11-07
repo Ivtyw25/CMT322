@@ -31,7 +31,7 @@ export function ContactPage({ siteInfo }: { siteInfo: SiteInfo }) {
   return (
     <HelpPageFrame href={routes.help.contact} {...copy} siteInfo={siteInfo}>
       <ContactSection {...works}>
-        <div className="grid items-start gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           <ContactCard {...copy.report} icon={<Flag aria-hidden className="size-5" />} />
           <ContactCard {...copy.track} icon={<Search aria-hidden className="size-5" />} />
         </div>
@@ -56,7 +56,7 @@ export function ContactPage({ siteInfo }: { siteInfo: SiteInfo }) {
         />
       </ContactSection>
       <ContactSection {...before}>
-        <div className="grid items-start gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           <ContactCard {...copy.faq} icon={<CircleHelp aria-hidden className="size-5" />} />
           <ContactCard
             {...copy.announcements}

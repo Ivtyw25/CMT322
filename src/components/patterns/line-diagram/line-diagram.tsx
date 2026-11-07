@@ -163,7 +163,7 @@ function StationStop({
           className={cn(
             'transition-colors duration-(--duration-fast)',
             junction
-              ? 'type-heading-2xs text-primary-800'
+              ? 'type-heading-2xs text-gray-600 group-hover:text-primary-700'
               : selected
                 ? 'type-body-xs-semibold text-primary-700'
                 : 'type-body-xs text-gray-600 group-hover:text-primary-700',

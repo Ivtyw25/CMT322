@@ -118,14 +118,18 @@ test.describe('faq: topics', () => {
         routes.project.faqTopic(category.id),
       );
     }
-    const audience = page.getByRole('radiogroup', { name: faq.topics.audienceLabel });
-    await page.getByLabel(faq.topics.audiences.land).check({ force: true });
+    const audience = page.getByRole('combobox', { name: faq.topics.audienceLabel });
+    const pick = async (label: string) => {
+      await audience.click();
+      await page.getByRole('option', { name: label, exact: true }).click();
+    };
+    await pick(faq.topics.audiences.land);
     await expect(cards).toHaveCount(1);
-    await page.getByLabel(faq.topics.audiences['live-work']).check({ force: true });
+    await pick(faq.topics.audiences['live-work']);
     await expect(cards).toHaveCount(2);
-    await page.getByLabel(faq.topics.audiences.everyone).check({ force: true });
+    await pick(faq.topics.audiences.everyone);
     await expect(cards).toHaveCount(categories.length);
-    await expect(audience.or(page.locator('fieldset')).first()).toBeVisible();
+    await expect(audience).toHaveText(faq.topics.audiences.everyone);
   });
 
   test('a topic link shows that topic, marks its card and focuses the heading', async ({
@@ -310,17 +314,16 @@ test.describe('faq: page furniture', () => {
 });
 
 test.describe('faq: layout', () => {
-  test('the audience switch is vertical at 390 px and a row at 768 px', async ({ page }) => {
+  test('the popular terms stay on one swipeable row at 390 px', async ({ page }) => {
     await open(page, routes.project.faq, 390);
-    const options = page.locator('fieldset label');
-    const a = await options.nth(0).boundingBox();
-    const b = await options.nth(1).boundingBox();
-    expect(b?.y ?? 0).toBeGreaterThan((a?.y ?? 0) + 20);
-    expect(a?.height ?? 0).toBeGreaterThanOrEqual(44);
-    await page.setViewportSize({ width: 768, height: 900 });
-    const c = await options.nth(0).boundingBox();
-    const d = await options.nth(1).boundingBox();
-    expect(Math.abs((c?.y ?? 0) - (d?.y ?? 1))).toBeLessThan(2);
+    const chips = page.getByRole('button', { name: faq.search.popular[0], exact: true });
+    const last = page.getByRole('button', {
+      name: faq.search.popular[faq.search.popular.length - 1],
+      exact: true,
+    });
+    const a = await chips.boundingBox();
+    const b = await last.boundingBox();
+    expect(Math.abs((a?.y ?? 0) - (b?.y ?? 1))).toBeLessThan(2);
   });
 
   test('has no horizontal scroll at 320 px', async ({ page }) => {

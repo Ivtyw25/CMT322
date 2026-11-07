@@ -2,7 +2,8 @@
 
 import { House, Landmark, Signpost, TrainFront, type LucideIcon } from 'lucide-react';
 import { LinkCard } from '@/components/ui/link-card';
-import { SegmentedControl } from '@/components/ui/segmented-control';
+import { Field } from '@/components/ui/field';
+import { MenuSelect } from '@/components/ui/menu-select';
 import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
 import type { FaqAudience, FaqCategory, FaqCategoryId } from '@/data/models/faq';
@@ -42,7 +43,7 @@ type FaqTopicsProps = {
   activeTopic: string | null;
 };
 
-/** The audience switch and the topic cards it filters. Cards are links to `?topic=`. */
+/** The audience menu and the topic cards it filters. Cards are links to `?topic=`. */
 export function FaqTopics({
   categories,
   counts,
@@ -52,13 +53,16 @@ export function FaqTopics({
 }: FaqTopicsProps) {
   return (
     <div className="flex flex-col gap-4">
-      <SegmentedControl
-        legend={copy.audienceLabel}
-        options={audienceOptions}
-        value={audience}
-        onValueChange={onAudienceChange}
-        orientation="adaptive"
-      />
+      <Field label={copy.audienceLabel} className="w-full sm:w-80">
+        <MenuSelect
+          value={audience}
+          onValueChange={(value) => {
+            const choice = audienceOptions.find((option) => option.value === value);
+            if (choice) onAudienceChange(choice.value);
+          }}
+          options={audienceOptions}
+        />
+      </Field>
       <ul className="grid gap-4 md:grid-cols-2">
         {topicsForAudience(categories, audience).map((category) => {
           const Icon = topicIcons[category.id];

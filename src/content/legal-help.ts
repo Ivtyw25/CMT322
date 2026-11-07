@@ -10,13 +10,6 @@ export type HelpSection = {
   note?: { tone: 'warning' | 'info'; text: string };
 };
 
-export type HelpAsideCopy = {
-  title: string;
-  body: string;
-  primary: { label: string; href: string };
-  secondary?: { label: string; href: string };
-};
-
 const helpPages = [
   { label: 'Contact us', href: routes.help.contact },
   { label: 'Accessibility', href: routes.help.accessibility },
@@ -47,12 +40,12 @@ export const legalHelpCopy = {
     { id: 'help', label: 'Help', items: helpPages },
     { id: 'legal', label: 'Legal', items: legalPages },
   ],
-  aside: {
-    title: 'Questions about this site?',
-    body: 'Most questions are answered in the FAQ.',
-    faq: 'Read the FAQ',
-    contact: 'Contact us',
-    careline: (label: string, number: string) => `${label} ${number}, 24 hours`,
+  /** The one-line help note at the end of every Help and Legal page. */
+  questions: {
+    lead: 'Any questions? Read the',
+    faq: 'FAQ',
+    contact: ', or contact us at',
+    or: 'or',
   },
   demo: '',
   summaryTitle: 'In short',
@@ -69,12 +62,6 @@ export const legalHelpCopy = {
       'Traffic and construction information is a guide and can change at short notice. Always follow road signs and officers on site.',
       'This portal is not an emergency service. If anyone is in danger, call 999.',
     ],
-    aside: {
-      title: 'Questions about these terms?',
-      body: 'Most questions are answered in the FAQ. You can also email help@mutiaraconnect.my.',
-      primary: { label: 'Read the FAQ', href: routes.project.faq },
-      secondary: { label: 'Privacy policy', href: routes.legal.privacy },
-    } satisfies HelpAsideCopy,
     sections: [
       {
         id: 'about',
@@ -238,12 +225,6 @@ export const legalHelpCopy = {
       'Other commuters never see your name or contact details.',
       'You can download, correct or delete your data from your profile at any time.',
     ],
-    aside: {
-      title: 'Questions about your data?',
-      body: 'Most requests can be done from your profile. You can also email help@mutiaraconnect.my.',
-      primary: { label: 'Go to your profile', href: routes.account.profile },
-      secondary: { label: 'Terms & Conditions', href: routes.legal.terms },
-    } satisfies HelpAsideCopy,
     sections: [
       {
         id: 'information',
@@ -339,11 +320,6 @@ export const legalHelpCopy = {
       'How Mutiara Line Community Connect works for everyone, and its known limitations.',
     lede: 'Everyone should be able to check road changes and report problems, whatever device or assistive technology they use.',
     updated: 'Last reviewed 29 October 2026.',
-    aside: {
-      title: 'Something hard to use?',
-      body: 'Tell us the page and what happened, and we will fix it or send the information another way.',
-      primary: { label: 'Contact us', href: routes.help.contact },
-    } satisfies HelpAsideCopy,
     sections: [
       {
         id: 'standard',
@@ -412,11 +388,6 @@ export const legalHelpCopy = {
       { id: 'website', title: 'Questions about this website' },
       { id: 'before', title: 'Before you get in touch' },
     ],
-    aside: {
-      title: 'Not sure where to start?',
-      body: 'Most questions are answered in the FAQ.',
-      primary: { label: 'Read the FAQ', href: routes.project.faq },
-    } satisfies HelpAsideCopy,
     report: {
       title: 'Report an issue',
       body: 'Damaged roads, blocked drains, noise, dust or unsafe worksites. You get a ticket number.',
@@ -463,11 +434,6 @@ export const legalHelpCopy = {
     title: 'Sitemap',
     description: 'Find public pages on Mutiara LRT Community Connect.',
     lede: 'Every page on Mutiara Line Community Connect, grouped the same way as the menu.',
-    aside: {
-      title: 'Can’t find a page?',
-      body: 'Tell us what you were looking for and we will point you to it.',
-      primary: { label: 'Contact us', href: routes.help.contact },
-    } satisfies HelpAsideCopy,
     groups: [
       ...Object.values(navGroups).map((group) => ({
         id: group.id,

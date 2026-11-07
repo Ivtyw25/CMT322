@@ -4,6 +4,7 @@ import { JUNCTION_CODE } from '@/data/api/line-alignment';
 import { cn } from '@/lib/cn';
 import { InterchangeIcons } from './interchange-icons';
 import './line-flow.css';
+import { flowStyle } from './line-flow-style';
 import { stationHref, stationLinkLabel, type LineStation } from './line-station';
 import {
   zigzagLayout,
@@ -22,9 +23,6 @@ const VARIANTS: readonly { columns: ZigzagColumns; show: string }[] = [
 
 /** Label width as a share of the column spacing, so neighbouring labels never touch. */
 const LABEL_SHARE = 0.96;
-
-type FlowStyle = React.CSSProperties & { '--flow-from': number };
-const FLOW_FROM_START: FlowStyle = { '--flow-from': 1 };
 
 /** Distance from the top of a stop's link to the centre of its circle, in px. */
 const CIRCLE_CENTRE = { stop: 20, junction: 24 };
@@ -76,9 +74,8 @@ function Stop<Station extends LineStation>({
           <span
             className={cn(
               'wrap-anywhere transition-colors duration-(--duration-fast) group-hover:text-primary-700',
-              junction
-                ? 'type-heading-3xs whitespace-nowrap text-primary-800'
-                : 'type-body-xs-semibold text-gray-800',
+              junction ? 'type-heading-3xs whitespace-nowrap' : 'type-body-xs-semibold',
+              'text-gray-800',
             )}
           >
             {station.name}
@@ -134,8 +131,7 @@ function ZigzagVariant<Station extends LineStation>({
             d={path.d}
             pathLength={1}
             className="line-flow fill-none"
-            data-part={path.part}
-            style={FLOW_FROM_START}
+            style={flowStyle(path.flow)}
             strokeWidth={layout.strokeWidth}
             strokeLinecap="round"
             strokeLinejoin="round"
