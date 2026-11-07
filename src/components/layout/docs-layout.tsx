@@ -25,6 +25,8 @@ type DocsLayoutProps = {
   aside?: React.ReactNode;
   /** A rule above the aside block and the wider gap that goes with it. Off for an aside that is already a card. */
   asideDivider?: boolean;
+  /** Below 1280 px, show the aside block after the article. Off for a block only the wide aside needs. */
+  asideOnNarrow?: boolean;
   /** Gallery only: show the aside at any width and pin its active item. */
   preview?: { activeId: string };
   children: React.ReactNode;
@@ -47,6 +49,7 @@ export function DocsLayout({
   onThisPage = [],
   aside,
   asideDivider = true,
+  asideOnNarrow = true,
   preview,
   children,
 }: DocsLayoutProps) {
@@ -135,7 +138,7 @@ export function DocsLayout({
             </div>
           ) : null}
         </div>
-        {aside && !preview ? (
+        {aside && asideOnNarrow && !preview ? (
           <div
             className={cn(
               'max-w-article xl:hidden',

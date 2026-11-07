@@ -1,14 +1,15 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useState } from 'react';
 import { FitToWidth } from '@/components/patterns/fit-to-width';
 import { LineDiagram } from '@/components/patterns/line-diagram/line-diagram';
+import { LineZigzag } from '@/components/patterns/line-diagram/line-zigzag';
 import {
   DIAGRAM_HEIGHT,
   DIAGRAM_WIDTH,
 } from '@/components/patterns/line-diagram/line-diagram-layout';
-import { LineRailView } from '@/components/patterns/line-diagram/line-rail-view';
 import type {
+  DescribeStation,
   LineMarkerKind,
   MarkersByStation,
 } from '@/components/patterns/line-diagram/line-markers';
@@ -24,6 +25,7 @@ import type { RouteStation } from './route-station';
 import { StationCard } from './station-card';
 import { STATION_SEARCH_ID, StationSearch } from './station-search';
 import { TimeFilter } from './time-filter';
+import { TrafficWorkspace } from './traffic-workspace';
 import type { TrafficEntry } from './traffic-entry';
 import { countByLayer, filterByTimeAndText, showLayer } from './traffic-filters';
 import { useTrafficParams } from './use-traffic-filters';
@@ -38,28 +40,18 @@ type RouteViewProps = {
 const LIST_ID = 'route-changes-list';
 const STATIONS_ID = 'route-stations';
 
-function reducedMotion(): boolean {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-/** Route view (Figma 5:843): station picker and road changes beside the line diagram or rail. */
+/**
+ * Route view (Figma 5:843): station picker and road changes in the workspace panel, beside the
+ * line diagram (1440 px and up) or the zigzag line without the water flow (below).
+ */
 export function RouteView({ entries, stations, updatedAt }: RouteViewProps) {
   const copy = trafficCopy.route;
   const { params, when, hidden, setWhen, toggleLayer } = useTrafficParams();
   const stationParam = params.get('station')?.toUpperCase();
   const station = stations.find((item) => item.code === stationParam) ?? null;
   const selectedCode = station?.code ?? null;
-  const wantsCard = useRef(false);
-
-  // Below 1024 px the card sits above the rail: bring it into view once it has rendered.
-  useEffect(() => {
-    if (!selectedCode || !wantsCard.current) return;
-    wantsCard.current = false;
-    if (window.matchMedia('(min-width: 1024px)').matches) return;
-    document
-      .getElementById('station-card')
-      ?.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
-  }, [selectedCode]);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const changePanelOpen = useCallback((open: boolean) => setPanelOpen(open), []);
 
   const inTime = filterByTimeAndText(entries, when, '');
   const counts = countByLayer(inTime);
@@ -84,8 +76,9 @@ export function RouteView({ entries, stations, updatedAt }: RouteViewProps) {
 
   function select(code: string) {
     const next = code === selectedCode ? null : code.toLowerCase();
-    wantsCard.current = next !== null;
     params.set({ station: next });
+    // On a phone the line fills the view: open the panel to show the station card.
+    if (next) setPanelOpen(true);
   }
 
   function clearStation() {
@@ -100,52 +93,60 @@ export function RouteView({ entries, stations, updatedAt }: RouteViewProps) {
     ? copy.selected.emptyNear(station.name)
     : trafficCopy.map.filters.noMatch.text;
 
+  const describeStation: DescribeStation = (item, state) => {
+    const base = `${item.code} ${item.name}${stationNotes(item)}`;
+    return state.markers.length > 0
+      ? `${base}, ${copy.diagram.changesNearby(state.markers.length)}`
+      : base;
+  };
+
   return (
-    <div className="flex flex-col lg:grid lg:h-full lg:grid-cols-[25rem_1fr]">
-      <section
-        aria-labelledby="traffic-title"
-        className="flex flex-col gap-5 bg-surface p-4 md:p-8 lg:overflow-y-auto lg:p-6"
-      >
-        <PanelHeader view="route" updatedAt={updatedAt} when={when} hidden={hidden} />
-        <StationSearch stations={stations} onSelect={select} />
-        <TimeFilter value={when} onChange={setWhen} />
-        <LayerToggles view="route" hidden={hidden} counts={counts} onToggle={toggleLayer} />
-        <hr className="border-gray-200" />
-        {station ? <StationCard station={station} onClear={clearStation} /> : null}
-        <a
-          href={`#${STATIONS_ID}`}
-          className="sr-only focus:not-sr-only focus:type-body-s-medium focus:text-primary-700"
-        >
-          {trafficCopy.map.filters.skipToStations}
-        </a>
-        <RoadChangeList
-          headingId={LIST_ID}
-          title={title}
-          label={trafficCopy.map.results.listLabel}
-          entries={listed}
-          mode="link"
-          emptyText={emptyText}
-          onClearFilters={() => params.set({ when: null, hide: null })}
-        />
-        <FilterLiveRegion count={listed.length} />
-      </section>
-      <div className="bg-gray-50 lg:flex lg:flex-col lg:overflow-y-auto lg:border-l lg:border-gray-200">
+    <TrafficWorkspace
+      panelOpen={panelOpen}
+      onPanelOpenChange={changePanelOpen}
+      panel={
+        <section aria-labelledby="traffic-title" className="flex flex-col gap-5 p-4 md:p-6">
+          <PanelHeader view="route" updatedAt={updatedAt} when={when} hidden={hidden} />
+          <StationSearch stations={stations} onSelect={select} />
+          <TimeFilter value={when} onChange={setWhen} />
+          <LayerToggles view="route" hidden={hidden} counts={counts} onToggle={toggleLayer} />
+          <hr className="border-gray-200" />
+          {station ? <StationCard station={station} onClear={clearStation} /> : null}
+          <a
+            href={`#${STATIONS_ID}`}
+            className="sr-only focus:not-sr-only focus:type-body-s-medium focus:text-primary-700"
+          >
+            {trafficCopy.map.filters.skipToStations}
+          </a>
+          <RoadChangeList
+            headingId={LIST_ID}
+            title={title}
+            label={trafficCopy.map.results.listLabel}
+            entries={listed}
+            mode="link"
+            emptyText={emptyText}
+            onClearFilters={() => params.set({ when: null, hide: null })}
+          />
+          <FilterLiveRegion count={listed.length} />
+        </section>
+      }
+      main={
         <figure
           id={STATIONS_ID}
           tabIndex={-1}
           aria-label={copy.diagram.label}
-          className="flex flex-col gap-4 p-4 max-[1439px]:mx-auto max-[1439px]:max-w-160 min-[1440px]:justify-center min-[1440px]:py-10 md:p-8 lg:flex-1 lg:p-6 lg:max-[1439px]:mx-0 lg:max-[1439px]:max-w-140"
+          className="h-full overflow-y-auto bg-gray-50 px-2 pt-10 pb-24 outline-none min-[1440px]:flex min-[1440px]:flex-col min-[1440px]:justify-center md:px-6 md:pb-10"
         >
-          <figcaption className="type-body-s text-gray-600">{copy.diagram.caption}</figcaption>
           <div className="min-[1440px]:hidden">
-            <LineRailView
+            <LineZigzag
               stations={stations}
+              flow={false}
               mode="select"
+              label={copy.stationList.label}
               selectedCode={selectedCode}
               onSelect={select}
               markersByStation={markersByStation}
-              markerNote={copy.diagram.changesNearby}
-              label={copy.stationList.label}
+              describeStation={describeStation}
             />
           </div>
           <div className="mx-auto hidden w-full max-w-225 min-[1440px]:flex min-[1440px]:flex-col min-[1440px]:gap-8">
@@ -157,18 +158,13 @@ export function RouteView({ entries, stations, updatedAt }: RouteViewProps) {
                 onSelect={select}
                 markersByStation={markersByStation}
                 legend={null}
-                describeStation={(item, state) => {
-                  const base = `${item.code} ${item.name}${stationNotes(item)}`;
-                  return state.markers.length > 0
-                    ? `${base}, ${copy.diagram.changesNearby(state.markers.length)}`
-                    : base;
-                }}
+                describeStation={describeStation}
               />
             </FitToWidth>
             <DiagramLegend />
           </div>
         </figure>
-      </div>
-    </div>
+      }
+    />
   );
 }

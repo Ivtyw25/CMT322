@@ -10,11 +10,7 @@ export type HelpSection = {
   note?: { tone: 'warning' | 'info'; text: string };
 };
 
-const helpPages = [
-  { label: 'Contact us', href: routes.help.contact },
-  { label: 'Accessibility', href: routes.help.accessibility },
-  { label: 'Sitemap', href: routes.help.sitemap },
-] as const;
+const helpPages = navGroups.help.items.map(({ label, href }) => ({ label, href }));
 const legalPages = [
   { label: 'Terms & Conditions', href: routes.legal.terms },
   { label: 'Privacy policy', href: routes.legal.privacy },
@@ -449,7 +445,6 @@ export const legalHelpCopy = {
           { label: 'Profile & settings', href: routes.account.profile },
         ],
       },
-      { id: 'help', label: 'Help', items: helpPages },
       { id: 'legal', label: 'Legal', items: legalPages },
     ],
     related: [related.home, related.contact],

@@ -149,9 +149,13 @@ export function MapCanvas({
       if (event.key === 'Escape' && popupRef.current?.isOpen()) map.closePopup(popupRef.current);
     };
     container.addEventListener('keydown', closeOnEscape);
+    // The box can change size without the window doing so (a resizable or collapsed side panel).
+    const resize = new ResizeObserver(() => map.invalidateSize());
+    resize.observe(container);
     const markersInMap = markerById.current;
     const zonesInMap = zoneById.current;
     return () => {
+      resize.disconnect();
       container.removeEventListener('keydown', closeOnEscape);
       // Taking the map down closes its popup; that is not the visitor deselecting anything.
       closingByCode.current = true;

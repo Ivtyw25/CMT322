@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { LocationMap } from '@/components/patterns/map/location-map';
 import type {
   MapLabel,
@@ -9,7 +9,7 @@ import type {
   MapPoint,
   MapZone,
 } from '@/components/patterns/map/map-types';
-import { SearchInput } from '@/components/ui/search-input';
+import { SearchBar } from '@/components/ui/search-bar';
 import { trafficCopy } from '@/content/traffic';
 import { FilterLiveRegion } from './filter-live-region';
 import { MapPopup } from './map-popup';
@@ -17,6 +17,7 @@ import { PanelHeader } from './panel-header';
 import { LayerToggles } from './layer-toggles';
 import { RoadChangeList, emptyTextOf } from './road-change-list';
 import { TimeFilter } from './time-filter';
+import { TrafficWorkspace } from './traffic-workspace';
 import type { TrafficEntry } from './traffic-entry';
 import {
   MAX_QUERY_LENGTH,
@@ -41,7 +42,7 @@ type MapViewProps = {
 const LIST_ID = 'road-changes-list';
 const MAP_ID = 'traffic-map';
 const SEARCH_DELAY_MS = 300;
-const DESKTOP_QUERY = '(min-width: 1024px)';
+const WIDE_QUERY = '(min-width: 768px)';
 /** Stations named on the map at the first zoom (KOMTAR, next to Macallum, waits for zoom 12); the rest from zoom 14. */
 const KEY_STATIONS = new Set(['S31', 'S19', 'S13', 'S09', 'S03', 'A01']);
 const LABEL_ZOOM_KEY = 11;
@@ -67,6 +68,8 @@ export function MapView({ entries, stations, alignment, updatedAt }: MapViewProp
   const [query, setQuery] = useState(() => params.get('q')?.slice(0, MAX_QUERY_LENGTH) ?? '');
   const focusParam = params.get('focus');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const changePanelOpen = useCallback((open: boolean) => setPanelOpen(open), []);
   const [pan, setPan] = useState<{ id: string; key: number } | null>(
     focusParam ? { id: focusParam, key: 1 } : null,
   );
@@ -112,9 +115,9 @@ export function MapView({ entries, stations, alignment, updatedAt }: MapViewProp
     }
   }, [focusParam, selected, entries, params]);
 
-  // Below 1024 px the list sits under the map; on desktop it scrolls inside the panel.
+  // From 768 px the list scrolls inside the panel beside the map: keep the chosen row in view.
   useEffect(() => {
-    if (!selectedId || !window.matchMedia(DESKTOP_QUERY).matches) return;
+    if (!selectedId || !window.matchMedia(WIDE_QUERY).matches) return;
     document
       .getElementById(`road-change-${selectedId}`)
       ?.scrollIntoView({ block: 'nearest', behavior: reducedMotion() ? 'auto' : 'smooth' });
@@ -166,12 +169,8 @@ export function MapView({ entries, stations, alignment, updatedAt }: MapViewProp
     }
     params.set({ focus: id });
     setPan((current) => ({ id, key: (current?.key ?? 0) + 1 }));
-    if (!window.matchMedia(DESKTOP_QUERY).matches) {
-      document.getElementById(MAP_ID)?.scrollIntoView({
-        block: 'start',
-        behavior: reducedMotion() ? 'auto' : 'smooth',
-      });
-    }
+    // On a phone the panel covers the map: close it so the chosen place shows.
+    setPanelOpen(false);
   }
 
   function changeQuery(next: string) {
@@ -195,82 +194,77 @@ export function MapView({ entries, stations, alignment, updatedAt }: MapViewProp
   const popupEntry = (id: string) => shown.find((entry) => entry.id === id);
 
   return (
-    <div className="flex flex-col lg:grid lg:h-full lg:grid-cols-[25rem_1fr]">
-      <section
-        aria-labelledby="traffic-title"
-        className="order-2 flex flex-col gap-5 bg-surface p-4 md:p-8 lg:order-1 lg:overflow-y-auto lg:p-6"
-      >
-        <PanelHeader view="map" updatedAt={updatedAt} when={when} hidden={hidden} />
-        <SearchInput
-          aria-label={copy.filters.placeSearch.label}
-          placeholder={copy.filters.placeSearch.placeholder}
-          enterKeyHint="search"
-          maxLength={MAX_QUERY_LENGTH}
-          value={query}
-          onChange={(event) => changeQuery(event.target.value)}
-          onClear={() => changeQuery('')}
-          onKeyDown={(event) => {
-            if (event.key === 'Escape') changeQuery('');
-            if (event.key === 'Enter') fitToResults();
-          }}
-        />
-        <TimeFilter value={when} onChange={setWhen} />
-        <LayerToggles view="map" hidden={hidden} counts={counts} onToggle={toggleLayer} />
-        <hr className="border-gray-200" />
-        <RoadChangeList
-          headingId={LIST_ID}
-          title={copy.results.title(shown.length)}
-          label={copy.results.listLabel}
-          entries={shown}
-          mode="select"
-          selectedId={selectedId}
-          onSelect={select}
-          hoveredId={hoveredId}
-          onHover={setHoveredId}
-          emptyText={emptyTextOf(cause)}
-          onClearFilters={clearFilters}
-        />
-        <FilterLiveRegion count={shown.length} />
-      </section>
-      <div
-        id={MAP_ID}
-        className="relative order-1 h-[min(30rem,60svh)] md:h-130 lg:order-2 lg:h-full"
-      >
-        <a
-          href={`#${LIST_ID}`}
-          className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-20 focus:rounded-lg focus:bg-surface focus:px-3 focus:py-2 focus:type-body-s-medium focus:text-primary-700"
-        >
-          {copy.filters.skipToList}
-        </a>
-        <LocationMap
-          center={center}
-          zoom={START_ZOOM}
-          label={copy.layout.mapLabel}
-          centreLabel={copy.controls.resetView}
-          unavailableText={copy.layout.unavailable}
-          interaction="full"
-          className="size-full border-0"
-          markers={markers}
-          zones={zones}
-          lines={lines}
-          labels={labels}
-          resetBounds={stations}
-          fitPoints={fit.points}
-          fitKey={fit.key}
-          fitMaxZoom={FIT_MAX_ZOOM}
-          selectedId={selectedId}
-          hoveredId={hoveredId}
-          onHover={setHoveredId}
-          onSelect={(id) => params.set({ focus: id })}
-          onDeselect={() => params.set({ focus: null })}
-          renderPopup={(id) => {
-            const entry = popupEntry(id);
-            return entry ? <MapPopup entry={entry} /> : null;
-          }}
-          focusId={pan?.id ?? null}
-          focusKey={pan?.key ?? 0}
-        />
-      </div>
-    </div>
+    <TrafficWorkspace
+      panelOpen={panelOpen}
+      onPanelOpenChange={changePanelOpen}
+      panel={
+        <section aria-labelledby="traffic-title" className="flex flex-col gap-5 p-4 md:p-6">
+          <PanelHeader view="map" updatedAt={updatedAt} when={when} hidden={hidden} />
+          <SearchBar
+            label={copy.filters.placeSearch.label}
+            placeholder={copy.filters.placeSearch.placeholder}
+            value={query}
+            onValueChange={changeQuery}
+            onSubmit={fitToResults}
+            inputProps={{ maxLength: MAX_QUERY_LENGTH }}
+          />
+          <TimeFilter value={when} onChange={setWhen} />
+          <LayerToggles view="map" hidden={hidden} counts={counts} onToggle={toggleLayer} />
+          <hr className="border-gray-200" />
+          <RoadChangeList
+            headingId={LIST_ID}
+            title={copy.results.title(shown.length)}
+            label={copy.results.listLabel}
+            entries={shown}
+            mode="select"
+            selectedId={selectedId}
+            onSelect={select}
+            hoveredId={hoveredId}
+            onHover={setHoveredId}
+            emptyText={emptyTextOf(cause)}
+            onClearFilters={clearFilters}
+          />
+          <FilterLiveRegion count={shown.length} />
+        </section>
+      }
+      main={
+        <div id={MAP_ID} className="relative size-full">
+          <a
+            href={`#${LIST_ID}`}
+            className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-20 focus:rounded-lg focus:bg-surface focus:px-3 focus:py-2 focus:type-body-s-medium focus:text-primary-700"
+          >
+            {copy.filters.skipToList}
+          </a>
+          <LocationMap
+            center={center}
+            zoom={START_ZOOM}
+            label={copy.layout.mapLabel}
+            centreLabel={copy.controls.resetView}
+            unavailableText={copy.layout.unavailable}
+            interaction="full"
+            className="size-full border-0"
+            markers={markers}
+            zones={zones}
+            lines={lines}
+            labels={labels}
+            resetBounds={stations}
+            fitPoints={fit.points}
+            fitKey={fit.key}
+            fitMaxZoom={FIT_MAX_ZOOM}
+            selectedId={selectedId}
+            hoveredId={hoveredId}
+            onHover={setHoveredId}
+            onSelect={(id) => params.set({ focus: id })}
+            onDeselect={() => params.set({ focus: null })}
+            renderPopup={(id) => {
+              const entry = popupEntry(id);
+              return entry ? <MapPopup entry={entry} /> : null;
+            }}
+            focusId={pan?.id ?? null}
+            focusKey={pan?.key ?? 0}
+          />
+        </div>
+      }
+    />
   );
 }

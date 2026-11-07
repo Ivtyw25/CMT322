@@ -153,8 +153,13 @@ export const trafficCopy = {
       mapLabel: 'Map of road changes along the LRT Mutiara Line',
       /** Over the map when its tiles cannot load. */
       unavailable: 'The map could not load. The list still shows every road change.',
-      showMap: 'Show map',
-      showList: 'Show list',
+      /** Phones: the button that opens the panel over the whole view, and the one that closes it. */
+      openPanel: 'Filters and road changes',
+      closePanel: 'Close filters and road changes',
+      /** Tablet and desktop: the divider between the panel and the map or line. */
+      resizePanel: 'Resize the panel',
+      collapsePanel: 'Hide the panel',
+      expandPanel: 'Show the panel',
     },
     basemap: {
       label: 'Map type',
@@ -223,8 +228,6 @@ export const trafficCopy = {
     filters,
     diagram: {
       label: 'Diagram of the LRT Mutiara Line',
-      caption:
-        'Stations in line order, not to scale. Select a station to see road changes near it.',
       stationButton: (code: string, name: string) => `${code} ${name}`,
       /** Rail rows with glyphs, read out after the station name. */
       changesNearby: (count: number) =>

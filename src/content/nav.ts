@@ -99,6 +99,31 @@ export const navGroups = {
       },
     ],
   },
+  help: {
+    id: 'help',
+    label: 'Help',
+    intro: 'Ways to reach us, and how this site works for everyone.',
+    items: [
+      {
+        id: 'contact',
+        label: 'Contact us',
+        description: 'Ways to reach the right team',
+        href: routes.help.contact,
+      },
+      {
+        id: 'accessibility',
+        label: 'Accessibility',
+        description: 'How the site works for everyone',
+        href: routes.help.accessibility,
+      },
+      {
+        id: 'sitemap',
+        label: 'Sitemap',
+        description: 'Every page in one list',
+        href: routes.help.sitemap,
+      },
+    ],
+  },
 } as const satisfies Record<string, NavGroup>;
 
 export const navCopy = {
@@ -132,6 +157,15 @@ export const navCopy = {
     accountLink: 'Create an account',
     /** Sign-up returns the guest to the page they were on (main agent decision). */
     accountHref: (currentPath: string) => routes.account.signupReturningTo(currentPath),
+  },
+
+  helpPanel: {
+    title: 'Need an answer quickly?',
+    faqText: 'Most questions about the works, road changes and reports are answered in the FAQ.',
+    faqLink: 'Read the FAQ',
+    faqHref: routes.project.faq,
+    urgentTitle: 'Urgent problem at a worksite?',
+    urgentText: (careline: string) => `Call MRTCareline on ${careline}, open 24 hours.`,
   },
 
   header: {

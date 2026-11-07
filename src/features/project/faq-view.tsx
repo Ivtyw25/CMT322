@@ -188,8 +188,8 @@ export function FaqView({ categories, items, mostAsked, url, topicsHeading }: Fa
         onSubmit={() => headingRef.current?.focus()}
       />
       <section aria-labelledby="topics" className="mt-12 flex flex-col gap-5 lg:mt-16">
-        {topicsHeading}
         <FaqTopics
+          heading={topicsHeading}
           categories={categories}
           counts={counts}
           audience={audience}

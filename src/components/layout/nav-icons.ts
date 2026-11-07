@@ -1,12 +1,15 @@
 import {
+  Accessibility,
   CircleHelp,
   ClipboardList,
   HardHat,
   Info,
+  Mail,
   Map,
   MapPin,
   Megaphone,
   MessageSquareWarning,
+  Network,
   Route,
   Ticket,
   TrafficCone,
@@ -34,5 +37,10 @@ export const navItemIcons: Record<NavGroupId, Record<string, LucideIcon>> = {
     overview: ClipboardList,
     report: MessageSquareWarning,
     track: Ticket,
+  },
+  help: {
+    contact: Mail,
+    accessibility: Accessibility,
+    sitemap: Network,
   },
 };

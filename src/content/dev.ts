@@ -324,7 +324,6 @@ export const devCopy = {
     lineNone: 'No station selected',
     lineStation: (code: string, name: string, count: number) =>
       `${code} ${name}, ${count} road ${count === 1 ? 'change' : 'changes'} nearby`,
-    lineNote: (count: number) => `${count} road changes nearby`,
     lineRailLabel: 'Stations in line order',
     queryCaption: 'Writes ?when= and ?hide=; the default is dropped; the hash is kept',
     queryNow: 'Show Happening now',

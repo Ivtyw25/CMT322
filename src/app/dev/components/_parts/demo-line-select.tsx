@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { LineDiagram } from '@/components/patterns/line-diagram/line-diagram';
 import type { MarkersByStation } from '@/components/patterns/line-diagram/line-markers';
-import { LineRailView } from '@/components/patterns/line-diagram/line-rail-view';
+import { LineZigzag } from '@/components/patterns/line-diagram/line-zigzag';
 import { devCopy } from '@/content/dev';
 import type { Station, StationCode } from '@/data/models/station';
 
@@ -16,7 +16,7 @@ const MARKERS: MarkersByStation = {
   S20: ['closure', 'construction'],
 };
 
-/** The line diagram (1280 px and up) and the rail (below) in select mode, for the gallery. */
+/** The line diagram (1280 px and up) and the zigzag (below) in select mode, for the gallery. */
 export function DemoLineSelect({ stations }: { stations: readonly Station[] }) {
   const [selectedCode, setSelectedCode] = useState<StationCode | null>(null);
   const select = (code: StationCode) =>
@@ -42,15 +42,23 @@ export function DemoLineSelect({ stations }: { stations: readonly Station[] }) {
           }
         />
       </div>
-      <div className="max-w-xl xl:hidden">
-        <LineRailView
+      <div className="xl:hidden">
+        <LineZigzag
           stations={stations}
+          flow={false}
           mode="select"
           label={copy.lineRailLabel}
           selectedCode={selectedCode}
-          onSelect={select}
+          onSelect={(code) => {
+            const station = stations.find((item) => item.code === code);
+            if (station) select(station.code);
+          }}
           markersByStation={MARKERS}
-          markerNote={copy.lineNote}
+          describeStation={(station, { markers }) =>
+            markers.length > 0
+              ? copy.lineStation(station.code, station.name, markers.length)
+              : `${station.code} ${station.name}`
+          }
         />
       </div>
     </div>

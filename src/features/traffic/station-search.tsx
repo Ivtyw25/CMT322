@@ -1,6 +1,6 @@
 'use client';
 
-import { SearchInput } from '@/components/ui/search-input';
+import { SearchBar } from '@/components/ui/search-bar';
 import { useId, useState } from 'react';
 import { trafficCopy } from '@/content/traffic';
 import { normaliseQuery } from '@/lib/search/normalise';
@@ -58,40 +58,39 @@ export function StationSearch({ stations, onSelect }: StationSearchProps) {
         event.preventDefault();
         choose(station);
       }
-    } else if (event.key === 'Escape') {
-      // A search field clears itself on Escape; here the first press only closes the list.
-      if (open) {
-        event.preventDefault();
-        setOpen(false);
-      } else {
-        setQuery('');
-      }
+    } else if (event.key === 'Escape' && open) {
+      // The first press only closes the list; the next clears the field (SearchBar).
+      event.preventDefault();
+      setOpen(false);
     }
   }
 
   return (
-    <div className="relative">
-      <SearchInput
-        id={STATION_SEARCH_ID}
-        role="combobox"
-        aria-label={trafficCopy.map.filters.stationSearch.label}
-        aria-autocomplete="list"
-        aria-expanded={expanded}
-        aria-controls={listId}
-        aria-activedescendant={expanded ? `${listId}-${active}` : undefined}
-        enterKeyHint="search"
-        placeholder={trafficCopy.map.filters.stationSearch.placeholder}
-        value={query}
-        onChange={(event) => {
-          setQuery(event.target.value);
-          setActive(0);
-          setOpen(true);
-        }}
-        onClear={() => setQuery('')}
-        onFocus={() => setOpen(query !== '')}
-        onBlur={() => setOpen(false)}
-        onKeyDown={onKeyDown}
-      />
+    <SearchBar
+      label={trafficCopy.map.filters.stationSearch.label}
+      placeholder={trafficCopy.map.filters.stationSearch.placeholder}
+      value={query}
+      onValueChange={(next) => {
+        setQuery(next);
+        setActive(0);
+        setOpen(next !== '');
+      }}
+      onSubmit={() => {
+        const station = matches[active] ?? matches[0];
+        if (station) choose(station);
+      }}
+      inputProps={{
+        id: STATION_SEARCH_ID,
+        role: 'combobox',
+        'aria-autocomplete': 'list',
+        'aria-expanded': expanded,
+        'aria-controls': listId,
+        'aria-activedescendant': expanded ? `${listId}-${active}` : undefined,
+        onFocus: () => setOpen(query !== ''),
+        onBlur: () => setOpen(false),
+        onKeyDown,
+      }}
+    >
       <ul
         id={listId}
         role="listbox"
@@ -133,6 +132,6 @@ export function StationSearch({ stations, onSelect }: StationSearchProps) {
       <p role="status" className="sr-only">
         {open && query.trim() !== '' ? copy.count(matches.length) : ''}
       </p>
-    </div>
+    </SearchBar>
   );
 }

@@ -36,6 +36,7 @@ export function HelpPageFrame({
       groups={legalHelpCopy.groups}
       onThisPage={sections.map((section) => ({ id: section.id, label: section.title }))}
       aside={<HelpQuestions siteInfo={siteInfo} />}
+      asideOnNarrow={false}
     >
       <div className="flex flex-col gap-8 lg:gap-12">
         <DocsPageHead

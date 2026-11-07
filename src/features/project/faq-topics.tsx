@@ -41,28 +41,38 @@ type FaqTopicsProps = {
   onAudienceChange: (audience: AudienceChoice) => void;
   /** The topic whose questions are showing. */
   activeTopic: string | null;
+  /** The section `h2`, shown on the same row as the audience menu. */
+  heading: React.ReactNode;
 };
 
-/** The audience menu and the topic cards it filters. Cards are links to `?topic=`. */
+/** The heading row with the audience menu, then the topic cards it filters (links to `?topic=`). */
 export function FaqTopics({
   categories,
   counts,
   audience,
   onAudienceChange,
   activeTopic,
+  heading,
 }: FaqTopicsProps) {
   return (
-    <div className="flex flex-col gap-4">
-      <Field label={copy.audienceLabel} className="w-full sm:w-80">
-        <MenuSelect
-          value={audience}
-          onValueChange={(value) => {
-            const choice = audienceOptions.find((option) => option.value === value);
-            if (choice) onAudienceChange(choice.value);
-          }}
-          options={audienceOptions}
-        />
-      </Field>
+    <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        {heading}
+        <Field
+          label={copy.audienceLabel}
+          className="flex-row items-center gap-3 [&>label]:shrink-0 [&>label]:whitespace-nowrap"
+        >
+          <MenuSelect
+            className="w-full min-w-0 sm:w-60"
+            value={audience}
+            onValueChange={(value) => {
+              const choice = audienceOptions.find((option) => option.value === value);
+              if (choice) onAudienceChange(choice.value);
+            }}
+            options={audienceOptions}
+          />
+        </Field>
+      </div>
       <ul className="grid gap-4 md:grid-cols-2">
         {topicsForAudience(categories, audience).map((category) => {
           const Icon = topicIcons[category.id];

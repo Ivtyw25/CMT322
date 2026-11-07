@@ -140,14 +140,16 @@ test.describe('line diagram and rail in select mode', () => {
     await expect(box.getByRole('status')).toHaveText(traffic.lineNone);
   });
 
-  test('the rail rows are toggle buttons with a hidden count', async ({ page }) => {
+  test('the zigzag stops are toggle buttons named with their road-change count', async ({
+    page,
+  }) => {
     await openGallery(page, 390);
     await whenHydrated(page, 'section:has(#line-diagram) button');
     const box = specimen(page, 'line-diagram', traffic.lineCaption);
-    const rows = box.locator('ol[aria-label] > li').getByRole('button');
+    const rows = box.getByRole('list', { name: traffic.lineRailLabel }).getByRole('button');
     await expect(rows).toHaveCount(22);
-    const s09 = rows.filter({ hasText: traffic.lineNote(2) }).filter({ hasText: 'S09' });
-    await expect(s09).toHaveCount(1);
+    const s09 = rows.filter({ hasText: 'S09' });
+    await expect(s09).toHaveAccessibleName(new RegExp(`^S09 .*, 2 road changes`));
     await s09.click();
     await expect(s09).toHaveAttribute('aria-pressed', 'true');
   });
@@ -256,9 +258,7 @@ test.describe('workspace layout', () => {
       return parseFloat(shell?.style.getPropertyValue('--chrome-h') ?? '');
     });
 
-  test('from 1024 px there is no footer and the content fills the window under the header', async ({
-    page,
-  }) => {
+  test('there is no footer and the content fills the window under the header', async ({ page }) => {
     await openWorkspace(page, 1280);
     await expect(page.getByRole('contentinfo')).toHaveCount(0);
     await expect(page.getByRole('heading', { name: traffic.workspaceTitle })).toBeVisible();
@@ -282,13 +282,13 @@ test.describe('workspace layout', () => {
     expect((await page.locator('main#main').boundingBox())?.height).toBeCloseTo(800 - chrome, 0);
   });
 
-  test('below 1024 px the page scrolls as usual', async ({ page }) => {
+  test('on a phone the content also fills the window, and its panes scroll', async ({ page }) => {
     await openWorkspace(page, 390);
     await expect(page.getByRole('contentinfo')).toHaveCount(0);
     const overflow = await page
       .locator('main#main')
       .evaluate((main) => getComputedStyle(main).overflowY);
-    expect(overflow).toBe('visible');
+    expect(overflow).toBe('hidden');
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       390,
     );

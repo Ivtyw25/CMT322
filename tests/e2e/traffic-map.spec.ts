@@ -396,29 +396,46 @@ test.describe('breakpoints', () => {
     expect(mapBox?.width).toBeCloseTo(624, 0);
   });
 
-  test('on a phone the map comes first, then the panel, and nothing scrolls sideways', async ({
+  test('on a phone the map fills the view, the panel opens over it, and nothing scrolls sideways', async ({
     page,
   }) => {
-    for (const width of [320, PHONE.width, 768]) {
+    for (const width of [320, PHONE.width]) {
       await visit(page, routes.traffic.map, { width, height: 844 });
-      const mapBox = await page.getByRole('region', { name: copy.layout.mapLabel }).boundingBox();
-      const panelBox = await panel(page).boundingBox();
-      expect(mapBox && panelBox && mapBox.y < panelBox.y).toBe(true);
+      await expect(page.getByRole('region', { name: copy.layout.mapLabel })).toBeVisible();
+      await expect(panel(page)).toBeHidden();
+      await page.getByRole('button', { name: copy.layout.openPanel }).click();
+      const dialog = page.getByRole('dialog', { name: copy.layout.panelLabel });
+      await expect(dialog).toBeVisible();
+      const box = await dialog.boundingBox();
+      expect(box?.width).toBeCloseTo(width, 0);
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
       ).toBe(true);
     }
   });
 
-  test('on a phone choosing a list item brings the map into view', async ({ page }) => {
+  test('on a phone choosing a list item closes the panel and shows the place on the map', async ({
+    page,
+  }) => {
     await visit(page, routes.traffic.map, PHONE);
-    await item(page, closure.id).scrollIntoViewIfNeeded();
+    await page.getByRole('button', { name: copy.layout.openPanel }).click();
     await item(page, closure.id).click();
+    await expect(page.getByRole('dialog', { name: copy.layout.panelLabel })).toHaveCount(0);
     await expect(popup(page)).toBeVisible();
-    await expect
-      .poll(() =>
-        page.locator('#traffic-map').evaluate((element) => element.getBoundingClientRect().top),
-      )
-      .toBeLessThan(120);
+  });
+
+  test('from 768 px the panel can be resized with the keyboard and collapsed', async ({ page }) => {
+    await visit(page, routes.traffic.map, TABLET);
+    const divider = page.getByRole('separator', { name: copy.layout.resizePanel });
+    await expect(divider).toHaveAttribute('aria-valuenow', '400');
+    await divider.focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(divider).toHaveAttribute('aria-valuenow', '424');
+    await page.keyboard.press('End');
+    await expect(divider).toHaveAttribute('aria-valuenow', '560');
+    await page.getByRole('button', { name: copy.layout.collapsePanel }).click();
+    await expect(panel(page)).toBeHidden();
+    await page.getByRole('button', { name: copy.layout.expandPanel }).click();
+    await expect(panel(page)).toBeVisible();
   });
 });

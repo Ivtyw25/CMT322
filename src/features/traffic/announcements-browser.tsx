@@ -6,8 +6,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { IconButton } from '@/components/ui/icon-button';
 import { Pagination } from '@/components/ui/pagination';
-import { SearchInput } from '@/components/ui/search-input';
-import { Select, type SelectOption } from '@/components/ui/select';
+import { Field } from '@/components/ui/field';
+import { MenuSelect } from '@/components/ui/menu-select';
+import { SearchBar } from '@/components/ui/search-bar';
+import type { SelectOption } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { trafficCopy } from '@/content/traffic';
 import { useQueryParams } from '@/lib/url/use-query-params';
@@ -24,6 +26,9 @@ import {
   type StatusFilter,
 } from './announcement-rows';
 import { AnnouncementsTable } from './announcements-table';
+
+/** The area menu's value for "All areas" (a menu option cannot have an empty value). */
+const ALL_AREAS = 'all';
 
 const copy = trafficCopy.announcements;
 const SEARCH_WRITE_MS = 300;
@@ -268,27 +273,23 @@ export function AnnouncementsBrowser({ rows, areaOptions }: AnnouncementsBrowser
             ))}
           </TabsList>
           <div className="flex flex-col gap-3 md:flex-row md:items-center">
-            <Select
-              aria-label={copy.filters.areaLabel}
-              value={area}
-              onChange={(event) => changeArea(event.target.value)}
-              options={[{ value: '', label: copy.filters.allAreas }, ...areaOptions]}
-              className="md:w-28"
-            />
-            <div role="search" className="md:flex-1 xl:w-70 xl:flex-none">
-              <SearchInput
-                aria-label={copy.filters.searchLabel}
-                placeholder={copy.filters.searchPlaceholder}
-                enterKeyHint="search"
-                maxLength={MAX_QUERY_LENGTH}
-                value={query}
-                onChange={(event) => changeQuery(event.target.value)}
-                onClear={() => changeQuery('')}
-                onKeyDown={(event) => {
-                  if (event.key === 'Escape') changeQuery('');
-                }}
+            <Field label={copy.filters.areaLabel} hideLabel className="md:w-40 md:shrink-0">
+              <MenuSelect
+                value={area === '' ? ALL_AREAS : area}
+                onValueChange={(next) => changeArea(next === ALL_AREAS ? '' : next)}
+                options={[{ value: ALL_AREAS, label: copy.filters.allAreas }, ...areaOptions]}
+                className="h-13.5 rounded-full px-5"
               />
-            </div>
+            </Field>
+            <SearchBar
+              label={copy.filters.searchLabel}
+              placeholder={copy.filters.searchPlaceholder}
+              value={query}
+              onValueChange={changeQuery}
+              onSubmit={() => summaryRef.current?.focus()}
+              inputProps={{ maxLength: MAX_QUERY_LENGTH }}
+              className="md:flex-1 xl:w-80 xl:flex-none"
+            />
           </div>
         </div>
         <TabsContent value={status} className="scroll-mt-32 outline-none">

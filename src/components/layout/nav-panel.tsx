@@ -103,6 +103,7 @@ export function NavPanel({
       <div className="flex min-w-0 flex-1 flex-col gap-3.5 px-8 py-7">
         {group.id === 'project' ? <ProjectFeature data={data} onNavigate={onNavigate} /> : null}
         {group.id === 'traffic' ? <TrafficFeature data={data} onNavigate={onNavigate} /> : null}
+        {group.id === 'help' ? <HelpFeature data={data} onNavigate={onNavigate} /> : null}
         {group.id === 'report-track' ? (
           <ReportTrackFeature
             data={data}
@@ -205,6 +206,22 @@ function ReportTrackFeature({
           </Link>
         </div>
       ) : null}
+    </>
+  );
+}
+
+function HelpFeature({ data, onNavigate }: FeatureProps) {
+  const copy = navCopy.helpPanel;
+  return (
+    <>
+      <p className={featureTitle}>{copy.title}</p>
+      <p className="type-body-s text-gray-600">{copy.faqText}</p>
+      <Link href={copy.faqHref} onClick={onNavigate} className={cn(featureLink, 'self-start')}>
+        {copy.faqLink}
+      </Link>
+      <Callout tone="warning" title={copy.urgentTitle}>
+        {copy.urgentText(data.careline)}
+      </Callout>
     </>
   );
 }

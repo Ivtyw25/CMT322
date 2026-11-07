@@ -232,7 +232,7 @@ test.describe('station card and list', () => {
   });
 });
 
-test.describe('rail (below 1440)', () => {
+test.describe('zigzag (below 1440)', () => {
   test('a station row toggles its selection, and the rows with road changes say how many', async ({
     page,
   }) => {
@@ -243,18 +243,18 @@ test.describe('rail (below 1440)', () => {
     await expect(row).toHaveAttribute('aria-pressed', 'true');
     await expect(page).toHaveURL(/station=s09/);
     await expect(card(page)).toBeVisible();
-    await expect(row).toContainText(copy.diagram.changesNearby(markedAtBukitJambul.length));
+    await expect(row).toHaveAccessibleName(
+      new RegExp(copy.diagram.changesNearby(markedAtBukitJambul.length)),
+    );
     await row.click();
     await expect(row).toHaveAttribute('aria-pressed', 'false');
     await expect(page).not.toHaveURL(/station=/);
   });
 
-  test('hiding a layer takes its glyphs away from the rows', async ({ page }) => {
+  test('hiding a layer takes its glyphs away from the stops', async ({ page }) => {
     await visit(page, routes.traffic.route, TABLET);
-    const rows = page.locator('#route-stations li');
-    const note = (text: string) => rows.getByText(text, { exact: false });
-    const before = await note('road change').count();
-    expect(before).toBeGreaterThan(0);
+    const marked = page.locator('#route-stations li button[aria-label*="road change"]:visible');
+    expect(await marked.count()).toBeGreaterThan(0);
     for (const name of [
       filters.layers.closures,
       filters.layers.construction,
@@ -262,7 +262,7 @@ test.describe('rail (below 1440)', () => {
     ]) {
       await layerBox(page, name).click();
     }
-    await expect(note('road change')).toHaveCount(0);
+    await expect(marked).toHaveCount(0);
   });
 
   test('has one row for each of the 22 stations, and the diagram is not shown', async ({
@@ -284,13 +284,18 @@ test.describe('rail (below 1440)', () => {
     }
   });
 
-  test('choosing a station on a phone brings its card into view', async ({ page }) => {
+  test('choosing a station on a phone opens the panel over the view with its card', async ({
+    page,
+  }) => {
     await visit(page, routes.traffic.route, PHONE);
     const row = stationButton(page, 'S09');
     await row.scrollIntoViewIfNeeded();
     await row.click();
+    const panel = page.getByRole('dialog', { name: trafficCopy.map.layout.panelLabel });
+    await expect(panel).toBeVisible();
     await expect(card(page)).toBeInViewport();
-    await expect(row).toBeFocused();
+    await panel.getByRole('button', { name: trafficCopy.map.layout.closePanel }).click();
+    await expect(panel).toBeHidden();
   });
 });
 
@@ -312,9 +317,8 @@ test.describe('diagram (1440 and up)', () => {
     await expect(page).not.toHaveURL(/station=/);
   });
 
-  test('has the hint, the key and one button for every station', async ({ page }) => {
+  test('has the key and one button for every station', async ({ page }) => {
     await visit(page, routes.traffic.route, DESKTOP);
-    await expect(page.getByText(copy.diagram.caption)).toBeVisible();
     await expect(page.getByRole('list', { name: copy.diagram.legend.title })).toBeVisible();
     const diagram = page.locator('#route-stations ol button:visible');
     await expect(diagram).toHaveCount(stations.length);

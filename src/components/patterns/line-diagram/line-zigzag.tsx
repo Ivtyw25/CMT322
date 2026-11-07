@@ -5,6 +5,14 @@ import { cn } from '@/lib/cn';
 import { InterchangeIcons } from './interchange-icons';
 import './line-flow.css';
 import { flowStyle } from './line-flow-style';
+import { LineMarkerGlyph } from './line-marker-glyph';
+import {
+  visibleMarkers,
+  type DescribeStation,
+  type LineMarkerKind,
+  type LineMode,
+  type MarkersByStation,
+} from './line-markers';
 import { stationHref, stationLinkLabel, type LineStation } from './line-station';
 import {
   zigzagLayout,
@@ -13,69 +21,87 @@ import {
   type ZigzagNode,
 } from './line-zigzag-layout';
 
-/** Stops per row by width. Each variant is drawn once and shown by CSS, so nothing shifts on load. */
+/**
+ * Stops per row by the width the zigzag has (a container query, so it also fits beside the
+ * Traffic sidebar). Each variant is drawn once and shown by CSS, so nothing shifts on load.
+ */
 const VARIANTS: readonly { columns: ZigzagColumns; show: string }[] = [
-  { columns: 3, show: 'min-[520px]:hidden' },
-  { columns: 4, show: 'hidden min-[520px]:block md:hidden' },
-  { columns: 5, show: 'hidden md:block lg:hidden' },
-  { columns: 6, show: 'hidden lg:block xl:hidden' },
+  { columns: 3, show: '@min-[27.5rem]:hidden' },
+  { columns: 4, show: 'hidden @min-[27.5rem]:block @min-[37.5rem]:hidden' },
+  { columns: 5, show: 'hidden @min-[37.5rem]:block @min-[53.75rem]:hidden' },
+  { columns: 6, show: 'hidden @min-[53.75rem]:block' },
 ];
 
 /** Label width as a share of the column spacing, so neighbouring labels never touch. */
 const LABEL_SHARE = 0.96;
 
-/** Distance from the top of a stop's link to the centre of its circle, in px. */
+/** Distance from the top of a stop's control to the centre of its circle, in px. */
 const CIRCLE_CENTRE = { stop: 20, junction: 24 };
 
 function percent(value: number, total: number): string {
   return `${(value / total) * 100}%`;
 }
 
-function Stop<Station extends LineStation>({
-  node,
-  layout,
+type SelectProps = {
+  mode: LineMode;
+  selectedCode: string | null;
+  onSelect?: (code: string) => void;
+  markersByStation?: MarkersByStation;
+  describeStation?: DescribeStation;
+};
+
+function StopFace<Station extends LineStation>({
+  station,
+  junction,
+  selected,
+  markers,
 }: {
-  node: ZigzagNode<Station>;
-  layout: ZigzagLayout<Station>;
+  station: Station;
+  junction: boolean;
+  selected: boolean;
+  markers: readonly LineMarkerKind[];
 }) {
-  const { station } = node;
-  const junction = station.code === JUNCTION_CODE;
   return (
-    <li
-      className="absolute -translate-x-1/2"
-      style={{
-        left: percent(node.x, layout.width),
-        top: `calc(${percent(node.y, layout.height)} - ${junction ? CIRCLE_CENTRE.junction : CIRCLE_CENTRE.stop}px)`,
-        width: percent(layout.step * LABEL_SHARE, layout.width),
-      }}
-    >
-      <Link
-        href={stationHref(station.code)}
-        aria-label={stationLinkLabel(station)}
-        className="group flex flex-col items-center gap-1 rounded-xl px-0.5 pt-0.5 pb-1 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-      >
+    <>
+      {junction ? (
+        <span className="absolute bottom-full left-1/2 mb-0.5 -translate-x-1/2 type-body-s-semibold whitespace-nowrap text-gray-800 transition-colors duration-(--duration-fast) group-hover:text-primary-700">
+          {station.name}
+          <InterchangeIcons modes={station.interchangeModes} className="ml-1" />
+        </span>
+      ) : null}
+      <span className="relative">
         <span
           className={cn(
-            'flex shrink-0 items-center justify-center rounded-full bg-surface transition-colors duration-(--duration-fast) group-hover:bg-primary-50',
+            'flex shrink-0 items-center justify-center rounded-full transition-colors duration-(--duration-fast)',
             junction ? 'size-11 border-3 border-primary-800' : 'size-9 border-2 border-primary-600',
+            selected
+              ? 'bg-primary-600 text-static-white ring-4 ring-primary-200'
+              : 'bg-surface group-hover:bg-primary-50',
           )}
         >
           <span
-            className={
-              junction
-                ? 'type-body-s-semibold text-primary-800'
-                : 'type-body-xs-semibold text-primary-700'
-            }
+            className={cn(
+              junction ? 'type-body-s-semibold' : 'type-body-xs-semibold',
+              selected ? 'text-static-white' : junction ? 'text-primary-800' : 'text-primary-700',
+            )}
           >
             {station.code}
           </span>
         </span>
+        {markers.length > 0 ? (
+          <span className="absolute -top-1.5 left-[calc(100%-0.5rem)] flex gap-0.5">
+            {markers.map((kind) => (
+              <LineMarkerGlyph key={kind} kind={kind} />
+            ))}
+          </span>
+        ) : null}
+      </span>
+      {junction ? null : (
         <span className="flex flex-col items-center text-center">
           <span
             className={cn(
-              'wrap-anywhere transition-colors duration-(--duration-fast) group-hover:text-primary-700',
-              junction ? 'type-heading-3xs whitespace-nowrap' : 'type-body-xs-semibold',
-              'text-gray-800',
+              'type-body-xs-semibold wrap-anywhere transition-colors duration-(--duration-fast) group-hover:text-primary-700',
+              selected ? 'text-primary-700' : 'text-gray-800',
             )}
           >
             {station.name}
@@ -87,7 +113,67 @@ function Stop<Station extends LineStation>({
             </span>
           ) : null}
         </span>
-      </Link>
+      )}
+    </>
+  );
+}
+
+const controlClass =
+  'group relative flex w-full cursor-pointer flex-col items-center gap-1 rounded-xl px-0.5 pt-0.5 pb-1 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600';
+
+function Stop<Station extends LineStation>({
+  node,
+  layout,
+  select,
+}: {
+  node: ZigzagNode<Station>;
+  layout: ZigzagLayout<Station>;
+  select: SelectProps;
+}) {
+  const { station } = node;
+  const junction = station.code === JUNCTION_CODE;
+  const selected = select.mode === 'select' && select.selectedCode === station.code;
+  const allMarkers =
+    select.mode === 'select' ? (select.markersByStation?.[station.code] ?? []) : [];
+  const face = (
+    <StopFace
+      station={station}
+      junction={junction}
+      selected={selected}
+      markers={visibleMarkers(allMarkers)}
+    />
+  );
+  return (
+    <li
+      className="absolute -translate-x-1/2"
+      style={{
+        left: percent(node.x, layout.width),
+        top: `calc(${percent(node.y, layout.height)} - ${junction ? CIRCLE_CENTRE.junction : CIRCLE_CENTRE.stop}px)`,
+        width: percent(layout.step * LABEL_SHARE, layout.width),
+      }}
+    >
+      {select.mode === 'select' ? (
+        <button
+          type="button"
+          aria-pressed={selected}
+          aria-label={
+            select.describeStation?.(station, { selected, markers: allMarkers }) ??
+            stationLinkLabel(station)
+          }
+          onClick={() => select.onSelect?.(station.code)}
+          className={controlClass}
+        >
+          {face}
+        </button>
+      ) : (
+        <Link
+          href={stationHref(station.code)}
+          aria-label={stationLinkLabel(station)}
+          className={controlClass}
+        >
+          {face}
+        </Link>
+      )}
     </li>
   );
 }
@@ -97,11 +183,15 @@ function ZigzagVariant<Station extends LineStation>({
   columns,
   show,
   label,
+  flow,
+  select,
 }: {
   stations: readonly Station[];
   columns: ZigzagColumns;
   show: string;
   label?: string;
+  flow: boolean;
+  select: SelectProps;
 }) {
   const layout = zigzagLayout(stations, columns);
   return (
@@ -119,49 +209,69 @@ function ZigzagVariant<Station extends LineStation>({
           <path
             key={`track-${path.id}`}
             d={path.d}
-            className="fill-none stroke-primary-100"
+            className={cn('fill-none', flow ? 'stroke-primary-100' : 'stroke-primary-600')}
             strokeWidth={layout.strokeWidth}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
         ))}
-        {layout.paths.map((path) => (
-          <path
-            key={`water-${path.id}`}
-            d={path.d}
-            pathLength={1}
-            className="line-flow fill-none"
-            style={flowStyle(path.flow)}
-            strokeWidth={layout.strokeWidth}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        ))}
+        {flow
+          ? layout.paths.map((path) => (
+              <path
+                key={`water-${path.id}`}
+                d={path.d}
+                pathLength={1}
+                className="line-flow fill-none"
+                style={flowStyle(path.flow)}
+                strokeWidth={layout.strokeWidth}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ))
+          : null}
       </svg>
       <ol aria-label={label}>
         {layout.nodes.map((node) => (
-          <Stop key={node.station.code} node={node} layout={layout} />
+          <Stop key={node.station.code} node={node} layout={layout} select={select} />
         ))}
       </ol>
     </div>
   );
 }
 
+type LineZigzagProps<Station extends LineStation> = {
+  stations: readonly Station[];
+  /** Accessible name of the list of stops. */
+  label?: string;
+  /** Draw the water layer (wrap in `LineFlow` to animate it). Off: a plain solid line. */
+  flow?: boolean;
+  /** `link` (default): each stop links to its station page. `select`: each is a toggle button. */
+  mode?: LineMode;
+  selectedCode?: string | null;
+  onSelect?: (code: string) => void;
+  /** Road-change glyphs beside each stop (`select` mode only). */
+  markersByStation?: MarkersByStation;
+  /** Accessible name of each stop in `select` mode. */
+  describeStation?: DescribeStation;
+};
+
 /**
- * The line as a snake that fills the width (below 1280 px): A01 top left, rows joined by U-turns,
- * to the junction S19, which forks to S20 and on to S30 and S31. One link per stop, in line order.
- * Wrap it in `LineFlow` for the water animation.
+ * The line as a snake that fills the width: A01 top left, rows joined by U-turns, to the junction
+ * S19, which forks to S20 and on to S30 and S31. One control per stop, in line order.
  */
 export function LineZigzag<Station extends LineStation>({
   stations,
   label,
-}: {
-  stations: readonly Station[];
-  /** Accessible name of the list of stops. */
-  label?: string;
-}) {
+  flow = true,
+  mode = 'link',
+  selectedCode = null,
+  onSelect,
+  markersByStation,
+  describeStation,
+}: LineZigzagProps<Station>) {
+  const select: SelectProps = { mode, selectedCode, onSelect, markersByStation, describeStation };
   return (
-    <div className="px-4 md:px-8">
+    <div className="@container px-4 md:px-8">
       {VARIANTS.map(({ columns, show }) => (
         <ZigzagVariant
           key={columns}
@@ -169,6 +279,8 @@ export function LineZigzag<Station extends LineStation>({
           columns={columns}
           show={show}
           label={label}
+          flow={flow}
+          select={select}
         />
       ))}
     </div>

@@ -12,8 +12,8 @@ type SiteShellProps = {
   children: React.ReactNode;
   /**
    * `standard` (default) ends with the footer. `workspace` (Map view, Route view) has no footer
-   * and, from 1024 px, a content area exactly as tall as the space under the header and notice:
-   * `calc(100dvh - var(--chrome-h))`. Below 1024 px the page scrolls as usual.
+   * and a content area exactly as tall as the space under the header and notice:
+   * `calc(100dvh - var(--chrome-h))`; the page's own panes scroll inside it.
    */
   layout?: 'standard' | 'workspace';
 };
@@ -36,7 +36,7 @@ export async function SiteShell({ children, layout = 'standard' }: SiteShellProp
         id="main"
         tabIndex={-1}
         data-shell-inert=""
-        className={cn('flex-1', workspace && 'lg:workspace-height lg:flex-none lg:overflow-hidden')}
+        className={cn('flex-1', workspace && 'workspace-height flex-none overflow-hidden')}
       >
         <ProtectedRoute>{children}</ProtectedRoute>
       </main>
