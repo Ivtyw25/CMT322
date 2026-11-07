@@ -14,6 +14,10 @@ type ChipSelectProps = {
   options: readonly ChipSelectOption[];
   /** `compact` is the 32 px chip of the Construction progress filters. */
   density?: 'default' | 'compact';
+  /** Text before the chosen value, e.g. "Type" shows "Type: All". The menu lists plain values. */
+  prefix?: string;
+  /** Decorative icon before the text. */
+  icon?: React.ReactNode;
   className?: string;
 };
 
@@ -27,6 +31,8 @@ export function ChipSelect({
   onValueChange,
   options,
   density = 'default',
+  prefix,
+  icon,
   className,
 }: ChipSelectProps) {
   return (
@@ -42,6 +48,12 @@ export function ChipSelect({
           className,
         )}
       >
+        {icon ? (
+          <span aria-hidden className="flex shrink-0 text-gray-500">
+            {icon}
+          </span>
+        ) : null}
+        {prefix ? <span>{prefix}:</span> : null}
         <SelectPrimitive.Value />
         <SelectPrimitive.Icon asChild>
           <ChevronDown

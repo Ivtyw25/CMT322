@@ -13,7 +13,7 @@ It serves two audiences:
 | Audience | What they do | Where |
 |---|---|---|
 | **Commuters and residents** (public; guest or signed in) | Read project info, check road closures and detours, follow construction, report problems and track tickets | Commuter site, routes `/…` |
-| **Staff** (two roles: *Government authority* and *Project developer*) | Triage and answer tickets; publish traffic announcements, map items and progress updates | Admin console. **Out of scope for this build.** |
+| **Staff** (two roles: *Government authority* and *Project developer*) | Triage and answer tickets; publish traffic announcements, map items and progress updates | Staff portal under `/admin` (in scope from 2026-11-08). |
 
 This is a university project (USM, CMT322). There is **no backend**:
 - Everything runs on typed mock data and mock services.
@@ -27,7 +27,7 @@ This is a university project (USM, CMT322). There is **no backend**:
 - **File key:** `8kWWATZPol9TwztOw8MYG4`
 - **Pages:**
   - `Prototype — Commuter` (id `0:1`)
-  - `Prototype — Admin` (id `112:4615`): out of scope, don't read or build it
+  - `Prototype — Admin` (id `112:4615`): the staff portal (in scope from 2026-11-08)
 - **Skill first:** the Figma MCP server requires the `figma-design-to-code` skill to be loaded before `get_design_context`, and the `figma-use` skill before `use_figma`. Skill choices for each agent are in `docs/skills.md`.
 - **Reading frames:** use the Figma MCP tools with a frame ID from `pages.json`:
   - `get_design_context` for structure and styles
@@ -115,7 +115,7 @@ The **Station page** is a template. Figma shows KOMTAR (S20), and the same templ
 
 Read the full station details from the Stations frame (`100:3723`).
 
-**Admin pages (A00–A09)** are listed in `pages.json` with status `skipped`. Don't build them, and don't add any `/admin` link to the commuter site.
+**Admin pages (A00–A09)** are in `pages.json` (groups admin-1, admin-2). Build them under `/admin`; don't add any `/admin` link to the commuter site.
 
 ---
 

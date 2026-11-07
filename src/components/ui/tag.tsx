@@ -13,6 +13,12 @@ export const tagKinds = [
   'inProgress',
   'resolved',
   'submitted',
+  'overdue',
+  'highPriority',
+  'normal',
+  'scheduled',
+  'draft',
+  'published',
 ] as const;
 export type TagKind = (typeof tagKinds)[number];
 
@@ -52,9 +58,15 @@ const toneOf = {
   inProgress: 'info',
   resolved: 'success',
   submitted: 'submitted',
+  overdue: 'danger',
+  highPriority: 'danger',
+  normal: 'submitted',
+  scheduled: 'info',
+  draft: 'submitted',
+  published: 'success',
 } as const satisfies Record<TagKind, keyof typeof dotTone>;
 
-/** One of the ten fixed status tags. The label always carries the meaning; never recolour. */
+/** One of the fixed status tags (the last six are the staff portal's). The label always carries the meaning; never recolour. */
 export function Tag({ kind, className }: { kind: TagKind; className?: string }) {
   const tone = toneOf[kind];
   return (

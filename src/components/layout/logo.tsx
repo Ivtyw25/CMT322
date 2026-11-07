@@ -12,15 +12,26 @@ type LogoProps = {
   tone?: 'default' | 'onDark';
   className?: string;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+  /** Where the logo links. Default: the public home page (the staff portal links to its dashboard). */
+  href?: string;
+  /** Accessible name of the link. Default: "Mutiara Line, home". */
+  label?: string;
 };
 
 /** Logo mark and wordmark, linking home. The image is decorative; the link carries the name. */
-export function Logo({ size = 'default', tone = 'default', className, onClick }: LogoProps) {
+export function Logo({
+  size = 'default',
+  tone = 'default',
+  className,
+  onClick,
+  href = routes.home,
+  label = commonCopy.logo.homeLabel,
+}: LogoProps) {
   const compact = size === 'compact';
   return (
     <Link
-      href={routes.home}
-      aria-label={commonCopy.logo.homeLabel}
+      href={href}
+      aria-label={label}
       onClick={onClick}
       className={cn(
         'hit-area flex shrink-0 items-center rounded-lg',

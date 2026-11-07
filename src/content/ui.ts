@@ -115,6 +115,13 @@ export const uiCopy = {
     inProgress: 'In progress',
     resolved: 'Resolved',
     submitted: 'Submitted',
+    /** Staff portal (Figma 113:4668, 115:4681). */
+    overdue: 'Overdue',
+    highPriority: 'High priority',
+    normal: 'Normal',
+    scheduled: 'Scheduled',
+    draft: 'Draft',
+    published: 'Published',
   },
 
   /** Ticket status words outside the tags (stepper, update log). */

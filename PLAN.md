@@ -29,7 +29,7 @@ Build the **commuter site** from Figma file `8kWWATZPol9TwztOw8MYG4` as a mainta
 | Stack | Next.js 16.4.2 with the App Router and Turbopack, TypeScript strict |
 | Folder structure | The main agent decides, guided by the qualities in `CLAUDE.md` §2, and documents it in `ARCHITECTURE.md` |
 | Hidden content | The content writer also writes everything Figma doesn't show: all options, tab panels, paginated and "show all" lists, accordion answers, and the records behind template pages (all 22 stations, all tickets) |
-| Scope | Commuter site only. The admin console (10 pages) is **out of scope**; those pages are `skipped` in `pages.json`. Don't build them, and don't link to `/admin` from the commuter site. |
+| Scope | Commuter site plus the staff portal (10 admin pages, owner decision 2026-11-08). The commuter site does not link to `/admin`. The owner tests the staff portal by hand; no tests or verify runs for it. |
 | Map | Leaflet + OpenStreetMap. No Google Maps. |
 | UI/UX designer model | Opus 5.5, medium effort (confirmed) |
 | Careline and email | "MRTCareline 1800-88-6782" and `help@mutiaraconnect.my` are confirmed. Use them as given; don't tag them `VERIFY`. |

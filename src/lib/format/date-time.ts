@@ -28,3 +28,18 @@ export function formatClockTime(iso: string): string {
 export function isoDateOf(iso: string): string {
   return new Date(iso).toLocaleDateString('sv-SE', { timeZone: 'Asia/Kuala_Lumpur' });
 }
+
+const fullDateTime = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+  timeZone: 'Asia/Kuala_Lumpur',
+});
+
+/** "28 Oct 2026, 14:41": 24-hour, Malaysia time. */
+export function formatFullDateTime(iso: string): string {
+  return fullDateTime.format(new Date(iso));
+}

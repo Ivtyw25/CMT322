@@ -53,6 +53,23 @@ export const routes = {
     accessibility: '/accessibility',
     sitemap: '/sitemap',
   },
+  /** Staff portal. Not linked from the commuter site. */
+  admin: {
+    login: '/admin/login',
+    dashboard: '/admin',
+    tickets: '/admin/tickets',
+    ticketsWith: (query: string) => `/admin/tickets?q=${encodeURIComponent(query)}`,
+    ticketsByStatus: (status: string) => `/admin/tickets?status=${status}`,
+    ticket: (ticketId: string) => `/admin/tickets/${ticketId}`,
+    announcements: '/admin/announcements',
+    announcementsWith: (query: string) => `/admin/announcements?q=${encodeURIComponent(query)}`,
+    announcementNew: '/admin/announcements/new/edit',
+    announcementEdit: (announcementId: string) => `/admin/announcements/${announcementId}/edit`,
+    mapItems: '/admin/map-items',
+    progress: '/admin/progress',
+    progressEditor: (updateId: string) => `/admin/progress/${updateId}/edit`,
+    progressNew: '/admin/progress/new/edit',
+  },
   dev: {
     components: '/dev/components',
     workspace: '/dev/workspace',

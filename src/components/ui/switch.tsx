@@ -8,11 +8,20 @@ type SwitchProps = Omit<SwitchPrimitive.SwitchProps, 'className' | 'children'> &
   label: string;
   /** Secondary line under the label. With it the label sits first and the switch at the end. */
   description?: string;
+  /** Keeps the label for screen readers only (a switch in a table row). */
+  hideLabel?: boolean;
   className?: string;
 };
 
 /** Labelled on/off setting (Figma 91:2963 / 91:2965). Space toggles; the label is clickable. */
-export function Switch({ label, description, className, id, ...props }: SwitchProps) {
+export function Switch({
+  label,
+  description,
+  hideLabel = false,
+  className,
+  id,
+  ...props
+}: SwitchProps) {
   const generated = useId();
   const switchId = id ?? generated;
   const descriptionId = `${switchId}-description`;
@@ -57,7 +66,10 @@ export function Switch({ label, description, className, id, ...props }: SwitchPr
           </p>
         </div>
       ) : (
-        <label htmlFor={switchId} className="cursor-pointer type-body-s-medium text-gray-900">
+        <label
+          htmlFor={switchId}
+          className={cn('cursor-pointer type-body-s-medium text-gray-900', hideLabel && 'sr-only')}
+        >
           {label}
         </label>
       )}

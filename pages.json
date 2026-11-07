@@ -80,22 +80,22 @@
     {
       "id": "admin-1",
       "iteration": 8,
-      "status": "skipped",
+      "status": "todo",
       "figma": [
         "112:4616",
         "118:5313"
       ],
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build."
+      "notes": "In scope (owner decision, 8 Nov 2026). Owner tests by hand; no tests or verify."
     },
     {
       "id": "admin-2",
       "iteration": 9,
-      "status": "skipped",
+      "status": "todo",
       "figma": [
         "112:4616",
         "118:5313"
       ],
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build."
+      "notes": "In scope (owner decision, 8 Nov 2026). Owner tests by hand; no tests or verify."
     }
   ],
   "pages": [
@@ -564,9 +564,9 @@
         "desktop": "113:4621",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -581,9 +581,9 @@
         "desktop": "113:4668",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -598,9 +598,9 @@
         "desktop": "115:4681",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -615,9 +615,9 @@
         "desktop": "115:5036",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -632,9 +632,9 @@
         "desktop": "116:4824",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour. Same route as the authority dashboard; content depends on the signed-in role.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour. Same route as the authority dashboard; content depends on the signed-in role.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -649,9 +649,9 @@
         "desktop": "116:4985",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -666,9 +666,9 @@
         "desktop": "116:5269",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -683,9 +683,9 @@
         "desktop": "117:5034",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -700,9 +700,9 @@
         "desktop": "117:5417",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0
@@ -717,9 +717,9 @@
         "desktop": "117:5669",
         "mobile": null
       },
-      "notes": "Out of scope (owner decision, 30 Oct 2026). Do not build. Desktop design only; UX designer specifies tablet and mobile behaviour.",
+      "notes": "In scope (owner decision, 8 Nov 2026). Desktop design only; UX designer specifies tablet and mobile behaviour.",
       "visualTolerance": 0.03,
-      "status": "skipped",
+      "status": "built",
       "rounds": {
         "tester": 0,
         "main": 0

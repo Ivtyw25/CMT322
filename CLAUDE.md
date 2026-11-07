@@ -15,7 +15,7 @@ Every agent in this repo follows these rules. Other files cover the rest:
 - **Framework:** Next.js **16.4.2** with the **App Router** and **Turbopack**, React, TypeScript (strict)
 - **Map:** Leaflet + OpenStreetMap, with the © OpenStreetMap contributors attribution visible. No Google Maps.
 - **Hosting:** Vercel, deployed by the main agent with the Vercel CLI (`PLAN.md` §6a)
-- **Scope:** commuter site only. The admin console is out of scope: no `/admin` routes or links.
+- **Scope:** commuter site plus the staff portal under `/admin` (owner decision 2026-11-08, reversing 30 Oct 2026). The commuter site still shows no links to `/admin`; staff open `/admin/login` directly. For the staff portal, the owner tests by hand: no tests or verify runs are required for it.
 - **Backend:** none. All data comes from typed mock data behind a small data-access layer (async functions), so a real API can replace it later without touching pages or components.
 
 **Chosen by the main agent in Phase 0**, and recorded in `ARCHITECTURE.md`:

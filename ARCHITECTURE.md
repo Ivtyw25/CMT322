@@ -10,11 +10,12 @@ src/
   app/                 Routes only. Thin: fetch data, compose features, set metadata.
     (site)/            Pages with the site header, notification bar and footer (layout.tsx).
     (auth)/            Log in, Sign up, Forgot password (split layout, no site footer).
+    (admin)/admin/     Staff portal (own layout: staff sidebar + top bar, no site header/footer).
     dev/components/    Development-only gallery of every shared component. 404 in production.
     layout.tsx         Root: <html>, fonts, theme script, providers.
     not-found.tsx      404 page.
   features/<group>/    Page sections and page-specific widgets, one folder per page group:
-                       home, project, traffic, report-track, account, legal-help.
+                       home, project, traffic, report-track, account, legal-help, admin.
   components/
     ui/                Shared primitives: button, tag, field, switch, tabs, accordion, … (shadcn-based, restyled)
     layout/            Header, mobile menu, nav panel, notification bar, footer, section bar, docs layout
@@ -48,6 +49,7 @@ docs/                  BRIEFING.md (product facts), design-system.md (tokens), f
 | Records (stations, tickets, FAQ answers, announcements) | `src/data/mock/<type>.ts` + type in `data/models` + getter in `data/api` |
 | Colour, type, radius, shadow, width | `design/tokens/figma-tokens.json` → `npm run tokens` (main agent only) |
 | A hook or helper | `src/lib/<topic>/` (no JSX) or next to the one component that uses it |
+| A staff portal page | route in `src/app/(admin)/admin/…`, sections in `src/features/admin/`, copy in `src/content/admin.ts`, staff records in `src/data/mock/` + `data/api`. Staff portal layout parts live in `src/features/admin/layout/`. |
 | An image | `src/assets/images/`, imported statically into `next/image` |
 
 ## 3. Rules the linter enforces
@@ -70,6 +72,7 @@ docs/                  BRIEFING.md (product facts), design-system.md (tokens), f
 - **Links:** `next/link` with `routes.*`. External: `target="_blank" rel="noopener noreferrer"` plus an "opens in new tab" label from content. Social names are plain text.
 - **Theme:** `useTheme()` from `@/lib/theme/theme-provider` (`preference`, `resolvedTheme`, `setPreference`). Storage key `mlc-theme`. Never touch `data-theme` yourself.
 - **Session (mock):** `@/lib/session` (built in the foundations iteration), storage key `mlc-session` holding `{ "userId": "user-meiling" }`. Protected routes are listed in `config/routes.ts`.
+- **Staff session (mock):** `@/lib/staff-session`, storage key `mlc-staff-session` holding `{ "staffId": "…" }`; the staff member's role (`authority` | `developer`) decides the dashboard and the nav. Separate from the commuter session. `/admin/*` (except `/admin/login`) sends signed-out staff to `/admin/login` on the client.
 - **Map:** Leaflet loaded with `next/dynamic({ ssr: false })` from `components/patterns/map/`. OSM attribution visible. Light tiles in both themes.
 - **Testing hooks:** the desktop header root has `data-header="desktop"`, the mobile header `data-header="mobile"`. Controls smaller than 44 × 44 px on mobile get the `hit-area` utility.
 - **Tests:** each page has `tests/e2e/<page-id>.spec.ts`. New concrete URLs (e.g. a new template) go in `tests/support/pages.ts`. Visual states go in `tests/visual/states.ts`.
