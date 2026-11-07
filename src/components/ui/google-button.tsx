@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import google from '@/assets/brand/google/google-light-text-square.svg';
+import google from '@/assets/brand/google/google-light-text-pill.svg';
 export function GoogleButton({
   label,
   disabled,

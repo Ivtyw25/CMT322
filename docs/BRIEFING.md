@@ -187,7 +187,7 @@ There is one variable collection, **"MYDS Colour"** (based on the Malaysia Gover
 
 ### 4.2 Typography
 
-Headings use **Poppins SemiBold**; body text uses **Inter**. Load both with `next/font/google`.
+Headings use **Poppins SemiBold**; body text uses **Google Sans** (replaced Inter, owner decision 2026-11-07). Load both with `next/font/google`.
 
 **Headings**
 

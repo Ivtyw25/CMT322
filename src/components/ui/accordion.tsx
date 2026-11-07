@@ -180,7 +180,7 @@ function AccordionItem({
           className={cn(
             'flex min-h-11 w-full cursor-pointer items-center justify-between gap-4 text-left',
             'text-gray-900 transition-colors duration-(--duration-fast) hover:text-primary-700',
-            size === 'large' && 'py-4.5 type-body-m-semibold md:type-body-l md:font-semibold',
+            size === 'large' && 'py-4.5 type-body-l font-semibold',
             size === 'roomy' && ['pt-5 type-body-m-semibold', expanded ? 'pb-2.5' : 'pb-5'],
             size === 'default' && 'py-4 type-body-m-semibold',
           )}

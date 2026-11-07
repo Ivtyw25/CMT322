@@ -60,14 +60,28 @@ for (const k of Object.keys(src.gradient))
   out(`@utility bg-${k} {\n  background-image: var(--background-image-${k});\n}`);
 out();
 out(
-  '/* Figma text styles. Use type-<style>; responsive steps like `type-heading-s lg:type-heading-l`. */',
+  '/* Figma text styles. Use type-<style>; heading, hero and large body styles are fluid (clamp between the 390 and 1440 px frames), so they need no breakpoint steps. */',
 );
+/** Fluid scale between the 390 px phone frame (`min`) and the 1440 px desktop frame (`size`/`line`). */
+const VW_MIN = 390;
+const VW_MAX = 1440;
+const FLOOR_VW = 320;
+const calc = (lo, hi, x0, x1) => {
+  const slope = (hi - lo) / (x1 - x0);
+  const offset = lo - slope * x0;
+  return `calc(${+(slope * 100).toFixed(3)}vw ${offset < 0 ? '-' : '+'} ${rem(Math.abs(offset))})`;
+};
+const fluid = (lo, hi, floor) => {
+  const main = calc(lo, hi, VW_MIN, VW_MAX);
+  const expr = floor ? `min(${calc(floor, lo, FLOOR_VW, VW_MIN)}, ${main})` : main;
+  return `clamp(${rem(floor ?? lo)}, ${expr}, ${rem(hi)})`;
+};
 for (const [k, t] of Object.entries(src.type)) {
   out(`@utility type-${k} {`);
   out(`  font-family: var(--font-${t.family});`);
-  out(`  font-size: ${rem(t.size)};`);
-  out(`  line-height: ${rem(t.line)};`);
-  out(`  letter-spacing: ${t.tracking ? rem(t.tracking) : '0'};`);
+  out(`  font-size: ${t.min ? fluid(t.min.size, t.size, t.floor?.size) : rem(t.size)};`);
+  out(`  line-height: ${t.min ? fluid(t.min.line, t.line, t.floor?.line) : rem(t.line)};`);
+  out(`  letter-spacing: ${t.tracking ? `${+(t.tracking / t.size).toFixed(4)}em` : '0'};`);
   out(`  font-weight: ${t.weight};`);
   out('}');
 }

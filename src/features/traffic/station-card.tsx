@@ -37,7 +37,7 @@ export function StationCard({ station, onClear }: StationCardProps) {
       <p className="type-body-s text-gray-700">{station.serves}</p>
       <Link
         href={routes.project.station(station.code)}
-        className="hit-area w-fit type-body-s-semibold text-primary-700 hover:underline"
+        className="hit-area w-fit type-body-s-semibold text-primary-700 hover:text-primary-800"
       >
         {copy.selected.viewStation}
       </Link>

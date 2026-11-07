@@ -13,7 +13,7 @@ export function ReportNeedHelp({ withReportLink = false }: { withReportLink?: bo
         {withReportLink ? (
           <Link
             href={routes.reportTrack.report}
-            className="hit-area self-start text-primary-700 hover:underline"
+            className="hit-area self-start text-primary-700 hover:text-primary-800"
           >
             {reportTrackCopy.track.sidebar.another}
           </Link>

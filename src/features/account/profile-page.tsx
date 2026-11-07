@@ -121,7 +121,7 @@ export function ProfilePage({
               {initialsOf(name)}
             </span>
             <div className="min-w-0 flex-1">
-              <h1 className="type-heading-s lg:type-heading-m">{name}</h1>
+              <h1 className="type-heading-m">{name}</h1>
               <div className="mt-1 flex flex-col gap-4 type-body-s text-gray-600 md:flex-row md:flex-wrap md:gap-x-4 md:gap-y-2">
                 <p>{email}</p>
                 <p>{copy.header.memberSince(profile.memberSince)}</p>
@@ -172,7 +172,7 @@ export function ProfilePage({
                     key={status}
                     className={`rounded-lg px-4 py-3.5 ${status === 'pending' ? 'bg-warning-50 text-warning-700' : status === 'inProgress' ? 'bg-primary-50 text-primary-700' : 'bg-success-50 text-success-700'}`}
                   >
-                    <p className="type-heading-xs md:type-heading-s">
+                    <p className="type-heading-s">
                       {
                         allTickets.filter((ticket) =>
                           status === 'pending'
@@ -356,7 +356,7 @@ export function ProfilePage({
                 <p className={profileLabel}>{copy.privacy.terms.label}</p>
                 <Link
                   href={routes.legal.terms}
-                  className={`${profileRowAction} hit-area inline-flex items-center justify-end type-body-s-semibold text-primary-700 hover:underline`}
+                  className={`${profileRowAction} hit-area inline-flex items-center justify-end type-body-s-semibold text-primary-700 hover:text-primary-800`}
                 >
                   {copy.privacy.terms.view}
                 </Link>

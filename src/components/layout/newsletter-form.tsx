@@ -7,7 +7,7 @@ import { subscribeToAlerts } from '@/data/api/alerts';
 import type { AreaId } from '@/data/models/area';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
-import { Select } from '@/components/ui/select';
+import { MenuSelect } from '@/components/ui/menu-select';
 import { TextInput } from '@/components/ui/text-input';
 import { useSession } from '@/lib/session';
 
@@ -137,13 +137,13 @@ export function NewsletterForm({ areas, preview }: NewsletterFormProps) {
               label={copy.areaLabel}
               hideLabel
               tone="onNavy"
-              className="hidden @min-[48rem]:block @min-[48rem]:shrink-0 @min-[48rem]:[&_select]:field-sizing-content @min-[48rem]:[&_select]:pr-9"
+              className="hidden @min-[48rem]:block @min-[48rem]:w-52 @min-[48rem]:shrink-0"
             >
-              <Select
+              <MenuSelect
                 name="area"
                 value={areaValue}
                 disabled={sending}
-                onChange={(event) => setAreaValue(event.target.value)}
+                onValueChange={setAreaValue}
                 options={[
                   { value: ALL_AREAS, label: copy.allAreasOption },
                   ...areas.map((area) => ({ value: area.id, label: area.label })),

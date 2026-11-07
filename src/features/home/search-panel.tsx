@@ -69,8 +69,8 @@ function Option({
       }}
       onClick={() => onSelect(entry)}
       className={cn(
-        'flex min-h-15 cursor-pointer items-center gap-3 border-l-3 py-2.5 pr-4 pl-3.25',
-        active ? 'border-primary-600 bg-primary-50' : 'border-transparent',
+        'flex min-h-15 cursor-pointer items-center gap-3 px-4 py-2.5',
+        active && 'bg-primary-50',
       )}
     >
       <span

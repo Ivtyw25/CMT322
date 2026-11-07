@@ -37,7 +37,7 @@ export function PolicyPage({
   return (
     <HelpPageFrame href={href} {...copy} siteInfo={siteInfo}>
       {copy.summary ? (
-        <div className="flex flex-col gap-2.5 rounded-lg border-l-3 border-primary-600 bg-primary-50 px-4 py-5 type-body-s lg:px-6">
+        <div className="flex flex-col gap-2.5 rounded-lg bg-primary-50 px-4 py-5 type-body-s lg:px-6">
           <p className="type-body-s-semibold text-primary-800">{legalHelpCopy.summaryTitle}</p>
           <ul className="list-disc pl-5.25 text-gray-800">
             {copy.summary.map((item) => (

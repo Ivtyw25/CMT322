@@ -1,5 +1,8 @@
 import type { AreaId } from './area';
 
+/** How you can change to other transport at a station. */
+export type InterchangeMode = 'rail' | 'ferry' | 'bus' | 'air';
+
 export type StationCode = `${'S' | 'A'}${number}`;
 
 /** The six build stages every station goes through, in order. Labels live in src/content/ui.ts. */
@@ -78,6 +81,8 @@ export type Station = {
   connectsTo: StationConnection[];
   /** Other transport you can change to here. Empty when there is none. */
   interchanges: string[];
+  /** The kinds of transport in `interchanges`, for icons in the line diagram. */
+  interchangeModes: InterchangeMode[];
   /** Landmarks near the station. */
   nearby: string[];
   /** Null until construction starts at this station (Segment 2 starts January 2027). */

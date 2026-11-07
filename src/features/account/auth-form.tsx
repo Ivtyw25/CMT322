@@ -172,7 +172,6 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
       heading={copy.panel.heading}
       illustration={signup ? 'signup' : 'login'}
       footer={footer}
-      notice={<p className="type-body-xs text-gray-600">{extra.demo}</p>}
     >
       {!reset && status !== 'guest' ? (
         <div aria-busy="true" className="space-y-6">
@@ -182,7 +181,7 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
         </div>
       ) : sent ? (
         <div className="space-y-5">
-          <h1 ref={sentHeading} tabIndex={-1} className="type-heading-xs lg:type-heading-s">
+          <h1 ref={sentHeading} tabIndex={-1} className="type-heading-s">
             {accountCopy.forgotPassword.checkEmail.title}
           </h1>
           <Callout tone="success">
@@ -235,7 +234,7 @@ export function AuthForm({ mode, rawNext }: { mode: Mode; rawNext?: string }) {
         </div>
       ) : (
         <>
-          <h1 className="type-heading-xs lg:type-heading-s">{copy.header.title}</h1>
+          <h1 className="type-heading-s">{copy.header.title}</h1>
           <p className="mt-1.5 mb-5 type-body-m text-gray-600">{copy.header.lede}</p>
           {!reset ? (
             <>

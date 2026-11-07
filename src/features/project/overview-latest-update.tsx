@@ -8,7 +8,7 @@ import { formatDate } from '@/lib/format/dates';
 const { latest } = projectCopy.overview;
 
 const seeAllClass =
-  'inline-flex min-h-11 items-center type-body-s-semibold text-primary-700 hover:underline md:min-h-0';
+  'inline-flex min-h-11 items-center type-body-s-semibold text-primary-700 hover:text-primary-800 md:min-h-0';
 
 /** The newest site update: photo, date and place, title, summary and the link to all updates. */
 export function OverviewLatestUpdate({ update }: { update: ConstructionUpdate | null }) {

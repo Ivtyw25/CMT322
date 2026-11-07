@@ -1,3 +1,5 @@
+import { SwipeRow } from '@/components/patterns/swipe-row';
+import { SwipeRowItem } from '@/components/patterns/swipe-row-item';
 import { LinkCard } from '@/components/ui/link-card';
 import { homeCopy } from '@/content/home';
 import { HomeSection, SectionHeader } from './section-frame';
@@ -11,11 +13,11 @@ export function GuideSection() {
   return (
     <HomeSection headingId={HEADING_ID}>
       <SectionHeader headingId={HEADING_ID} title={copy.title} lede={copy.lede} />
-      <ul className="grid gap-6 md:grid-cols-2 md:gap-6 lg:grid-cols-4 lg:gap-y-8">
+      <SwipeRow from="sm" wideClassName="sm:grid sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-y-8">
         {copy.cards.map((card) => {
           const Icon = sectionIcons[card.icon];
           return (
-            <li key={card.id} className="flex">
+            <SwipeRowItem key={card.id} className="flex">
               <LinkCard
                 href={card.href}
                 title={card.title}
@@ -27,14 +29,14 @@ export function GuideSection() {
                     <Icon className="size-5.5" />
                   </span>
                 }
-                className="w-full gap-3.5 rounded-3xl p-4 md:p-6 [&_h3]:type-body-m-semibold [&_h3]:text-wrap group-hover:[&_h3]:text-primary-700 [&_h3_a]:flex"
+                className="w-full gap-3.5 rounded-3xl p-4 md:p-6 [&_h3]:type-heading-3xs [&_h3]:text-wrap group-hover:[&_h3]:text-primary-700 [&_h3_a]:flex"
               >
                 <p className="type-body-s text-gray-600">{card.text}</p>
               </LinkCard>
-            </li>
+            </SwipeRowItem>
           );
         })}
-      </ul>
+      </SwipeRow>
     </HomeSection>
   );
 }

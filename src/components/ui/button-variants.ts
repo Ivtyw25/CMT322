@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority';
 
 export const buttonVariants = cva(
   [
-    'hit-area inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg type-body-s-semibold',
+    'hit-area inline-flex cursor-pointer items-center justify-center gap-2 rounded-full type-body-s-semibold',
     'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
     'disabled:cursor-not-allowed aria-busy:cursor-progress',
   ],
@@ -20,7 +20,7 @@ export const buttonVariants = cva(
           'disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400',
         ],
         ghost: [
-          'px-0 py-2.5 text-primary-700 hover:underline active:text-primary-800',
+          'px-0 py-2.5 text-primary-700 hover:text-primary-800 active:text-primary-800',
           'disabled:text-gray-400 disabled:no-underline',
         ],
       },

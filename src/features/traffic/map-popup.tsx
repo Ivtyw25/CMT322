@@ -5,7 +5,7 @@ import { routes } from '@/config/routes';
 import { trafficCopy } from '@/content/traffic';
 import type { TrafficEntry } from './traffic-entry';
 
-const linkClass = 'type-body-s-medium text-primary-700 hover:underline';
+const linkClass = 'type-body-s-medium text-primary-700 hover:text-primary-800';
 
 /** The details of one road change inside the map's popup (Figma 67:2416). */
 export function MapPopup({ entry }: { entry: TrafficEntry }) {

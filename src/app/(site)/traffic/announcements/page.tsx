@@ -34,8 +34,8 @@ export default async function TrafficAnnouncementsPage() {
             ]}
             current={copy.header.breadcrumb}
           />
-          <h1 className="type-heading-s lg:type-heading-m">{copy.header.title}</h1>
-          <p className="max-w-180 type-body-l text-gray-600 lg:type-body-xl">{copy.header.lede}</p>
+          <h1 className="type-heading-m">{copy.header.title}</h1>
+          <p className="max-w-180 type-body-xl text-gray-600">{copy.header.lede}</p>
         </Container>
       </header>
       <Container className="py-8 lg:py-10">

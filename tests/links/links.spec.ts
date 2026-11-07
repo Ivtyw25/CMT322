@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { prepare, settle } from '../support/browser';
-import { allowedExternalLinks, socialNames } from '../support/external-links';
+import { allowedExternalLinks } from '../support/external-links';
 import { pendingPaths, visitsForActivePages } from '../support/pages';
 
 const MAX_BUTTONS_PER_PAGE = 60;
@@ -49,7 +49,6 @@ for (const visit of visitsForActivePages()) {
         problems.push(`dead link ${label}`);
         continue;
       }
-      if (socialNames.includes(a.name)) problems.push(`social name rendered as a link ${label}`);
       if (a.href.startsWith('#')) {
         const exists = await page.locator(`[id="${a.href.slice(1)}"]`).count();
         if (!exists) problems.push(`in-page anchor has no target ${label}`);

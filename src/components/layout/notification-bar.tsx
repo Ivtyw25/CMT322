@@ -16,7 +16,7 @@ export type NoticeView = { id: string; title: string; message: string };
 
 type NotificationBarProps = {
   notice: NoticeView;
-  /** Gallery only: force the look and skip the Home placement. */
+  /** Gallery only: force the look and show the bar on any route. */
   preview?: 'solid' | 'hero';
 };
 
@@ -51,8 +51,8 @@ export function resetNoticeDismissal(): void {
 }
 
 /**
- * The single site notice under the header (Figma 4:750 / 127:5800). Closing it hides it for
- * this browser session; a notice with a different id shows again. The head script hides a
+ * The single site notice under the header (Figma 4:750 / 127:5800). It shows on Home only (owner
+ * decision, 2026-11-07), over the hero. Closing it hides it for this browser session; a notice with a different id shows again. The head script hides a
  * dismissed notice before first paint, so it never flashes back.
  */
 export function NotificationBar({ notice, preview }: NotificationBarProps) {
@@ -63,9 +63,9 @@ export function NotificationBar({ notice, preview }: NotificationBarProps) {
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  if (!preview && savedId === notice.id) return null;
+  if (!preview && (!isHome || savedId === notice.id)) return null;
 
-  const overHero = preview ? preview === 'hero' : isHome;
+  const overHero = preview ? preview === 'hero' : true;
 
   function dismiss() {
     setFading(true);
@@ -88,7 +88,7 @@ export function NotificationBar({ notice, preview }: NotificationBarProps) {
         '@container border-b',
         'border-warning-100 bg-warning-50',
         overHero && 'lg:border-static-white/15 lg:bg-static-scrim-bar lg:backdrop-blur-bar',
-        !preview && isHome && 'absolute inset-x-0 top-header-mobile z-30 mt-px lg:top-header',
+        !preview && 'absolute inset-x-0 top-header-mobile z-30 mt-px lg:top-header',
         fading && 'animate-fade-out',
       )}
     >
@@ -128,8 +128,9 @@ export function NotificationBar({ notice, preview }: NotificationBarProps) {
             <Link
               href={routes.traffic.announcements}
               className={cn(
-                'hit-area type-body-s-semibold text-warning-700 underline decoration-1 underline-offset-2 hover:decoration-2',
-                overHero && 'lg:text-static-amber lg:focus-visible:outline-static-white',
+                'hit-area type-body-s-semibold text-warning-700 underline decoration-1 underline-offset-2 transition-colors duration-(--duration-fast) hover:text-warning-600',
+                overHero &&
+                  'lg:text-static-amber lg:hover:text-static-white lg:focus-visible:outline-static-white',
               )}
             >
               {notificationCopy.viewDetails}

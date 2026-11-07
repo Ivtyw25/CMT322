@@ -28,20 +28,17 @@ export function Hero({ searchIndex }: { searchIndex: readonly SearchEntry[] }) {
           fill
           priority
           sizes="(max-width: 767px) max(100vw, 1160px), (max-width: 1023px) max(100vw, 1193px), max(100vw, 1491px)"
-          className="object-cover"
+          className="object-cover object-[25%_50%] lg:object-center"
         />
         <div className="absolute inset-0 bg-hero-scrim" />
         <div className="absolute inset-x-0 top-0 h-55 bg-nav-scrim" />
       </div>
       <Container gutter="wide" className="relative pt-47.5 pb-10 lg:pt-71.75 lg:pb-0">
-        <div className="flex max-w-140 flex-col items-start gap-3.5 lg:ml-auto lg:w-160 lg:max-w-none lg:items-end lg:text-right">
-          <h1
-            id={HERO_TITLE_ID}
-            className="type-hero-title-compact text-static-white min-[390px]:type-hero-title-mobile lg:type-hero-title"
-          >
+        <div className="ml-auto flex max-w-140 flex-col items-end gap-3.5 text-right lg:w-160 lg:max-w-none">
+          <h1 id={HERO_TITLE_ID} className="type-hero-title text-static-white">
             {title}
           </h1>
-          <p className="type-hero-tagline-mobile text-static-on-navy-200 lg:type-hero-tagline">
+          <p className="type-hero-tagline text-static-on-navy-200">
             {tagline.map((line) => (
               <span key={line} className="block">
                 {line}
@@ -57,7 +54,7 @@ export function Hero({ searchIndex }: { searchIndex: readonly SearchEntry[] }) {
             <ButtonLink
               variant="ghost"
               href={actions.report.href}
-              className="text-static-white hover:underline focus-visible:outline-static-white active:text-static-white"
+              className="text-static-white hover:text-static-on-navy-200 focus-visible:outline-static-white active:text-static-white"
             >
               {actions.report.label}
             </ButtonLink>

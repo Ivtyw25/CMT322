@@ -1,6 +1,6 @@
 # ARCHITECTURE
 
-Next.js 16.4.2 (App Router, Turbopack), React 19, TypeScript strict, Tailwind CSS 4. No backend: typed mock data behind async functions. Only the main agent edits this file.
+Next.js 16.4.2 (App Router, Turbopack), React 19, TypeScript strict, Tailwind CSS 4. No backend: typed mock data behind async functions.
 
 ## 1. Folders
 
@@ -34,7 +34,7 @@ tests/
   visual/reference/      Figma screenshots: <page-id|state>--<1440|390>--<light|dark>.png
   support/               pages.ts (page → URLs), browser.ts (theme/session setup), external-links.ts
 scripts/               tokens, check-tokens, test runners, verify.
-docs/specs/ docs/content/ docs/qa/   UX specs, content notes, QA reports, one file per page.
+docs/                  BRIEFING.md (product facts), design-system.md (tokens), fonts.md (licences).
 ```
 
 ## 2. Where do I put…?
@@ -62,8 +62,8 @@ docs/specs/ docs/content/ docs/qa/   UX specs, content notes, QA reports, one fi
 - **Files** kebab-case (`station-card.tsx`); components PascalCase named exports; one component per file; no default exports except Next.js route files.
 - **Server components by default.** `'use client'` only on the interactive leaf. Pages fetch with `await getX()` from `@/data/api` and pass plain props down.
 - **Copy objects:** `export const <group>Copy = { … } as const`. Copy that needs a value is a function: `resultCount: (n: number) => \`${n} results\``. Records never live in copy.
-- **Styling:** Tailwind utilities on tokens only. Type: `type-<style>` utilities (`type-heading-s lg:type-heading-l`), mobile first. Variants with `cva` in the component file; merge with `cn()`. No `dark:` colour variants: tokens swap per theme.
-- **Fonts:** `styles/fonts.ts` loads the original Inter and Poppins assets through `next/font/local` from `assets/fonts`, so builds do not need Google Fonts network access. Licence notices and provenance: `docs/fonts.md`.
+- **Styling:** Tailwind utilities on tokens only. Type: one `type-<style>` utility per role. Heading, hero and large body styles are fluid (clamp, 390 to 1440 px), so never step them with `lg:type-*` (docs/specs/_shared.md, type scale). Variants with `cva` in the component file; merge with `cn()`. No `dark:` colour variants: tokens swap per theme.
+- **Fonts:** `styles/fonts.ts` loads the Google Sans (body) and Poppins (headings) assets through `next/font/local` from `assets/fonts`, so builds do not need Google Fonts network access. Licence notices and provenance: `docs/fonts.md`.
 - **Breakpoints:** Tailwind defaults. Below `lg` (1024 px) the mobile header shows. Content width `max-w-content` (1200 px) with `px-5 md:px-8 lg:px-10`; docs pages: sidebar `w-docs-sidebar`, article `max-w-article`, aside `w-docs-aside`.
 - **Primitives:** shadcn/ui (Radix) for behaviour, restyled to Figma with tokens. Run `npx shadcn add <name>`, then restyle; discard any change it makes to `globals.css`.
 - **Icons:** `lucide-react`, stroke 2. Decorative icons `aria-hidden`.

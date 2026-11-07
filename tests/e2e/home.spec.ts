@@ -102,14 +102,9 @@ test.describe('home: hero search', () => {
     await expect(page).toHaveURL(new RegExp(`${routes.project.station('S09')}$`));
   });
 
-  test('Escape closes the panel first, then clears the box; Alt+ArrowUp also closes', async ({
-    page,
-  }) => {
+  test('Escape closes the panel first, then clears the box', async ({ page }) => {
     await typeQuery(page, 'buk');
     const box = searchBox(page);
-    await box.press('Alt+ArrowUp');
-    await expect(box).toHaveAttribute('aria-expanded', 'false');
-    await box.press('ArrowDown');
     await expect(box).toHaveAttribute('aria-expanded', 'true');
     await box.press('Escape');
     await expect(box).toHaveAttribute('aria-expanded', 'false');
@@ -409,7 +404,6 @@ test.describe('home: line preview', () => {
     await visit(page);
     const line = section(page, 'line-heading');
     await expect(line.getByRole('radio', { name: homeCopy.line.viewToggle.route })).toBeChecked();
-    await expect(line.getByText(homeCopy.line.captions.route)).toBeVisible();
     await expect(stationLinks(page)).toHaveCount(stations.length);
     await expect(line.getByText(homeCopy.line.legend.line, { exact: true })).toBeHidden();
   });
@@ -452,11 +446,9 @@ test.describe('home: line preview', () => {
       await expect(map).toBeChecked({ timeout: 1000 });
     }).toPass();
     await expect(map).toBeFocused();
-    await expect(line.getByText(homeCopy.line.captions.map)).toBeVisible();
     await expect(line.getByRole('region', { name: homeCopy.line.map.label })).toBeVisible();
     await map.press('ArrowLeft');
     await expect(route).toBeChecked();
-    await expect(line.getByText(homeCopy.line.captions.route)).toBeVisible();
     await expect(line.getByRole('region', { name: homeCopy.line.map.label })).toBeHidden();
   });
 
@@ -485,7 +477,6 @@ test.describe('home: line preview', () => {
       await expect(
         region.getByRole('link', { name: new RegExp(homeCopy.line.map.attribution.label) }),
       ).toHaveAttribute('href', homeCopy.line.map.attribution.href);
-      await expect(region.getByText(homeCopy.line.map.caption)).toBeVisible();
       const zoomOut = region.getByRole('button', { name: homeCopy.line.map.zoomOut });
       const zoomIn = region.getByRole('button', { name: homeCopy.line.map.zoomIn });
       await expect(zoomIn).toBeEnabled();
@@ -578,7 +569,6 @@ test.describe('home: about, guide and safety', () => {
     await expect(
       about.getByRole('heading', { level: 2, name: homeCopy.about.title }),
     ).toBeVisible();
-    await expect(about.getByRole('img', { name: homeCopy.about.imageAlt })).toBeVisible();
     await expect(about.getByRole('link', { name: homeCopy.about.link.label })).toHaveAttribute(
       'href',
       homeCopy.about.link.href,

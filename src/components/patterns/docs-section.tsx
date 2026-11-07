@@ -13,7 +13,7 @@ export function DocsSectionHeading({ id, title, compact = false }: DocsSectionHe
     <h2
       id={id}
       tabIndex={-1}
-      className={cn('scroll-mt-32 type-heading-2xs outline-none', !compact && 'lg:type-heading-xs')}
+      className={cn('scroll-mt-32 outline-none', compact ? 'type-heading-2xs' : 'type-heading-xs')}
     >
       {title}
     </h2>

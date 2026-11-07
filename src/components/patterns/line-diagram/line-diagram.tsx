@@ -4,6 +4,7 @@ import { lineDiagramCopy } from '@/content/line';
 import type { StationCode } from '@/data/models/station';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { cn } from '@/lib/cn';
+import { InterchangeIcons } from './interchange-icons';
 import { LineDiagramArt } from './line-diagram-art';
 import { LineMarkerGlyph } from './line-marker-glyph';
 import {
@@ -99,7 +100,7 @@ function StationStop({
   markers,
   describe,
 }: SelectProps & { station: LineStation; layout: StationLayout }) {
-  const { x, y, radius, border, label, junction, branch } = layout;
+  const { x, y, radius, border, label, junction } = layout;
   const box = boxOf(layout);
   const select = mode === 'select';
   const selected = select && selectedCode === station.code;
@@ -124,7 +125,7 @@ function StationStop({
       <span
         className={cn(
           'absolute flex items-center justify-center rounded-full bg-surface transition-colors duration-(--duration-fast) group-hover:bg-primary-50',
-          junction ? 'border-primary-800' : branch ? 'border-primary-300' : 'border-primary-600',
+          junction ? 'border-primary-800' : 'border-primary-600',
         )}
         style={{
           left: x - radius - box.left,
@@ -139,10 +140,7 @@ function StationStop({
           className={
             junction
               ? 'type-body-s-semibold text-primary-800'
-              : cn(
-                  'type-body-xs-semibold',
-                  branch ? 'text-primary-600 dark:text-primary-500' : 'text-primary-700',
-                )
+              : 'type-body-xs-semibold text-primary-700'
           }
         >
           {station.code}
@@ -163,7 +161,7 @@ function StationStop({
       >
         <span
           className={cn(
-            'transition-colors duration-(--duration-fast) group-hover:underline',
+            'transition-colors duration-(--duration-fast)',
             junction
               ? 'type-heading-2xs text-primary-800'
               : selected
@@ -172,6 +170,7 @@ function StationStop({
           )}
         >
           {station.name}
+          <InterchangeIcons modes={station.interchangeModes} className="ml-1" />
         </span>
         {station.isProvisionalName ? (
           <span aria-hidden className="type-body-xs text-gray-500">
@@ -246,7 +245,7 @@ function DefaultLegend() {
         {copy.legend.nearby}
       </LegendRow>
       <LegendRow
-        swatch={<span className="size-3.5 rounded-full border-2 border-primary-300 bg-surface" />}
+        swatch={<span className="size-3.5 rounded-full border-2 border-primary-600 bg-surface" />}
       >
         {copy.legend.station}
       </LegendRow>

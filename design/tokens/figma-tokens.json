@@ -203,7 +203,7 @@
   },
   "font": {
     "heading": "var(--font-poppins), ui-sans-serif, system-ui, sans-serif",
-    "body": "var(--font-inter), ui-sans-serif, system-ui, sans-serif"
+    "body": "var(--font-google-sans), ui-sans-serif, system-ui, sans-serif"
   },
   "type": {
     "heading-xl": {
@@ -211,42 +211,66 @@
       "size": 60,
       "line": 72,
       "tracking": -1.2,
-      "weight": 600
+      "weight": 600,
+      "min": {
+        "size": 32,
+        "line": 40
+      }
     },
     "heading-l": {
       "family": "heading",
       "size": 48,
       "line": 60,
       "tracking": -0.96,
-      "weight": 600
+      "weight": 600,
+      "min": {
+        "size": 26,
+        "line": 34
+      }
     },
     "heading-m": {
       "family": "heading",
       "size": 36,
       "line": 44,
       "tracking": -0.5,
-      "weight": 600
+      "weight": 600,
+      "min": {
+        "size": 26,
+        "line": 34
+      }
     },
     "heading-s": {
       "family": "heading",
       "size": 30,
       "line": 38,
       "tracking": -0.3,
-      "weight": 600
+      "weight": 600,
+      "min": {
+        "size": 22,
+        "line": 30
+      }
     },
     "heading-xs": {
       "family": "heading",
       "size": 24,
       "line": 32,
       "tracking": 0,
-      "weight": 600
+      "weight": 600,
+      "min": {
+        "size": 18,
+        "line": 26
+      }
     },
     "heading-2xs": {
       "family": "heading",
       "size": 20,
       "line": 28,
       "tracking": 0,
-      "weight": 600
+      "weight": 600,
+      "min": {
+        "size": 18,
+        "line": 26
+      }
     },
     "heading-3xs": {
       "family": "heading",
@@ -260,14 +284,22 @@
       "size": 20,
       "line": 28,
       "tracking": 0,
-      "weight": 400
+      "weight": 400,
+      "min": {
+        "size": 16,
+        "line": 24
+      }
     },
     "body-l": {
       "family": "body",
       "size": 18,
       "line": 26,
       "tracking": 0,
-      "weight": 400
+      "weight": 400,
+      "min": {
+        "size": 16,
+        "line": 24
+      }
     },
     "body-m": {
       "family": "body",
@@ -337,35 +369,26 @@
       "size": 60,
       "line": 72,
       "tracking": -1.2,
-      "weight": 700
-    },
-    "hero-title-mobile": {
-      "family": "heading",
-      "size": 44,
-      "line": 50,
-      "tracking": -0.88,
-      "weight": 700
-    },
-    "hero-title-compact": {
-      "family": "heading",
-      "size": 36,
-      "line": 44,
-      "tracking": -0.5,
-      "weight": 700
+      "weight": 700,
+      "min": {
+        "size": 40,
+        "line": 46
+      },
+      "floor": {
+        "size": 32,
+        "line": 36
+      }
     },
     "hero-tagline": {
       "family": "heading",
       "size": 36,
       "line": 46,
       "tracking": 0,
-      "weight": 300
-    },
-    "hero-tagline-mobile": {
-      "family": "heading",
-      "size": 22,
-      "line": 30,
-      "tracking": 0,
-      "weight": 300
+      "weight": 300,
+      "min": {
+        "size": 20,
+        "line": 28
+      }
     },
     "wordmark-mobile": {
       "family": "heading",

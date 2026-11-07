@@ -7,7 +7,14 @@ export const lineDiagramCopy = {
   /** Added to stationLabel for S19 Macallum. */
   junctionSuffix: ', where the two routes meet',
   /** Short form under a provisional name in the diagram. The rail uses "Provisional name". */
-  provisionalShort: '(provisional)',
+  provisionalShort: '(provisional station)',
+  /** Added to stationLabel for each kind of transport you can change to. */
+  interchangeSuffix: {
+    rail: ', rail interchange',
+    ferry: ', ferry interchange',
+    bus: ', bus interchange',
+    air: ', airport interchange',
+  },
   depot: 'Depot',
   legend: {
     line: 'Mutiara Line',

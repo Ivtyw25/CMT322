@@ -30,7 +30,7 @@ export function FaqHelpCard({ careline }: { careline: Careline }) {
       <p className="type-body-xs text-gray-600">
         <a
           href={careline.tel}
-          className="inline-flex min-h-11 items-center text-primary-700 hover:underline"
+          className="inline-flex min-h-11 items-center text-primary-700 hover:text-primary-800"
         >
           {stillNeedHelp.careline(careline.label, careline.number)}
         </a>

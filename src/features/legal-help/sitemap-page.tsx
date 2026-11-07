@@ -22,7 +22,7 @@ export function SitemapPage({ siteInfo }: { siteInfo: SiteInfo }) {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="hit-area block type-body-s-medium text-primary-700 hover:underline"
+                    className="hit-area block type-body-s-medium text-primary-700 hover:text-primary-800"
                   >
                     {item.label}
                   </Link>

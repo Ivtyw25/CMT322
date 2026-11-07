@@ -43,13 +43,13 @@ test.describe('project overview', () => {
     );
   });
 
-  test('card title underlines on hover', async ({ page }) => {
+  test('card title does not underline on hover', async ({ page }) => {
     const title = page.locator('article').getByRole('link', {
       name: overview.pages.cards[0]?.title ?? '',
       exact: true,
     });
     await title.hover();
-    await expect(title).toHaveCSS('text-decoration-line', 'underline');
+    await expect(title).toHaveCSS('text-decoration-line', 'none');
   });
 
   test('latest update shows the newest record and links to construction', async ({ page }) => {

@@ -17,7 +17,7 @@ export default function TrafficError({ reset }: { error: Error; reset: () => voi
         <Button onClick={reset}>{uiCopy.actions.tryAgain}</Button>
         <Link
           href={routes.traffic.route}
-          className="type-body-s-semibold text-primary-700 hover:underline"
+          className="type-body-s-semibold text-primary-700 hover:text-primary-800"
         >
           {copy.routeLink}
         </Link>

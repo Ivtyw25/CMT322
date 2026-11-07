@@ -58,7 +58,7 @@ export function HelpSection({ careline }: HelpSectionProps) {
             <a
               href={careline.tel}
               aria-label={callLabel}
-              className="hit-area rounded-sm text-gray-900 hover:underline"
+              className="hit-area rounded-sm text-gray-900 transition-colors duration-(--duration-fast) hover:text-primary-700"
             >
               {copy.careline.title(careline.label, careline.number)}
             </a>

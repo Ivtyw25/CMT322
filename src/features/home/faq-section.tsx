@@ -20,14 +20,13 @@ export function FaqSection({ items }: FaqSectionProps) {
     title: item.question,
     content: <p className="max-w-150 text-gray-600">{item.summary}</p>,
   }));
-  const [first] = entries;
-  if (!first) return null;
+  if (entries.length === 0) return null;
   return (
     <HomeSection headingId={HEADING_ID}>
       <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-25">
         <div className="flex flex-col items-start gap-3">
           <AccentBar />
-          <h2 id={HEADING_ID} className="type-heading-xs lg:type-heading-s">
+          <h2 id={HEADING_ID} className="type-heading-s">
             {copy.title}
           </h2>
           <p className="type-body-m text-gray-600">{copy.lede}</p>
@@ -35,7 +34,7 @@ export function FaqSection({ items }: FaqSectionProps) {
             {copy.seeAll.label}
           </ButtonLink>
         </div>
-        <Accordion items={entries} size="roomy" defaultOpenIds={[first.id]} />
+        <Accordion items={entries} size="roomy" />
       </div>
     </HomeSection>
   );

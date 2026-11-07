@@ -21,7 +21,7 @@ export default function TrafficSiteError({ reset }: { error: Error; reset: () =>
         <Button onClick={reset}>{uiCopy.actions.tryAgain}</Button>
         <Link
           href={routes.help.contact}
-          className="type-body-s-semibold text-primary-700 hover:underline"
+          className="type-body-s-semibold text-primary-700 hover:text-primary-800"
         >
           {trafficCopy.announcements.error.contact}
         </Link>

@@ -17,7 +17,7 @@ export function SubmittedEmail({
   address: string;
 }) {
   return (
-    <figure className="flex flex-col gap-1.5 border-l-3 border-gray-300 pl-4 wrap-anywhere">
+    <figure className="flex flex-col gap-1.5 rounded-lg bg-gray-50 p-4 wrap-anywhere">
       <figcaption className="sr-only">{email.title}</figcaption>
       <p className="flex items-start gap-2 type-body-xs text-gray-500">
         <Mail aria-hidden className="mt-0.5 size-3.5 shrink-0" />

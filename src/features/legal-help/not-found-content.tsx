@@ -20,7 +20,7 @@ export function NotFoundContent() {
           <li key={link.href}>
             <Link
               href={link.href}
-              className="inline-flex min-h-11 items-center type-body-m text-primary-700 hover:underline"
+              className="inline-flex min-h-11 items-center type-body-m text-primary-700 hover:text-primary-800"
             >
               {link.label}
             </Link>

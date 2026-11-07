@@ -41,7 +41,7 @@ export function DocsPageHead({
         <h1
           ref={titleRef}
           tabIndex={titleRef ? -1 : undefined}
-          className={cn('type-heading-s lg:type-heading-m', titleRef ? 'outline-none' : undefined)}
+          className={cn('type-heading-m', titleRef ? 'outline-none' : undefined)}
         >
           {title}
         </h1>
@@ -49,7 +49,7 @@ export function DocsPageHead({
       <p
         className={cn(
           'max-w-170 text-gray-600',
-          ledeSize === 'xl' ? 'type-body-l lg:type-body-xl' : 'type-body-m lg:type-body-l',
+          ledeSize === 'xl' ? 'type-body-xl' : 'type-body-l',
         )}
       >
         {lede}

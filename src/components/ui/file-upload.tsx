@@ -148,7 +148,7 @@ export function FileUpload({
                 'hit-area type-body-s-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
                 full
                   ? 'ml-1 cursor-not-allowed text-gray-500'
-                  : 'cursor-pointer text-primary-700 underline-offset-2 hover:underline',
+                  : 'cursor-pointer text-primary-700 underline-offset-2 hover:text-primary-800',
               )}
             >
               {uiCopy.upload.browse}

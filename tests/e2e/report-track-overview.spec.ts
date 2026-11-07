@@ -36,10 +36,10 @@ test.describe('report and track overview', () => {
     await expect(article.getByText(report.points[0], { exact: true })).toBeVisible();
   });
 
-  test('card title underlines on hover', async ({ page }) => {
+  test('card title does not underline on hover', async ({ page }) => {
     const card = page.locator('article li').filter({ hasText: overview.pages.cards[0].title });
     await card.first().hover();
-    await expect(card.first().getByRole('heading')).toHaveCSS('text-decoration-line', 'underline');
+    await expect(card.first().getByRole('heading')).toHaveCSS('text-decoration-line', 'none');
   });
 
   test('lists the four steps', async ({ page }) => {

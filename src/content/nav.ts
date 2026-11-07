@@ -135,7 +135,7 @@ export const navCopy = {
   },
 
   header: {
-    logIn: 'Log in',
+    logIn: 'Sign in',
     logInHref: (currentPath: string) => routes.account.loginReturningTo(currentPath),
     /** Accessible name of the signed-in account chip, which shows the first name only. */
     accountMenuLabel: (fullName: string) => `Account menu, ${fullName}`,
@@ -143,20 +143,14 @@ export const navCopy = {
 
   appearance: {
     title: 'Appearance',
-    subtitle: 'Saved on this device',
-    /** Accessible name of the theme button, e.g. "Appearance: Match system". */
+    /** Accessible name of the theme button, e.g. "Appearance: System". */
     buttonLabel: (current: string) => `Appearance: ${current}`,
     /** Live-region message after a change, e.g. "Appearance set to Dark". */
     changed: (choice: string) => `Appearance set to ${choice}`,
     options: {
-      light: { label: 'Light', shortLabel: 'Light', description: null },
-      dark: { label: 'Dark', shortLabel: 'Dark', description: null },
-      system: {
-        label: 'Match system',
-        /** Mobile segmented control. */
-        shortLabel: 'System',
-        description: 'Follows your device setting',
-      },
+      light: { label: 'Light', shortLabel: 'Light' },
+      dark: { label: 'Dark', shortLabel: 'Dark' },
+      system: { label: 'System', shortLabel: 'System' },
     },
   },
 
@@ -180,8 +174,8 @@ export const navCopy = {
     closeMenu: 'Close menu',
     /** Accessible name of the signed-in avatar link. */
     profileLink: (fullName: string) => `Your profile, ${fullName}`,
-    logIn: 'Log in',
-    createAccount: 'Create an account',
+    logIn: 'Sign in',
+    createAccount: 'Sign up',
     createAccountHref: (currentPath: string) => routes.account.signupReturningTo(currentPath),
     /** Account rows in the drawer (signed in): Profile & settings and My reports. */
     accountItemIds: ['profile', 'reports'],

@@ -1,7 +1,7 @@
 'use client';
 
 import type { Map as LeafletMap } from 'leaflet';
-import { LoaderCircle, MapPinOff, Minus, Plus } from 'lucide-react';
+import { MapPinOff, Minus, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { uiCopy } from '@/content/ui';
 import { cn } from '@/lib/cn';
 import './line-map.css';
 import { LABELLED_CODES, LARGE_CODES, toPaths, type MapStation } from './line-map-data';
+import { LineMapLoading } from './line-map-loading';
 
 type MapStatus = 'loading' | 'ready' | 'error';
 
@@ -107,7 +108,7 @@ function MapCanvas({ stations, onStatus }: MapCanvasProps) {
           name.textContent = homeCopy.line.stationLabel(station.code, station.name);
           const link = document.createElement('a');
           link.href = station.href;
-          link.className = 'type-body-s-semibold text-primary-700 hover:underline';
+          link.className = 'type-body-s-semibold text-primary-700 hover:text-primary-800';
           link.textContent = copy.openStationPage(station.name);
           link.addEventListener('click', (event) => {
             event.preventDefault();
@@ -172,9 +173,6 @@ function MapCanvas({ stations, onStatus }: MapCanvasProps) {
           <Minus aria-hidden className="size-5" />
         </Button>
       </div>
-      <p className={cn(chipClass, 'absolute bottom-3 left-3 z-1000 type-body-xs-medium')}>
-        {copy.caption}
-      </p>
       <p className={cn(chipClass, 'absolute right-3 bottom-3 z-1000 type-body-xs-medium')}>
         <ExternalLink href={copy.attribution.href} className="text-gray-900">
           {copy.attribution.label}
@@ -204,15 +202,7 @@ export function LineMap({ stations }: LineMapProps) {
       className="relative isolate h-120 overflow-hidden rounded-3xl border border-gray-200 lg:h-150"
     >
       <MapCanvas key={attempt} stations={stations} onStatus={setStatus} />
-      {status === 'loading' ? (
-        <div
-          role="status"
-          className="absolute inset-0 z-1000 flex items-center justify-center gap-2 bg-gray-100 type-body-s text-gray-600"
-        >
-          <LoaderCircle aria-hidden className="size-5 animate-spin motion-reduce:animate-none" />
-          {copy.loading}
-        </div>
-      ) : null}
+      {status === 'loading' ? <LineMapLoading className="absolute inset-0 z-1000" /> : null}
       {status === 'error' ? (
         <div className="absolute inset-0 z-1000 flex flex-col items-center justify-center gap-3 bg-gray-100 px-5 text-center">
           <MapPinOff aria-hidden className="size-6 text-gray-400" />

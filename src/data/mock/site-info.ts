@@ -12,8 +12,4 @@ export const siteInfo: SiteInfo = {
     href: 'mailto:help@mutiaraconnect.my',
     description: 'Questions about this platform',
   },
-  socials: ['Facebook', 'Instagram', 'X', 'YouTube', 'TikTok', 'LinkedIn'].map((name) => ({
-    name,
-    url: null,
-  })),
 };

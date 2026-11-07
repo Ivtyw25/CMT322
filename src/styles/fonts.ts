@@ -11,11 +11,11 @@ export const poppins = localFont({
   variable: '--font-poppins',
 });
 
-/** Body: Inter Regular, Medium and Semi Bold. Exposed as --font-inter. */
-export const inter = localFont({
-  src: '../assets/fonts/inter-latin-variable.woff2',
+/** Body: Google Sans Regular, Medium and Semi Bold (variable). Exposed as --font-google-sans. */
+export const googleSans = localFont({
+  src: '../assets/fonts/google-sans-latin-variable.woff2',
   weight: '400 600',
   style: 'normal',
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-google-sans',
 });

@@ -27,7 +27,7 @@ export function OverviewPopularQuestions() {
       </ul>
       <Link
         href={routes.project.faq}
-        className="hit-area inline-flex items-center self-start type-body-s-semibold text-primary-700 hover:underline"
+        className="hit-area inline-flex items-center self-start type-body-s-semibold text-primary-700 hover:text-primary-800"
       >
         {faq.seeAll}
       </Link>

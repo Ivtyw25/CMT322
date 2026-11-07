@@ -4,9 +4,9 @@ import { routes } from '@/config/routes';
 import { navCopy, type NavGroup } from '@/content/nav';
 import { Callout } from '@/components/ui/callout';
 import { Tag } from '@/components/ui/tag';
-import { LineRail, LineRailStop } from '@/components/patterns/line-rail';
 import { cn } from '@/lib/cn';
 import type { NavGroupId } from './nav-groups';
+import { navItemIcons } from './nav-icons';
 import type { ShellData } from './shell-data';
 
 type NavPanelProps = {
@@ -26,9 +26,12 @@ type NavPanelProps = {
 
 const featureTitle = 'type-body-s-semibold text-gray-900';
 const featureLink =
-  'hit-area type-body-s-medium text-primary-700 transition-colors duration-(--duration-fast) hover:underline';
+  'hit-area type-body-s-medium text-primary-700 hover:text-primary-800 transition-colors duration-(--duration-fast)';
 
-/** One mega-menu panel (Figma 101:4039): the group's pages on a line rail, a feature on the right. */
+/**
+ * One mega-menu panel (Figma 101:4039): the group's pages as an icon list (owner decision
+ * 2026-11-07: no line rail, the pages are not steps), a feature on the right.
+ */
 export function NavPanel({
   group,
   data,
@@ -55,22 +58,49 @@ export function NavPanel({
           <p className="type-heading-3xs text-gray-900">{group.label}</p>
           <p className="type-body-s text-gray-600">{group.intro}</p>
         </div>
-        <LineRail variant="panel" label={group.label}>
-          {group.items.map((item, index) => (
-            <LineRailStop
-              key={item.id}
-              title={item.label}
-              description={item.description}
-              href={item.href}
-              filled={index === 0}
-              current={pathname === item.href}
-              onNavigate={onNavigate}
-            />
-          ))}
-        </LineRail>
+        <ul aria-label={group.label} className="flex flex-col gap-0.5">
+          {group.items.map((item) => {
+            const Icon = navItemIcons[group.id][item.id];
+            const current = pathname === item.href;
+            return (
+              <li key={item.id}>
+                <Link
+                  href={item.href}
+                  onClick={onNavigate}
+                  aria-current={current ? 'page' : undefined}
+                  className={cn(
+                    'group flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors duration-(--duration-fast) focus-visible:-outline-offset-2',
+                    current ? 'bg-primary-50' : 'hover:bg-primary-50/60',
+                  )}
+                >
+                  {Icon ? (
+                    <Icon
+                      aria-hidden
+                      className={cn(
+                        'mt-0.5 size-5 shrink-0',
+                        current ? 'text-primary-700' : 'text-gray-500 group-hover:text-primary-600',
+                      )}
+                    />
+                  ) : null}
+                  <span className="flex min-w-0 flex-col">
+                    <span
+                      className={cn(
+                        'type-body-s-semibold',
+                        current ? 'text-primary-700' : 'text-gray-900 group-hover:text-primary-700',
+                      )}
+                    >
+                      {item.label}
+                    </span>
+                    <span className="type-body-xs text-gray-600">{item.description}</span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-3.5 border-l border-gray-200 bg-gray-50 px-8 py-7">
+      <div className="flex min-w-0 flex-1 flex-col gap-3.5 px-8 py-7">
         {group.id === 'project' ? <ProjectFeature data={data} onNavigate={onNavigate} /> : null}
         {group.id === 'traffic' ? <TrafficFeature data={data} onNavigate={onNavigate} /> : null}
         {group.id === 'report-track' ? (
@@ -99,9 +129,9 @@ function ProjectFeature({ data, onNavigate }: FeatureProps) {
             <Link
               href={routes.project.station(station.code)}
               onClick={onNavigate}
-              className="flex items-center gap-3 px-3.5 py-3 transition-colors duration-(--duration-fast) hover:bg-gray-50 focus-visible:-outline-offset-2"
+              className="flex items-center gap-3 px-3.5 py-3 transition-colors duration-(--duration-fast) hover:bg-primary-50/60 focus-visible:-outline-offset-2"
             >
-              <span className="w-10 shrink-0 rounded-md bg-primary-600 py-0.75 text-center type-body-xs-semibold text-static-white">
+              <span className="w-10 shrink-0 rounded-md bg-primary-50 py-0.75 text-center type-body-xs-semibold text-primary-700">
                 {station.code}
               </span>
               <span className="flex min-w-0 flex-1 flex-col">

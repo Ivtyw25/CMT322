@@ -8,7 +8,7 @@ import { FollowsProvider } from '@/lib/follows';
 import { SessionProvider } from '@/lib/session';
 import { ThemeProvider } from '@/lib/theme/theme-provider';
 import { buildShellScript } from '@/lib/theme/theme-script';
-import { inter, poppins } from '@/styles/fonts';
+import { googleSans, poppins } from '@/styles/fonts';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="en-MY"
-      className={cn(poppins.variable, inter.variable)}
+      className={cn(poppins.variable, googleSans.variable)}
       suppressHydrationWarning
       data-scroll-behavior="smooth"
     >

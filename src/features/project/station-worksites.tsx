@@ -47,7 +47,7 @@ export function StationWorksites({
       />
       <Link
         href={routes.traffic.map}
-        className="hit-area w-fit type-body-s-medium text-primary-700 hover:underline"
+        className="hit-area w-fit type-body-s-medium text-primary-700 hover:text-primary-800"
       >
         {copy.link}
       </Link>

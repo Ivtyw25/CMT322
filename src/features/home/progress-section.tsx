@@ -1,4 +1,6 @@
 import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
+import { SwipeRow } from '@/components/patterns/swipe-row';
+import { SwipeRowItem } from '@/components/patterns/swipe-row-item';
 import { ButtonLink } from '@/components/ui/button-link';
 import { LinkCard } from '@/components/ui/link-card';
 import { homeCopy } from '@/content/home';
@@ -27,9 +29,9 @@ export function ProgressSection({ updates }: ProgressSectionProps) {
         }
       />
       {updates.length > 0 ? (
-        <ul className="grid items-start gap-6 md:grid-cols-3">
+        <SwipeRow wideClassName="md:grid md:grid-cols-3 md:gap-6">
           {updates.map((update) => (
-            <li key={update.id}>
+            <SwipeRowItem key={update.id}>
               <LinkCard
                 href={copy.cardHref(update.id)}
                 title={update.title}
@@ -41,13 +43,13 @@ export function ProgressSection({ updates }: ProgressSectionProps) {
                     </time>
                   </div>
                 }
-                className="gap-2 overflow-hidden rounded-3xl p-0 [&_h3]:type-body-m-semibold [&_h3]:text-wrap group-hover:[&_h3]:text-primary-700 [&_h3_a]:flex [&>h3]:px-5"
+                className="h-full gap-2 overflow-hidden rounded-3xl p-0 [&_h3]:type-heading-2xs [&_h3]:text-wrap group-hover:[&_h3]:text-primary-700 [&_h3_a]:flex [&>h3]:px-5"
               >
                 <p className="px-5 pb-5 type-body-s text-gray-600">{update.summary}</p>
               </LinkCard>
-            </li>
+            </SwipeRowItem>
           ))}
-        </ul>
+        </SwipeRow>
       ) : (
         <p className="type-body-m text-gray-600">{copy.empty}</p>
       )}

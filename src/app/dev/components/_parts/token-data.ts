@@ -63,16 +63,6 @@ export const typeStyles = [
   'type-body-xs-semibold',
 ] as const;
 
-/** Phone style first, then the style from 1024 px (docs/BRIEFING.md §4.3). */
-export const stepDowns = [
-  { name: 'heading-m, lg: heading-xl', className: 'type-heading-m lg:type-heading-xl' },
-  { name: 'heading-s, lg: heading-l', className: 'type-heading-s lg:type-heading-l' },
-  { name: 'heading-xs, lg: heading-s', className: 'type-heading-xs lg:type-heading-s' },
-  { name: 'heading-2xs, lg: heading-xs', className: 'type-heading-2xs lg:type-heading-xs' },
-  { name: 'body-l, lg: body-xl', className: 'type-body-l lg:type-body-xl' },
-  { name: 'body-m, lg: body-l', className: 'type-body-m lg:type-body-l' },
-] as const;
-
 export const radii = [
   { name: 'xs', className: 'rounded-xs' },
   { name: 'sm', className: 'rounded-sm' },

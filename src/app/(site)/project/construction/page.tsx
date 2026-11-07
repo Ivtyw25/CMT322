@@ -71,7 +71,7 @@ export default async function ConstructionPage() {
             <p>{copy.updates.note.body}</p>
             <Link
               href={routes.traffic.map}
-              className="hit-area type-body-s-semibold text-primary-700 hover:underline"
+              className="hit-area type-body-s-semibold text-primary-700 hover:text-primary-800"
             >
               {copy.updates.note.link}
             </Link>

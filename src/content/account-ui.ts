@@ -1,5 +1,4 @@
 export const accountUiCopy = {
-  demo: 'University prototype: sign-in and email confirmations are simulated. Use fictional details and an example password.',
   summary: (n: number, task: string) => `Fix ${n} ${n === 1 ? 'thing' : 'things'} ${task}`,
   tasks: { login: 'to log in', signup: 'to create your account', reset: 'to send the reset link' },
   rules: { met: ', met', unmet: ', not met', complete: 'Password meets all rules' },

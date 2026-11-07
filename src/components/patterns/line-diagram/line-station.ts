@@ -5,20 +5,26 @@ import { JUNCTION_CODE } from '@/data/api/line-alignment';
 import type { Station } from '@/data/models/station';
 
 /** The parts of a station the diagram and the rail use. A full `Station` fits. */
-export type LineStation = Pick<Station, 'code' | 'name' | 'subtitle' | 'isProvisionalName'>;
+export type LineStation = Pick<
+  Station,
+  'code' | 'name' | 'subtitle' | 'isProvisionalName' | 'interchangeModes'
+>;
 
-/** Spoken after the name: the provisional and junction notes ("" when neither applies). */
-export function stationNotes(station: Pick<Station, 'code' | 'isProvisionalName'>): string {
+/** Spoken after the name: the provisional, junction and interchange notes ("" when none applies). */
+export function stationNotes(
+  station: Pick<Station, 'code' | 'isProvisionalName' | 'interchangeModes'>,
+): string {
   const copy = lineDiagramCopy;
   return [
     station.isProvisionalName ? copy.provisionalSuffix : '',
     station.code === JUNCTION_CODE ? copy.junctionSuffix : '',
+    ...station.interchangeModes.map((mode) => copy.interchangeSuffix[mode]),
   ].join('');
 }
 
 /** Accessible name of a map marker: "S20 KOMTAR", plus provisional and junction notes. */
 export function stationLinkLabel(
-  station: Pick<Station, 'code' | 'name' | 'isProvisionalName'>,
+  station: Pick<Station, 'code' | 'name' | 'isProvisionalName' | 'interchangeModes'>,
 ): string {
   return `${lineDiagramCopy.stationLabel(station.code, station.name)}${stationNotes(station)}`;
 }

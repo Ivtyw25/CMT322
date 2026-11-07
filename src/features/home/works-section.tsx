@@ -23,28 +23,22 @@ export function WorksSection({ areas, items, area }: WorksSectionProps) {
       className="scroll-mt-header-mobile bg-gray-50 py-10 md:py-16 lg:scroll-mt-header lg:py-20"
     >
       <Container gutter="wide" className="flex flex-col gap-6 md:gap-8">
-        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
-          <div className="flex flex-col gap-3">
-            <AccentBar />
-            <h2
-              id={WORKS_HEADING_ID}
-              tabIndex={-1}
-              className="type-heading-xs outline-none lg:type-heading-s"
-            >
-              {copy.title}
-            </h2>
-            <p className="type-body-m text-gray-600">{copy.lede}</p>
-          </div>
-          <ButtonLink
-            variant="secondary"
-            href={copy.allAnnouncements.href}
-            fullWidth
-            className="md:w-auto md:shrink-0"
-          >
-            {copy.allAnnouncements.label}
-          </ButtonLink>
+        <div className="flex flex-col gap-3">
+          <AccentBar />
+          <h2 id={WORKS_HEADING_ID} tabIndex={-1} className="type-heading-s outline-none">
+            {copy.title}
+          </h2>
+          <p className="type-body-m text-gray-600">{copy.lede}</p>
         </div>
         <WorksArea areas={areas} items={items} initialArea={area} />
+        <ButtonLink
+          variant="secondary"
+          href={copy.allAnnouncements.href}
+          fullWidth
+          className="md:w-auto md:self-start"
+        >
+          {copy.allAnnouncements.label}
+        </ButtonLink>
       </Container>
     </section>
   );

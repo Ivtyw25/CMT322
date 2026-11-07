@@ -12,7 +12,7 @@ export function SubmittedSkeleton() {
       aria-label={reportTrackCopy.submitted.loading}
       className="flex flex-col gap-10"
     >
-      <div className="flex flex-col gap-3 border-l-4 border-gray-200 pl-5">
+      <div className="flex flex-col gap-3">
         <div className={cn(bar, 'h-5 w-28')} />
         <div className={cn(bar, 'max-w-md h-12 w-full')} />
       </div>

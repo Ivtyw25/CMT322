@@ -12,6 +12,8 @@ type FilterChipsProps<Value extends string> = {
   onValueChange: (value: Value) => void;
   /** `compact` is the 32 px chip of the Construction progress filters. */
   density?: 'default' | 'compact';
+  /** `scroll`: one swipeable row below 768 px instead of wrapping. */
+  layout?: 'wrap' | 'scroll';
   className?: string;
 };
 
@@ -22,10 +24,20 @@ export function FilterChips<Value extends string>({
   value,
   onValueChange,
   density = 'default',
+  layout = 'wrap',
   className,
 }: FilterChipsProps<Value>) {
   return (
-    <div role="group" aria-label={label} className={cn('flex flex-wrap gap-2', className)}>
+    <div
+      role="group"
+      aria-label={label}
+      className={cn(
+        'flex flex-wrap gap-2',
+        layout === 'scroll' &&
+          'max-md:-my-1.5 max-md:scrollbar-none max-md:flex-nowrap max-md:overflow-x-auto max-md:py-1.5',
+        className,
+      )}
+    >
       {options.map((option) => {
         const pressed = option.value === value;
         return (
@@ -35,7 +47,7 @@ export function FilterChips<Value extends string>({
             aria-pressed={pressed}
             onClick={() => onValueChange(option.value)}
             className={cn(
-              'hit-area cursor-pointer rounded-full border type-body-s-medium',
+              'hit-area shrink-0 cursor-pointer rounded-full border type-body-s-medium whitespace-nowrap',
               density === 'compact' ? 'px-3 py-1.25' : 'px-4 py-2',
               'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
               pressed

@@ -113,8 +113,9 @@ Bar 60 px + 1 px border, padding 10 × 16, gap 8. Root `data-header="mobile"`. O
 
 ### 8. Notification bar, node 4:750 (desktop), 127:5800 (mobile), over hero 37:1236
 - **One message at a time. Decision:** the shell shows the single most urgent site notice from `getSiteNotice()` in `data/api` (returns `SiteNotice | null`: `id`, `title`, `message`, `announcementId`). Null → no bar and no empty space. The mock returns the Figma notice ("Road closure tonight", Jalan Sultan Azlan Shah, one lane each way from 10 pm to 6 am).
-- Placement: directly under the header, full-bleed, not sticky (it scrolls away). On Home it sits over the hero under the transparent header.
-- Styles: Solid (all pages except Home): `warning-50` bg, `warning-100` bottom border, `triangle-alert` 18 px `warning-700`, title Body/S Semibold `warning-700`, message Body/S `gray-800`, "View details" Body/S Semibold underlined `warning-700`, close `x` 18 px `gray-600`. Over hero (Home): `static-scrim-bar` + `backdrop-blur-bar`, border white 15 %, title and link `static-amber`, message `static-white`, icons `static-white`. The over-hero style does not change when the header turns Solid (the bar scrolls with the hero).
+- **Owner decision 2026-11-07: the site notice shows on Home only.** No other route renders the bar or reserves space for it (`NotificationBar` returns null unless the path is `routes.home`).
+- Placement: on Home, directly under the header over the hero, full-bleed, not sticky (it scrolls away).
+- Styles: Solid (gallery preview only, since the bar no longer shows on other pages): `warning-50` bg, `warning-100` bottom border, `triangle-alert` 18 px `warning-700`, title Body/S Semibold `warning-700`, message Body/S `gray-800`, "View details" Body/S Semibold underlined `warning-700`, close `x` 18 px `gray-600`. Over hero (Home): `static-scrim-bar` + `backdrop-blur-bar`, border white 15 %, title and link `static-amber`, message `static-white`, icons `static-white`. The over-hero style does not change when the header turns Solid (the bar scrolls with the hero).
 - Layout: ≥1024 single row (icon, title, message, link inline, close at the far right; wraps to two lines if needed). <1024 the mobile layout: row 1 icon + title, message below, link below, close top-right (127:5788).
 - "View details" → `routes.traffic.announcements` (no hash until the Announcements spec defines anchors). Its accessible name adds context with visually hidden text: "View details about the road closure tonight" (content key).
 - Close: `<button>` with `aria-label` "Dismiss this notice", 30 × 30 visible, `hit-area` below 768; hover bg `warning-100` (over hero: `static-glass`); focus-visible ring (over hero `static-white`).
@@ -211,7 +212,7 @@ Every part lives once in `components/ui` or `components/patterns`. Hover colours
 
 **Switch** (`91:2963` on, `91:2965` off): 40 × 24, `role="switch"` (button with `aria-checked`) or native checkbox with `role="switch"`. Label to its left or right is clickable; row ≥44 px tall below 768. On: track `primary-600`, knob `static-white` `shadow-knob` right; off: track `gray-300`, knob left. Knob slides 150 ms (reduced: instant). Space/Enter toggles. Disabled: 50 % track opacity is not allowed (opacity rule): use track `gray-200`, knob `gray-100`.
 
-**Segmented control** (Line preview "Route view / Map view", drawer Appearance): container `gray-100`, padding 3, radius `xl`; segments radius `lg`, Body/S Medium; selected `surface` + `shadow-control`, text `primary-700`; unselected `gray-700`, hover `gray-900`. Semantics: native radio group (`fieldset` + visually hidden legend). ←/→ move and select. Selected segment indicator moves instantly (no sliding thumb).
+**Segmented control** (Line preview "Route view / Map view", drawer Appearance): container `gray-100`, padding 3, pill (radius `full`); segments pill (radius `full`), Body/S Medium; selected `surface` + `shadow-control`, text `primary-700`; unselected `gray-700`, hover `gray-900`. Semantics: native radio group (`fieldset` + visually hidden legend). ←/→ move and select. Selected segment indicator moves instantly (no sliding thumb). **Decision 2026-11-07:** track and segments are pills, like buttons site-wide.
 
 **Tabs** (underline tabs, About "Two routes, one line"): `role="tablist"`, Body/S Medium; selected text `primary-700` with 2 px `primary-600` underline, others `gray-600`, hover `gray-900`. Automatic activation: ←/→ move and select, Home/End. Tabs **wrap** to a second row on narrow screens (M · About shows "Environment" on row 2); never a horizontal scroll. Panels `role="tabpanel"`, `tabindex="0"` only if the panel has no focusable content. When a page spec says the tab is deep-linkable, the URL gets `?tab=<id>` via `router.replace` (no history entry per tab).
 
@@ -385,6 +386,10 @@ Mobile previews in 390 px frames need the components to respond to their contain
 10. **Account menu radius** is 14 px in Figma, not on the radius scale; spec uses `2xl` (12 px).
 11. **Docs-layout pages:** confirmed from frames for About, Construction, FAQ, Report and Terms; the remaining page specs say whether they use it.
 
+## Type scale decision (2026-11-07)
+
+Heading, hero and large body tokens are fluid: `clamp(min, calc(vw + rem), max)` between the 390 px frame (min) and the 1440 px frame (max), so components use one role token and never pair a phone token with a desktop token. Scale (font/line, px): heading-xl 36/44 to 60/72; heading-l 30/38 to 48/60; heading-m 30/38 to 36/44; heading-s 24/32 to 30/38; heading-xs 20/28 to 24/32; body-xl 18/26 to 20/28; body-l 16/24 to 18/26; hero-title 44/50 at 390 to 60/72 (floor 36/40 at 320); hero-tagline 22/30 to 36/46. heading-2xs, heading-3xs, body-m, body-s, body-xs and the weight variants stay fixed (legibility; inputs stay at 16 px). Defined in `design/tokens/figma-tokens.json` (`min`, `floor`) and generated by `npm run tokens`.
+
 ## Main agent decisions (iteration 1)
 
 These answer the open questions above and override anything earlier in this file.
@@ -399,3 +404,6 @@ These answer the open questions above and override anything earlier in this file
 8. **Sign up** also returns visitors to where they were: `routes.account.signupReturningTo(path)` is on main.
 9. **Home header with a panel or menu open (QA U1):** Figma 47:1249 wins. On Home the desktop header stays Transparent while a nav panel, the Appearance menu or the account menu is open; the open trigger is a white pill (`surface` bg, `primary-700` text). The theme button and account chip use the same pill when their menu is open on Transparent (icon or label and chevron `primary-700`; the avatar keeps its colours). Only scrolling (scrollY ≥ 8) switches it to Solid.
 10. **Traffic panel order (QA U2):** active announcements, oldest start first, first 3 (matches Figma 101:3919). The panel sorts this itself; the data layer's default order is unchanged for other pages.
+11. **No left accent bars (owner, 2026-11-07):** selected rows, callouts, notes and quoted blocks use a plain fill and text colour only, with no thick coloured edge. Stepper and timeline connector lines stay.
+12. **Docs frame centred (owner, 2026-11-07):** `DocsLayout` is capped at `max-w-page` and centred, so wide screens have balanced space. Below 1440 px nothing changes.
+13. **Current step pulses (owner, 2026-11-07):** one dot in the stepper (the current step, else the last complete before an upcoming one) and the timeline (the last past entry) shows a looping ring (`animate-pulse-ring`, none under reduced motion). The line rail has no progress state and does not pulse.

@@ -57,7 +57,7 @@ export function DocsLayout({
   const hasList = onThisPage.length > 0;
 
   return (
-    <div className="flex flex-col lg:flex-row">
+    <div className="mx-auto flex w-full max-w-page flex-col lg:flex-row">
       {currentGroup && currentItem ? (
         <SectionBar
           groupLabel={currentGroup.label}

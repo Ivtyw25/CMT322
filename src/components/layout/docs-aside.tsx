@@ -43,18 +43,16 @@ function AsideLink({ link, active, nested = false, onSelect }: AsideLinkProps) {
       aria-current={active ? 'true' : undefined}
       onClick={() => onSelect(link.id)}
       className={cn(
-        '-ml-0.5 block border-l-2 py-1.5 transition-colors duration-(--duration-fast) ease-(--ease-standard)',
-        nested ? 'pl-7' : 'pl-3.5',
+        'block py-1.5 transition-colors duration-(--duration-fast) ease-(--ease-standard)',
+        nested ? 'pl-5' : 'pl-0',
         nested
           ? active
             ? 'type-body-xs-semibold'
             : 'type-body-xs'
           : active
-            ? 'type-body-s-medium'
+            ? 'type-body-s-semibold'
             : 'type-body-s',
-        active
-          ? 'border-primary-600 text-primary-700'
-          : 'border-transparent text-gray-600 hover:text-gray-900',
+        active ? 'text-primary-700' : 'text-gray-600 hover:text-gray-900',
       )}
     >
       {link.label}
@@ -117,7 +115,7 @@ export function DocsAside({
   return (
     <nav aria-label={commonCopy.landmarks.onThisPage} className={className}>
       <p className="mb-3 type-body-xs-semibold text-gray-900">{commonCopy.landmarks.onThisPage}</p>
-      <ul className="flex flex-col border-l-2 border-gray-200">
+      <ul className="flex flex-col">
         {items.map((item) => (
           <li key={item.id}>
             <AsideLink link={item} active={item.id === activeId} onSelect={select} />

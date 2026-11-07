@@ -20,11 +20,11 @@ type CalloutProps = {
 const iconed = {
   warning: {
     Icon: TriangleAlert,
-    box: 'border-warning-600 bg-warning-50',
+    box: 'bg-warning-50',
     text: 'text-warning-700',
   },
-  success: { Icon: CircleCheck, box: 'border-success-600 bg-success-50', text: 'text-success-700' },
-  danger: { Icon: CircleAlert, box: 'border-danger-600 bg-danger-50', text: 'text-danger-700' },
+  success: { Icon: CircleCheck, box: 'bg-success-50', text: 'text-success-700' },
+  danger: { Icon: CircleAlert, box: 'bg-danger-50', text: 'text-danger-700' },
 } as const;
 
 /**
@@ -49,7 +49,7 @@ export function Callout({
         ref={ref}
         tabIndex={tabIndex}
         className={cn(
-          'flex gap-3 rounded-xl border-l-3 p-4 type-body-s text-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
+          'flex gap-3 rounded-xl p-4 type-body-s text-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
           box,
           className,
         )}
@@ -66,7 +66,7 @@ export function Callout({
         ref={ref}
         tabIndex={tabIndex}
         className={cn(
-          'flex gap-3 rounded-xl border-l-3 border-primary-600 bg-gray-50 p-4 type-body-s text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
+          'flex gap-3 rounded-xl bg-primary-50 p-4 type-body-s text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
           className,
         )}
       >
@@ -82,7 +82,7 @@ export function Callout({
       ref={ref}
       tabIndex={tabIndex}
       className={cn(
-        'flex flex-col gap-1.5 rounded-xl border-l-3 p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
+        'flex flex-col gap-1.5 rounded-xl p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
         box,
         className,
       )}

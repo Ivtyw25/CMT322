@@ -79,26 +79,11 @@ test.describe('footer newsletter', () => {
 test.describe('footer on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test('has no area select and no back-to-top button', async ({ page }) => {
+  test('has no area select', async ({ page }) => {
     await prepare(page);
     await page.goto(routes.project.overview);
     await settle(page);
     const footer = page.getByRole('contentinfo');
     await expect(footer.getByLabel(copy.areaLabel)).toBeHidden();
-    await expect(footer.getByRole('button', { name: footerCopy.backToTop })).toBeHidden();
-  });
-});
-
-test.describe('footer social names', () => {
-  test('are plain text: not links, not buttons, not focusable', async ({ page }) => {
-    await prepare(page);
-    await page.goto(routes.project.overview);
-    await settle(page);
-    const socials = page
-      .getByRole('contentinfo')
-      .getByRole('list', { name: footerCopy.social.title });
-    await expect(socials.getByRole('listitem')).toHaveCount(6);
-    await expect(socials.getByRole('link')).toHaveCount(0);
-    await expect(socials.getByRole('button')).toHaveCount(0);
   });
 });

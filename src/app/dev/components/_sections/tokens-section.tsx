@@ -1,12 +1,6 @@
 import { devCopy } from '@/content/dev';
 import { GallerySection, Specimen } from '@/app/dev/components/_parts/section';
-import {
-  colourSwatches,
-  radii,
-  shadows,
-  stepDowns,
-  typeStyles,
-} from '@/app/dev/components/_parts/token-data';
+import { colourSwatches, radii, shadows, typeStyles } from '@/app/dev/components/_parts/token-data';
 
 export function TokensSection() {
   const copy = devCopy.tokens;
@@ -30,14 +24,6 @@ export function TokensSection() {
           <p key={style} className={`${style} text-gray-900`}>
             {copy.typeSample}
             <span className="ml-3 type-body-xs text-gray-500">{style}</span>
-          </p>
-        ))}
-      </Specimen>
-      <Specimen caption={copy.mobileStepDown} className="flex-col">
-        {stepDowns.map((step) => (
-          <p key={step.name} className={`${step.className} text-gray-900`}>
-            {copy.typeSample}
-            <span className="ml-3 type-body-xs text-gray-500">{step.name}</span>
           </p>
         ))}
       </Specimen>

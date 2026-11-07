@@ -1,8 +1,8 @@
 /** Station code of the place where the two routes meet. */
 export const JUNCTION_CODE = 'S19';
 
-/** The branch to KOMTAR leaves the main line at Macallum. */
-const BRANCH_CODE = 'S20';
+/** Station code of KOMTAR, where the short branch from the junction ends. */
+export const BRANCH_CODE = 'S20';
 
 type Point = { code: string; lat: number; lng: number };
 

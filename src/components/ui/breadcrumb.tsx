@@ -24,7 +24,7 @@ export function Breadcrumb({ items, current, tone = 'primary', className }: Brea
             <Link
               href={item.href}
               className={cn(
-                'hit-area transition-colors duration-(--duration-fast) hover:underline',
+                'hit-area transition-colors duration-(--duration-fast)',
                 tone === 'muted'
                   ? 'text-gray-600 hover:text-primary-700'
                   : 'text-primary-700 hover:text-primary-800',

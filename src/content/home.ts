@@ -3,7 +3,7 @@ import { lineDiagramCopy } from './line';
 
 /**
  * Home page copy, Figma 37:1025 (desktop), 133:6556 (mobile), search state 49:1127 / 134:8874.
- * UX spec: docs/specs/home.md. Sections are in reading order.
+ * Sections are in reading order.
  *
  * Records come from @/data/api, never from here: announcements (works list), areas (chip
  * labels), stations (line preview), construction updates (progress cards), most-asked FAQ
@@ -117,7 +117,6 @@ export const homeCopy = {
         `You're signed up. We'll email ${email} when road changes are announced for ${area}.`,
       allAreasInSentence: 'the whole line',
       sendFailed: "We couldn't sign you up just now. Check your connection and try again.",
-      footnote: 'You can unsubscribe at any time.',
     },
   },
 
@@ -125,11 +124,6 @@ export const homeCopy = {
     title: 'The Mutiara Line in 2031',
     // VERIFY: "December 2031". BRIEFING §8 confirms only "Operations start in 2031".
     lede: '22 stations will link PSR-A, the airport and George Town with Penang Sentral on the mainland. Opening is planned for December 2031.',
-    /** <figcaption> of each view (768 px and up). */
-    captions: {
-      route: 'Stations in line order, not to scale',
-      map: 'Where the line runs on Penang Island and the mainland',
-    },
     viewToggle: {
       /** Visually hidden legend of the radio group. */
       label: 'Line view',
@@ -140,7 +134,6 @@ export const homeCopy = {
     map: {
       /** role="region" name. */
       label: 'Map of the Mutiara Line',
-      caption: 'Illustrative alignment.',
       /** Followed by uiCopy.opensInNewTab (visually hidden). */
       attribution: {
         label: '© OpenStreetMap contributors',
@@ -161,7 +154,6 @@ export const homeCopy = {
     // VERIFY: the line's role in the Penang Transport Master Plan and the State Government vision.
     body: "The LRT Mutiara Line is a key part of the Penang Transport Master Plan. It is more than a way to travel. It will support growth that benefits everyone and bring new jobs, as part of the State Government's vision of a connected, dynamic Penang.",
     link: { label: 'Read more about the line', href: routes.project.about },
-    imageAlt: 'Red lanterns hang over Love Lane, a street of shophouses in George Town',
   },
 
   guide: {

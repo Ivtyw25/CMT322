@@ -20,7 +20,7 @@ function dateTextOf(item: Announcement): string {
 
 const metaClass = 'flex items-start gap-1.5 type-body-s text-gray-600';
 const textLinkClass =
-  'hit-area type-body-s-semibold text-primary-700 transition-colors duration-(--duration-fast) hover:underline';
+  'hit-area type-body-s-semibold text-primary-700 hover:text-primary-800 transition-colors duration-(--duration-fast)';
 
 /** "Road changes this week" (Figma 66:2206): status, title, place and dates, a link to the map. */
 export function OverviewRoadChanges({

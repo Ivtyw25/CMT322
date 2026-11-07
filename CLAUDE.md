@@ -32,7 +32,7 @@ Every agent in this repo follows these rules. Other files cover the rest:
   - dynamic routes for station pages and tickets, statically generated where possible (e.g. all 22 stations)
   - a `not-found` page for 404s
   - metadata (title, description) set per route
-- **Fonts and images:** load Poppins and Inter with `next/font`. Serve the design's images with `next/image` and explicit sizes.
+- **Fonts and images:** load Poppins and Google Sans with `next/font`. Serve the design's images with `next/image` and explicit sizes.
 - **Theme:** dark mode must not flash on load. Set the theme on `<html>` before first paint, and make sure hydration doesn't complain.
 
 ## 2. What we want from the codebase
@@ -86,10 +86,11 @@ The main agent decides the folder structure. These are the qualities it must hav
   - System follows `prefers-color-scheme` live
   - the choice is saved per browser, with storage access wrapped in try/catch
 - **Links:**
+  - hover is a colour change only, never an underline (owner decision 2026-11-07)
   - internal links use `next/link` and the shared route definitions
   - no `href="#"`
   - external links open in a new tab with `rel="noopener noreferrer"` and an "opens in new tab" label
-  - social media names in the footer have no URLs (owner decision). Render them as plain text styled as in Figma: not links or buttons, never focusable, never counted as dead links.
+  - the footer shows no social media accounts (owner decision 2026-11-07, removed).
 - **State:** React state and context. No global store unless the spec needs one; if so, record it in `log.md`.
 - **Tests:** every page has a behaviour spec covering its interactive states from the UX spec.
 
@@ -97,7 +98,7 @@ The main agent decides the folder structure. These are the qualities it must hav
 
 These are decisions already made with the owner. Do not undo them.
 
-- **Line-rail motif:** stations, timelines and menus show stops on a vertical line (dot + line). Reuse the shared line-rail and timeline components; don't invent new list styles for these.
+- **Line-rail motif:** stations and timelines show stops on a vertical line (dot + line). Desktop nav panels do not (owner decision 2026-11-07): their pages are an icon list with a tinted, left-bar active row (`components/layout/nav-icons.ts`). Reuse the shared line-rail and timeline components; don't invent new list styles for these.
 - **Accent bar:** a short 48 × 4 px primary bar above section headings. Keep it.
 - **Meta strings:** no middle dots (`·`) to join metadata. Use separate lines, icons with labels, or label/value pairs.
 - **Link labels:** no arrow characters stuck onto link text ("See all →"). Use a proper chevron icon where the design shows one.
@@ -107,6 +108,12 @@ These are decisions already made with the owner. Do not undo them.
   - the map comes first on traffic pages
   - tables become cards
   - horizontal timelines and steppers become vertical
+- **Home page overrides (owner decision, 2026-11-07),** which take precedence over the rules above on Home:
+  - on phones (<768 px) the guide, safety-tip and progress cards and the 22-station line preview are horizontal swipe rows (shared `components/patterns/swipe-row.tsx`); the station row keeps a horizontal dot + line
+  - home card titles use Poppins heading tokens
+  - below 640 px the hero search has no location icon, a one-line hint truncated with "…", and a round search-icon button
+- **Buttons** are pill-shaped (`rounded-full`) site-wide (owner decision, 2026-11-07). Cards keep their radius.
+- **Header:** the theme toggle (round) and the "Sign in" button show their outline only on hover. The mobile menu has no logo, theme toggle or Appearance section while open.
 - **Google sign-in button:** use the official Google button SVGs exactly as Google's branding guidelines require. Do not restyle them.
 
 ## 5. Commands

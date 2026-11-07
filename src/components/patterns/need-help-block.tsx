@@ -7,8 +7,8 @@ import { cn } from '@/lib/cn';
 export type Careline = { label: string; number: string; tel: string };
 
 const linkClass = cn(
-  'inline-flex min-h-11 items-center type-body-s text-primary-700 md:min-h-0',
-  'transition-colors duration-(--duration-fast) ease-(--ease-standard) hover:underline',
+  'inline-flex min-h-11 items-center type-body-s text-primary-700 hover:text-primary-800 md:min-h-0',
+  'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
 );
 
 /**

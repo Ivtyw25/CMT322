@@ -1,3 +1,38 @@
+import './line-flow.css';
+
+type FlowStyle = React.CSSProperties & { '--flow-from': number };
+
+/**
+ * The track, in flow order from A01: the main line A01 to S19 (drawn end to start), then the
+ * two short lines from S19 to S31 (end to start) and to S20 (start to end). `--flow-from` -1 fills
+ * a path from its end, 1 from its start (see line-flow.css).
+ */
+const LINE_SEGMENTS: readonly {
+  id: string;
+  d: string;
+  part: 'main' | 'branch';
+  flow: FlowStyle;
+}[] = [
+  {
+    id: 'main',
+    part: 'main',
+    d: 'M178.106 167.876H929.375C975.749 167.876 1005.43 197.556 1005.43 239.293V451.689C1005.43 505.483 975.749 546.293 929.375 546.293H281.057',
+    flow: { '--flow-from': -1 },
+  },
+  {
+    id: 'to-s31',
+    part: 'branch',
+    d: 'M63.0967 41.7372C64.9517 74.1994 68.6616 89.0393 72.3716 100.169C89.0665 140.979 129.876 163.239 178.106 167.876',
+    flow: { '--flow-from': -1 },
+  },
+  {
+    id: 'to-s20',
+    part: 'branch',
+    d: 'M178.106 167.876C120.601 178.079 68.6616 222.598 63.0967 294.943',
+    flow: { '--flow-from': 1 },
+  },
+];
+
 /** The line, depot and nearby-place pins of the logical diagram, drawn at Figma size (1152 × 614). */
 export function LineDiagramArt() {
   return (
@@ -9,25 +44,29 @@ export function LineDiagramArt() {
       fill="none"
       className="pointer-events-none absolute inset-0"
     >
-      <path
-        d="M63.0967 41.7372C64.9517 74.1994 68.6616 89.0393 72.3716 100.169C89.0665 140.979 129.876 163.239 178.106 167.876"
-        className="fill-none stroke-primary-200"
-        strokeWidth="11.1299"
-        strokeLinecap="round"
-      />
-      <path
-        d="M178.106 167.876C120.601 178.079 68.6616 222.598 63.0967 294.943"
-        className="fill-none stroke-primary-200"
-        strokeWidth="11.1299"
-        strokeLinecap="round"
-      />
-      <path
-        d="M178.106 167.876H929.375C975.749 167.876 1005.43 197.556 1005.43 239.293V451.689C1005.43 505.483 975.749 546.293 929.375 546.293H281.057"
-        className="fill-none stroke-primary-600"
-        strokeWidth="11.1299"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      {LINE_SEGMENTS.map((segment) => (
+        <path
+          key={`track-${segment.id}`}
+          d={segment.d}
+          className="fill-none stroke-primary-100"
+          strokeWidth="11.1299"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ))}
+      {LINE_SEGMENTS.map((segment) => (
+        <path
+          key={`water-${segment.id}`}
+          d={segment.d}
+          pathLength={1}
+          className="line-flow fill-none"
+          data-part={segment.part}
+          style={segment.flow}
+          strokeWidth="11.1299"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ))}
       <path
         d="M207.786 41.7371H222.625H233.755M233.755 18.5498H222.625V64.9244H233.755"
         className="fill-none stroke-gray-400"

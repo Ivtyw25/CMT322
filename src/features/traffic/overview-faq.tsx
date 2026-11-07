@@ -33,7 +33,7 @@ export function OverviewFaq({
       <Accordion items={entries} headingAs="h3" />
       <Link
         href={routes.project.faq}
-        className="hit-area inline-flex w-fit items-center py-2.5 type-body-s-semibold text-primary-700 hover:underline"
+        className="hit-area inline-flex w-fit items-center py-2.5 type-body-s-semibold text-primary-700 hover:text-primary-800"
       >
         {copy.seeAll}
       </Link>

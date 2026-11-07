@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { Check, Contrast, Monitor, Moon, Sun } from 'lucide-react';
+import { Contrast, Monitor, Moon, Sun } from 'lucide-react';
 import { DropdownMenu } from 'radix-ui';
 import { navCopy } from '@/content/nav';
 import { IconButton } from '@/components/ui/icon-button';
@@ -78,9 +78,10 @@ export function AppearanceMenu({
           aria-label={copy.buttonLabel(copy.options[selected].label)}
           variant="outline"
           className={cn(
+            'rounded-full border-transparent hover:border-gray-300 data-[state=open]:border-gray-300',
             compact && 'hit-area',
             onHero && 'text-static-white hover:bg-static-glass',
-            onHero && 'border-static-white hover:border-static-white',
+            onHero && 'border-transparent hover:border-static-white',
             onHero &&
               'data-[state=open]:border-surface data-[state=open]:bg-surface data-[state=open]:text-primary-700',
           )}
@@ -99,9 +100,8 @@ export function AppearanceMenu({
           'data-[state=closed]:animate-menu-out data-[state=open]:animate-menu-in',
         )}
       >
-        <DropdownMenu.Label className="flex flex-col px-2.5 pt-1.5 pb-1">
-          <span className="type-body-s-semibold text-gray-900">{copy.title}</span>
-          <span className="type-body-xs text-gray-500">{copy.subtitle}</span>
+        <DropdownMenu.Label className="px-2.5 pt-1.5 pb-1 type-body-s-semibold text-gray-900">
+          {copy.title}
         </DropdownMenu.Label>
         <DropdownMenu.RadioGroup
           value={selected}
@@ -128,19 +128,9 @@ export function AppearanceMenu({
                 )}
               >
                 <Icon aria-hidden className="size-4.5 shrink-0" />
-                <span className="flex flex-1 flex-col">
-                  <span className="group-data-[state=checked]:type-body-s-semibold">
-                    {option.label}
-                  </span>
-                  {option.description ? (
-                    <span className="type-body-xs font-normal text-gray-500">
-                      {option.description}
-                    </span>
-                  ) : null}
+                <span className="flex-1 group-data-[state=checked]:type-body-s-semibold">
+                  {option.label}
                 </span>
-                <DropdownMenu.ItemIndicator>
-                  <Check aria-hidden className="size-4 shrink-0" />
-                </DropdownMenu.ItemIndicator>
               </DropdownMenu.RadioItem>
             );
           })}

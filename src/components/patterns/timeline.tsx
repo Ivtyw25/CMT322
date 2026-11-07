@@ -28,6 +28,7 @@ export function Timeline({ items, orientation = 'vertical', className }: Timelin
   const responsive = orientation === 'responsive';
   const hasToday = items.some((item) => item.state === 'today');
   const lastIndex = items.length - 1;
+  const pulsing = items.findLastIndex((item) => item.state === 'past');
 
   return (
     <ol
@@ -115,6 +116,7 @@ export function Timeline({ items, orientation = 'vertical', className }: Timelin
                   today &&
                     responsive &&
                     'xl:size-6 xl:border-primary-600 xl:bg-surface xl:ring-4 xl:ring-primary-200',
+                  index === pulsing && 'animate-pulse-ring',
                 )}
               />
               {today && responsive ? (

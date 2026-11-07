@@ -19,7 +19,7 @@ type SiteShellProps = {
 };
 
 /**
- * Everything around a page: skip link, header, site notice, `<main id="main">` and footer.
+ * Everything around a page: skip link, header, site notice (Home only), `<main id="main">` and footer.
  * Pages render only their own content; this owns the one `<main>`.
  */
 export async function SiteShell({ children, layout = 'standard' }: SiteShellProps) {

@@ -54,7 +54,7 @@ export function WorkspaceSection() {
     <GallerySection id="workspace" note={copy.workspaceNote}>
       <Link
         href={routes.dev.workspace}
-        className="w-fit type-body-s-semibold text-primary-700 underline-offset-2 hover:underline"
+        className="w-fit type-body-s-semibold text-primary-700 underline-offset-2 hover:text-primary-800"
       >
         {copy.workspaceLink}
       </Link>

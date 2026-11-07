@@ -3,7 +3,7 @@ import type { Station, StationProgress, StationStage, StationStageId } from '@/d
 /*
  * The 22 stations in line order, Penang Sentral to PSR-A (docs/BRIEFING.md §3, Figma 100:3723).
  * KOMTAR (S20) is exactly as Figma 95:3102. Progress figures, stages and notes for the other
- * stations are invented mock records (docs/content/generated.md).
+ * stations are invented mock records.
  */
 
 const STAGE_ORDER: StationStageId[] = [
@@ -81,6 +81,7 @@ export const stations: Station[] = [
     structure: 'elevated',
     connectsTo: [{ code: 'S30', distanceKm: null }],
     interchanges: ['KTM Butterworth', 'Ferry terminal', 'Rapid Penang bus terminal'],
+    interchangeModes: ['rail', 'ferry', 'bus'],
     nearby: ['Penang Sentral transport hub', 'Butterworth town centre'],
     progress: null,
     stages: segment2Stages(),
@@ -111,6 +112,7 @@ export const stations: Station[] = [
       { code: 'S19', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Jalan Bagan Luar shops and offices'],
     progress: null,
     stages: segment2Stages(),
@@ -135,6 +137,7 @@ export const stations: Station[] = [
       { code: 'S30', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Gat Lebuh Macallum', 'Weld Quay'],
     progress: null,
     stages: segment2Stages(),
@@ -157,6 +160,7 @@ export const stations: Station[] = [
     // VERIFY: Figma lists only S19 Macallum under "Connects to"; S18 Bandar Sri Pinang is also next to KOMTAR.
     connectsTo: [{ code: 'S19', distanceKm: 0.79 }],
     interchanges: ['KOMTAR bus terminal'],
+    interchangeModes: ['bus'],
     nearby: ['KOMTAR Tower', 'George Town UNESCO site'],
     progress: progress(38, 'piers', '2026-10-27'),
     stages: segment1Stages(
@@ -195,6 +199,7 @@ export const stations: Station[] = [
       { code: 'S17', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Bandar Sri Pinang housing', 'Lebuhraya Tun Dr Lim Chong Eu'],
     progress: progress(14, 'piling', '2026-10-08'),
     stages: segment1Stages(
@@ -228,6 +233,7 @@ export const stations: Station[] = [
       { code: 'S16', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Sungai Pinang river', 'Jalan Sungai Pinang'],
     progress: progress(29, 'piers', '2026-10-16'),
     stages: segment1Stages(
@@ -255,6 +261,7 @@ export const stations: Station[] = [
       { code: 'S15', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Jelutong town', 'Lebuhraya Tun Dr Lim Chong Eu'],
     progress: progress(33, 'piers', '2026-10-16'),
     stages: segment1Stages(
@@ -282,6 +289,7 @@ export const stations: Station[] = [
       { code: 'S14', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Eastern waterfront', 'Lebuhraya Tun Dr Lim Chong Eu'],
     progress: progress(31, 'piers', '2026-10-16'),
     stages: segment1Stages(
@@ -309,6 +317,7 @@ export const stations: Station[] = [
       { code: 'S13', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Gelugor town', 'Jalan Gelugor'],
     progress: progress(41, 'piers', '2026-10-20'),
     stages: segment1Stages(
@@ -336,6 +345,7 @@ export const stations: Station[] = [
       { code: 'S12', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Universiti Sains Malaysia (USM) main campus'],
     progress: progress(46, 'structure', '2026-10-21'),
     stages: segment1Stages(
@@ -369,6 +379,7 @@ export const stations: Station[] = [
       { code: 'S11', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Batu Uban', 'Masjid Jamek Batu Uban'],
     progress: progress(39, 'piers', '2026-10-20'),
     stages: segment1Stages(
@@ -396,6 +407,7 @@ export const stations: Station[] = [
       { code: 'S10', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Sungai Dua Depot', 'Jalan Sungai Dua'],
     progress: progress(48, 'structure', '2026-10-18'),
     stages: segment1Stages(
@@ -423,6 +435,7 @@ export const stations: Station[] = [
       { code: 'S09', distanceKm: null },
     ],
     interchanges: ['Sungai Nibong bus terminal'],
+    interchangeModes: ['bus'],
     nearby: ['Sungai Nibong bus terminal', 'Jalan Sultan Azlan Shah'],
     progress: progress(42, 'piers', '2026-10-22'),
     stages: segment1Stages(
@@ -450,6 +463,7 @@ export const stations: Station[] = [
       { code: 'S08', distanceKm: null },
     ],
     interchanges: ['Rapid Penang bus hub'],
+    interchangeModes: ['bus'],
     nearby: ['Bukit Jambul Complex', 'SK Bayan Baru'],
     progress: progress(36, 'piers', '2026-10-26'),
     stages: segment1Stages(
@@ -483,6 +497,7 @@ export const stations: Station[] = [
       { code: 'S07', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['SPICE Arena', 'SPICE Convention Centre'],
     progress: progress(34, 'piers', '2026-10-12'),
     stages: segment1Stages(
@@ -516,6 +531,7 @@ export const stations: Station[] = [
       { code: 'S06', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Bayan Baru town centre'],
     progress: progress(30, 'piers', '2026-10-12'),
     stages: segment1Stages(
@@ -544,6 +560,7 @@ export const stations: Station[] = [
       { code: 'S05', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Bayan Lepas Free Industrial Zone, Phase 3'],
     progress: progress(17, 'piling', '2026-10-15'),
     stages: segment1Stages(
@@ -578,6 +595,7 @@ export const stations: Station[] = [
       { code: 'S04', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Bayan Lepas Free Industrial Zone, Phase 4', 'Lebuh Kampung Jawa'],
     progress: progress(21, 'piling', '2026-10-19'),
     stages: segment1Stages(
@@ -605,6 +623,7 @@ export const stations: Station[] = [
       { code: 'S03', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Sungai Tiram', 'Jalan Sungai Tiram'],
     progress: progress(24, 'piers', '2026-09-28'),
     stages: segment1Stages(
@@ -632,6 +651,7 @@ export const stations: Station[] = [
       { code: 'S02', distanceKm: null },
     ],
     interchanges: ['Penang International Airport terminal'],
+    interchangeModes: ['air'],
     nearby: ['Penang International Airport terminal'],
     progress: progress(27, 'piers', '2026-10-05'),
     stages: segment1Stages(
@@ -659,6 +679,7 @@ export const stations: Station[] = [
       { code: 'A01', distanceKm: null },
     ],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Permatang Damar Laut village'],
     progress: progress(12, 'piling', '2026-09-24'),
     stages: segment1Stages(
@@ -683,6 +704,7 @@ export const stations: Station[] = [
     structure: 'elevated',
     connectsTo: [{ code: 'S02', distanceKm: null }],
     interchanges: [],
+    interchangeModes: [],
     nearby: ['Penang South Reclamation island A'],
     progress: progress(6, 'site-clearing', '2026-09-24'),
     stages: segment1Stages(

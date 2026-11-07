@@ -22,7 +22,7 @@ export function DiagramLegend() {
         {copy.line}
       </Item>
       <Item
-        swatch={<span className="size-4.5 rounded-full border-3 border-primary-300 bg-surface" />}
+        swatch={<span className="size-4.5 rounded-full border-3 border-primary-600 bg-surface" />}
       >
         {copy.station}
       </Item>

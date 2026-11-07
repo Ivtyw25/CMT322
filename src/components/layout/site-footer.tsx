@@ -5,15 +5,14 @@ import { footerCopy } from '@/content/footer';
 import { getAreas } from '@/data/api/areas';
 import { getSiteInfo } from '@/data/api/site-info';
 import { cn } from '@/lib/cn';
-import { BackToTop } from './back-to-top';
 import { Logo } from './logo';
 import { NewsletterForm } from './newsletter-form';
 
 const footerLink =
-  'hit-area flex items-center type-body-s text-static-on-navy-200 transition-colors duration-(--duration-fast) hover:text-static-white hover:underline focus-visible:outline-static-white';
+  'hit-area flex items-center type-body-s text-static-on-navy-200 transition-colors duration-(--duration-fast) hover:text-static-white focus-visible:outline-static-white';
 
 const contactLink =
-  'hit-area type-body-s-semibold text-static-white hover:underline focus-visible:outline-static-white';
+  'hit-area type-body-s-semibold text-static-white transition-colors duration-(--duration-fast) hover:text-static-on-navy-200 focus-visible:outline-static-white';
 
 const divider = 'hidden h-px bg-surface @min-[48rem]:block';
 
@@ -93,32 +92,6 @@ export async function SiteFooter({ newsletterPreview, className }: SiteFooterPro
             areas={areas.map((area) => ({ id: area.id, label: area.label }))}
             preview={newsletterPreview}
           />
-          <div className={divider} />
-
-          <div className="flex flex-wrap items-center gap-2 @min-[48rem]:gap-4">
-            <p className="hidden type-body-s-semibold text-static-white @min-[48rem]:block">
-              {footerCopy.social.title}
-            </p>
-            <ul
-              aria-label={footerCopy.social.title}
-              className="flex flex-wrap gap-2 @min-[48rem]:gap-4"
-            >
-              {siteInfo.socials.map((channel) => (
-                <li
-                  key={channel.name}
-                  className={cn(
-                    'rounded-full border border-static-on-navy-300 px-2.5 py-1 type-body-xs-medium text-static-white',
-                    '@min-[48rem]:border-static-white-30 @min-[48rem]:px-3 @min-[48rem]:py-1.25 @min-[48rem]:text-static-on-navy-100',
-                  )}
-                >
-                  {channel.name}
-                </li>
-              ))}
-            </ul>
-            <BackToTop className="hidden @min-[48rem]:ml-6.5 @min-[48rem]:flex" />
-          </div>
-
-          <div className={divider} />
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-static-on-navy-300 pt-5 type-body-xs @min-[48rem]:gap-x-6 @min-[48rem]:border-t-0 @min-[48rem]:pt-0">
             <p className="text-static-on-navy-200 @min-[48rem]:mr-8.5">
               {footerCopy.legal.copyright}
@@ -127,7 +100,7 @@ export async function SiteFooter({ newsletterPreview, className }: SiteFooterPro
               <Link
                 key={link.href}
                 href={link.href}
-                className="hit-area type-body-xs-medium text-static-white hover:underline focus-visible:outline-static-white @min-[48rem]:font-normal @min-[48rem]:text-static-on-navy-100"
+                className="hit-area type-body-xs-medium text-static-white transition-colors duration-(--duration-fast) hover:text-static-on-navy-200 focus-visible:outline-static-white @min-[48rem]:font-normal @min-[48rem]:text-static-on-navy-100 @min-[48rem]:hover:text-static-white"
               >
                 {link.label}
               </Link>

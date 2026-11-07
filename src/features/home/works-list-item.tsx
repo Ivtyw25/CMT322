@@ -1,4 +1,4 @@
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/button-link';
 import { Tag } from '@/components/ui/tag';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
@@ -16,7 +16,7 @@ function MetaLine({
   children: string;
 }) {
   return (
-    <p className="flex items-center gap-1.5 type-body-s text-gray-700 md:whitespace-nowrap">
+    <p className="flex items-center gap-1.5 type-body-s-medium text-gray-900 md:whitespace-nowrap">
       {icon}
       <VisuallyHidden>{label}</VisuallyHidden>
       {children}
@@ -47,7 +47,8 @@ export function WorksListItem({ item }: { item: WorksItem }) {
         >
           {item.hours}
         </MetaLine>
-        <ButtonLink variant="ghost" href={copy.viewOnMapHref(item.id)}>
+        <ButtonLink variant="secondary" href={copy.viewOnMapHref(item.id)} className="mt-1.5">
+          <MapPin aria-hidden className="size-4 shrink-0" />
           {uiCopy.actions.viewOnMap}
           <VisuallyHidden>{copy.viewOnMapLabel(item.title)}</VisuallyHidden>
         </ButtonLink>

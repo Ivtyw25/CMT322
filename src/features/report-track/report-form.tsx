@@ -250,7 +250,7 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
           <button
             type="button"
             onClick={startOver}
-            className="mt-1 cursor-pointer type-body-s-semibold text-primary-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+            className="mt-1 cursor-pointer type-body-s-semibold text-primary-700 hover:text-primary-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
           >
             {draft.startOver}
           </button>

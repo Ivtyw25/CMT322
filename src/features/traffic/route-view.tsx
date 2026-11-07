@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { FitToWidth } from '@/components/patterns/fit-to-width';
 import { LineDiagram } from '@/components/patterns/line-diagram/line-diagram';
 import {
   DIAGRAM_HEIGHT,
@@ -16,7 +17,6 @@ import { trafficCopy } from '@/content/traffic';
 import type { StationCode } from '@/data/models/station';
 import { DiagramLegend } from './diagram-legend';
 import { FilterLiveRegion } from './filter-live-region';
-import { FitToWidth } from './fit-to-width';
 import { LayerToggles } from './layer-toggles';
 import { PanelHeader } from './panel-header';
 import { RoadChangeList } from './road-change-list';

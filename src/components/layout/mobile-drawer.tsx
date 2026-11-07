@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { commonCopy } from '@/content/common';
 import { navCopy } from '@/content/nav';
 import { ButtonLink } from '@/components/ui/button-link';
-import { ThemeSwitcher } from '@/components/patterns/theme-switcher';
 import { cn } from '@/lib/cn';
 import { navGroupList } from './nav-groups';
 import type { ShellUser } from './shell-data';
@@ -28,7 +27,7 @@ const rowClass =
 
 const groupPadding = 'px-5 py-3 md:px-8';
 
-/** The mobile menu (Figma 127:5592): every group expanded, account area, appearance. */
+/** The mobile menu (Figma 127:5592): every group expanded and the account area. */
 export function MobileDrawer({
   id,
   user,
@@ -44,7 +43,7 @@ export function MobileDrawer({
       id={id}
       aria-label={commonCopy.landmarks.siteMenu}
       className={cn(
-        'overflow-y-auto overscroll-contain bg-surface pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)] shadow-drawer',
+        'overflow-y-auto overscroll-contain bg-surface pb-[calc(env(safe-area-inset-bottom)+0.5rem)] shadow-drawer',
         'animate-drawer-in',
         className,
       )}
@@ -94,13 +93,14 @@ export function MobileDrawer({
           <ButtonLink href={navCopy.header.logInHref(currentPath)} fullWidth onClick={onNavigate}>
             {navCopy.mobile.logIn}
           </ButtonLink>
-          <Link
+          <ButtonLink
             href={navCopy.mobile.createAccountHref(currentPath)}
+            variant="secondary"
+            fullWidth
             onClick={onNavigate}
-            className="hit-area type-body-s-semibold text-primary-700 hover:underline"
           >
             {navCopy.mobile.createAccount}
-          </Link>
+          </ButtonLink>
         </div>
       ) : null}
 
@@ -152,11 +152,6 @@ export function MobileDrawer({
           </ul>
         </div>
       ) : null}
-
-      <div className="flex flex-col gap-2 border-t border-gray-200 px-5 py-3 md:px-8">
-        <p className="type-body-xs-semibold text-gray-500">{navCopy.appearance.title}</p>
-        <ThemeSwitcher />
-      </div>
     </nav>
   );
 }

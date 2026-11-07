@@ -1,0 +1,79 @@
+/*
+ * Home Route view (owner decision 2026-11-07): the line fills like water from A01 along the main
+ * line to S19, then to S31 and S20, turning from shallow to deep blue; then it drains back the
+ * same way to A01, and repeats. One 12 s cycle shared by every segment, so they stay in step.
+ * LineFlow sets data-flow on an ancestor: "ready" (empty), "on" (playing), "paused" (off screen).
+ * Without it (no JS, Traffic Route view) the line is simply drawn.
+ */
+.line-flow {
+  stroke: var(--color-primary-700);
+}
+
+[data-flow] .line-flow {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: var(--flow-from);
+}
+
+[data-flow='on'] .line-flow,
+[data-flow='paused'] .line-flow {
+  animation:
+    line-flow-colour 12s linear infinite,
+    line-flow-main 12s var(--ease-standard) infinite;
+}
+
+[data-flow] .line-flow[data-part='branch'] {
+  animation-name: line-flow-colour, line-flow-branch;
+}
+
+[data-flow='paused'] .line-flow {
+  animation-play-state: paused;
+}
+
+/* Fill 0–35 %, full 35–65 %, drain 65–100 %. */
+@keyframes line-flow-main {
+  0% {
+    stroke-dashoffset: var(--flow-from);
+  }
+  35%,
+  65% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: var(--flow-from);
+  }
+}
+
+/* Fill after the main line (35–48 %), drain before it (52–65 %). */
+@keyframes line-flow-branch {
+  0%,
+  35% {
+    stroke-dashoffset: var(--flow-from);
+  }
+  48%,
+  52% {
+    stroke-dashoffset: 0;
+  }
+  65%,
+  100% {
+    stroke-dashoffset: var(--flow-from);
+  }
+}
+
+@keyframes line-flow-colour {
+  0%,
+  100% {
+    stroke: var(--color-primary-200);
+  }
+  50% {
+    stroke: var(--color-primary-700);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-flow] .line-flow,
+  [data-flow] .line-flow[data-part='branch'] {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+}

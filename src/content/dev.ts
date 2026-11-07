@@ -47,7 +47,6 @@ export const devCopy = {
     type: 'Type scale',
     radii: 'Radii',
     shadows: 'Shadows',
-    mobileStepDown: 'Mobile step-down',
   },
   /** Labels for forced states and preview frames. */
   states: {

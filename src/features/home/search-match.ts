@@ -2,7 +2,6 @@ import type { SearchEntry, SearchEntryKind } from '@/data/models/search';
 import { normalise, normaliseQuery } from '@/lib/search/normalise';
 
 export const MIN_QUERY_LENGTH = 2;
-const MAX_PER_GROUP = 4;
 const GROUP_ORDER: readonly SearchEntryKind[] = ['station', 'road', 'area'];
 
 export type SearchMatch = {
@@ -23,7 +22,7 @@ function rank(label: string, detail: string, query: string): { score: number; at
   return detail.includes(query) ? { score: 3, at: -1 } : null;
 }
 
-/** Suggestions for a query: grouped Stations, Roads, Areas; at most four each; empty below two characters. */
+/** Suggestions for a query: grouped Stations, Roads, Areas; every match, ranked; empty below two characters. */
 export function matchEntries(entries: readonly SearchEntry[], rawQuery: string): SearchGroup[] {
   const query = normaliseQuery(rawQuery);
   if (query.length < MIN_QUERY_LENGTH) return [];
@@ -44,10 +43,7 @@ export function matchEntries(entries: readonly SearchEntry[], rawQuery: string):
           : { start: first, end: last + 1 };
       ranked.push({ match: { entry, highlight }, score: found.score });
     }
-    const matches = ranked
-      .toSorted((a, b) => a.score - b.score)
-      .slice(0, MAX_PER_GROUP)
-      .map((item) => item.match);
+    const matches = ranked.toSorted((a, b) => a.score - b.score).map((item) => item.match);
     if (matches.length > 0) groups.push({ kind, matches });
   }
   return groups;

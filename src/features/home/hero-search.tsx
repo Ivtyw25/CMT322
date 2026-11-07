@@ -1,6 +1,6 @@
 'use client';
 
-import { MapPin } from 'lucide-react';
+import { MapPin, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ const PHONE_HEADER_HEIGHT = 61;
 /** Where the box sits when the phone keyboard opens: 12 px under the mobile header. */
 const PHONE_BOX_TOP = PHONE_HEADER_HEIGHT + 12;
 
-/** Hero search: an ARIA 1.2 combobox over the local search index. See docs/specs/home.md section 2. */
+/** Hero search: an ARIA 1.2 combobox over the local search index. */
 export function HeroSearch({ entries }: { entries: readonly SearchEntry[] }) {
   const copy = homeCopy.search;
   const router = useRouter();
@@ -124,8 +124,7 @@ export function HeroSearch({ entries }: { entries: readonly SearchEntry[] }) {
         break;
       case 'ArrowUp':
         event.preventDefault();
-        if (event.altKey) setOpen(false);
-        else if (showPanel) move(-1);
+        if (showPanel) move(-1);
         break;
       case 'Enter':
         if (showPanel && activeEntry) {
@@ -178,11 +177,11 @@ export function HeroSearch({ entries }: { entries: readonly SearchEntry[] }) {
         aria-label={copy.formLabel}
         onSubmit={onSubmit}
         className={cn(
-          'flex items-center gap-2.5 rounded-xl bg-surface py-1.5 pr-1.5 pl-4 shadow-hero-search',
+          'flex items-center gap-2.5 rounded-full bg-surface py-1.5 pr-1.5 pl-5 shadow-hero-search',
           'focus-within:ring-2 focus-within:ring-primary-600 focus-within:ring-inset',
         )}
       >
-        <MapPin aria-hidden className="size-5 shrink-0 text-gray-500" />
+        <MapPin aria-hidden className="hidden size-5 shrink-0 text-gray-500 sm:block" />
         <div className="relative flex min-h-10 min-w-0 flex-1 items-center">
           <label htmlFor={inputId} className="sr-only">
             {copy.hint}
@@ -190,7 +189,7 @@ export function HeroSearch({ entries }: { entries: readonly SearchEntry[] }) {
           <span
             aria-hidden
             className={cn(
-              'pointer-events-none text-left type-body-m text-gray-400',
+              'pointer-events-none min-w-0 text-left type-body-m text-gray-400 max-sm:truncate',
               query !== '' && 'invisible',
             )}
           >
@@ -221,7 +220,10 @@ export function HeroSearch({ entries }: { entries: readonly SearchEntry[] }) {
             className="absolute inset-0 w-full bg-transparent type-body-m text-gray-900 caret-primary-600 outline-none"
           />
         </div>
-        <Button type="submit">{uiCopy.actions.search}</Button>
+        <Button type="submit" className="max-sm:size-10 max-sm:p-0">
+          <Search aria-hidden className="size-5 sm:hidden" />
+          <span className="max-sm:sr-only">{uiCopy.actions.search}</span>
+        </Button>
       </form>
       {showPanel ? (
         <SearchPanel

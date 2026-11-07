@@ -55,7 +55,7 @@ export function OverviewPageCards() {
             <h3 id={titleId} className="-my-2.5 type-heading-3xs text-primary-700 md:my-0">
               <Link
                 href={card.href}
-                className="inline-flex min-h-11 min-w-11 items-center hover:underline md:min-h-0 md:min-w-0"
+                className="inline-flex min-h-11 min-w-11 items-center transition-colors duration-(--duration-fast) hover:text-primary-800 md:min-h-0 md:min-w-0"
               >
                 {card.title}
               </Link>
@@ -69,7 +69,7 @@ export function OverviewPageCards() {
                 <li key={label}>
                   <Link
                     href={links[index] ?? card.href}
-                    className="flex min-h-11 items-center type-body-s text-gray-700 transition-colors duration-(--duration-fast) hover:text-primary-700 hover:underline md:min-h-6.5"
+                    className="flex min-h-11 items-center type-body-s text-gray-700 transition-colors duration-(--duration-fast) hover:text-primary-700 md:min-h-6.5"
                   >
                     {label}
                   </Link>

@@ -7,8 +7,6 @@ export type StationLayout = {
   radius: number;
   /** Border width of the circle. */
   border: number;
-  /** A stop on one of the two light branches that meet at Macallum. */
-  branch?: boolean;
   /** The place where the two routes meet. */
   junction?: boolean;
   label: {
@@ -34,7 +32,6 @@ export const stationLayouts: Record<string, StationLayout> = {
     y: 41.74,
     radius: R,
     border: B,
-    branch: true,
     label: { x: 92.75, y: 32.74, width: 88, height: 18, align: 'left' },
   },
   S30: {
@@ -42,7 +39,6 @@ export const stationLayouts: Record<string, StationLayout> = {
     y: 100.17,
     radius: R,
     border: B,
-    branch: true,
     label: { x: 102.03, y: 82.17, width: 99, height: 36, align: 'left' },
   },
   S19: {
@@ -58,7 +54,6 @@ export const stationLayouts: Record<string, StationLayout> = {
     y: 294.94,
     radius: R,
     border: B,
-    branch: true,
     label: { x: 16.7, y: 320.93, width: 92.75, height: 18, align: 'center' },
   },
   S18: {

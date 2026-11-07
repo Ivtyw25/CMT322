@@ -16,7 +16,7 @@ export function StationServesCard({ station }: { station: ServesStation }) {
       <div className="flex flex-col gap-0.5">
         <Link
           href={routes.project.station(station.code)}
-          className="inline-flex min-h-11 items-center type-body-s-semibold text-gray-900 hover:text-primary-700 hover:underline md:min-h-0"
+          className="inline-flex min-h-11 items-center type-body-s-semibold text-gray-900 hover:text-primary-700 md:min-h-0"
         >
           {station.name}
         </Link>

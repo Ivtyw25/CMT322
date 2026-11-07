@@ -38,7 +38,7 @@ export function StationGlance({
             <li key={neighbour.code}>
               <Link
                 href={routes.project.station(neighbour.code)}
-                className="hit-area text-primary-700 hover:underline"
+                className="hit-area text-primary-700 hover:text-primary-800"
               >
                 {`${neighbour.code} ${neighbour.name}`}
               </Link>
@@ -88,7 +88,7 @@ export function StationUrgentHelp({ careline }: { careline: SiteInfo['careline']
       </h2>
       <a
         href={careline.tel}
-        className="hit-area flex w-fit items-center gap-2 type-body-s-medium text-primary-700 hover:underline"
+        className="hit-area flex w-fit items-center gap-2 type-body-s-medium text-primary-700 hover:text-primary-800"
       >
         <Phone aria-hidden className="size-4" />
         {uiCopy.docsPage.needHelp.careline(careline.label, careline.number)}

@@ -145,7 +145,7 @@
 @theme {
   --font-*: initial;
   --font-heading: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-google-sans), ui-sans-serif, system-ui, sans-serif;
   --text-*: initial;
   --radius-*: initial;
   --radius-xs: 0.125rem;
@@ -203,46 +203,46 @@
   background-image: var(--background-image-nav-scrim);
 }
 
-/* Figma text styles. Use type-<style>; responsive steps like `type-heading-s lg:type-heading-l`. */
+/* Figma text styles. Use type-<style>; heading, hero and large body styles are fluid (clamp between the 390 and 1440 px frames), so they need no breakpoint steps. */
 @utility type-heading-xl {
   font-family: var(--font-heading);
-  font-size: 3.75rem;
-  line-height: 4.5rem;
-  letter-spacing: -0.075rem;
+  font-size: clamp(2rem, calc(2.667vw + 1.35rem), 3.75rem);
+  line-height: clamp(2.5rem, calc(3.048vw + 1.7571rem), 4.5rem);
+  letter-spacing: -0.02em;
   font-weight: 600;
 }
 @utility type-heading-l {
   font-family: var(--font-heading);
-  font-size: 3rem;
-  line-height: 3.75rem;
-  letter-spacing: -0.06rem;
+  font-size: clamp(1.625rem, calc(2.095vw + 1.1143rem), 3rem);
+  line-height: clamp(2.125rem, calc(2.476vw + 1.5214rem), 3.75rem);
+  letter-spacing: -0.02em;
   font-weight: 600;
 }
 @utility type-heading-m {
   font-family: var(--font-heading);
-  font-size: 2.25rem;
-  line-height: 2.75rem;
-  letter-spacing: -0.0313rem;
+  font-size: clamp(1.625rem, calc(0.952vw + 1.3929rem), 2.25rem);
+  line-height: clamp(2.125rem, calc(0.952vw + 1.8929rem), 2.75rem);
+  letter-spacing: -0.0139em;
   font-weight: 600;
 }
 @utility type-heading-s {
   font-family: var(--font-heading);
-  font-size: 1.875rem;
-  line-height: 2.375rem;
-  letter-spacing: -0.0187rem;
+  font-size: clamp(1.375rem, calc(0.762vw + 1.1893rem), 1.875rem);
+  line-height: clamp(1.875rem, calc(0.762vw + 1.6893rem), 2.375rem);
+  letter-spacing: -0.01em;
   font-weight: 600;
 }
 @utility type-heading-xs {
   font-family: var(--font-heading);
-  font-size: 1.5rem;
-  line-height: 2rem;
+  font-size: clamp(1.125rem, calc(0.571vw + 0.9857rem), 1.5rem);
+  line-height: clamp(1.625rem, calc(0.571vw + 1.4857rem), 2rem);
   letter-spacing: 0;
   font-weight: 600;
 }
 @utility type-heading-2xs {
   font-family: var(--font-heading);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+  font-size: clamp(1.125rem, calc(0.19vw + 1.0786rem), 1.25rem);
+  line-height: clamp(1.625rem, calc(0.19vw + 1.5786rem), 1.75rem);
   letter-spacing: 0;
   font-weight: 600;
 }
@@ -255,15 +255,15 @@
 }
 @utility type-body-xl {
   font-family: var(--font-body);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+  font-size: clamp(1rem, calc(0.381vw + 0.9071rem), 1.25rem);
+  line-height: clamp(1.5rem, calc(0.381vw + 1.4071rem), 1.75rem);
   letter-spacing: 0;
   font-weight: 400;
 }
 @utility type-body-l {
   font-family: var(--font-body);
-  font-size: 1.125rem;
-  line-height: 1.625rem;
+  font-size: clamp(1rem, calc(0.19vw + 0.9536rem), 1.125rem);
+  line-height: clamp(1.5rem, calc(0.19vw + 1.4536rem), 1.625rem);
   letter-spacing: 0;
   font-weight: 400;
 }
@@ -332,36 +332,15 @@
 }
 @utility type-hero-title {
   font-family: var(--font-heading);
-  font-size: 3.75rem;
-  line-height: 4.5rem;
-  letter-spacing: -0.075rem;
-  font-weight: 700;
-}
-@utility type-hero-title-mobile {
-  font-family: var(--font-heading);
-  font-size: 2.75rem;
-  line-height: 3.125rem;
-  letter-spacing: -0.055rem;
-  font-weight: 700;
-}
-@utility type-hero-title-compact {
-  font-family: var(--font-heading);
-  font-size: 2.25rem;
-  line-height: 2.75rem;
-  letter-spacing: -0.0313rem;
+  font-size: clamp(2rem, min(calc(11.429vw - 0.2857rem), calc(1.905vw + 2.0357rem)), 3.75rem);
+  line-height: clamp(2.25rem, min(calc(14.286vw - 0.6071rem), calc(2.476vw + 2.2714rem)), 4.5rem);
+  letter-spacing: -0.02em;
   font-weight: 700;
 }
 @utility type-hero-tagline {
   font-family: var(--font-heading);
-  font-size: 2.25rem;
-  line-height: 2.875rem;
-  letter-spacing: 0;
-  font-weight: 300;
-}
-@utility type-hero-tagline-mobile {
-  font-family: var(--font-heading);
-  font-size: 1.375rem;
-  line-height: 1.875rem;
+  font-size: clamp(1.25rem, calc(1.524vw + 0.8786rem), 2.25rem);
+  line-height: clamp(1.75rem, calc(1.714vw + 1.3321rem), 2.875rem);
   letter-spacing: 0;
   font-weight: 300;
 }

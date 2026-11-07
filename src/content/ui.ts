@@ -15,7 +15,6 @@ export const uiCopy = {
     clearSearch: 'Clear search',
     viewOnMap: 'View on map',
     viewNotice: 'View notice',
-    backToTop: 'Back to top',
     showMore: 'Show more',
     showLess: 'Show less',
     showAll: (count: number, noun: string) => `Show all ${count} ${noun}`,

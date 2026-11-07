@@ -289,7 +289,7 @@ export const projectCopy = {
     search: {
       label: 'Search stations',
       placeholder: 'Search by name or code, for example S20',
-      /** Visually hidden status after the field (docs/specs/stations.md). */
+      /** Visually hidden status after the field. */
       results: (shown: number, total: number) =>
         shown === total ? `Showing all ${total} stations` : `Showing ${shown} of ${total} stations`,
       noResultsStatus: (query: string) => `No stations match ${query}`,

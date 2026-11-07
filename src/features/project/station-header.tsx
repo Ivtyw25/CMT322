@@ -41,7 +41,7 @@ export function StationHeader({ station, stats }: StationHeaderProps) {
               {station.code}
             </span>
             <div className="flex min-w-0 flex-col gap-2">
-              <h1 className="type-heading-m md:type-heading-l">
+              <h1 className="type-heading-l">
                 <span className="sr-only">{`${station.code} `}</span>
                 {station.name}
                 {station.isProvisionalName ? (
@@ -79,7 +79,7 @@ export function StationHeader({ station, stats }: StationHeaderProps) {
               )}
             >
               <dt className="type-body-s text-gray-600">{stat.label}</dt>
-              <dd className="type-heading-xs text-gray-900 md:type-heading-s">{stat.value}</dd>
+              <dd className="type-heading-s text-gray-900">{stat.value}</dd>
             </div>
           ))}
         </dl>

@@ -29,7 +29,7 @@ export function OverviewPopularQuestions({ items }: { items: readonly FaqItem[] 
       )}
       <Link
         href={routes.project.faq}
-        className="inline-flex min-h-11 items-center self-start type-body-s-semibold text-primary-700 hover:underline md:min-h-0"
+        className="inline-flex min-h-11 items-center self-start type-body-s-semibold text-primary-700 hover:text-primary-800 md:min-h-0"
       >
         {questions.link}
       </Link>

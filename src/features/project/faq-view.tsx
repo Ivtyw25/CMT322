@@ -203,7 +203,7 @@ export function FaqView({ categories, items, mostAsked, url, topicsHeading }: Fa
             ref={headingRef}
             id="questions"
             tabIndex={-1}
-            className="scroll-mt-32 type-heading-2xs outline-none lg:type-heading-xs"
+            className="scroll-mt-32 type-heading-xs outline-none"
           >
             {heading}
           </h2>

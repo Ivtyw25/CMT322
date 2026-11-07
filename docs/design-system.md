@@ -55,7 +55,7 @@ Not tokenised on purpose: the Google sign-in button colours (we use Google's off
 
 ## Typography
 
-Poppins SemiBold for headings and Inter for body, loaded with `next/font` (`src/styles/fonts.ts`). Each Figma text style is one utility that sets family, size, line height, letter spacing and weight:
+Poppins SemiBold for headings and Google Sans for body (owner decision 2026-11-07, replaced Inter), loaded with `next/font` (`src/styles/fonts.ts`). Each Figma text style is one utility that sets family, size, line height, letter spacing and weight:
 
 `type-heading-xl` 60/72 · `type-heading-l` 48/60 · `type-heading-m` 36/44 · `type-heading-s` 30/38 · `type-heading-xs` 24/32 · `type-heading-2xs` 20/28 · `type-heading-3xs` 16/24 · `type-body-xl` 20/28 · `type-body-l` 18/26 · `type-body-m` 16/24 · `type-body-s` 14/20 · `type-body-xs` 12/18, and `-medium` / `-semibold` for body M, S and XS.
 
@@ -108,4 +108,4 @@ Motion: `ease-standard` cubic-bezier(0.2, 0, 0, 1), `ease-enter` (0, 0, 0.2, 1),
 ## Added in iteration 2 (home hero)
 
 - `static-white-35` (white 35 %, Try chip border, measured on 37:1025) and `static-glass-strong` (white 24 %, chip hover; not in Figma).
-- Hero type, not Figma text styles but measured on the hero: `type-hero-title` Poppins Bold 60/72 −1.2, `type-hero-title-mobile` 44/50, `type-hero-title-compact` 36/44 (below 390 px), `type-hero-tagline` Poppins Light 36/46, `type-hero-tagline-mobile` 22/30. Poppins 300 and 700 are loaded for these only.
+- Hero type, not Figma text styles but measured on the hero: `type-hero-title` Poppins Bold, fluid 44/50 at 390 px to 60/72 at 1440 px (floor 36/40 at 320 px), `type-hero-tagline` Poppins Light, fluid 22/30 to 36/46. Poppins 300 and 700 are loaded for these only.

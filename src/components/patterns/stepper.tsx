@@ -12,6 +12,18 @@ export type StepEntry = {
   detail?: string;
 };
 
+/**
+ * The step to pulse: the current one, or without one the last complete step when the next has not
+ * started.
+ */
+function pulseIndex(steps: readonly StepEntry[]): number {
+  const current = steps.findIndex((step) => step.state === 'current');
+  if (current >= 0) return current;
+  return steps.findIndex(
+    (step, index) => step.state === 'complete' && steps[index + 1]?.state === 'upcoming',
+  );
+}
+
 const stateLabel = {
   complete: uiCopy.stepper.completed,
   current: uiCopy.stepper.current,
@@ -43,9 +55,10 @@ export function Stepper({ variant = 'status', ...props }: StepperProps) {
 type StepListProps = Omit<StepperProps, 'variant'>;
 
 function StageList({ steps, label = uiCopy.stepper.label, className }: StepListProps) {
+  const pulsing = pulseIndex(steps);
   return (
     <ol aria-label={label} className={cn('flex flex-col', className)}>
-      {steps.map((step) => (
+      {steps.map((step, index) => (
         <li
           key={step.id}
           aria-current={step.state === 'current' ? 'step' : undefined}
@@ -65,6 +78,7 @@ function StageList({ steps, label = uiCopy.stepper.label, className }: StepListP
               step.state === 'complete' && 'border-success-600 bg-success-600 text-static-white',
               step.state === 'current' && 'border-primary-600 bg-surface',
               step.state === 'upcoming' && 'border-gray-300 bg-surface',
+              index === pulsing && 'animate-pulse-ring',
             )}
           >
             {step.state === 'complete' ? <Check className="size-3.5" strokeWidth={3} /> : null}
@@ -108,6 +122,7 @@ function StatusSteps({
   className,
 }: StepListProps) {
   const lastIndex = steps.length - 1;
+  const pulsing = pulseIndex(steps);
   return (
     <ol
       aria-label={label}
@@ -149,6 +164,7 @@ function StatusSteps({
                   step.state === 'complete' && [completeTone[tone].dot, 'text-static-white'],
                   step.state === 'current' && 'border-primary-600 bg-surface',
                   step.state === 'upcoming' && 'border-gray-300 bg-surface',
+                  index === pulsing && 'animate-pulse-ring',
                 )}
               >
                 {step.state === 'complete' ? <Check className="size-4" strokeWidth={3} /> : null}

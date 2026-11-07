@@ -111,15 +111,19 @@ export function MobileHeader({ data, preview, className }: MobileHeaderProps) {
       )}
     >
       <div className="flex h-header-mobile items-center gap-2 px-4 md:px-8">
-        <Logo size="compact" tone={onHero ? 'onDark' : 'default'} onClick={close} dataLogo />
+        {menuOpen ? null : (
+          <Logo size="compact" tone={onHero ? 'onDark' : 'default'} onClick={close} />
+        )}
         <div className="flex-1" />
-        <AppearanceMenu
-          compact
-          onHero={onHero}
-          open={appearanceIsOpen}
-          onOpenChange={setAppearanceOpen}
-          preview={Boolean(preview)}
-        />
+        {menuOpen ? null : (
+          <AppearanceMenu
+            compact
+            onHero={onHero}
+            open={appearanceIsOpen}
+            onOpenChange={setAppearanceOpen}
+            preview={Boolean(preview)}
+          />
+        )}
         {!preview || preview.auth === 'signed-in' ? (
           <Link
             data-auth={preview ? undefined : 'signed-in'}

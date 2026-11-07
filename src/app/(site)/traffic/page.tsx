@@ -51,8 +51,8 @@ export default async function TrafficOverviewPage() {
             items={[{ label: uiCopy.breadcrumb.home, href: routes.home }]}
             current={copy.header.title}
           />
-          <h1 className="type-heading-s lg:type-heading-m">{copy.header.title}</h1>
-          <p className="max-w-175 type-body-l text-gray-600 lg:type-body-xl">{copy.header.lede}</p>
+          <h1 className="type-heading-m">{copy.header.title}</h1>
+          <p className="max-w-175 type-body-xl text-gray-600">{copy.header.lede}</p>
         </header>
         <OverviewPageCards headingId={IDS.pages} />
         <OverviewRoadChanges headingId={IDS.week} items={changes} />

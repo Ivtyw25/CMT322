@@ -92,7 +92,7 @@ export function StationProgress({ id, station }: { id: string; station: Station 
       </div>
       <Link
         href={routes.project.construction}
-        className="hit-area w-fit type-body-s-medium text-primary-700 hover:underline"
+        className="hit-area w-fit type-body-s-medium text-primary-700 hover:text-primary-800"
       >
         {copy.link}
       </Link>

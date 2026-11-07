@@ -75,11 +75,6 @@ export const footerCopy = {
       sendFailed: "We couldn't sign you up just now. Check your connection and try again.",
     },
   },
-  social: {
-    /** Label only: the channel names are plain text, not links (owner decision). */
-    title: 'MRT Corp on social media',
-  },
-  backToTop: 'Back to top',
   legal: {
     copyright: '© 2026 Mutiara LRT Community Connect',
     links: [

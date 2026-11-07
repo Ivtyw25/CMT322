@@ -27,7 +27,7 @@ export function OverviewPageCards() {
             >
               <Icon className="size-4.5" />
             </span>
-            <h3 className="type-heading-3xs text-primary-700 group-hover:underline">
+            <h3 className="type-heading-3xs text-primary-700 group-hover:text-primary-800">
               <Link
                 href={href}
                 className="-my-3 inline-block py-3 outline-none after:absolute after:inset-0 after:rounded-2xl"

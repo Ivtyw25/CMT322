@@ -9,7 +9,7 @@ import type { AnnouncementRow } from './announcement-rows';
 const copy = trafficCopy.announcements.table;
 
 const linkClass =
-  'hit-area whitespace-nowrap type-body-s-semibold text-primary-700 transition-colors duration-(--duration-fast) hover:underline';
+  'hit-area whitespace-nowrap type-body-s-semibold text-primary-700 hover:text-primary-800 transition-colors duration-(--duration-fast)';
 
 /** A cell of the table. Below 1280 px it is a label and value line inside the card. */
 const cellClass = 'type-body-s max-xl:flex max-xl:gap-3 xl:px-3 xl:py-4 xl:align-middle';
@@ -84,7 +84,7 @@ export function AnnouncementsTable({ rows, linkedId, onViewNotice }: Announcemen
               >
                 <td
                   role="cell"
-                  className="max-xl:basis-full xl:border-t xl:border-l-3 xl:border-gray-200 xl:border-l-transparent xl:py-4 xl:pr-3 xl:pl-4.25 xl:group-data-[linked=true]/row:border-l-primary-600"
+                  className="max-xl:basis-full xl:border-t xl:border-gray-200 xl:py-4 xl:pr-3 xl:pl-4"
                 >
                   <Tag kind={row.status} />
                 </td>

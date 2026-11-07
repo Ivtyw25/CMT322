@@ -25,7 +25,7 @@ function emailError(value: string): string | null {
   return EMAIL_PATTERN.test(value.trim()) ? null : errors.emailInvalid;
 }
 
-/** "Get updates for this area": email sign-up for the chosen area. See docs/specs/home.md section 4. */
+/** "Get updates for this area": email sign-up for the chosen area. */
 export function WorksSubscribe({ area }: { area: SubscribeArea }) {
   const copy = homeCopy.works.subscribe;
   const { user } = useSession();
@@ -122,7 +122,6 @@ export function WorksSubscribe({ area }: { area: SubscribeArea }) {
                 {copy.sendFailed}
               </p>
             ) : null}
-            <p className="type-body-xs text-gray-600">{copy.footnote}</p>
           </form>
         </>
       )}

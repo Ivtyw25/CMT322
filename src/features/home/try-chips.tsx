@@ -9,7 +9,7 @@ import { revealWorks } from './works-anchor';
 export function TryChips() {
   const { tryLabel, tryChips } = homeCopy.hero;
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-2 lg:justify-end">
+    <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-2">
       <p className="type-body-s text-static-white">{tryLabel}</p>
       {tryChips.map((chip) => (
         <Link

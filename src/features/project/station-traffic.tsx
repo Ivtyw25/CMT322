@@ -10,7 +10,7 @@ import { DocsSection } from '@/components/patterns/docs-section';
 
 const { traffic: copy } = projectCopy.station;
 
-const linkClass = 'hit-area type-body-s-medium text-primary-700 hover:underline';
+const linkClass = 'hit-area type-body-s-medium text-primary-700 hover:text-primary-800';
 
 function NoticeAction({ href, label, title }: { href: string; label: string; title: string }) {
   return (

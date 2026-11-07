@@ -1,5 +1,6 @@
 import { LineRail, LineRailStop } from '@/components/patterns/line-rail';
 import type { StationCode } from '@/data/models/station';
+import { InterchangeIcons } from './interchange-icons';
 import { LineMarkerGlyph } from './line-marker-glyph';
 import { visibleMarkers, type LineMode, type MarkersByStation } from './line-markers';
 import { stationDescription, stationHref, type LineStation } from './line-station';
@@ -45,9 +46,14 @@ export function LineRailView({
             selected={select && selectedCode === station.code}
             onSelect={select ? () => onSelect?.(station.code) : undefined}
             glyphs={
-              glyphs.length > 0
-                ? glyphs.map((kind) => <LineMarkerGlyph key={kind} kind={kind} />)
-                : undefined
+              glyphs.length > 0 || station.interchangeModes.length > 0 ? (
+                <>
+                  <InterchangeIcons modes={station.interchangeModes} />
+                  {glyphs.map((kind) => (
+                    <LineMarkerGlyph key={kind} kind={kind} />
+                  ))}
+                </>
+              ) : undefined
             }
             srNote={markers.length > 0 ? markerNote?.(markers.length) : undefined}
           />

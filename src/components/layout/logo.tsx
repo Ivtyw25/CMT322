@@ -12,25 +12,16 @@ type LogoProps = {
   tone?: 'default' | 'onDark';
   className?: string;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-  /** Marks the link so the back-to-top button can move focus here. */
-  dataLogo?: boolean;
 };
 
 /** Logo mark and wordmark, linking home. The image is decorative; the link carries the name. */
-export function Logo({
-  size = 'default',
-  tone = 'default',
-  className,
-  onClick,
-  dataLogo,
-}: LogoProps) {
+export function Logo({ size = 'default', tone = 'default', className, onClick }: LogoProps) {
   const compact = size === 'compact';
   return (
     <Link
       href={routes.home}
       aria-label={commonCopy.logo.homeLabel}
       onClick={onClick}
-      data-logo={dataLogo ? '' : undefined}
       className={cn(
         'hit-area flex shrink-0 items-center rounded-lg',
         compact ? 'gap-2.5' : 'gap-3',

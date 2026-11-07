@@ -214,7 +214,7 @@ export function DesktopHeader({ data, preview, className }: DesktopHeaderProps) 
     >
       <Container className="relative">
         <div className="flex h-header items-center justify-between">
-          <Logo tone={onHero ? 'onDark' : 'default'} dataLogo />
+          <Logo tone={onHero ? 'onDark' : 'default'} />
 
           <nav aria-label={commonCopy.landmarks.mainNav}>
             <ul className="flex items-start gap-1">
@@ -304,8 +304,9 @@ export function DesktopHeader({ data, preview, className }: DesktopHeaderProps) 
                     ref={loginRef}
                     className={cn(
                       buttonVariants({ variant: 'secondary' }),
+                      'border-transparent bg-transparent hover:border-gray-300',
                       onHero &&
-                        'border-static-white/60 bg-transparent text-static-white hover:border-static-white/60 hover:bg-static-glass active:bg-static-glass',
+                        'text-static-white hover:border-static-white/60 hover:bg-static-glass active:bg-static-glass',
                     )}
                   >
                     <User aria-hidden className="size-4.5" />

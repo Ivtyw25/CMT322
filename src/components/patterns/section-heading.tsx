@@ -22,12 +22,10 @@ export function SectionHeading({
   return (
     <div className={cn('flex flex-col gap-3', className)}>
       <AccentBar />
-      <Heading id={id} tabIndex={id ? -1 : undefined} className="type-heading-xs lg:type-heading-s">
+      <Heading id={id} tabIndex={id ? -1 : undefined} className="type-heading-s">
         {children}
       </Heading>
-      {description ? (
-        <p className="type-body-m text-gray-600 lg:type-body-l">{description}</p>
-      ) : null}
+      {description ? <p className="type-body-l text-gray-600">{description}</p> : null}
     </div>
   );
 }

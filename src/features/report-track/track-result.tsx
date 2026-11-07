@@ -53,7 +53,7 @@ export function TrackResult({ ticket, category }: TrackResultProps) {
           <p className="type-body-s text-gray-600">{ticket.id}</p>
           <Tag kind={tagOf[ticket.status]} />
         </div>
-        <h2 className="type-heading-xs wrap-anywhere md:type-heading-s">{ticket.title}</h2>
+        <h2 className="type-heading-s wrap-anywhere">{ticket.title}</h2>
         <ul className="flex flex-col gap-2 type-body-s text-gray-600 md:flex-row md:flex-wrap md:gap-x-5">
           <li className="flex items-center gap-1.5">
             <TagIcon aria-hidden className="size-4 shrink-0" />
