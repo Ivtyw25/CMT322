@@ -30,6 +30,11 @@ async function open(page: Page, path: string = routes.reportTrack.report, width 
 }
 
 const field = (page: Page, label: string) => page.getByLabel(label, { exact: false }).first();
+const category = (page: Page) => page.getByRole('combobox', { name: report.category.label });
+const pickCategory = async (page: Page, label: string) => {
+  await category(page).click();
+  await page.getByRole('option', { name: label, exact: true }).click();
+};
 const submit = (page: Page) => page.getByRole('button', { name: report.actions.submit });
 const summaryTitle = (page: Page) =>
   page.getByRole('heading', { level: 2, name: report.errorSummary.title });
@@ -39,7 +44,7 @@ const coordinates = (page: Page) => page.getByText(/^\d+\.\d{4}, \d+\.\d{4}$/);
 
 async function fillValid(page: Page) {
   await page.getByRole('radio', { name: report.type.options[0].label }).check();
-  await field(page, report.category.label).selectOption(firstCategory.id);
+  await pickCategory(page, firstCategory.label);
   await field(page, report.details.subject.label).fill('Driveway blocked by site hoarding');
   await field(page, report.details.description.label).fill(
     'Since Monday the new hoarding covers half of our shop driveway and lorries cannot turn in.',
@@ -66,7 +71,7 @@ test.describe('report: access and resting state', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(report.header.title);
     await expect(page.getByRole('form', { name: report.header.title })).toBeVisible();
     await expect(page.getByRole('radio', { name: report.type.options[0].label })).toBeChecked();
-    await expect(field(page, report.category.label)).toHaveValue('');
+    await expect(category(page)).toHaveText(report.category.placeholder);
     await expect(field(page, report.details.subject.label)).toHaveValue('');
     await expect(field(page, report.contact.fullName.label)).toHaveValue(mockUser.name);
     await expect(field(page, report.contact.email.label)).toHaveValue(mockUser.email);
@@ -97,9 +102,8 @@ test.describe('report: access and resting state', () => {
 
   test('the category hint is the select description and shows on focus', async ({ page }) => {
     await open(page);
-    const select = field(page, report.category.label);
-    await select.selectOption(firstCategory.id);
-    await expect(select).toHaveAccessibleDescription(firstCategory.hint);
+    await pickCategory(page, firstCategory.label);
+    await expect(category(page)).toHaveAccessibleDescription(firstCategory.hint);
   });
 });
 
@@ -205,7 +209,7 @@ test.describe('report: submit with errors', () => {
     await field(page, report.details.subject.label).fill('Driveway blocked by hoarding');
     const links = summaryTitle(page).locator('..').getByRole('link');
     await expect(links).toHaveCount(4);
-    await field(page, report.category.label).selectOption(firstCategory.id);
+    await pickCategory(page, firstCategory.label);
     await field(page, report.details.description.label).fill(
       'Since Monday the new hoarding covers half of our driveway.',
     );

@@ -2,7 +2,7 @@
 
 import { Field } from '@/components/ui/field';
 import { RadioCard } from '@/components/ui/radio-card';
-import { Select } from '@/components/ui/select';
+import { MenuSelect } from '@/components/ui/menu-select';
 import { TextInput } from '@/components/ui/text-input';
 import { Textarea } from '@/components/ui/textarea';
 import { reportTrackCopy } from '@/content/report-track';
@@ -45,20 +45,17 @@ export function ReportTypeSection({
       </div>
       <div id={reportFieldId('category')} className="group scroll-mt-35">
         <Field label={category.label} error={categoryError ?? undefined}>
-          <Select
+          <MenuSelect
             name="category"
             value={values.categoryId}
-            onChange={(event) =>
-              update({
-                categoryId: event.target.value as ReportSectionProps['values']['categoryId'],
-              })
-            }
+            placeholder={category.placeholder}
+            onValueChange={(next) => {
+              const entry = categories.find((candidate) => candidate.id === next);
+              if (entry) update({ categoryId: entry.id });
+            }}
             onBlur={() => onBlur('category')}
             aria-describedby={chosen && !categoryError ? CATEGORY_HINT_ID : undefined}
-            options={[
-              { value: '', label: category.placeholder },
-              ...categories.map((entry) => ({ value: entry.id, label: entry.label })),
-            ]}
+            options={categories.map((entry) => ({ value: entry.id, label: entry.label }))}
           />
         </Field>
         {chosen ? (

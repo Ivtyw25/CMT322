@@ -10,8 +10,11 @@ import { useMediaQuery } from '@/lib/dom/use-media-query';
 
 const PANEL_ID = 'traffic-panel';
 const STORAGE_KEY = 'traffic-panel';
-/** Panel width in px: default, limits, and one arrow-key step on the divider. */
-const WIDTH = { initial: 400, min: 300, max: 560, step: 24 };
+/**
+ * Panel width in px: default, limits, and one arrow-key step on the divider. The minimum keeps
+ * the Route view / Map view switch on one line.
+ */
+const WIDTH = { initial: 400, min: 340, max: 560, step: 24 };
 /** The panel never takes more than this share of the workspace, so the map or line stays usable. */
 const MAX_SHARE = 0.6;
 
@@ -72,7 +75,7 @@ type TrafficWorkspaceProps = {
 
 /**
  * Map view and Route view frame. From 768 px: the panel on the left, resizable by dragging or
- * with the arrow keys on its divider (300 px up to 560 px, never over 60 % of the width), and
+ * with the arrow keys on its divider (340 px up to 560 px, never over 60 % of the width), and
  * collapsible with the button on the divider; both choices are remembered in this browser.
  * Below 768 px: the map or line fills the view and the panel opens over all of it.
  */
@@ -175,7 +178,7 @@ export function TrafficWorkspace({
         }}
         style={panelStyle}
         className={cn(
-          'flex-col overflow-y-auto overscroll-contain bg-surface',
+          'scrollbar-none flex-col overflow-y-auto overscroll-contain bg-surface',
           overlay ? 'fixed inset-x-0 top-[var(--chrome-h,4rem)] bottom-0 z-40 flex' : 'hidden',
           'md:static md:z-auto md:flex md:w-(--panel-w) md:shrink-0',
           collapsed && 'md:hidden',

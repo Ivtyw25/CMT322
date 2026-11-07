@@ -95,11 +95,12 @@ export function FaqView({ categories, items, mostAsked, url, topicsHeading }: Fa
 
   const labelOf = (id: string) => categories.find((entry) => entry.id === id)?.shortLabel;
 
-  const entries: AccordionEntry[] = list.map((item, index) => ({
+  const entries: AccordionEntry[] = list.map((item) => ({
     id: item.id,
     eyebrow: labelOf(item.categoryId),
     title: <FaqQuestionText text={item.question} query={mode === 'search' ? trimmed : ''} />,
-    defaultOpen: mode === 'most' ? index === 0 : mode === 'search' && list.length === 1,
+    // Every question starts closed; only a search that finds exactly one opens it.
+    defaultOpen: mode === 'search' && list.length === 1,
     content: <FaqAnswer item={item} />,
   }));
 

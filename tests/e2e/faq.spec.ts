@@ -25,12 +25,12 @@ const headers = (page: Page) => questions(page).locator('h3 button');
 const search = (page: Page) => page.getByRole('searchbox', { name: faq.search.label });
 
 test.describe('faq: most asked view', () => {
-  test('shows the five most asked questions with the first open', async ({ page }) => {
+  test('shows the five most asked questions, all closed', async ({ page }) => {
     await open(page);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(faq.header.title);
     await expect(page.locator('#questions')).toHaveText(faq.mostAsked.title);
     await expect(headers(page)).toHaveCount(mostAsked.length);
-    await expect(headers(page).first()).toHaveAttribute('aria-expanded', 'true');
+    await expect(headers(page).first()).toHaveAttribute('aria-expanded', 'false');
     await expect(headers(page).nth(1)).toHaveAttribute('aria-expanded', 'false');
   });
 
@@ -42,7 +42,7 @@ test.describe('faq: most asked view', () => {
     await third.click();
     await expect(second).toHaveAttribute('aria-expanded', 'true');
     await expect(third).toHaveAttribute('aria-expanded', 'true');
-    await expect(headers(page).first()).toHaveAttribute('aria-expanded', 'true');
+    await expect(headers(page).first()).toHaveAttribute('aria-expanded', 'false');
     await second.click();
     await expect(second).toHaveAttribute('aria-expanded', 'false');
   });
@@ -60,6 +60,7 @@ test.describe('faq: most asked view', () => {
 
   test('an open item shows the short answer, next steps and its own feedback', async ({ page }) => {
     await open(page);
+    await headers(page).first().click();
     const first = mostAsked[0];
     await expect(page.getByText(first?.answer[0] ?? '').first()).toBeVisible();
     await expect(page.getByText(faq.item.nextSteps).first()).toBeVisible();
@@ -75,6 +76,7 @@ test.describe('faq: most asked view', () => {
 
   test('item feedback: No shows reasons and a reason thanks the visitor', async ({ page }) => {
     await open(page);
+    await headers(page).first().click();
     const row = questions(page).getByRole('group', { name: faq.item.feedback.question }).first();
     await row.getByRole('button', { name: uiCopy.docsPage.feedback.no, exact: true }).click();
     const reasons = page.getByRole('group', { name: faq.item.feedback.reasonsLabel });
@@ -87,6 +89,7 @@ test.describe('faq: most asked view', () => {
 
   test('item feedback: Yes thanks the visitor', async ({ page }) => {
     await open(page);
+    await headers(page).first().click();
     const row = questions(page).getByRole('group', { name: faq.item.feedback.question }).first();
     await row.getByRole('button', { name: uiCopy.docsPage.feedback.yes, exact: true }).click();
     await expect(

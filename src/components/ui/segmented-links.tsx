@@ -37,6 +37,7 @@ export function SegmentedLinks({
               aria-current={link.current ? 'page' : undefined}
               className={cn(
                 segmentedItemClass,
+                'whitespace-nowrap',
                 link.current && 'bg-surface text-primary-700 shadow-control',
               )}
             >

@@ -12,26 +12,35 @@ type FitToWidthProps = {
   height: number;
   /** Smallest shrink factor before the drawing scrolls sideways. */
   minScale?: number;
+  /** Largest growth factor when there is room to spare (1: never larger than its natural size). */
+  maxScale?: number;
   children: React.ReactNode;
 };
 
 /**
- * Shows a drawing of a fixed size at its natural size, or shrunk to fit the space (never below
- * 85 %; narrower than that it scrolls sideways). Small labels grow by the shrink factor, so they
+ * Shows a drawing of a fixed size scaled to fit the space: shrunk down to `minScale` (narrower
+ * than that it scrolls sideways) and, with room to spare, grown up to `maxScale`. Small labels grow by the shrink factor, so they
  * stay at least 12 px on screen.
  */
-export function FitToWidth({ width, height, minScale = MIN_SCALE, children }: FitToWidthProps) {
+export function FitToWidth({
+  width,
+  height,
+  minScale = MIN_SCALE,
+  maxScale = 1,
+  children,
+}: FitToWidthProps) {
   const box = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   useEffect(() => {
     const element = box.current;
     if (!element) return;
-    const measure = () => setScale(Math.min(1, Math.max(minScale, element.clientWidth / width)));
+    const measure = () =>
+      setScale(Math.min(maxScale, Math.max(minScale, element.clientWidth / width)));
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     return () => observer.disconnect();
-  }, [width, minScale]);
+  }, [width, minScale, maxScale]);
   return (
     <div ref={box} className="w-full overflow-x-auto">
       <div className="mx-auto" style={{ width: width * scale, height: height * scale }}>

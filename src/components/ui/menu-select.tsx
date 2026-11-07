@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 import { Select as SelectPrimitive } from 'radix-ui';
 import { cn } from '@/lib/cn';
 import { controlVariants } from './control-styles';
@@ -13,6 +14,12 @@ type MenuSelectProps = {
   onValueChange: (value: string) => void;
   options: readonly SelectOption[];
   disabled?: boolean;
+  /** Shown while `value` is empty, e.g. "Choose a category". */
+  placeholder?: string;
+  /** Focus left the field with its list closed (for validation on blur). */
+  onBlur?: () => void;
+  /** Extra description ids, added to the Field's hint and error. */
+  'aria-describedby'?: string;
   className?: string;
 };
 
@@ -28,26 +35,38 @@ export function MenuSelect({
   onValueChange,
   options,
   disabled,
+  placeholder,
+  onBlur,
+  'aria-describedby': describedBy,
   className,
 }: MenuSelectProps) {
   const { tone, ...fieldProps } = useFieldControl();
+  const [open, setOpen] = useState(false);
+  const describedByAll =
+    [fieldProps['aria-describedby'], describedBy].filter(Boolean).join(' ') || undefined;
   return (
     <SelectPrimitive.Root
       name={name}
       value={value}
       onValueChange={onValueChange}
+      open={open}
+      onOpenChange={setOpen}
       disabled={disabled}
     >
       <SelectPrimitive.Trigger
         {...fieldProps}
+        aria-describedby={describedByAll}
+        onBlur={() => {
+          if (!open) onBlur?.();
+        }}
         className={cn(
           controlVariants({ tone }),
-          'group flex cursor-pointer items-center justify-between gap-2 text-left',
+          'group flex cursor-pointer items-center justify-between gap-2 text-left data-placeholder:text-gray-400',
           className,
         )}
       >
         <span className="min-w-0 flex-1 truncate">
-          <SelectPrimitive.Value />
+          <SelectPrimitive.Value placeholder={placeholder} />
         </span>
         <SelectPrimitive.Icon asChild>
           <ChevronDown

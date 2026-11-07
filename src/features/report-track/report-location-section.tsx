@@ -123,7 +123,7 @@ export function ReportLocationSection({
               ) : null}
             </>
           }
-          className="h-50 rounded-xl md:h-55"
+          className="h-75 rounded-xl md:h-95"
         />
         {problem ? (
           <p className="flex items-start gap-1.5 type-body-s text-danger-700">
