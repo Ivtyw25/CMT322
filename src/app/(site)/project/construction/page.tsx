@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { NeedHelpBlock } from '@/components/patterns/need-help-block';
 import { PageFeedback } from '@/components/patterns/page-feedback';
 import { RelatedPages } from '@/components/patterns/related-pages';
 import { Timeline, type TimelineEntry } from '@/components/patterns/timeline';
@@ -10,7 +9,6 @@ import { uiCopy } from '@/content/ui';
 import { getAreas } from '@/data/api/areas';
 import { getToday } from '@/data/api/clock';
 import { getConstructionUpdates, getMilestones } from '@/data/api/construction';
-import { getSiteInfo } from '@/data/api/site-info';
 import { ConstructionExplorer } from '@/features/project/construction-explorer';
 import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { milestoneDate } from '@/features/project/milestone-date';
@@ -24,12 +22,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ConstructionPage() {
-  const [updates, milestones, areas, today, siteInfo] = await Promise.all([
+  const [updates, milestones, areas, today] = await Promise.all([
     getConstructionUpdates(),
     getMilestones(),
     getAreas(),
     getToday(),
-    getSiteInfo(),
   ]);
 
   const thisMonth = today.slice(0, 7);
@@ -64,7 +61,6 @@ export default async function ConstructionPage() {
         />
       }
       timeline={<Timeline items={entries} orientation="responsive" />}
-      needHelp={<NeedHelpBlock careline={siteInfo.careline} />}
       tail={
         <>
           <Callout tone="info">

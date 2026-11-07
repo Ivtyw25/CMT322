@@ -145,3 +145,10 @@ test.describe('track a ticket: result', () => {
     expect(overflow).toBe(false);
   });
 });
+
+test('the sidebar offers another report and no careline', async ({ page }) => {
+  await open(page, routes.reportTrack.track);
+  const help = page.getByRole('region', { name: reportTrackCopy.shared.needHelp.title });
+  await expect(help.getByRole('link', { name: track.sidebar.another })).toBeVisible();
+  await expect(help.locator('a[href^="tel:"]')).toHaveCount(0);
+});

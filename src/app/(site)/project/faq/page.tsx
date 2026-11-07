@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { DocsLayout } from '@/components/layout/docs-layout';
+import { PageFeedback } from '@/components/patterns/page-feedback';
 import { RelatedPages } from '@/components/patterns/related-pages';
 import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import { getFaq, getMostAskedFaq } from '@/data/api/faq';
-import { getSiteInfo } from '@/data/api/site-info';
 import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { DocsSectionHeading } from '@/components/patterns/docs-section';
 import { FaqExplorer } from '@/features/project/faq-explorer';
@@ -19,11 +19,7 @@ export const metadata: Metadata = {
 };
 
 export default async function FaqPage() {
-  const [{ categories, items }, mostAsked, siteInfo] = await Promise.all([
-    getFaq(),
-    getMostAskedFaq(),
-    getSiteInfo(),
-  ]);
+  const [{ categories, items }, mostAsked] = await Promise.all([getFaq(), getMostAskedFaq()]);
 
   return (
     <DocsLayout
@@ -32,7 +28,7 @@ export default async function FaqPage() {
         { id: 'topics', label: faq.toc.topics },
         { id: 'questions', label: faq.toc.mostAsked },
       ]}
-      aside={<FaqHelpCard careline={siteInfo.careline} />}
+      aside={<FaqHelpCard />}
     >
       <div className="flex flex-col gap-12 lg:gap-16">
         <div className="flex flex-col gap-6">
@@ -52,7 +48,10 @@ export default async function FaqPage() {
             topicsHeading={<DocsSectionHeading id="topics" title={faq.topics.title} />}
           />
         </div>
-        <RelatedPages pages={faq.related} />
+        <div className="flex flex-col gap-8 border-t border-gray-200 pt-6">
+          <PageFeedback icons />
+          <RelatedPages pages={faq.related} />
+        </div>
       </div>
     </DocsLayout>
   );

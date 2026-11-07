@@ -27,13 +27,13 @@ export function HelpPageFrame({
   siteInfo,
   children,
 }: HelpPageFrameProps) {
-  const group = legalHelpCopy.groups.find((candidate) =>
-    candidate.items.some((item) => item.href === href),
-  );
+  const { helpGroup, legalGroup } = legalHelpCopy;
+  const isLegal = legalGroup.items.some((item) => item.href === href);
+  const helpHome = helpGroup.items[0];
   return (
     <DocsLayout
       currentHref={href}
-      groups={legalHelpCopy.groups}
+      groups={isLegal ? [legalGroup] : undefined}
       onThisPage={sections.map((section) => ({ id: section.id, label: section.title }))}
       aside={<HelpQuestions siteInfo={siteInfo} />}
       asideOnNarrow={false}
@@ -44,9 +44,7 @@ export function HelpPageFrame({
           lede={lede}
           breadcrumb={[
             { label: legalHelpCopy.home, href: routes.home },
-            ...(group && group.id !== 'legal' && group.items[0]
-              ? [{ label: group.label, href: group.items[0].href }]
-              : []),
+            ...(!isLegal && helpHome ? [{ label: helpGroup.label, href: helpHome.href }] : []),
           ]}
         >
           {updated ? <p className="type-body-xs text-gray-500">{updated}</p> : null}

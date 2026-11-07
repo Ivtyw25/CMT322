@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { DocsLayout } from '@/components/layout/docs-layout';
-import { NeedHelpBlock } from '@/components/patterns/need-help-block';
 import { PageFeedback } from '@/components/patterns/page-feedback';
 import { RelatedPages } from '@/components/patterns/related-pages';
 import { routes } from '@/config/routes';
@@ -8,7 +7,6 @@ import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import { getMilestones } from '@/data/api/construction';
 import { getToday } from '@/data/api/clock';
-import { getSiteInfo } from '@/data/api/site-info';
 import { getStations } from '@/data/api/stations';
 import { AboutBenefits } from '@/features/project/about-benefits';
 import { AboutKeyFigures } from '@/features/project/about-key-figures';
@@ -28,11 +26,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const [stations, milestones, today, siteInfo] = await Promise.all([
+  const [stations, milestones, today] = await Promise.all([
     getStations(),
     getMilestones(),
     getToday(),
-    getSiteInfo(),
   ]);
 
   return (
@@ -47,7 +44,6 @@ export default async function AboutPage() {
         { id: 'benefits', label: about.toc.benefits },
         { id: 'timeline', label: about.toc.timeline },
       ]}
-      aside={<NeedHelpBlock careline={siteInfo.careline} />}
     >
       <div className="flex flex-col gap-8 md:gap-12 lg:gap-16">
         <DocsPageHead

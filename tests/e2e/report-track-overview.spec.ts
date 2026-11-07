@@ -13,6 +13,27 @@ test.describe('report and track overview', () => {
     await settle(page);
   });
 
+  test('the sidebar careline is one blue tap-to-call line', async ({ page }) => {
+    const help = page.getByRole('region', { name: reportTrackCopy.shared.needHelp.title });
+    const careline = help.locator('a[href^="tel:"]');
+    await expect(careline).toHaveText('MRTCareline 1800-88-6782');
+    const { lines, color, link } = await careline.evaluate((element) => {
+      const style = getComputedStyle(element);
+      const probe = document.createElement('a');
+      probe.className = 'text-primary-700';
+      document.body.append(probe);
+      const linkColor = getComputedStyle(probe).color;
+      probe.remove();
+      return {
+        lines: Math.round(element.getBoundingClientRect().height / parseFloat(style.lineHeight)),
+        color: style.color,
+        link: linkColor,
+      };
+    });
+    expect(lines).toBeLessThanOrEqual(1);
+    expect(color).toBe(link);
+  });
+
   test('shows one h1 and three sections in order', async ({ page }) => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(overview.header.title);
     await expect(page.locator('article h2')).toHaveText([

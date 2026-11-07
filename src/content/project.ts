@@ -598,8 +598,6 @@ export const projectCopy = {
       title: 'Still need help?',
       /** Buttons use uiCopy.docsPage.needHelp.report and .track. */
       body: 'Send a report or question to the authority. You get a ticket ID to follow up.',
-      /** e.g. "MRTCareline 1800-88-6782, 24 hours". */
-      careline: (label: string, number: string) => `${label} ${number}, 24 hours`,
     },
     related: [relatedPage.about, relatedPage.construction, relatedPage.trafficMap],
   },

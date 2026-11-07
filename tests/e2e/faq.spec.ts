@@ -284,7 +284,7 @@ test.describe('faq: deep links', () => {
 });
 
 test.describe('faq: page furniture', () => {
-  test('Still need help card has report, track and a tel link', async ({ page }) => {
+  test('Still need help card has report and track, and no careline', async ({ page }) => {
     await open(page);
     const card = page.getByRole('region', { name: faq.stillNeedHelp.title });
     await expect(card.getByRole('link', { name: 'Report an issue' })).toHaveAttribute(
@@ -295,7 +295,12 @@ test.describe('faq: page furniture', () => {
       'href',
       routes.reportTrack.track,
     );
-    await expect(card.locator('a[href^="tel:"]')).toHaveCount(1);
+    await expect(card.locator('a[href^="tel:"]')).toHaveCount(0);
+  });
+
+  test('asks whether the page was helpful', async ({ page }) => {
+    await open(page);
+    await expect(page.getByText(uiCopy.docsPage.feedback.question)).toBeVisible();
   });
 
   test('related pages link to About, Construction and the traffic map', async ({ page }) => {

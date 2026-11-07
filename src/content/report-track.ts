@@ -9,7 +9,6 @@
 const shared = {
   needHelp: {
     title: 'Need help?',
-    careline: 'MRTCareline 1800-88-6782, 24 hours',
   },
   emergency: {
     title: 'Emergency or immediate danger?',
@@ -420,7 +419,6 @@ const track = {
   sidebar: {
     title: 'Need help?',
     another: 'Report another issue',
-    careline: shared.needHelp.careline,
   },
   actions: {
     reportAnother: 'Report another issue',

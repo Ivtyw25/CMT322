@@ -82,6 +82,24 @@ for (const width of [390, 1440]) {
   });
 }
 
+test('help pages use the joined sidebar; legal pages show only the Legal group', async ({
+  page,
+}) => {
+  await prepare(page);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(routes.help.contact);
+  const sidebar = page.getByRole('navigation', { name: 'Section pages' });
+  await expect(sidebar.getByText('Project', { exact: true })).toBeVisible();
+  await expect(sidebar.getByText('Help', { exact: true })).toBeVisible();
+  await expect(sidebar.getByText('Legal', { exact: true })).toHaveCount(0);
+  for (const path of [routes.legal.terms, routes.legal.privacy]) {
+    await page.goto(path);
+    await expect(sidebar.getByText('Legal', { exact: true })).toBeVisible();
+    await expect(sidebar.getByText('Help', { exact: true })).toHaveCount(0);
+    await expect(sidebar.getByRole('link')).toHaveCount(2);
+  }
+});
+
 test('help pages show a group breadcrumb, legal pages go straight to Home and relevant help actions', async ({
   page,
 }) => {

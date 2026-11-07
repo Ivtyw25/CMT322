@@ -73,7 +73,7 @@ export function DocsLayout({
       <div className="hidden w-[calc(var(--container-docs-sidebar)+1.5rem)] shrink-0 border-r border-gray-200 lg:block">
         <nav
           aria-label={commonCopy.landmarks.sectionPages}
-          className="sticky top-29.25 flex max-h-[calc(100dvh-8.8125rem)] flex-col gap-6 overflow-y-auto px-6 py-9"
+          className="sticky top-29.25 scrollbar-none flex max-h-[calc(100dvh-8.8125rem)] flex-col gap-6 overflow-y-auto px-6 py-9"
         >
           {groups.map((group) => (
             <div key={group.id} className="flex flex-col gap-1">

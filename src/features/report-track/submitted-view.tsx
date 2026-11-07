@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import { DocsLayout } from '@/components/layout/docs-layout';
 import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { DocsSection } from '@/components/patterns/docs-section';
+import type { Careline } from '@/components/patterns/need-help-block';
 import { Stepper, type StepEntry } from '@/components/patterns/stepper';
 import { ButtonLink } from '@/components/ui/button-link';
 import { Callout } from '@/components/ui/callout';
@@ -64,10 +65,16 @@ type SubmittedViewProps = {
   /** The ticket when the mock data has it; otherwise this browser's own reports are searched. */
   serverTicket: Ticket | null;
   categories: readonly ReportCategory[];
+  careline: Careline;
 };
 
 /** The confirmation: owner only. Everyone else, and unknown IDs, get the unavailable note. */
-export function SubmittedView({ ticketId, serverTicket, categories }: SubmittedViewProps) {
+export function SubmittedView({
+  ticketId,
+  serverTicket,
+  categories,
+  careline,
+}: SubmittedViewProps) {
   const resolved = useResolvedTicket(serverTicket, ticketId);
   const { status, user } = useSession();
   const announce = useAnnounce();
@@ -185,7 +192,7 @@ export function SubmittedView({ ticketId, serverTicket, categories }: SubmittedV
             ]
           : []
       }
-      aside={<ReportNeedHelp />}
+      aside={<ReportNeedHelp careline={careline} />}
       asideDivider={false}
     >
       {content}

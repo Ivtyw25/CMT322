@@ -6,6 +6,7 @@ import { DocsSection } from '@/components/patterns/docs-section';
 import { routes } from '@/config/routes';
 import { reportTrackCopy } from '@/content/report-track';
 import { uiCopy } from '@/content/ui';
+import { getSiteInfo } from '@/data/api/site-info';
 import { OverviewPageCards } from '@/features/report-track/overview-page-cards';
 import { OverviewPopularQuestions } from '@/features/report-track/overview-popular-questions';
 import { OverviewSteps } from '@/features/report-track/overview-steps';
@@ -20,7 +21,8 @@ export const metadata: Metadata = {
 
 const ids = { pages: 'pages', how: 'how-it-works', faq: 'popular-questions' } as const;
 
-export default function ReportTrackOverviewPage() {
+export default async function ReportTrackOverviewPage() {
+  const siteInfo = await getSiteInfo();
   return (
     <DocsLayout
       currentHref={routes.reportTrack.overview}
@@ -29,7 +31,7 @@ export default function ReportTrackOverviewPage() {
         { id: ids.how, label: overview.onThisPage.howItWorks },
         { id: ids.faq, label: overview.onThisPage.faq },
       ]}
-      aside={<ReportNeedHelp />}
+      aside={<ReportNeedHelp careline={siteInfo.careline} />}
     >
       <div className="flex flex-col gap-12 lg:gap-16">
         <DocsPageHead

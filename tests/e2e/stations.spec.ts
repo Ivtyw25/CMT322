@@ -210,3 +210,8 @@ test.describe('stations: layout and links', () => {
     await expect(chipOf(page, 'S20')).toBeVisible();
   });
 });
+
+test('asks whether the page was helpful', async ({ page }) => {
+  await open(page);
+  await expect(page.getByText(uiCopy.docsPage.feedback.question)).toBeVisible();
+});

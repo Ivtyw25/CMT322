@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { DocsLayout } from '@/components/layout/docs-layout';
+import { PageFeedback } from '@/components/patterns/page-feedback';
 import { RelatedPages } from '@/components/patterns/related-pages';
 import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
@@ -38,7 +39,10 @@ export default async function StationsPage() {
           ]}
         />
         <StationsExplorer stations={listed} segments={<StationsSegments />} />
-        <RelatedPages pages={copy.related} className="border-t border-gray-200 pt-8" />
+        <div className="flex flex-col gap-8 border-t border-gray-200 pt-6">
+          <PageFeedback icons />
+          <RelatedPages pages={copy.related} />
+        </div>
       </div>
     </DocsLayout>
   );

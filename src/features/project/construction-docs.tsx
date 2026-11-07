@@ -33,7 +33,6 @@ type ConstructionDocsProps = {
   head: React.ReactNode;
   timeline: React.ReactNode;
   tail: React.ReactNode;
-  needHelp: React.ReactNode;
 };
 
 const phaseOptions = (Object.keys(uiCopy.constructionPhases) as PhaseChoice[]).map((value) => ({
@@ -66,7 +65,6 @@ export function ConstructionDocs({
   head,
   timeline,
   tail,
-  needHelp,
 }: ConstructionDocsProps) {
   const announce = useAnnounce();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -182,7 +180,7 @@ export function ConstructionDocs({
   ];
 
   return (
-    <DocsLayout currentHref={routes.project.construction} onThisPage={toc} aside={needHelp}>
+    <DocsLayout currentHref={routes.project.construction} onThisPage={toc}>
       <div className="flex flex-col gap-12 lg:gap-16">
         {head}
         <DocsSection id="timeline" title={copy.timeline.title}>

@@ -32,10 +32,10 @@ export const legalHelpCopy = {
   home: 'Home',
   help: 'Help',
   legal: 'Legal',
-  groups: [
-    { id: 'help', label: 'Help', items: helpPages },
-    { id: 'legal', label: 'Legal', items: legalPages },
-  ],
+  /** Help pages use the site's joined sidebar; this group is only for the breadcrumb. */
+  helpGroup: { id: 'help', label: 'Help', items: helpPages },
+  /** Terms and Privacy show only this group in their sidebar. */
+  legalGroup: { id: 'legal', label: 'Legal', items: legalPages },
   /** The one-line help note at the end of every Help and Legal page. */
   questions: {
     lead: 'Any questions? Read the',
