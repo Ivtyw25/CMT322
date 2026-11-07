@@ -122,7 +122,7 @@ export function DocsLayout({
             >
               <div
                 className={cn(
-                  'sticky top-29.25 flex max-h-[calc(100dvh-8.8125rem)] flex-col overflow-y-auto',
+                  'sticky top-29.25 scrollbar-none flex max-h-[calc(100dvh-8.8125rem)] flex-col overflow-y-auto pb-3',
                   asideDivider ? 'gap-8' : 'gap-6',
                 )}
               >
