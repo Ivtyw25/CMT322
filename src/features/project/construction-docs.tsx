@@ -193,7 +193,7 @@ export function ConstructionDocs({
             <div
               role="group"
               aria-label={copy.updates.filtersLabel}
-              className="flex flex-wrap items-center gap-2"
+              className="flex flex-col items-start gap-3 md:flex-row md:flex-wrap md:items-center md:gap-2"
             >
               <FilterChips
                 label={copy.updates.filtersLabel}
@@ -201,12 +201,14 @@ export function ConstructionDocs({
                 value={phase as PhaseChoice}
                 onValueChange={(next) => changeFilters(next, area)}
                 density="compact"
+                layout="scroll"
+                className="max-md:w-full"
               />
               <ChipSelect
                 density="compact"
                 label={copy.updates.areaLabel}
                 value={area}
-                onChange={(event) => changeFilters(phase, event.target.value)}
+                onValueChange={(next) => changeFilters(phase, next)}
                 options={[
                   { value: ALL, label: uiCopy.filters.allAreas },
                   ...areas.map((item) => ({ value: item.id, label: item.label })),

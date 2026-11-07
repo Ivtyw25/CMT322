@@ -175,27 +175,31 @@ test.describe('route diagram (1440 px)', () => {
     await expect(stop.locator('span')).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   });
 
-  test('the station rail is hidden at this width', async ({ page }) => {
+  test('the station zigzag is hidden at this width', async ({ page }) => {
     await open(page);
     await expect(page.getByRole('list', { name: about.stations.title })).toBeHidden();
   });
 });
 
-test.describe('station rail (below 1280 px)', () => {
+test.describe('station zigzag (below 1280 px)', () => {
   test('lists 22 links to station pages and hides the diagram', async ({ page }) => {
     await open(page, 1024);
     const rail = page.getByRole('list', { name: about.stations.title });
     await expect(rail.getByRole('link')).toHaveCount(22);
-    await expect(rail.getByRole('link').first()).toHaveAttribute(
-      'href',
-      routes.project.station(stations[0]?.code ?? ''),
-    );
+    for (const station of stations) {
+      await expect(rail.locator(`a[href="${routes.project.station(station.code)}"]`)).toHaveCount(
+        1,
+      );
+    }
     await expect(page.getByRole('radiogroup')).toBeHidden();
   });
 
-  test('a rail row opens the station page', async ({ page }) => {
+  test('a zigzag stop opens the station page', async ({ page }) => {
     await open(page, 390);
-    await page.getByRole('link', { name: /S20/ }).first().click();
+    await page
+      .getByRole('list', { name: about.stations.title })
+      .locator(`a[href="${routes.project.station('S20')}"]`)
+      .click();
     await expect(page).toHaveURL(new RegExp(`${routes.project.station('S20')}$`));
   });
 

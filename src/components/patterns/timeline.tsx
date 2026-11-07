@@ -23,19 +23,23 @@ type TimelineProps = {
 const pillClass =
   'inline-flex rounded-full bg-primary-600 px-2.5 py-0.5 type-body-xs-semibold whitespace-nowrap text-static-white';
 
-/** Milestones on a line. Past entries are filled dots, future ones hollow, "Today" is its own item. */
+/**
+ * Milestones on a line. Past entries are filled dots, future ones hollow, "Today" is its own item
+ * and pulses; without it the latest past entry pulses.
+ */
 export function Timeline({ items, orientation = 'vertical', className }: TimelineProps) {
   const responsive = orientation === 'responsive';
-  const hasToday = items.some((item) => item.state === 'today');
   const lastIndex = items.length - 1;
-  const pulsing = items.findLastIndex((item) => item.state === 'past');
+  const todayIndex = items.findIndex((item) => item.state === 'today');
+  const pulsing =
+    todayIndex >= 0 ? todayIndex : items.findLastIndex((item) => item.state === 'past');
 
   return (
     <ol
       className={cn(
         'flex flex-col',
         responsive && 'xl:flex-row xl:items-start',
-        responsive && hasToday && 'xl:pt-9',
+        responsive && todayIndex >= 0 && 'xl:pt-9',
         className,
       )}
     >

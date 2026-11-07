@@ -12,9 +12,9 @@ Residents and commuters come to understand what the Mutiara Line is: its length 
 | Width | Layout |
 |---|---|
 | 320–389 | As 390. Key figures stay 2 × 2 (each tile ≥ 140 px; "Start of operations" wraps). Tabs wrap to more rows (shared Tabs rule). Label/value tables: see "Info tables". Timeline date column 96 px instead of 140. |
-| 390–767 | Mobile frame 129:5475. Section bar `Project / About the line`. Key figures 2 × 2 (129:5535: left column no inner padding, right column with a 1 px `gray-200` left divider; row gap 20). Station diagram replaced by the **station line rail** (129:6123). Timeline rows: date column 140, text wraps in the rest (129:5789). Feedback and related pages full width; "Need help?" after the article. |
-| 768–1023 | Section bar; article max 760. Key figures **4 in a row** (desktop 54:2148, dividers between tiles). Station line rail (not the diagram; see "Stations along the line"). Tables use the desktop columns (label 200, value rest). |
-| 1024–1279 | Sidebar + article (fluid, ~648 px at 1024). Key figures 4 in a row. Station **line rail** still (the diagram needs 760 px). Aside hidden; "Need help?" after the article. |
+| 390–767 | Mobile frame 129:5475. Section bar `Project / About the line`. Key figures 2 × 2 (129:5535: left column no inner padding, right column with a 1 px `gray-200` left divider; row gap 20). Station diagram replaced by the **station zigzag** (owner decision 2026-11-07). Timeline rows: date column 140, text wraps in the rest (129:5789). Feedback and related pages full width; "Need help?" after the article. |
+| 768–1023 | Section bar; article max 760. Key figures **4 in a row** (desktop 54:2148, dividers between tiles). Station zigzag (not the diagram; see "Stations along the line"). Tables use the desktop columns (label 200, value rest). |
+| 1024–1279 | Sidebar + article (fluid, ~648 px at 1024). Key figures 4 in a row. Station **zigzag** still (the diagram needs 760 px). Aside hidden; "Need help?" after the article. |
 | 1280–1439 | Three columns; article is the full 760 px: the **route diagram** replaces the rail. |
 | 1440+ | Desktop frame 1:332; content 1200 centred; at 1920 extra width is margin. |
 
@@ -49,7 +49,9 @@ Intro "Station order, not to scale. Select a station to see what it serves." Two
 - Card: code chip, station name as a **link** to the station page (Body/S Semibold `gray-900`, hover `primary-700` + underline), then the "serves" sentence. The card is `aria-live="polite"` `aria-atomic="true"` so the change is announced ("S13, Jalan Universiti. Serves Universiti Sains Malaysia …").
 - Keyboard: the stops form one `role="radiogroup"` (`aria-label` "Stations along the line") with roving tabindex: Tab enters on the selected stop; Arrow Right/Down = next station in line order (S31 → A01), Arrow Left/Up = previous, Home = S31, End = A01; selection follows focus; Enter/Space also select. Each stop is `role="radio"` with `aria-checked` and name "S13 Jalan Universiti". Tab leaves the group to the card's link.
 
-**b. Station line rail, <1280 (129:6123).**
+**b. Station zigzag, <1280 (owner decision 2026-11-07, replaces the line rail of 129:6123).**
+- The shared `LineZigzag` from Home (in `LineFlow`), list named "Stations along the line"; each stop links to its station page; then the KOMTAR "Serves" card.
+- Superseded line-rail notes, kept for history:
 - Shared `LineRail` page variant, one stop per station in line order: stop 24 px, code chip, name Body/M Semibold, subtitle Body/S `gray-600` (the station's `subtitle`, or "Provisional name"), `chevron-right` 18 px `gray-400`.
 - **Decision:** each row is a **link to the station page**, as the chevrons in 129:6123 imply. The selected-station card is **not shown** below 1280 (Figma 129:5748 shows it after the rail, but with rows as links nothing would select it, and the rail already shows each subtitle). See Open questions.
 - Row states: hover/pressed bg `gray-50`, name `primary-700`; focus-visible ring inset; rows ≥ 48 px.

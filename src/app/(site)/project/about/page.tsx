@@ -18,7 +18,7 @@ import { AboutTravelling } from '@/features/project/about-travelling';
 import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { DocsSection } from '@/components/patterns/docs-section';
 import { StationExplorer } from '@/features/project/station-explorer';
-import { StationRail } from '@/features/project/station-rail';
+import { StationZigzag } from '@/features/project/station-zigzag';
 
 const { about } = projectCopy;
 
@@ -88,7 +88,7 @@ export default async function AboutPage() {
             />
           </div>
           <div className="xl:hidden">
-            <StationRail stations={stations} />
+            <StationZigzag stations={stations} />
           </div>
         </DocsSection>
         <DocsSection id="travelling" title={about.travelling.title}>

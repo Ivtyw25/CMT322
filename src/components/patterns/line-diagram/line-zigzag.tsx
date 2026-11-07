@@ -99,10 +99,12 @@ function ZigzagVariant<Station extends LineStation>({
   stations,
   columns,
   show,
+  label,
 }: {
   stations: readonly Station[];
   columns: ZigzagColumns;
   show: string;
+  label?: string;
 }) {
   const layout = zigzagLayout(stations, columns);
   return (
@@ -140,7 +142,7 @@ function ZigzagVariant<Station extends LineStation>({
           />
         ))}
       </svg>
-      <ol>
+      <ol aria-label={label}>
         {layout.nodes.map((node) => (
           <Stop key={node.station.code} node={node} layout={layout} />
         ))}
@@ -156,13 +158,22 @@ function ZigzagVariant<Station extends LineStation>({
  */
 export function LineZigzag<Station extends LineStation>({
   stations,
+  label,
 }: {
   stations: readonly Station[];
+  /** Accessible name of the list of stops. */
+  label?: string;
 }) {
   return (
     <div className="px-4 md:px-8">
       {VARIANTS.map(({ columns, show }) => (
-        <ZigzagVariant key={columns} stations={stations} columns={columns} show={show} />
+        <ZigzagVariant
+          key={columns}
+          stations={stations}
+          columns={columns}
+          show={show}
+          label={label}
+        />
       ))}
     </div>
   );

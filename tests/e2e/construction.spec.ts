@@ -35,6 +35,10 @@ const areaSelect = (page: Page) =>
   page
     .getByRole('region', { name: copy.updates.title })
     .getByRole('combobox', { name: copy.updates.areaLabel });
+const pickArea = async (page: Page, label: string) => {
+  await areaSelect(page).click();
+  await page.getByRole('option', { name: label, exact: true }).click();
+};
 const live = (page: Page) => page.locator('div[aria-live="polite"].sr-only');
 const loadOlder = (page: Page) => page.getByRole('button', { name: uiCopy.actions.loadOlder });
 
@@ -91,7 +95,7 @@ test.describe('construction: site updates', () => {
       updates[0]?.timelineTitle ?? updates[0]?.title ?? '',
     );
     await expect(chip(page, uiCopy.constructionPhases.all)).toHaveAttribute('aria-pressed', 'true');
-    await expect(areaSelect(page)).toHaveValue('all');
+    await expect(areaSelect(page)).toHaveText(uiCopy.filters.allAreas);
   });
 
   test('a phase chip filters the list, updates the URL and announces the count', async ({
@@ -119,8 +123,7 @@ test.describe('construction: site updates', () => {
       updates.some((u) => u.areaId === item.id && u.phase === 'piling'),
     );
     await chip(page, uiCopy.constructionPhases.piling).click();
-    await areaSelect(page).focus();
-    await areaSelect(page).selectOption(area?.id ?? '');
+    await pickArea(page, area?.label ?? '');
     const expected = piling.filter((item) => item.areaId === area?.id).length;
     await expect(entries(page)).toHaveCount(Math.min(PAGE, expected));
     await expect(page).toHaveURL(new RegExp(`phase=piling&area=${area?.id}`));
@@ -137,7 +140,7 @@ test.describe('construction: site updates', () => {
     );
     await open(page, `${routes.project.construction}?phase=nonsense&area=nowhere`);
     await expect(chip(page, uiCopy.constructionPhases.all)).toHaveAttribute('aria-pressed', 'true');
-    await expect(areaSelect(page)).toHaveValue('all');
+    await expect(areaSelect(page)).toHaveText(uiCopy.filters.allAreas);
   });
 
   test('a filter with no match shows the empty state; Show all updates resets and focuses All updates', async ({
@@ -146,7 +149,7 @@ test.describe('construction: site updates', () => {
     test.skip(!emptyPair, 'every phase and area pair has an update');
     await open(page);
     await chip(page, uiCopy.constructionPhases[emptyPair?.phase ?? 'piling']).click();
-    await areaSelect(page).selectOption(emptyPair?.area.id ?? '');
+    await pickArea(page, emptyPair?.area.label ?? '');
     await expect(page.locator('#main p', { hasText: copy.updates.empty.title })).toBeVisible();
     await expect(live(page)).toHaveText(copy.updates.status.none);
     await expect(loadOlder(page)).toHaveCount(0);

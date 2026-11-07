@@ -9,7 +9,6 @@ const { stations: copy } = projectCopy;
 const stations = await getStations();
 const total = stations.length;
 const komtar = stations.find((station) => station.code === 'S20');
-const stationAt = (code: string) => stations.find((station) => station.code === code);
 
 async function open(
   page: Page,
@@ -165,35 +164,16 @@ test.describe('stations: search', () => {
 });
 
 test.describe('stations: following', () => {
-  test('a guest sees no Following chips and a log in card', async ({ page }) => {
+  test('a guest sees no Following chips', async ({ page }) => {
     await open(page);
     await expect(page.getByText(uiCopy.station.following, { exact: true })).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: copy.aside.signedOut.title })).toBeVisible();
-    const login = page.getByRole('link', { name: copy.aside.signedOut.action });
-    await expect(login).toHaveAttribute(
-      'href',
-      routes.account.loginReturningTo(routes.project.stations),
-    );
   });
 
-  test('a signed-in visitor sees chips on followed stations and their names on the card', async ({
-    page,
-  }) => {
+  test('a signed-in visitor sees chips on followed stations', async ({ page }) => {
     await open(page, { signedIn: true });
     await expect(chipOf(page, 'S20')).toBeVisible();
     await expect(chipOf(page, 'S13')).toBeVisible();
     await expect(chipOf(page, 'S18')).toHaveCount(0);
-    const s20 = stationAt('S20');
-    const s13 = stationAt('S13');
-    await expect(
-      page
-        .getByText(copy.aside.following.body([`S20 ${s20?.name}`, `S13 ${s13?.name}`]))
-        .locator('visible=true'),
-    ).toBeVisible();
-    await expect(page.getByRole('link', { name: copy.aside.following.action })).toHaveAttribute(
-      'href',
-      routes.account.profileSection('stations'),
-    );
   });
 
   test('every row link carries the code, name and a hidden following note', async ({ page }) => {
@@ -213,13 +193,10 @@ test.describe('stations: layout and links', () => {
     }
   });
 
-  test('the follow card moves under the article below 1280 px and nothing scrolls sideways', async ({
-    page,
-  }) => {
+  test('nothing scrolls sideways at any width', async ({ page }) => {
     await open(page);
     for (const width of [320, 390, 768, 1024]) {
       await page.setViewportSize({ width, height: 900 });
-      await expect(page.getByRole('heading', { name: copy.aside.signedOut.title })).toBeVisible();
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
       );

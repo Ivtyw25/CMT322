@@ -1,17 +1,16 @@
 'use client';
 
-import { Search, SearchX, X } from 'lucide-react';
+import { MapPin, SearchX } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { LineRail, LineRailStop } from '@/components/patterns/line-rail';
 import { Button } from '@/components/ui/button';
-import { controlVariants } from '@/components/ui/control-styles';
+import { SearchBar } from '@/components/ui/search-bar';
 import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import type { Station } from '@/data/models/station';
 import { useAnnounce } from '@/lib/announce/announcer';
-import { cn } from '@/lib/cn';
 import { useFollowedStations } from '@/lib/follows';
 import { MatchText } from './match-text';
 import { isCodeQuery, searchStations } from './station-search';
@@ -98,50 +97,18 @@ export function StationsView({
 
   return (
     <div className="flex flex-col gap-8">
-      <div role="search" className="relative">
-        <Search
-          aria-hidden
-          className="pointer-events-none absolute top-3.5 left-3.5 size-4.5 text-gray-400"
-        />
-        <input
-          ref={inputRef}
-          type="search"
-          value={query}
-          aria-label={copy.search.label}
-          placeholder={copy.search.placeholder}
-          enterKeyHint="search"
-          spellCheck={false}
-          autoComplete="off"
-          onChange={(event) => changeQuery(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault();
-              const only = matches.length === 1 ? matches[0] : undefined;
-              if (only) router.push(routes.project.station(only.code));
-            }
-            if (event.key === 'Escape' && query) {
-              event.preventDefault();
-              changeQuery('');
-            }
-          }}
-          className={cn(
-            controlVariants({ tone: 'default' }),
-            'h-12.5 rounded-xl pl-10 type-body-s md:type-body-m',
-            query ? 'pr-12' : 'pr-4',
-            '[&::-webkit-search-cancel-button]:appearance-none',
-          )}
-        />
-        {query ? (
-          <button
-            type="button"
-            aria-label={uiCopy.actions.clearSearch}
-            onClick={clearAndFocus}
-            className="hit-area absolute top-1.5 right-2 flex size-8 cursor-pointer items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-primary-600"
-          >
-            <X aria-hidden className="size-4" />
-          </button>
-        ) : null}
-      </div>
+      <SearchBar
+        inputRef={inputRef}
+        value={query}
+        onValueChange={changeQuery}
+        onSubmit={() => {
+          const only = matches.length === 1 ? matches[0] : undefined;
+          if (only) router.push(routes.project.station(only.code));
+        }}
+        label={copy.search.label}
+        placeholder={copy.search.placeholder}
+        icon={<MapPin />}
+      />
 
       {segments}
 

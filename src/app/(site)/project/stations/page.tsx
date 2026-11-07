@@ -8,7 +8,6 @@ import { getStations } from '@/data/api/stations';
 import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { StationsExplorer } from '@/features/project/stations-explorer';
 import { StationsSegments } from '@/features/project/stations-segments';
-import { StationsFollowCard } from '@/features/project/stations-follow-card';
 
 const { stations: copy } = projectCopy;
 
@@ -28,10 +27,7 @@ export default async function StationsPage() {
   }));
 
   return (
-    <DocsLayout
-      currentHref={routes.project.stations}
-      aside={<StationsFollowCard stations={listed} />}
-    >
+    <DocsLayout currentHref={routes.project.stations}>
       <div className="flex flex-col gap-8 lg:gap-10">
         <DocsPageHead
           title={copy.header.title}

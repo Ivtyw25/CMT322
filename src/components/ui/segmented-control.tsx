@@ -20,7 +20,8 @@ type SegmentedControlProps<Value extends string> = {
   /** Stretch the segments over the full width (drawer). Ignored when vertical. */
   fullWidth?: boolean;
   /**
-   * `vertical` stacks full-width options, 44 px each. `adaptive` is vertical until the space it
+   * `vertical` stacks full-width options, 44 px each, in a rounded box (a pill track only suits a
+   * row). `adaptive` is vertical until the space it
    * sits in is 660 px wide, then a row (the FAQ audience switch).
    */
   orientation?: 'horizontal' | 'vertical' | 'adaptive';
@@ -47,8 +48,9 @@ export function SegmentedControl<Value extends string>({
       className={cn(
         segmentedTrackClass,
         orientation === 'horizontal' && (fullWidth ? 'w-full' : 'w-fit'),
-        orientation === 'vertical' && 'w-full flex-col',
-        adaptive && 'w-full flex-col @min-[41.25rem]:w-fit @min-[41.25rem]:flex-row',
+        orientation === 'vertical' && 'w-full flex-col rounded-2xl',
+        adaptive &&
+          'w-full flex-col rounded-2xl @min-[41.25rem]:w-fit @min-[41.25rem]:flex-row @min-[41.25rem]:rounded-full',
         !adaptive && className,
       )}
     >
@@ -61,8 +63,8 @@ export function SegmentedControl<Value extends string>({
             'has-checked:bg-surface has-checked:text-primary-700 has-checked:shadow-control',
             'has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-600',
             fullWidth && orientation === 'horizontal' && 'flex-1',
-            orientation === 'vertical' && 'min-h-11',
-            adaptive && 'min-h-11 @min-[41.25rem]:min-h-0',
+            orientation === 'vertical' && 'min-h-11 rounded-xl',
+            adaptive && 'min-h-11 rounded-xl @min-[41.25rem]:min-h-0 @min-[41.25rem]:rounded-full',
           )}
         >
           <input

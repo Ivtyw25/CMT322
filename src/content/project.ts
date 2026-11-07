@@ -7,12 +7,6 @@ import { routes } from '@/config/routes';
  * Shared words (Need help?, page feedback, actions, tags, stages) are in ui.ts.
  */
 
-/** Joins names as "A", "A and B" or "A, B and C". */
-const listOf = (items: readonly string[]): string =>
-  items.length <= 1
-    ? (items[0] ?? '')
-    : `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
-
 /** One description per page, used by every "Related pages" list in the group. */
 const relatedPage = {
   about: {
@@ -314,24 +308,6 @@ export const projectCopy = {
       label: 'Stations in line order, from Penang Sentral to PSR-A',
       /** Accessible name of each row link, e.g. "S20 KOMTAR". */
       rowLabel: (code: string, name: string) => `${code} ${name}`,
-    },
-    aside: {
-      following: {
-        title: 'Stations you follow',
-        /** e.g. "S20 KOMTAR and S13 Jalan Universiti. We email you about closures and works near them." */
-        body: (stations: readonly string[]) =>
-          `${listOf(stations)}. We email you about closures and works near ${stations.length === 1 ? 'it' : 'them'}.`,
-        action: 'Manage in your profile',
-      },
-      none: {
-        title: 'Follow a station',
-        body: 'Open a station and choose Follow station. We email you about closures and works near it.',
-      },
-      signedOut: {
-        title: 'Get alerts for your stations',
-        body: 'Log in to follow stations and get emails about closures and works near them.',
-        action: 'Log in to follow stations',
-      },
     },
     related: [
       relatedPage.about,
