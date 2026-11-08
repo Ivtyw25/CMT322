@@ -1,8 +1,4 @@
-import type {
-  StaffAnnouncement,
-  StaffMapItem,
-  StaffProgressUpdate,
-} from '@/data/models/staff-content';
+import type { StaffAnnouncement, StaffProgressUpdate } from '@/data/models/staff-content';
 import { announcements } from './announcements';
 import { constructionUpdates } from './construction-updates';
 import { hazards } from './hazards';
@@ -14,6 +10,8 @@ const FARAH = 'Farah Hassan';
 /*
  * Staff view of the 21 public announcements (Figma 116:4985), plus two drafts. The banner is on for
  * the lane closure and the night closure, as in the Figma list; everything else is off.
+ * Every announcement owns its pin on the traffic map, so the six road works and the hazard that
+ * the public map shows beside the announcements also exist here as announcements.
  */
 const bannerOn = new Set(['sultan-azlan-shah-lane-closure', 'komtar-crosshead-night-closure']);
 
@@ -21,6 +19,7 @@ const publishedAnnouncements: StaffAnnouncement[] = announcements.map((item) => 
   ...item,
   showBanner: bannerOn.has(item.id),
   emailFollowers: item.id === 'komtar-crosshead-night-closure',
+  mapName: item.title,
   showOnMap: item.status !== 'ended',
   notice:
     item.id === 'komtar-crosshead-night-closure'
@@ -60,6 +59,7 @@ const drafts: StaffAnnouncement[] = draftBase
         detour: [],
         showBanner: false,
         emailFollowers: false,
+        mapName: 'Footpath closure on Jalan Tun Dr Awang',
         showOnMap: false,
         notice: null,
         history: [{ id: 'h1', at: '2026-10-27T11:05:00+08:00', action: 'created', by: DANIEL }],
@@ -80,6 +80,7 @@ const drafts: StaffAnnouncement[] = draftBase
         detour: [],
         showBanner: false,
         emailFollowers: false,
+        mapName: 'Night works at the Jalan Macallum junction',
         showOnMap: false,
         notice: null,
         history: [{ id: 'h1', at: '2026-10-28T16:30:00+08:00', action: 'created', by: DANIEL }],
@@ -87,46 +88,65 @@ const drafts: StaffAnnouncement[] = draftBase
     ]
   : [];
 
-export const staffAnnouncements: StaffAnnouncement[] = [...publishedAnnouncements, ...drafts];
+const roadWorkAnnouncements: StaffAnnouncement[] = roadWorks.map((item) => ({
+  id: item.id,
+  type: item.kind,
+  status: item.status,
+  title: item.title,
+  summary: item.summary,
+  brief: item.brief,
+  location: item.location,
+  road: item.road,
+  lat: item.lat,
+  lng: item.lng,
+  areaIds: item.areaIds,
+  stationCodes: item.stationCodes,
+  startDate: item.startDate,
+  endDate: item.endDate,
+  dailyHours: item.dailyHours,
+  duration: item.duration,
+  detour: [],
+  publishedAt: item.startDate,
+  showBanner: false,
+  emailFollowers: false,
+  mapName: item.title,
+  showOnMap: true,
+  notice: null,
+  history: [],
+}));
 
-/** Every pin on the public traffic map: announcements, road works and the hazard. */
-export const staffMapItems: StaffMapItem[] = [
-  ...announcements.map((item): StaffMapItem => ({
-    id: item.id,
-    kind: item.type === 'closure' ? 'closure' : item.type === 'hazard' ? 'hazard' : 'worksite',
-    name: item.title,
-    status: item.status,
-    lat: item.lat,
-    lng: item.lng,
-    from: item.startDate,
-    to: item.endDate.length === 7 ? `${item.endDate}-28` : item.endDate,
-    announcementId: item.id,
-    visible: item.status !== 'ended',
-  })),
-  ...roadWorks.map((item): StaffMapItem => ({
-    id: item.id,
-    kind: item.kind === 'hazard' ? 'hazard' : 'worksite',
-    name: item.title,
-    status: item.status,
-    lat: item.lat,
-    lng: item.lng,
-    from: item.startDate,
-    to: item.endDate.length === 7 ? `${item.endDate}-28` : item.endDate,
-    announcementId: null,
-    visible: true,
-  })),
-  ...hazards.map((item): StaffMapItem => ({
-    id: item.id,
-    kind: 'hazard',
-    name: item.title,
-    status: item.status,
-    lat: item.lat,
-    lng: item.lng,
-    from: item.reportedOn,
-    to: '',
-    announcementId: null,
-    visible: true,
-  })),
+const hazardAnnouncements: StaffAnnouncement[] = hazards.map((item) => ({
+  id: item.id,
+  type: 'hazard',
+  status: item.status,
+  title: item.title,
+  summary: item.summary,
+  brief: item.brief,
+  location: item.location,
+  road: item.road,
+  lat: item.lat,
+  lng: item.lng,
+  areaIds: item.areaIds,
+  stationCodes: item.stationCodes,
+  startDate: item.reportedOn,
+  endDate: '',
+  dailyHours: null,
+  duration: '',
+  detour: [],
+  publishedAt: item.reportedOn,
+  showBanner: false,
+  emailFollowers: false,
+  mapName: item.title,
+  showOnMap: true,
+  notice: null,
+  history: [],
+}));
+
+export const staffAnnouncements: StaffAnnouncement[] = [
+  ...publishedAnnouncements,
+  ...roadWorkAnnouncements,
+  ...hazardAnnouncements,
+  ...drafts,
 ];
 
 /*

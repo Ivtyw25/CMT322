@@ -2,7 +2,7 @@
 
 import { ArrowDownUp, CalendarDays, Download, Filter, SearchX } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChipSelect } from '@/components/ui/chip-select';
 import { Pagination } from '@/components/ui/pagination';
@@ -53,7 +53,6 @@ export function TicketQueue() {
   const params = useQueryParams(queryDefaults);
   const { staff } = useStaffSession();
   const { tickets, now } = useTickets();
-  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
 
   const rawStatus = searchParams.get('status');
   const rawType = searchParams.get('type');
@@ -97,7 +96,6 @@ export function TicketQueue() {
 
   function change(partial: Parameters<typeof params.set>[0]) {
     params.set({ ...partial, page: null });
-    setSelected(new Set());
   }
 
   function hrefFor(target: number): string {
@@ -108,29 +106,8 @@ export function TicketQueue() {
     return `${pathname}${query ? `?${query}` : ''}`;
   }
 
-  function toggle(ticketId: string) {
-    setSelected((current) => {
-      const next = new Set(current);
-      if (next.has(ticketId)) next.delete(ticketId);
-      else next.add(ticketId);
-      return next;
-    });
-  }
-
-  function toggleAll(checked: boolean) {
-    setSelected((current) => {
-      const next = new Set(current);
-      for (const ticket of pageTickets) {
-        if (checked) next.add(ticket.id);
-        else next.delete(ticket.id);
-      }
-      return next;
-    });
-  }
-
   function exportCsv() {
-    const chosen = selected.size > 0 ? matching.filter((t) => selected.has(t.id)) : matching;
-    const rows = chosen.map((ticket) => [
+    const rows = matching.map((ticket) => [
       ticket.id,
       ticket.subject,
       copy.types[ticket.type],
@@ -243,34 +220,18 @@ export function TicketQueue() {
                 <p className="type-heading-3xs text-gray-900">{copy.empty.title}</p>
                 <p className="max-w-md type-body-s text-gray-600">{copy.empty.body}</p>
                 {filtered ? (
-                  <Button
-                    variant="secondary"
-                    onClick={() => {
-                      router.replace(pathname);
-                      setSelected(new Set());
-                    }}
-                  >
+                  <Button variant="secondary" onClick={() => router.replace(pathname)}>
                     {copy.empty.clear}
                   </Button>
                 ) : null}
               </div>
             ) : (
-              <TicketResults
-                tickets={pageTickets}
-                selected={selected}
-                onToggle={toggle}
-                onToggleAll={toggleAll}
-              />
+              <TicketResults tickets={pageTickets} />
             )}
             {matching.length > 0 ? (
               <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3">
                 <p className="min-w-0 flex-1 basis-60 type-body-s text-gray-600">
                   {copy.showing(first + 1, first + pageTickets.length, matching.length)}
-                  {selected.size > 0 ? (
-                    <span className="ml-3 type-body-s-medium text-gray-900">
-                      {copy.table.selected(selected.size)}
-                    </span>
-                  ) : null}
                 </p>
                 <Pagination
                   page={page}

@@ -2,7 +2,7 @@ import type { ReportType, Ticket } from '@/data/models/ticket';
 
 export const PAGE_SIZE = 9;
 
-export const statusTabs = ['all', 'submitted', 'pending', 'in-progress', 'resolved'] as const;
+export const statusTabs = ['all', 'pending', 'in-progress', 'resolved'] as const;
 export type StatusTab = (typeof statusTabs)[number];
 
 export const rangeOptions = ['7', '30', 'all'] as const;
@@ -60,7 +60,7 @@ export function filterTickets(
 }
 
 export function countByStatus(tickets: readonly Ticket[]): Record<StatusTab, number> {
-  const counts = { all: tickets.length, submitted: 0, pending: 0, 'in-progress': 0, resolved: 0 };
+  const counts = { all: tickets.length, pending: 0, 'in-progress': 0, resolved: 0 };
   for (const ticket of tickets) counts[ticket.status] += 1;
   return counts;
 }

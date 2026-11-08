@@ -15,8 +15,6 @@ import { AdminTopbar } from './admin-topbar';
 import { useSidebarLayout } from './use-sidebar-layout';
 
 type AdminShellProps = {
-  /** Items on the developer dashboard that need attention, for the bell. */
-  attentionCount: number;
   children: React.ReactNode;
 };
 
@@ -25,7 +23,7 @@ type AdminShellProps = {
  * below 1024 px, and the top bar. Signed-out visitors go to the staff log in page; nothing of
  * the portal is drawn until a staff session is found.
  */
-export function AdminShell({ attentionCount, children }: AdminShellProps) {
+export function AdminShell({ children }: AdminShellProps) {
   const router = useRouter();
   const pathname = usePathname();
   const announce = useAnnounce();
@@ -88,7 +86,6 @@ export function AdminShell({ attentionCount, children }: AdminShellProps) {
       <div className="flex min-w-0 flex-1 flex-col">
         <AdminTopbar
           role={staff.role}
-          notificationCount={staff.role === 'authority' ? unclaimedCount : attentionCount}
           menuId={menuId}
           menuOpen={menuOpen}
           onOpenMenu={() => setMenuRequested(true)}

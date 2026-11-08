@@ -1,12 +1,13 @@
 import { TicketAttachments } from '@/components/patterns/ticket-attachments';
 import { uiCopy } from '@/content/ui';
-import type { Ticket, TicketEvent, TicketReply } from '@/data/models/ticket';
+import type { Ticket, TicketEvent, TicketReply, TicketReporterReply } from '@/data/models/ticket';
 import { cn } from '@/lib/cn';
 import { formatFullDateTime } from '@/lib/format/date-time';
 
 type ThreadNode =
   | { kind: 'submission'; at: string }
   | { kind: 'reply'; at: string; reply: TicketReply }
+  | { kind: 'reporter-reply'; at: string; reply: TicketReporterReply }
   | { kind: 'event'; at: string; event: TicketEvent };
 
 type TicketThreadProps = {
@@ -15,13 +16,25 @@ type TicketThreadProps = {
   viewer: 'reporter' | 'staff';
   /** Replaces the details of the submission, for a visitor who did not send the report. */
   submissionNotice?: React.ReactNode;
+  /** The reporter's own replies. Staff always see them; the Track page shows them to the reporter only. */
+  showReporterReplies?: boolean;
   className?: string;
 };
 
-function nodesOf(ticket: Ticket, viewer: TicketThreadProps['viewer']): ThreadNode[] {
+function nodesOf(
+  ticket: Ticket,
+  viewer: TicketThreadProps['viewer'],
+  showReporterReplies: boolean,
+): ThreadNode[] {
   const events = ticket.events.filter((event) => viewer === 'staff' || event.kind === 'claimed');
+  const reporterReplies = showReporterReplies ? ticket.reporterReplies : [];
   const later: ThreadNode[] = [
     ...ticket.replies.map((reply): ThreadNode => ({ kind: 'reply', at: reply.at, reply })),
+    ...reporterReplies.map((reply): ThreadNode => ({
+      kind: 'reporter-reply',
+      at: reply.at,
+      reply,
+    })),
     ...events.map((event): ThreadNode => ({ kind: 'event', at: event.at, event })),
   ].toSorted((a, b) => Date.parse(a.at) - Date.parse(b.at));
   return [{ kind: 'submission', at: ticket.submittedAt }, ...later];
@@ -51,18 +64,24 @@ function NodeHeader({ who, at }: { who: string; at: string }) {
  * The conversation on a ticket, oldest first, on a line: the reporter's submission, then each staff
  * reply. Claiming (and, for staff, a priority change) shows as a small system line in between.
  */
-export function TicketThread({ ticket, viewer, submissionNotice, className }: TicketThreadProps) {
+export function TicketThread({
+  ticket,
+  viewer,
+  submissionNotice,
+  showReporterReplies = viewer === 'staff',
+  className,
+}: TicketThreadProps) {
   const copy = uiCopy.ticketThread;
   return (
     <ol aria-label={copy.label} className={cn('flex flex-col', className)}>
-      {nodesOf(ticket, viewer).map((node) => {
+      {nodesOf(ticket, viewer, showReporterReplies).map((node) => {
         const system = node.kind === 'event';
         const key =
           node.kind === 'submission'
             ? 'submission'
-            : node.kind === 'reply'
-              ? node.reply.id
-              : node.event.id;
+            : node.kind === 'event'
+              ? node.event.id
+              : node.reply.id;
         return (
           <li key={key} className="group flex gap-4 pb-5 last:pb-0">
             <span aria-hidden className="relative flex w-3 shrink-0 justify-center">
@@ -104,6 +123,15 @@ export function TicketThread({ ticket, viewer, submissionNotice, className }: Ti
                 <h3 className="type-body-m-semibold wrap-anywhere text-gray-900">
                   {node.reply.subject}
                 </h3>
+                <p className="type-body-m wrap-anywhere whitespace-pre-line text-gray-700">
+                  {node.reply.body}
+                </p>
+                <TicketAttachments attachments={node.reply.attachments} />
+              </div>
+            ) : null}
+            {node.kind === 'reporter-reply' ? (
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <NodeHeader who={copy.reporterReplied(node.reply.name)} at={node.at} />
                 <p className="type-body-m wrap-anywhere whitespace-pre-line text-gray-700">
                   {node.reply.body}
                 </p>

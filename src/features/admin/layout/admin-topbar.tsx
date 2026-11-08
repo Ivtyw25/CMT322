@@ -13,7 +13,6 @@ import { AdminNotifications } from './admin-notifications';
 
 type AdminTopbarProps = {
   role: StaffRole;
-  notificationCount: number;
   menuId: string;
   menuOpen: boolean;
   onOpenMenu: () => void;
@@ -26,7 +25,6 @@ type AdminTopbarProps = {
 /** The staff top bar (Figma 112:4704): search, public site link, theme and notifications. */
 export function AdminTopbar({
   role,
-  notificationCount,
   menuId,
   menuOpen,
   onOpenMenu,
@@ -107,7 +105,7 @@ export function AdminTopbar({
         <span className="sr-only">{adminCopy.shell.opensInNewTab}</span>
       </Link>
       <AppearanceMenu />
-      <AdminNotifications role={role} count={notificationCount} />
+      <AdminNotifications />
     </header>
   );
 }

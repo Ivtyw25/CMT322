@@ -4,10 +4,10 @@ import type { StationCode } from './station';
 export type TicketId = `MLC-${string}-${string}`;
 export const TICKET_ID_PATTERN = /^MLC-\d{6}-\d{4}$/;
 
-/** Submitted means no staff member has claimed the ticket yet. */
-export type TicketStatus = 'submitted' | 'pending' | 'in-progress' | 'resolved';
-/** The statuses a staff reply can set. Only claiming moves a ticket out of Submitted. */
-export type ReplyStatus = Exclude<TicketStatus, 'submitted'>;
+/** Pending means nobody has claimed the ticket yet. Claiming moves it to In progress. */
+export type TicketStatus = 'pending' | 'in-progress' | 'resolved';
+/** The statuses a staff reply can set. Only claiming moves a ticket out of Pending. */
+export type ReplyStatus = Exclude<TicketStatus, 'pending'>;
 export type ReportType = 'complaint' | 'inquiry';
 export type TicketPriority = 'normal' | 'high';
 
@@ -68,6 +68,16 @@ export type TicketReply = {
   status: ReplyStatus | null;
 };
 
+/** A reply from the reporter, written on the Track page. */
+export type TicketReporterReply = {
+  id: string;
+  /** ISO 8601 date-time. */
+  at: string;
+  name: string;
+  body: string;
+  attachments: TicketAttachment[];
+};
+
 /** A small system line between the conversation nodes. */
 export type TicketEvent = { id: string; at: string; by: string } & (
   { kind: 'claimed' } | { kind: 'priority'; priority: TicketPriority }
@@ -77,8 +87,11 @@ export type TicketEvent = { id: string; at: string; by: string } & (
 export type TicketNote = {
   id: string;
   at: string;
+  authorId: string;
   author: string;
   text: string;
+  /** IDs of the staff members @-mentioned in `text`. */
+  mentions: string[];
 };
 
 /** One ticket, as the commuter and the staff portal both see it. */
@@ -108,6 +121,8 @@ export type Ticket = {
   handler: TicketHandler | null;
   /** Oldest first. */
   replies: TicketReply[];
+  /** The reporter's replies, oldest first. */
+  reporterReplies: TicketReporterReply[];
   /** Oldest first. */
   events: TicketEvent[];
   /** Oldest first. */

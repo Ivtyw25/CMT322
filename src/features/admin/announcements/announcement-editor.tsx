@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronLeft, FileText, Map as MapIcon, MapPin, TriangleAlert, X } from 'lucide-react';
+import { ChevronLeft, FileText, MapPin, TriangleAlert, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
@@ -19,16 +19,11 @@ import { adminCopy } from '@/content/admin';
 import type { AnnouncementType } from '@/data/models/announcement';
 import type { AreaId } from '@/data/models/area';
 import type { StationCode } from '@/data/models/station';
-import type {
-  StaffAnnouncement,
-  StaffHistoryEntry,
-  StaffMapItem,
-} from '@/data/models/staff-content';
+import type { StaffAnnouncement, StaffHistoryEntry } from '@/data/models/staff-content';
 import { AdminPanel } from '@/features/admin/panel';
 import { DeveloperOnly } from '@/features/admin/developer-only';
 import { historyText } from '@/features/admin/history-text';
 import { AdminPageHead } from '@/features/admin/page-head';
-import { mapItemStore } from '@/features/admin/map-items/map-item-store';
 import { formatDate, formatDateRange } from '@/lib/format/dates';
 import { formatFullDateTime } from '@/lib/format/date-time';
 import { slugify } from '@/lib/format/slug';
@@ -39,6 +34,7 @@ import {
   durationLabel,
   fullEndDate,
   isNightly,
+  kindOfType,
   NIGHT_HOURS,
   statusFromDates,
 } from './announcement-store';
@@ -54,7 +50,6 @@ type AnnouncementEditorProps = {
   /** The route's ID, or "new". */
   id: string;
   base: readonly StaffAnnouncement[];
-  baseMapItems: readonly StaffMapItem[];
   areas: readonly AreaOption[];
   stations: readonly StationOption[];
   /** Today as "YYYY-MM-DD", the mock day. */
@@ -102,6 +97,7 @@ function blankAnnouncement(
     publishedAt: '',
     showBanner: false,
     emailFollowers: false,
+    mapName: '',
     showOnMap: false,
     notice: null,
     history: [],
@@ -117,7 +113,6 @@ function briefOf(summary: string): string {
 export function AnnouncementEditor({
   id,
   base,
-  baseMapItems,
   areas,
   stations,
   today,
@@ -127,7 +122,6 @@ export function AnnouncementEditor({
   const router = useRouter();
   const { staff } = useStaffSession();
   const records = useStaffRecords(announcementStore, base);
-  const mapItems = useStaffRecords(mapItemStore, baseMapItems);
   const existing = records.find((record) => record.id === id) ?? null;
   const isNew = id === NEW_ID;
 
@@ -138,7 +132,6 @@ export function AnnouncementEditor({
           key={id}
           record={existing ?? blankAnnouncement(areas, center)}
           isNew={isNew}
-          linkedItem={mapItems.find((item) => item.announcementId === id) ?? null}
           areas={areas}
           stations={stations}
           today={today}
@@ -162,7 +155,6 @@ export function AnnouncementEditor({
 type EditorFormProps = {
   record: StaffAnnouncement;
   isNew: boolean;
-  linkedItem: StaffMapItem | null;
   areas: readonly AreaOption[];
   stations: readonly StationOption[];
   today: string;
@@ -174,7 +166,6 @@ type EditorFormProps = {
 function EditorForm({
   record,
   isNew,
-  linkedItem,
   areas,
   stations,
   today,
@@ -213,8 +204,9 @@ function EditorForm({
     if (draft.summary.trim() === '') found.summary = copy.errors.summary;
     if (draft.location.trim() === '') found.road = copy.errors.road;
     if (draft.startDate === '') found.start = copy.errors.start;
-    if (draft.endDate === '') found.end = copy.errors.end;
-    else if (draft.startDate && fullEndDate(draft.endDate) < draft.startDate) {
+    if (draft.endDate === '') {
+      if (draft.type !== 'hazard') found.end = copy.errors.end;
+    } else if (draft.startDate && fullEndDate(draft.endDate) < draft.startDate) {
       found.end = copy.errors.endBeforeStart;
     }
     return found;
@@ -267,6 +259,7 @@ function EditorForm({
       id: savedId,
       status,
       road: road || draft.location,
+      mapName: draft.mapName.trim() || draft.title.trim(),
       stationCodes: nearby.map((station) => station.code),
       duration:
         mode === 'draft' ? draft.duration : durationLabel(draft.startDate, draft.endDate, nightly),
@@ -412,7 +405,11 @@ function EditorForm({
                   onChange={(event) => change('startDate', event.target.value)}
                 />
               </Field>
-              <Field label={copy.fields.end} error={errors.end}>
+              <Field
+                label={copy.fields.end}
+                hint={draft.type === 'hazard' ? copy.fields.endHint : undefined}
+                error={errors.end}
+              >
                 <TextInput
                   type="date"
                   value={draft.endDate ? fullEndDate(draft.endDate) : ''}
@@ -453,28 +450,29 @@ function EditorForm({
                 leadingIcon={<MapPin className="size-4" />}
               />
             </Field>
-            <div className="relative">
-              <LocationMap
-                center={{ lat: draft.lat, lng: draft.lng }}
-                zoom={15}
-                label={copy.map.label}
-                interaction="snippet"
-                className="h-50 rounded-xl"
-                markers={[]}
-                pin={{
-                  point: { lat: draft.lat, lng: draft.lng },
-                  onChange: (point) => setDraft((current) => ({ ...current, ...point })),
-                  label: () => copy.map.pinLabel,
-                  dropLabel: copy.map.dropLabel,
-                }}
+            <Field
+              label={copy.fields.mapName}
+              hint={copy.fields.mapNameHint(adminCopy.mapItems.kinds[kindOfType[draft.type]])}
+            >
+              <TextInput
+                value={draft.mapName}
+                onChange={(event) => change('mapName', event.target.value)}
               />
-              {linkedItem ? (
-                <p className="pointer-events-none absolute top-3.5 left-3.5 z-10 flex max-w-[calc(100%-1.75rem)] items-center gap-1.5 rounded-lg border border-gray-200 bg-surface px-2.5 py-1.5 type-body-xs-medium text-gray-800">
-                  <MapIcon aria-hidden className="size-3.5 shrink-0 text-primary-700" />
-                  <span className="truncate">{copy.map.linked(linkedItem.name)}</span>
-                </p>
-              ) : null}
-            </div>
+            </Field>
+            <LocationMap
+              center={{ lat: draft.lat, lng: draft.lng }}
+              zoom={15}
+              label={copy.map.label}
+              interaction="snippet"
+              className="h-50 rounded-xl"
+              markers={[]}
+              pin={{
+                point: { lat: draft.lat, lng: draft.lng },
+                onChange: (point) => setDraft((current) => ({ ...current, ...point })),
+                label: () => copy.map.pinLabel,
+                dropLabel: copy.map.dropLabel,
+              }}
+            />
           </AdminPanel>
 
           <AdminPanel
@@ -524,7 +522,6 @@ function EditorForm({
                 {noticeError}
               </p>
             ) : null}
-            <p className="type-body-xs text-gray-500">{copy.notice.shown}</p>
           </AdminPanel>
         </div>
 

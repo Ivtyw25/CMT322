@@ -164,11 +164,9 @@ export function ProfilePage({
                   >
                     <p className="type-heading-s">
                       {
-                        allTickets.filter((ticket) =>
-                          status === 'pending'
-                            ? ticket.status === 'pending' || ticket.status === 'submitted'
-                            : ticket.status ===
-                              (status === 'inProgress' ? 'in-progress' : 'resolved'),
+                        allTickets.filter(
+                          (ticket) =>
+                            ticket.status === (status === 'inProgress' ? 'in-progress' : status),
                         ).length
                       }
                     </p>

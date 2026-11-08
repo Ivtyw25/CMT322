@@ -1,5 +1,6 @@
 import { Tag, tagKinds } from '@/components/ui/tag';
 import { GallerySection, Specimen } from '@/app/dev/components/_parts/section';
+import { devCopy } from '@/content/dev';
 
 export function TagsSection() {
   return (
@@ -8,6 +9,10 @@ export function TagsSection() {
         {tagKinds.map((kind) => (
           <Tag key={kind} kind={kind} />
         ))}
+      </Specimen>
+      <Specimen caption={devCopy.states.recordTags}>
+        <Tag kind="ticketId" label={devCopy.samples.ticketId} />
+        <Tag kind="category" label={devCopy.samples.categoryLabel} />
       </Specimen>
     </GallerySection>
   );

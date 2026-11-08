@@ -1,8 +1,30 @@
 import { adminCopy } from '@/content/admin';
-import type { StaffAnnouncement, StaffAnnouncementStatus } from '@/data/models/staff-content';
+import type { AnnouncementType } from '@/data/models/announcement';
+import type {
+  MapItemKind,
+  StaffAnnouncement,
+  StaffAnnouncementStatus,
+} from '@/data/models/staff-content';
+import { removeKey } from '@/lib/storage';
 import { createRecordStore } from '@/lib/staff-records/record-store';
 
 export const announcementStore = createRecordStore<StaffAnnouncement>('mlc-staff-announcements');
+
+/* Map items used to have their own store. They are part of their announcement now, so drop it. */
+if (typeof window !== 'undefined') removeKey('mlc-staff-map-items');
+
+/** What the public map calls an announcement's pin, and the type each pin kind stands for. */
+export const kindOfType = {
+  closure: 'closure',
+  construction: 'worksite',
+  hazard: 'hazard',
+} as const satisfies Record<AnnouncementType, MapItemKind>;
+
+export const typeOfKind = {
+  closure: 'closure',
+  worksite: 'construction',
+  hazard: 'hazard',
+} as const satisfies Record<MapItemKind, AnnouncementType>;
 
 const DAY_MS = 86_400_000;
 export const NIGHT_HOURS = { from: '22:00', to: '06:00' } as const;
@@ -19,14 +41,14 @@ export function isNightly(item: Pick<StaffAnnouncement, 'dailyHours'>): boolean 
   return item.dailyHours?.from === NIGHT_HOURS.from && item.dailyHours.to === NIGHT_HOURS.to;
 }
 
-/** Where a published announcement stands on `today`. */
+/** Where a published announcement stands on `today`. An empty end date never ends. */
 export function statusFromDates(
   start: string,
   end: string,
   today: string,
 ): Exclude<StaffAnnouncementStatus, 'draft'> {
   if (start > today) return 'upcoming';
-  if (fullEndDate(end) < today) return 'ended';
+  if (end !== '' && fullEndDate(end) < today) return 'ended';
   return 'active';
 }
 

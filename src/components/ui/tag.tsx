@@ -12,7 +12,6 @@ export const tagKinds = [
   'pending',
   'inProgress',
   'resolved',
-  'submitted',
   'overdue',
   'highPriority',
   'normal',
@@ -21,6 +20,9 @@ export const tagKinds = [
   'published',
 ] as const;
 export type TagKind = (typeof tagKinds)[number];
+
+/** Pills whose label is the record's own text: a ticket ID, a category. */
+export type LabelledTagKind = 'ticketId' | 'category';
 
 const tagVariants = cva(
   'inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 type-body-xs-medium whitespace-nowrap',
@@ -32,7 +34,7 @@ const tagVariants = cva(
         success: 'bg-success-50 text-success-700',
         info: 'bg-primary-50 text-primary-700',
         neutral: 'bg-gray-100 text-gray-600',
-        submitted: 'bg-gray-100 text-gray-700',
+        plain: 'bg-gray-100 text-gray-700',
       },
     },
   },
@@ -44,7 +46,7 @@ const dotTone = {
   success: 'bg-success-600',
   info: 'bg-primary-600',
   neutral: 'bg-gray-500',
-  submitted: 'bg-gray-500',
+  plain: 'bg-gray-500',
 } as const;
 
 const toneOf = {
@@ -57,22 +59,37 @@ const toneOf = {
   pending: 'warning',
   inProgress: 'info',
   resolved: 'success',
-  submitted: 'submitted',
   overdue: 'danger',
   highPriority: 'danger',
-  normal: 'submitted',
+  normal: 'plain',
   scheduled: 'info',
-  draft: 'submitted',
+  draft: 'plain',
   published: 'success',
-} as const satisfies Record<TagKind, keyof typeof dotTone>;
+  ticketId: 'plain',
+  category: 'plain',
+} as const satisfies Record<TagKind | LabelledTagKind, keyof typeof dotTone>;
 
-/** One of the fixed status tags (the last six are the staff portal's). The label always carries the meaning; never recolour. */
-export function Tag({ kind, className }: { kind: TagKind; className?: string }) {
-  const tone = toneOf[kind];
+type TagProps = { className?: string } & (
+  { kind: TagKind; label?: never } | { kind: LabelledTagKind; label: string }
+);
+
+/**
+ * One of the fixed tags (the last six are the staff portal's), or a pill that carries a record's own
+ * text (`ticketId`, `category`). The label always carries the meaning; never recolour.
+ */
+export function Tag(props: TagProps) {
+  const tone = toneOf[props.kind];
+  const text = props.label === undefined ? uiCopy.tags[props.kind] : props.label;
   return (
-    <span className={cn(tagVariants({ tone }), className)}>
-      <span aria-hidden className={cn('size-1.5 rounded-full', dotTone[tone])} />
-      {uiCopy.tags[kind]}
+    <span
+      className={cn(
+        tagVariants({ tone }),
+        props.label !== undefined && 'max-w-full wrap-anywhere whitespace-normal',
+        props.className,
+      )}
+    >
+      <span aria-hidden className={cn('size-1.5 shrink-0 rounded-full', dotTone[tone])} />
+      {text}
     </span>
   );
 }

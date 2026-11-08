@@ -18,7 +18,6 @@ import { ticketSteps } from './ticket-steps';
 const { result, onThisPage } = reportTrackCopy.track;
 
 const tagOf: Record<TicketStatus, TagKind> = {
-  submitted: 'submitted',
   pending: 'pending',
   'in-progress': 'inProgress',
   resolved: 'resolved',

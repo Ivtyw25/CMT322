@@ -346,8 +346,7 @@ export function AnnouncementsPage({ base, areas }: AnnouncementsPageProps) {
               {matching.length > 0 ? (
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3">
                   <p className="min-w-0 flex-1 basis-60 type-body-s text-gray-600">
-                    {copy.showing(first + 1, first + pageItems.length, matching.length)}{' '}
-                    {copy.endedNote}
+                    {copy.showing(first + 1, first + pageItems.length, matching.length)}
                   </p>
                   <Pagination
                     page={page}

@@ -2,7 +2,6 @@ import type { TagKind } from '@/components/ui/tag';
 import type { TicketPriority, TicketStatus } from '@/data/models/ticket';
 
 export const statusTagOf: Record<TicketStatus, TagKind> = {
-  submitted: 'submitted',
   pending: 'pending',
   'in-progress': 'inProgress',
   resolved: 'resolved',

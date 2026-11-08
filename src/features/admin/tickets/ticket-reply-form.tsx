@@ -19,7 +19,6 @@ const copy = adminCopy.ticket.reply;
 const NONE = 'none';
 
 const statusChoices: readonly SegmentedOption<ReplyStatus>[] = [
-  { value: 'pending', label: copy.statusOptions.pending },
   { value: 'in-progress', label: copy.statusOptions['in-progress'] },
   { value: 'resolved', label: copy.statusOptions.resolved },
 ];
@@ -50,7 +49,7 @@ export function TicketReplyForm({ ticket, staff, templates }: TicketReplyFormPro
   const { reply } = useTickets();
   const announce = useAnnounce();
   const [status, setStatus] = useState<ReplyStatus>(
-    ticket.status === 'submitted' ? 'pending' : ticket.status,
+    ticket.status === 'pending' ? 'in-progress' : ticket.status,
   );
   const [priority, setPriority] = useState<TicketPriority>(ticket.priority);
   const [templateId, setTemplateId] = useState(NONE);

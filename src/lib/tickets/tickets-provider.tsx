@@ -17,13 +17,16 @@ import { mockNow } from './mock-clock';
 import {
   addNote,
   addReply,
+  addReporterReply,
   claimTicket,
   createTicket,
   describeFiles,
   nextReplyId,
+  nextReporterReplyId,
   type NewTicketInput,
   type ReplyInput,
 } from './ticket-actions';
+import { isHandler, isUnclaimed } from './ticket-selectors';
 import { ticketStore } from './ticket-store';
 
 type TicketsValue = {
@@ -32,21 +35,27 @@ type TicketsValue = {
   /** False on the server and during hydration, before this browser's tickets are read. */
   ready: boolean;
   getTicket: (id: string) => Ticket | null;
-  /** Tickets no staff member has claimed yet. */
+  /** Tickets nobody has picked up yet: Pending and unclaimed. */
   unclaimedCount: number;
+  /** True for a report sent from this browser, whoever is signed in. */
+  sentFromHere: (id: string) => boolean;
   /** The mock "now" (ISO). */
   now: () => string;
-  /** Saves a report as Submitted and unclaimed. Resolves with the saved ticket. */
+  /** Saves a report as Pending and unclaimed. Resolves with the saved ticket. */
   submitTicket: (input: NewTicketInput, files: readonly File[]) => Promise<Ticket>;
+  /** The staff member takes an unclaimed ticket: they become its handler and it moves to In progress. */
   claim: (ticketId: string, staff: StaffMember) => void;
-  /** Saves a reply and its status and priority. The reporter is emailed (simulated). */
+  /** Saves the handler's reply with its status and priority. Ignored for any other staff member. The reporter is emailed (simulated). */
   reply: (
     ticketId: string,
     input: ReplyInput,
     files: readonly File[],
     staff: StaffMember,
   ) => Promise<void>;
-  addNote: (ticketId: string, text: string, staff: StaffMember) => void;
+  /** An internal note. Any staff member can add one. `mentions` are the staff IDs it @-mentions. */
+  addNote: (ticketId: string, text: string, mentions: string[], staff: StaffMember) => void;
+  /** The reporter's reply from the Track page, with optional photos and files. */
+  replyAsReporter: (ticketId: string, body: string, files: readonly File[]) => Promise<void>;
 };
 
 const TicketsContext = createContext<TicketsValue | null>(null);
@@ -84,15 +93,21 @@ export function TicketsProvider({ demoTickets, mockNow: anchor, children }: Prov
     () => applyRecordEdits(demoTickets, edits).toSorted(byNewestSubmitted),
     [demoTickets, edits],
   );
-  const unclaimedCount = useMemo(
-    () => tickets.filter((ticket) => ticket.status === 'submitted').length,
-    [tickets],
-  );
+  const unclaimedCount = useMemo(() => tickets.filter(isUnclaimed).length, [tickets]);
 
   const now = useCallback(() => mockNow(anchor), [anchor]);
   const getTicket = useCallback(
     (id: string) => tickets.find((ticket) => ticket.id === id) ?? null,
     [tickets],
+  );
+
+  const demoIds = useMemo(
+    () => new Set<string>(demoTickets.map((ticket) => ticket.id)),
+    [demoTickets],
+  );
+  const sentFromHere = useCallback(
+    (id: string) => !demoIds.has(id) && id in edits.upserts,
+    [demoIds, edits],
   );
 
   const value = useMemo<TicketsValue>(() => {
@@ -104,6 +119,7 @@ export function TicketsProvider({ demoTickets, mockNow: anchor, children }: Prov
       ready,
       getTicket,
       unclaimedCount,
+      sentFromHere,
       now,
       async submitTicket(input, files) {
         const at = now();
@@ -117,24 +133,32 @@ export function TicketsProvider({ demoTickets, mockNow: anchor, children }: Prov
       },
       claim(ticketId, staff) {
         const ticket = current(ticketId);
-        if (ticket && ticket.status === 'submitted') {
+        if (ticket && isUnclaimed(ticket)) {
           ticketStore.upsert(claimTicket(ticket, staff, now()));
         }
       },
       async reply(ticketId, input, files, staff) {
         const ticket = current(ticketId);
-        if (!ticket) return;
+        if (!ticket || !isHandler(ticket, staff.id)) return;
         const { attachments, blobs } = describeFiles(nextReplyId(ticket), files);
         await saveAttachmentBlobs(blobs);
         const latest = current(ticketId) ?? ticket;
         ticketStore.upsert(addReply(latest, input, staff, now(), attachments));
       },
-      addNote(ticketId, text, staff) {
+      addNote(ticketId, text, mentions, staff) {
         const ticket = current(ticketId);
-        if (ticket) ticketStore.upsert(addNote(ticket, text, staff, now()));
+        if (ticket) ticketStore.upsert(addNote(ticket, text, mentions, staff, now()));
+      },
+      async replyAsReporter(ticketId, body, files) {
+        const ticket = current(ticketId);
+        if (!ticket) return;
+        const { attachments, blobs } = describeFiles(nextReporterReplyId(ticket), files);
+        await saveAttachmentBlobs(blobs);
+        const latest = current(ticketId) ?? ticket;
+        ticketStore.upsert(addReporterReply(latest, body, now(), attachments));
       },
     };
-  }, [demoTickets, tickets, ready, getTicket, unclaimedCount, now]);
+  }, [demoTickets, tickets, ready, getTicket, unclaimedCount, sentFromHere, now]);
 
   return <TicketsContext value={value}>{children}</TicketsContext>;
 }

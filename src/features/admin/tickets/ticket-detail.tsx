@@ -4,13 +4,14 @@ import { ChevronLeft, Mail, MapPin, Phone, User } from 'lucide-react';
 import Link from 'next/link';
 import { TicketThread } from '@/components/patterns/ticket-thread';
 import { ButtonLink } from '@/components/ui/button-link';
+import { Callout } from '@/components/ui/callout';
 import { Tag } from '@/components/ui/tag';
 import { routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
 import type { ReplyTemplate, ReportCategory, Ticket } from '@/data/models/ticket';
 import { AdminPanel } from '@/features/admin/panel';
 import { useStaffSession } from '@/lib/staff-session';
-import { useTicket } from '@/lib/tickets';
+import { isHandler, isUnclaimed, useTicket } from '@/lib/tickets';
 import { TicketClaimPanel } from './ticket-claim-panel';
 import { TicketNotes } from './ticket-notes';
 import { TicketReplyForm } from './ticket-reply-form';
@@ -94,6 +95,11 @@ export function TicketDetail({ ticketId, categories, templates }: TicketDetailPr
   const { ticket } = lookup;
   const category = categories.find((candidate) => candidate.id === ticket.categoryId);
   const typeLabel = adminCopy.tickets.types[ticket.type];
+  const categoryText = category
+    ? copy.categoryLine(typeLabel, lowerFirst(category.label))
+    : typeLabel;
+  const unclaimed = isUnclaimed(ticket);
+  const handler = isHandler(ticket, staff.id);
 
   return (
     <div className="flex flex-col gap-6">
@@ -106,21 +112,19 @@ export function TicketDetail({ ticketId, categories, templates }: TicketDetailPr
       </Link>
 
       <div className="flex flex-col gap-2">
-        <p className="type-body-s-medium text-gray-500">{ticket.id}</p>
         <h1 className="type-heading-s wrap-anywhere text-gray-900">{ticket.subject}</h1>
         <div className="flex flex-wrap items-center gap-2">
+          <Tag kind="ticketId" label={ticket.id} />
+          <Tag kind="category" label={categoryText} />
           <Tag kind={statusTagOf[ticket.status]} />
           <Tag kind={priorityTagOf[ticket.priority]} />
-          <p className="type-body-s text-gray-600">
-            {category ? copy.categoryLine(typeLabel, lowerFirst(category.label)) : typeLabel}
-          </p>
         </div>
         <p className="type-body-s text-gray-700">
           {ticket.handler ? copy.handledBy(ticket.handler.name) : copy.notClaimed}
         </p>
       </div>
 
-      {ticket.status === 'submitted' ? <TicketClaimPanel ticket={ticket} staff={staff} /> : null}
+      {unclaimed ? <TicketClaimPanel ticket={ticket} staff={staff} /> : null}
 
       <div className="flex flex-col gap-5 xl:flex-row xl:items-start">
         <div className="flex min-w-0 flex-col gap-5 xl:flex-1">
@@ -135,7 +139,12 @@ export function TicketDetail({ ticketId, categories, templates }: TicketDetailPr
           <TicketNotes ticket={ticket} staff={staff} />
         </div>
         <div className="flex flex-col gap-5 xl:w-95 xl:shrink-0">
-          {ticket.status === 'submitted' ? null : (
+          {ticket.handler && !handler ? (
+            <Callout tone="info" title={copy.reply.readOnly.title(ticket.handler.name)}>
+              <p>{copy.reply.readOnly.body}</p>
+            </Callout>
+          ) : null}
+          {handler ? (
             <AdminPanel headingId="reply-heading" title={copy.reply.title} className="gap-4 p-5">
               <TicketReplyForm
                 key={ticket.id}
@@ -144,7 +153,7 @@ export function TicketDetail({ ticketId, categories, templates }: TicketDetailPr
                 templates={templates}
               />
             </AdminPanel>
-          )}
+          ) : null}
           <ReporterCard ticket={ticket} />
         </div>
       </div>

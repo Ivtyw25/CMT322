@@ -23,37 +23,27 @@ export type OfficialNotice = {
 
 /**
  * An announcement as the developer manages it: the public record plus the publishing choices.
- * A draft has empty `startDate` and `endDate` until they are chosen.
+ * A draft has empty `startDate` and `endDate` until they are chosen. A hazard may keep an empty
+ * `endDate`: it stays until someone removes it.
+ *
+ * Every announcement owns exactly one pin on the public traffic map. Its type, `mapName`, `lat`,
+ * `lng`, dates and `showOnMap` are the map item; the Map items page edits these same fields.
  */
 export type StaffAnnouncement = Omit<Announcement, 'status'> & {
   status: StaffAnnouncementStatus;
   showBanner: boolean;
   emailFollowers: boolean;
+  /** Name on the public map. */
+  mapName: string;
+  /** Whether the pin is visible on the public map. */
   showOnMap: boolean;
   notice: OfficialNotice | null;
   /** Oldest first. */
   history: StaffHistoryEntry[];
 };
 
+/** How the public traffic map classes an announcement's pin. A construction announcement is a worksite. */
 export type MapItemKind = 'closure' | 'worksite' | 'hazard';
-
-/** A pin on the public traffic map, as the map editor lists it. */
-export type StaffMapItem = {
-  id: string;
-  kind: MapItemKind;
-  /** Name on the public map. */
-  name: string;
-  status: 'active' | 'upcoming' | 'ended';
-  lat: number;
-  lng: number;
-  /** ISO 8601 date, or empty. */
-  from: string;
-  /** ISO 8601 date. Empty: no end date (a hazard stays until someone removes it). */
-  to: string;
-  /** The announcement the item belongs to. Null for an item without one. */
-  announcementId: string | null;
-  visible: boolean;
-};
 
 export type ProgressState = 'draft' | 'scheduled' | 'published';
 

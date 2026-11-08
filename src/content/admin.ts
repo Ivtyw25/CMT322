@@ -93,7 +93,6 @@ export const adminCopy = {
     checking: 'Checking your staff session',
     publicSite: 'View public site',
     opensInNewTab: 'opens in new tab',
-    notifications: 'Notifications',
     skipToContent: 'Skip to main content',
     search: {
       authority: {
@@ -106,18 +105,8 @@ export const adminCopy = {
       },
       submit: 'Search',
     },
-    notificationPanel: {
-      authority: (waiting: number) =>
-        waiting === 0
-          ? 'No tickets are waiting to be claimed.'
-          : waiting === 1
-            ? '1 ticket is waiting to be claimed.'
-            : `${waiting} tickets are waiting to be claimed.`,
-      developer: (count: number) =>
-        count === 1 ? '1 item needs your attention.' : `${count} items need your attention.`,
-      authorityAction: 'Open unclaimed tickets',
-      developerAction: 'Open the dashboard',
-    },
+    notificationsUnread: (unread: number) =>
+      unread === 0 ? 'Notifications, none unread' : `Notifications, ${unread} unread`,
   },
 
   nav: {
@@ -141,53 +130,65 @@ export const adminCopy = {
     updated: (when: string) => `Updated ${when}.`,
   },
 
+  /** The notification feed, on the dashboard and in the top bar bell. */
+  notifications: {
+    title: 'Notifications',
+    hint: 'Mentions, notes on your tickets and replies from reporters.',
+    listLabel: 'Notifications',
+    empty: 'You have no notifications yet.',
+    markAllRead: 'Mark all as read',
+    allRead: 'All notifications marked as read.',
+    unread: 'Unread',
+    excerpt: (text: string) => `“${text}”`,
+    viewAll: 'See all on the dashboard',
+    kinds: {
+      mention: (name: string) => `${name} mentioned you in a note`,
+      comment: (name: string) => `${name} added a note on a ticket you handle`,
+      'reporter-reply': (name: string) => `${name} replied on a ticket you handle`,
+    },
+  },
+
   dashboard: {
     title: 'Dashboard',
+    /** Pending tickets nobody has picked up, on both dashboards. */
+    unclaimed: {
+      title: 'Waiting to be picked up',
+      hint: 'Pending tickets nobody is handling yet, oldest first. The target is a pick-up within 2 working days.',
+      viewAll: 'View pending tickets',
+      listLabel: 'Tickets waiting to be picked up',
+      empty: 'Every ticket has been picked up.',
+      areaLabel: 'Area',
+      waitingLabel: 'Waiting',
+      claim: 'I’m working on this',
+      claimed: (id: string, name: string) => `${id} is now yours, handled by ${name}.`,
+      waited: {
+        minutes: (n: number) => `${n} min`,
+        hours: (n: number) => (n === 1 ? '1 hour' : `${n} hours`),
+        days: (n: number) => (n === 1 ? '1 day' : `${n} days`),
+      },
+    },
+    ticketCounts: {
+      label: 'Ticket status counts',
+      pending: {
+        label: 'Pending',
+        hint: (past: number) => `Nobody is handling these, ${past} past the 2-day target`,
+      },
+      inProgress: { label: 'In progress', hint: 'Being worked on' },
+      resolved: {
+        label: 'Resolved',
+        hint: (days: number | null) =>
+          days === null ? 'No resolved tickets yet' : `Average ${days} days to resolve`,
+      },
+    },
     authority: {
       intro: 'Reports from commuters, residents and businesses near the works.',
       openQueue: 'Open ticket queue',
-      stats: {
-        unclaimed: {
-          label: 'Waiting to be claimed',
-          hint: (past: number) => `${past} past the 2-day target`,
-        },
-        pending: { label: 'Pending', hint: 'Claimed, no reply yet' },
-        inProgress: { label: 'In progress', hint: 'Being worked on' },
-        resolved: {
-          label: 'Resolved',
-          hint: (days: number | null) =>
-            days === null ? 'No resolved tickets yet' : `Average ${days} days to resolve`,
-        },
-      },
-      needsReply: {
-        title: 'Needs a first reply',
-        hint: 'Oldest first. The target is a first reply within 2 working days.',
-        viewAll: 'View unclaimed tickets',
-        tableLabel: 'Tickets that need a first reply',
-        columns: { ticket: 'Ticket', subject: 'Subject', area: 'Area', waiting: 'Waiting' },
-        empty: 'Every ticket has had a first reply.',
-        areaLabel: 'Area',
-        waitingLabel: 'Waiting',
-        waited: {
-          minutes: (n: number) => `${n} min`,
-          hours: (n: number) => (n === 1 ? '1 hour' : `${n} hours`),
-          days: (n: number) => (n === 1 ? '1 day' : `${n} days`),
-        },
-      },
       byArea: {
         title: 'Open tickets by area',
         empty: 'No open tickets.',
       },
       byType: {
         title: 'Tickets by type',
-      },
-      activity: {
-        title: 'Recent activity',
-        empty: 'Nothing has happened yet.',
-        submitted: (id: string, name: string) => `${name} submitted ${id}`,
-        claimed: (name: string, id: string) => `${name} started working on ${id}`,
-        replied: (name: string, id: string, subject: string) =>
-          `${name} replied to ${id}: ${subject}`,
       },
     },
     developer: {
@@ -244,7 +245,6 @@ export const adminCopy = {
     tabsLabel: 'Ticket status',
     tabs: {
       all: 'All',
-      submitted: 'Submitted',
       pending: 'Pending',
       'in-progress': 'In progress',
       resolved: 'Resolved',
@@ -269,8 +269,6 @@ export const adminCopy = {
     types: { complaint: 'Complaint', inquiry: 'General inquiry' },
     table: {
       label: 'Tickets',
-      selectAll: 'Select all tickets on this page',
-      selectRow: (ticketId: string) => `Select ${ticketId}`,
       columns: {
         ticket: 'Ticket',
         subject: 'Subject',
@@ -281,8 +279,6 @@ export const adminCopy = {
         status: 'Status',
       },
       unclaimed: 'Not claimed yet',
-      selected: (count: number) =>
-        count === 1 ? '1 ticket selected' : `${count} tickets selected`,
     },
     showing: (from: number, to: number, total: number) =>
       `Showing ${from} to ${to} of ${total} tickets`,
@@ -311,7 +307,7 @@ export const adminCopy = {
     },
     claim: {
       title: 'Nobody is handling this ticket yet',
-      body: 'Claim it to become its handler. The status moves to Pending and the reporter sees who is looking into it.',
+      body: 'Claim it to become its handler. The status moves to In progress and the reporter sees who is looking into it.',
       action: 'I’m working on this',
       claimed: (name: string) => `You are now handling this ticket as ${name}.`,
     },
@@ -323,12 +319,20 @@ export const adminCopy = {
       add: 'Add note',
       byline: (author: string) => author,
       added: 'Internal note added.',
+      mentionHint: 'Type @ to mention a colleague. They are notified.',
+      mentionList: 'Staff to mention',
+      mentionSuggestions: (count: number) =>
+        count === 1 ? '1 colleague to mention' : `${count} colleagues to mention`,
     },
     reply: {
       title: 'Reply to the reporter',
       hint: 'The reply is emailed to the reporter and added to the conversation.',
       status: 'Status',
-      statusOptions: { pending: 'Pending', 'in-progress': 'In progress', resolved: 'Resolved' },
+      statusOptions: { 'in-progress': 'In progress', resolved: 'Resolved' },
+      readOnly: {
+        title: (name: string) => `Handled by ${name}`,
+        body: 'Only they can reply, change the status or priority, or resolve this ticket. You can still add internal notes.',
+      },
       priority: 'Priority',
       priorityOptions: { normal: 'Normal', high: 'High' },
       template: 'Reply template',
@@ -414,7 +418,6 @@ export const adminCopy = {
     },
     showing: (from: number, to: number, total: number) =>
       `Showing ${from} to ${to} of ${total} announcements.`,
-    endedNote: 'Ended announcements stay visible on the public Past tab.',
     paginationLabel: 'Announcement pages',
     empty: {
       title: 'No announcements match these filters',
@@ -430,7 +433,7 @@ export const adminCopy = {
       draft: (saved: string) => (saved ? `Draft, last saved ${saved}.` : 'Draft, not saved yet.'),
       upcoming: (when: string) => `Scheduled. Goes live on the public site on ${when}.`,
       active: 'Live on the public site.',
-      ended: 'Ended. It stays on the public Past tab.',
+      ended: 'Ended.',
     },
     saveDraft: 'Save draft',
     schedule: 'Save and schedule',
@@ -452,6 +455,9 @@ export const adminCopy = {
       calculated: '(calculated)',
       nightly: 'Repeats nightly, 10 pm to 6 am',
       road: 'Road or place',
+      endHint: 'Leave empty for a hazard with no end date.',
+      mapName: 'Name on the public map',
+      mapNameHint: (kind: string) => `Shown as a ${kind.toLowerCase()} pin. Empty uses the title.`,
     },
     typeOptions: { closure: 'Closure', construction: 'Construction', hazard: 'Hazard' },
     summaryMax: 400,
@@ -474,10 +480,8 @@ export const adminCopy = {
       label: 'Map of the road or place. Click the map to move the pin.',
       dropLabel: 'Drop a pin at the map centre',
       pinLabel: 'Announcement location pin',
-      linked: (name: string) => `Linked map item: ${name}`,
     },
     notice: {
-      shown: 'Shown as “View notice” on the public Announcements table.',
       uploaded: (sizeKb: number, when: string) => `${sizeKb} KB, uploaded ${when}`,
       remove: (fileName: string) => `Remove ${fileName}`,
       choose: 'Upload a PDF notice',
@@ -499,7 +503,7 @@ export const adminCopy = {
         and: ' and ',
         comma: ', ',
       },
-      map: { label: 'Show on the traffic map', hint: 'Uses the linked map item.' },
+      map: { label: 'Show on the traffic map', hint: 'Shows its pin on the public traffic map.' },
     },
     preview: {
       title: 'Public preview',
@@ -520,7 +524,7 @@ export const adminCopy = {
 
   mapItems: {
     title: 'Map items',
-    intro: 'Everything commuters see on the public traffic map.',
+    intro: 'Every announcement has one pin on the public traffic map.',
     add: 'Add item',
     searchLabel: 'Search map items',
     searchPlaceholder: 'Road or item name',
@@ -546,34 +550,30 @@ export const adminCopy = {
       label: 'Map tools',
       select: 'Select items',
       pin: 'Move the pin of the selected item',
-      remove: 'Delete the selected item',
       pinHint: 'Pin tool: click the map to move the pin, or drag it. Arrow keys nudge it 10 m.',
       selectHint: 'Select tool: click an item on the map or in the list.',
     },
     edit: {
       title: 'Edit map item',
-      newTitle: 'New map item',
       close: 'Close',
       type: 'Type',
       name: 'Name on the public map',
       from: 'From',
       to: 'To',
-      toHint: 'Leave empty for no end date.',
-      linked: 'Linked announcement',
-      noLinked: 'No linked announcement',
+      toHint: 'Leave empty for a hazard with no end date.',
+      announcement: 'Announcement',
       visible: 'Visible on the public map',
       visibleFrom: (when: string) => `Shows from ${when}`,
       visibleNoDate: 'Shows as soon as you save.',
+      visibleDraft: 'Publish the announcement first.',
       save: 'Save changes',
-      create: 'Add item',
-      delete: 'Delete',
+      deleteNote: 'To delete this item, delete its announcement.',
       saved: 'Map item saved.',
       errors: {
         name: 'Enter a name for the public map.',
         range: 'The end date must be on or after the start date.',
       },
     },
-    newName: 'New map item',
     legend: { label: 'Legend', closure: 'Closure', worksite: 'Worksite', hazard: 'Hazard' },
   },
 

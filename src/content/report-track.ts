@@ -66,7 +66,7 @@ const overview = {
       { title: 'Get your ticket ID', body: 'It appears on screen and arrives in your email.' },
       {
         title: 'The authority reviews it',
-        body: 'The status moves from Pending review to In progress.',
+        body: 'The status starts as Pending and moves to In progress when a staff member picks it up.',
       },
       { title: 'See the outcome', body: 'Resolution details appear when you track the ticket.' },
     ],
@@ -296,9 +296,8 @@ const submitted = {
   next: {
     title: 'What happens next',
     steps: {
-      submitted: { title: 'Submitted' },
-      pending: { title: 'Pending', detail: 'A staff member picks it up' },
-      'in-progress': { title: 'In progress', detail: 'The authority works on it' },
+      pending: { title: 'Pending' },
+      'in-progress': { title: 'In progress', detail: 'A staff member works on it' },
       resolved: { title: 'Resolved', detail: 'You see the outcome' },
     },
   },
@@ -399,6 +398,19 @@ const track = {
     updates: {
       title: 'Conversation',
       empty: 'No replies yet. We email you when the authority replies.',
+    },
+    reply: {
+      title: 'Reply on this ticket',
+      hint: 'Add more detail or answer a question. The staff member handling your ticket sees your reply in the conversation.',
+      message: { label: 'Your reply', placeholder: 'Write your reply…', max: 1000 },
+      files: { label: 'Photos and files', maxFiles: 5, maxMb: 10 },
+      errors: {
+        message: 'Enter your reply',
+        uploading: 'Wait for your files to finish uploading.',
+      },
+      send: 'Send reply',
+      sending: 'Sending reply…',
+      sent: 'Your reply was sent.',
     },
     resolution: {
       title: 'Resolution details',

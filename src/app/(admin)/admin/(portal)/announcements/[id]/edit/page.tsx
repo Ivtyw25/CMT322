@@ -1,7 +1,7 @@
 import { adminCopy } from '@/content/admin';
 import { getAreas } from '@/data/api/areas';
 import { getNow } from '@/data/api/clock';
-import { getStaffAnnouncements, getStaffMapItems } from '@/data/api/staff-content';
+import { getStaffAnnouncements } from '@/data/api/staff-content';
 import { getStations } from '@/data/api/stations';
 import { AnnouncementEditor } from '@/features/admin/announcements/announcement-editor';
 
@@ -16,9 +16,8 @@ export async function generateStaticParams() {
 
 export default async function AdminAnnouncementEditPage({ params }: Params) {
   const { id } = await params;
-  const [base, baseMapItems, areas, stations, now] = await Promise.all([
+  const [base, areas, stations, now] = await Promise.all([
     getStaffAnnouncements(),
-    getStaffMapItems(),
     getAreas(),
     getStations(),
     getNow(),
@@ -31,7 +30,6 @@ export default async function AdminAnnouncementEditPage({ params }: Params) {
     <AnnouncementEditor
       id={decodeURIComponent(id)}
       base={base}
-      baseMapItems={baseMapItems}
       areas={areas.map((area) => ({ id: area.id, label: area.label }))}
       stations={stations.map((station) => ({
         code: station.code,

@@ -9,7 +9,8 @@ import type { Ticket } from '@/data/models/ticket';
 import { formatDate } from '@/lib/format/dates';
 import { isoDateOf } from '@/lib/format/date-time';
 import { useSession } from '@/lib/session';
-import { resolutionReply } from '@/lib/tickets';
+import { resolutionReply, useTickets } from '@/lib/tickets';
+import { TrackReplyForm } from './track-reply-form';
 
 const { resolution, updates, ...result } = reportTrackCopy.track.result;
 
@@ -34,12 +35,14 @@ function Resolution({ ticket }: { ticket: Ticket }) {
 }
 
 /**
- * The conversation: the report and the replies of the authority. Only the account that sent the
- * report sees what it said; anyone with the ticket ID sees the replies.
+ * The conversation: the report, the replies of the authority and the reporter's own replies. Only
+ * the reporter (the account that sent the report, or the browser it was sent from) sees what the
+ * report said and can reply; anyone with the ticket ID sees the authority's replies.
  */
 export function TrackConversation({ ticket }: { ticket: Ticket }) {
   const { status, user } = useSession();
-  const owner = user !== null && ticket.reporterId === user.id;
+  const { sentFromHere } = useTickets();
+  const owner = (user !== null && ticket.reporterId === user.id) || sentFromHere(ticket.id);
 
   const notice =
     status === 'loading' ? (
@@ -60,11 +63,17 @@ export function TrackConversation({ ticket }: { ticket: Ticket }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <TicketThread ticket={ticket} viewer="reporter" submissionNotice={notice} />
+      <TicketThread
+        ticket={ticket}
+        viewer="reporter"
+        submissionNotice={notice}
+        showReporterReplies={owner}
+      />
       {ticket.replies.length === 0 ? (
         <p className="type-body-s text-gray-600">{updates.empty}</p>
       ) : null}
       <Resolution ticket={ticket} />
+      {owner ? <TrackReplyForm ticket={ticket} /> : null}
     </div>
   );
 }

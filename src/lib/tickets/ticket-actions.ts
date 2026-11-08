@@ -47,8 +47,10 @@ export function describeFiles(
 }
 
 export const nextReplyId = (ticket: Ticket) => `${ticket.id}-r${ticket.replies.length + 1}`;
+export const nextReporterReplyId = (ticket: Ticket) =>
+  `${ticket.id}-c${ticket.reporterReplies.length + 1}`;
 
-/** A report as it is saved on send: Submitted, unclaimed, no replies. */
+/** A report as it is saved on send: Pending, unclaimed, no replies. */
 export function createTicket(
   input: NewTicketInput,
   id: TicketId,
@@ -58,22 +60,23 @@ export function createTicket(
   return {
     ...input,
     id,
-    status: 'submitted',
+    status: 'pending',
     priority: 'normal',
     submittedAt: at,
     attachments,
     handler: null,
     replies: [],
+    reporterReplies: [],
     events: [],
     notes: [],
   };
 }
 
-/** The staff member takes the ticket: they become its handler and the status moves to Pending. */
+/** The staff member takes the ticket: they become its handler and the status moves to In progress. */
 export function claimTicket(ticket: Ticket, staff: StaffMember, at: string): Ticket {
   return {
     ...ticket,
-    status: 'pending',
+    status: 'in-progress',
     handler: { staffId: staff.id, name: staff.name, organisation: staff.organisation },
     events: [
       ...ticket.events,
@@ -123,13 +126,42 @@ export function addReply(
   };
 }
 
-/** A note only staff can read. */
-export function addNote(ticket: Ticket, text: string, staff: StaffMember, at: string): Ticket {
+/** A note only staff can read. `mentions` are the IDs of the staff members it @-mentions. */
+export function addNote(
+  ticket: Ticket,
+  text: string,
+  mentions: string[],
+  staff: StaffMember,
+  at: string,
+): Ticket {
   return {
     ...ticket,
     notes: [
       ...ticket.notes,
-      { id: `${ticket.id}-n${ticket.notes.length + 1}`, at, author: staff.name, text },
+      {
+        id: `${ticket.id}-n${ticket.notes.length + 1}`,
+        at,
+        authorId: staff.id,
+        author: staff.name,
+        text,
+        mentions,
+      },
+    ],
+  };
+}
+
+/** The reporter's reply, shown in the conversation on both sides. */
+export function addReporterReply(
+  ticket: Ticket,
+  body: string,
+  at: string,
+  attachments: TicketAttachment[],
+): Ticket {
+  return {
+    ...ticket,
+    reporterReplies: [
+      ...ticket.reporterReplies,
+      { id: nextReporterReplyId(ticket), at, name: ticket.reporter.name, body, attachments },
     ],
   };
 }

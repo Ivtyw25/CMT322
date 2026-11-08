@@ -12,7 +12,6 @@ import { DocsSection } from '@/components/patterns/docs-section';
 const { reports: copy } = projectCopy.station;
 
 const tagOf: Record<TicketStatus, TagKind> = {
-  submitted: 'pending',
   pending: 'pending',
   'in-progress': 'inProgress',
   resolved: 'resolved',

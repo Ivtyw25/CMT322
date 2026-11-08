@@ -64,7 +64,7 @@ export const tickets: Ticket[] = [
     coordinates: { lat: 5.3905, lng: 100.3278 },
     stationCode: 'S17',
     areaLabel: 'Jelutong',
-    status: 'submitted',
+    status: 'pending',
     priority: 'normal',
     submittedAt: '2026-10-29T09:48:00+08:00',
     reporterId: null,
@@ -72,6 +72,7 @@ export const tickets: Ticket[] = [
     attachments: [photo('MLC-261029-0514-s1', 'bus-stop-new-spot.jpg', 1_480_000)],
     handler: null,
     replies: [],
+    reporterReplies: [],
     events: [],
     notes: [],
   },
@@ -86,7 +87,7 @@ export const tickets: Ticket[] = [
     coordinates: { lat: 5.4152, lng: 100.3309 },
     stationCode: 'S20',
     areaLabel: 'George Town',
-    status: 'submitted',
+    status: 'pending',
     priority: 'normal',
     submittedAt: '2026-10-29T09:14:00+08:00',
     reporterId: 'user-meiling',
@@ -94,6 +95,7 @@ export const tickets: Ticket[] = [
     attachments: [photo('MLC-261029-0511-s1', 'dust-over-jalan-penang.jpg', 2_150_000)],
     handler: null,
     replies: [],
+    reporterReplies: [],
     events: [],
     notes: [],
   },
@@ -124,9 +126,18 @@ export const tickets: Ticket[] = [
         at: '2026-10-29T10:12:00+08:00',
         subject: 'The site contractor will move the hoarding',
         body: 'Thank you for the photos. The site contractor has been told to move the hoarding back from your driveway. Work is scheduled within 3 working days and we will update this ticket once it is done. The attached plan shows the new hoarding line.',
-        status: 'in-progress',
+        status: null,
         attachments: [pdf('MLC-261028-0482-r1-f1', 'hoarding-relocation-plan.pdf', 640_000)],
       }),
+    ],
+    reporterReplies: [
+      {
+        id: 'MLC-261028-0482-c1',
+        at: '2026-10-29T15:45:00+08:00',
+        name: MEILING.name,
+        body: 'Thank you for the plan. A second lorry could not turn in this afternoon either. Can the contractor move the hoarding before Friday?',
+        attachments: [],
+      },
     ],
     events: [
       {
@@ -140,8 +151,10 @@ export const tickets: Ticket[] = [
       {
         id: 'MLC-261028-0482-n1',
         at: '2026-10-29T09:30:00+08:00',
+        authorId: DANIEL.staffId,
         author: DANIEL.name,
-        text: 'Site contractor confirmed the move is booked for Friday morning. Traffic marshals are arranged.',
+        text: '@Nurul Aisyah the site contractor confirmed the move is booked for Friday morning. Traffic marshals are arranged.',
+        mentions: [NURUL.staffId],
       },
     ],
   },
@@ -162,16 +175,10 @@ export const tickets: Ticket[] = [
     reporterId: null,
     reporter: { name: 'Rajesh Kumar', email: 'rajesh.kumar@example.com', phone: '019-770 3358' },
     attachments: [],
-    handler: DANIEL,
+    handler: null,
     replies: [],
-    events: [
-      {
-        id: 'MLC-261028-0479-e1',
-        at: '2026-10-29T08:40:00+08:00',
-        by: DANIEL.name,
-        kind: 'claimed',
-      },
-    ],
+    reporterReplies: [],
+    events: [],
     notes: [],
   },
   {
@@ -198,8 +205,17 @@ export const tickets: Ticket[] = [
         at: '2026-10-28T11:30:00+08:00',
         subject: 'We have asked the contractor to stop night piling',
         body: 'We are sorry about the noise. Night piling was not approved for this site, and the contractor has been told to stop it. A site inspector will check the working hours this week.',
-        status: 'in-progress',
+        status: null,
       }),
+    ],
+    reporterReplies: [
+      {
+        id: 'MLC-261027-0466-c1',
+        at: '2026-10-29T16:20:00+08:00',
+        name: 'Lim Wei Jie',
+        body: 'Thank you. The piling started again last night at 10 pm. Please ask the inspector to visit after dark this time.',
+        attachments: [],
+      },
     ],
     events: [
       {
@@ -222,7 +238,7 @@ export const tickets: Ticket[] = [
     coordinates: { lat: 5.3524, lng: 100.3068 },
     stationCode: 'S12',
     areaLabel: 'Gelugor',
-    status: 'pending',
+    status: 'in-progress',
     priority: 'high',
     submittedAt: '2026-10-26T08:20:00+08:00',
     reporterId: null,
@@ -233,6 +249,7 @@ export const tickets: Ticket[] = [
     ],
     handler: NURUL,
     replies: [],
+    reporterReplies: [],
     events: [
       {
         id: 'MLC-261026-0444-e1',
@@ -241,7 +258,16 @@ export const tickets: Ticket[] = [
         kind: 'claimed',
       },
     ],
-    notes: [],
+    notes: [
+      {
+        id: 'MLC-261026-0444-n1',
+        at: '2026-10-29T11:15:00+08:00',
+        authorId: DANIEL.staffId,
+        author: DANIEL.name,
+        text: 'The steel plates were removed by the contractor on Jalan Batu Uban. I have asked them for a patching date.',
+        mentions: [],
+      },
+    ],
   },
   {
     id: 'MLC-261025-0440',
@@ -267,7 +293,7 @@ export const tickets: Ticket[] = [
         at: '2026-10-27T15:40:00+08:00',
         subject: 'The drain will be cleared on Thursday',
         body: 'Thanks for the report. The contractor will clear the drain and remove the bags on Thursday. We will send a photo when the drain is clear.',
-        status: 'in-progress',
+        status: null,
       }),
       reply(DANIEL, {
         id: 'MLC-261025-0440-r2',
@@ -278,6 +304,7 @@ export const tickets: Ticket[] = [
         attachments: [photo('MLC-261025-0440-r2-f1', 'drain-cleared.jpg', 1_820_000)],
       }),
     ],
+    reporterReplies: [],
     events: [
       {
         id: 'MLC-261025-0440-e1',
@@ -286,7 +313,16 @@ export const tickets: Ticket[] = [
         kind: 'claimed',
       },
     ],
-    notes: [],
+    notes: [
+      {
+        id: 'MLC-261025-0440-n1',
+        at: '2026-10-29T16:50:00+08:00',
+        authorId: NURUL.staffId,
+        author: NURUL.name,
+        text: '@Daniel Lim please check with the crew that the second photo shows the whole lane before you send it.',
+        mentions: [DANIEL.staffId],
+      },
+    ],
   },
   {
     id: 'MLC-261024-0417',
@@ -312,7 +348,7 @@ export const tickets: Ticket[] = [
         at: '2026-10-25T10:15:00+08:00',
         subject: 'We are checking the generator hours',
         body: 'Thank you for telling us. We have asked the KOMTAR site team why the generators run at night.',
-        status: 'in-progress',
+        status: null,
       }),
       reply(NURUL, {
         id: 'MLC-261024-0417-r2',
@@ -322,6 +358,7 @@ export const tickets: Ticket[] = [
         status: 'resolved',
       }),
     ],
+    reporterReplies: [],
     events: [
       {
         id: 'MLC-261024-0417-e1',
@@ -359,6 +396,7 @@ export const tickets: Ticket[] = [
         status: 'resolved',
       }),
     ],
+    reporterReplies: [],
     events: [
       {
         id: 'MLC-261022-0398-e1',
@@ -393,7 +431,7 @@ export const tickets: Ticket[] = [
         at: '2026-10-20T10:00:00+08:00',
         subject: 'A surveyor will visit your shophouse',
         body: 'We take cracks seriously. An independent surveyor will visit on Wednesday between 10 am and 12 pm. Please make sure someone can let them in.',
-        status: 'in-progress',
+        status: null,
       }),
       reply(DANIEL, {
         id: 'MLC-261019-0381-r2',
@@ -404,6 +442,7 @@ export const tickets: Ticket[] = [
         attachments: [pdf('MLC-261019-0381-r2-f1', 'wall-survey-report.pdf', 1_120_000)],
       }),
     ],
+    reporterReplies: [],
     events: [
       {
         id: 'MLC-261019-0381-e1',

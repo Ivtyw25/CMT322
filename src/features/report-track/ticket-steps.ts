@@ -5,14 +5,9 @@ import type { Ticket, TicketStatus } from '@/data/models/ticket';
 import { formatShortDateTime } from '@/lib/format/date-time';
 import { statusReachedAt } from '@/lib/tickets';
 
-export const ticketStatusOrder: readonly TicketStatus[] = [
-  'submitted',
-  'pending',
-  'in-progress',
-  'resolved',
-];
+export const ticketStatusOrder: readonly TicketStatus[] = ['pending', 'in-progress', 'resolved'];
 
-/** The four status steps of a ticket, each with the date it was reached. */
+/** The three status steps of a ticket, each with the date it was reached. */
 export function ticketSteps(ticket: Ticket): StepEntry[] {
   const current = ticketStatusOrder.indexOf(ticket.status);
   const resolved = ticket.status === 'resolved';
@@ -23,9 +18,7 @@ export function ticketSteps(ticket: Ticket): StepEntry[] {
       resolved || index < current ? 'complete' : index === current ? 'current' : 'upcoming';
     const detail = reachedAt
       ? formatShortDateTime(reachedAt)
-      : status === 'pending'
-        ? reportTrackCopy.submitted.next.steps.pending.detail
-        : reportTrackCopy.track.stepper.notYet;
+      : reportTrackCopy.track.stepper.notYet;
     return { id: status, label: uiCopy.ticketStatus[status], state, detail };
   });
 }

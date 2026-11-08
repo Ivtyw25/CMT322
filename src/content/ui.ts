@@ -115,7 +115,6 @@ export const uiCopy = {
     pending: 'Pending',
     inProgress: 'In progress',
     resolved: 'Resolved',
-    submitted: 'Submitted',
     /** Staff portal (Figma 113:4668, 115:4681). */
     overdue: 'Overdue',
     highPriority: 'High priority',
@@ -127,7 +126,6 @@ export const uiCopy = {
 
   /** Ticket status words outside the tags (stepper, update log). */
   ticketStatus: {
-    submitted: 'Submitted',
     pending: 'Pending',
     'in-progress': 'In progress',
     resolved: 'Resolved',
@@ -139,7 +137,8 @@ export const uiCopy = {
     submittedBy: (name: string) => `Submitted by ${name}`,
     repliedBy: (name: string, organisation: string) => `${name}, ${organisation}`,
     statusSet: (status: string) => `Status set to ${status}`,
-    claimed: (name: string) => `${name} is handling this ticket. Status set to Pending.`,
+    claimed: (name: string) => `${name} is handling this ticket. Status set to In progress.`,
+    reporterReplied: (name: string) => `${name} replied`,
     priorityChanged: (name: string, priority: string) => `${name} set the priority to ${priority}`,
     attachments: 'Attachments',
     photoAlt: (fileName: string) => `Photo: ${fileName}`,

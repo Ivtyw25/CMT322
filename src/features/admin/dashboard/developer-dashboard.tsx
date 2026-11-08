@@ -11,12 +11,15 @@ import type {
   AttentionTone,
   DeveloperDashboard as DeveloperDashboardData,
 } from '@/data/models/staff-dashboard';
+import { NotificationsPanel } from '@/features/admin/notifications/notifications-panel';
 import { AdminPageHead } from '@/features/admin/page-head';
 import { AdminPanel } from '@/features/admin/panel';
 import { cn } from '@/lib/cn';
 import { useStaffSession } from '@/lib/staff-session';
 import { useTickets } from '@/lib/tickets';
 import { StatCard } from './stat-card';
+import { TicketCountCards } from './ticket-count-cards';
+import { UnclaimedTickets } from './unclaimed-tickets';
 
 const copy = adminCopy.dashboard.developer;
 
@@ -98,6 +101,8 @@ export function DeveloperDashboard({ data }: { data: DeveloperDashboardData }) {
           hint={data.lastProgressUpdate.title}
         />
       </div>
+
+      <TicketCountCards />
 
       <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
         <AdminPanel
@@ -193,6 +198,9 @@ export function DeveloperDashboard({ data }: { data: DeveloperDashboardData }) {
           </AdminPanel>
         </div>
       </div>
+
+      <UnclaimedTickets />
+      <NotificationsPanel />
     </div>
   );
 }

@@ -15,6 +15,8 @@ type StaffSessionValue = {
   /** 'loading' on the server and during hydration, then 'signed-out' or 'signed-in'. */
   status: StaffSessionStatus;
   staff: StaffMember | null;
+  /** Every staff account, for @-mentions. */
+  members: readonly StaffMember[];
   signIn: (staffId: string) => void;
   signOut: () => void;
 };
@@ -52,8 +54,8 @@ export function StaffSessionProvider({
   }, []);
 
   const value = useMemo<StaffSessionValue>(
-    () => ({ status, staff, signIn, signOut }),
-    [status, staff, signIn, signOut],
+    () => ({ status, staff, members, signIn, signOut }),
+    [status, staff, members, signIn, signOut],
   );
   return <StaffSessionContext value={value}>{children}</StaffSessionContext>;
 }

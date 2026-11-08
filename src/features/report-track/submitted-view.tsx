@@ -39,12 +39,11 @@ function nextSteps(ticket: Ticket): StepEntry[] {
   const { steps } = submitted.next;
   return [
     {
-      id: 'submitted',
-      label: steps.submitted.title,
-      state: 'complete',
+      id: 'pending',
+      label: steps.pending.title,
+      state: 'current',
       detail: formatShortDateTime(ticket.submittedAt),
     },
-    { id: 'pending', label: steps.pending.title, state: 'upcoming', detail: steps.pending.detail },
     {
       id: 'in-progress',
       label: steps['in-progress'].title,

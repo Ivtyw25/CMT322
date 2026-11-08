@@ -5,35 +5,43 @@ import {
   MapPin,
   MousePointer2,
   Plus,
-  Trash2,
   TrafficCone,
   TriangleAlert,
   X,
   type LucideIcon,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { LocationMap, type MapMarker } from '@/components/patterns/map/location-map';
 import { Button } from '@/components/ui/button';
-import { ConfirmDialog } from '@/components/ui/dialog';
+import { ButtonLink } from '@/components/ui/button-link';
 import { Field } from '@/components/ui/field';
-import { MenuSelect } from '@/components/ui/menu-select';
 import { SearchInput } from '@/components/ui/search-input';
 import { SegmentedControl, type SegmentedOption } from '@/components/ui/segmented-control';
 import { Switch } from '@/components/ui/switch';
 import { Tag } from '@/components/ui/tag';
 import { TextInput } from '@/components/ui/text-input';
+import { routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
-import type { MapItemKind, StaffMapItem } from '@/data/models/staff-content';
-import { statusFromDates } from '@/features/admin/announcements/announcement-store';
+import type { MapItemKind, StaffAnnouncement } from '@/data/models/staff-content';
+import {
+  announcementStore,
+  durationLabel,
+  fullEndDate,
+  isNightly,
+  kindOfType,
+  statusFromDates,
+  typeOfKind,
+} from '@/features/admin/announcements/announcement-store';
 import { DeveloperOnly } from '@/features/admin/developer-only';
 import { cn } from '@/lib/cn';
 import { formatDate } from '@/lib/format/dates';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
-import { mapItemStore } from './map-item-store';
+import { useStaffSession } from '@/lib/staff-session';
 
 const copy = adminCopy.mapItems;
-const NO_LINK = 'none';
 const kinds = ['closure', 'worksite', 'hazard'] as const satisfies readonly MapItemKind[];
+const tagOf = { draft: 'draft', upcoming: 'scheduled', ended: 'ended', active: 'active' } as const;
 type KindFilter = 'all' | MapItemKind;
 
 const iconOf: Record<MapItemKind, LucideIcon> = {
@@ -54,41 +62,52 @@ const kindChoices: readonly SegmentedOption<MapItemKind>[] = kinds.map((kind) =>
 }));
 
 type MapItemsPageProps = {
-  base: readonly StaffMapItem[];
-  announcements: readonly { id: string; title: string }[];
+  /** Every announcement: each one owns a map item. */
+  base: readonly StaffAnnouncement[];
   /** Today as "YYYY-MM-DD", the mock day. */
   today: string;
+  /** The mock "now" as an ISO date-time. */
+  now: string;
   center: { lat: number; lng: number };
 };
 
 type Tool = 'select' | 'pin';
 
-/** The map items editor (Figma 117:5034): the list, the traffic map and the edit card. */
-export function MapItemsPage({ base, announcements, today, center }: MapItemsPageProps) {
-  const items = useStaffRecords(mapItemStore, base);
+const nameOf = (item: StaffAnnouncement) => item.mapName || item.title;
+
+/**
+ * The map items editor (Figma 117:5034): the list, the traffic map and the edit card. A map item is
+ * part of its announcement, so every change here is saved onto the announcement.
+ */
+export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
+  const { staff } = useStaffSession();
+  const items = useStaffRecords(announcementStore, base);
   const [query, setQuery] = useState('');
   const [kindFilter, setKindFilter] = useState<KindFilter>('all');
-  const [form, setForm] = useState<StaffMapItem | null>(null);
-  const [isNewItem, setIsNewItem] = useState(false);
+  const [form, setForm] = useState<StaffAnnouncement | null>(null);
   const [tool, setTool] = useState<Tool>('select');
   const [focusKey, setFocusKey] = useState(0);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [errors, setErrors] = useState<{ name?: string; range?: string }>({});
+  const [errors, setErrors] = useState<{
+    name?: string;
+    start?: string;
+    end?: string;
+    range?: string;
+  }>({});
   const [message, setMessage] = useState('');
 
   const counts = {
     all: items.length,
-    closure: items.filter((item) => item.kind === 'closure').length,
-    worksite: items.filter((item) => item.kind === 'worksite').length,
-    hazard: items.filter((item) => item.kind === 'hazard').length,
+    closure: items.filter((item) => item.type === 'closure').length,
+    worksite: items.filter((item) => item.type === 'construction').length,
+    hazard: items.filter((item) => item.type === 'hazard').length,
   };
 
   const shown = useMemo(() => {
     const text = query.trim().toLowerCase();
     return items.filter(
       (item) =>
-        (kindFilter === 'all' || item.kind === kindFilter) &&
-        (text === '' || item.name.toLowerCase().includes(text)),
+        (kindFilter === 'all' || kindOfType[item.type] === kindFilter) &&
+        (text === '' || `${nameOf(item)} ${item.road}`.toLowerCase().includes(text)),
     );
   }, [items, kindFilter, query]);
 
@@ -99,36 +118,16 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
     id: item.id,
     lat: item.lat,
     lng: item.lng,
-    label: item.name || copy.newName,
-    variant: variantOf[item.kind],
+    label: nameOf(item),
+    variant: variantOf[kindOfType[item.type]],
   }));
   const fitPoints = useMemo(() => items.map((item) => ({ lat: item.lat, lng: item.lng })), [items]);
 
-  function select(item: StaffMapItem) {
-    setForm(item);
-    setIsNewItem(false);
+  function select(item: StaffAnnouncement) {
+    setForm({ ...item, mapName: nameOf(item) });
     setErrors({});
     setMessage('');
     setFocusKey((key) => key + 1);
-  }
-
-  function startNew() {
-    setForm({
-      id: `map-item-${Date.now()}`,
-      kind: 'closure',
-      name: '',
-      status: 'upcoming',
-      lat: center.lat,
-      lng: center.lng,
-      from: today,
-      to: '',
-      announcementId: null,
-      visible: false,
-    });
-    setIsNewItem(true);
-    setErrors({});
-    setMessage('');
-    setTool('pin');
   }
 
   function close() {
@@ -137,23 +136,41 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
     setErrors({});
   }
 
-  function update(partial: Partial<StaffMapItem>) {
+  function update(partial: Partial<StaffAnnouncement>) {
     setForm((current) => (current ? { ...current, ...partial } : current));
     setMessage('');
   }
 
   function save() {
     if (!form) return;
+    const isDraft = form.status === 'draft';
     const found: typeof errors = {};
-    if (form.name.trim() === '') found.name = copy.edit.errors.name;
-    if (form.from && form.to && form.to < form.from) found.range = copy.edit.errors.range;
+    if (nameOf(form).trim() === '') found.name = copy.edit.errors.name;
+    if (!isDraft && form.startDate === '') found.start = adminCopy.announcementEditor.errors.start;
+    if (!isDraft && form.type !== 'hazard' && form.endDate === '') {
+      found.end = adminCopy.announcementEditor.errors.end;
+    }
+    if (form.startDate && form.endDate && fullEndDate(form.endDate) < form.startDate) {
+      found.range = copy.edit.errors.range;
+    }
     setErrors(found);
     if (Object.keys(found).length > 0) return;
-    const status = form.from
-      ? statusFromDates(form.from, form.to || '9999-12-31', today)
-      : 'active';
-    mapItemStore.upsert({ ...form, name: form.name.trim(), status });
-    setIsNewItem(false);
+    const status = isDraft ? 'draft' : statusFromDates(form.startDate, form.endDate, today);
+    const saved: StaffAnnouncement = {
+      ...form,
+      mapName: form.mapName.trim(),
+      status,
+      showOnMap: isDraft ? false : form.showOnMap,
+      duration: isDraft
+        ? form.duration
+        : durationLabel(form.startDate, form.endDate, isNightly(form)),
+      history: [
+        ...form.history,
+        { id: `h${form.history.length + 1}`, at: now, action: 'updated', by: staff?.name ?? '' },
+      ],
+    };
+    announcementStore.upsert(saved);
+    setForm(saved);
     setMessage(copy.edit.saved);
   }
 
@@ -161,9 +178,7 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
   const editCard = form ? (
     <div className="flex flex-col gap-3.5 rounded-2xl border border-gray-200 bg-surface p-5 shadow-panel lg:w-85">
       <div className="flex items-center gap-2">
-        <h2 className="min-w-0 flex-1 type-heading-3xs text-gray-900">
-          {isNewItem ? copy.edit.newTitle : copy.edit.title}
-        </h2>
+        <h2 className="min-w-0 flex-1 type-heading-3xs text-gray-900">{copy.edit.title}</h2>
         <button
           type="button"
           onClick={close}
@@ -180,62 +195,61 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
         <SegmentedControl
           legend={copy.edit.type}
           options={kindChoices}
-          value={form.kind}
+          value={kindOfType[form.type]}
           fullWidth
-          onValueChange={(kind) => update({ kind })}
+          onValueChange={(kind) => update({ type: typeOfKind[kind] })}
         />
       </div>
       <Field label={copy.edit.name} error={errors.name}>
-        <TextInput value={form.name} onChange={(event) => update({ name: event.target.value })} />
+        <TextInput
+          value={form.mapName}
+          onChange={(event) => update({ mapName: event.target.value })}
+        />
       </Field>
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label={copy.edit.from}>
+        <Field label={copy.edit.from} error={errors.start}>
           <TextInput
             type="date"
-            value={form.from}
-            onChange={(event) => update({ from: event.target.value })}
+            value={form.startDate}
+            onChange={(event) => update({ startDate: event.target.value })}
           />
         </Field>
-        <Field label={copy.edit.to} hint={copy.edit.toHint} error={errors.range}>
+        <Field
+          label={copy.edit.to}
+          hint={form.type === 'hazard' ? copy.edit.toHint : undefined}
+          error={errors.end ?? errors.range}
+        >
           <TextInput
             type="date"
-            value={form.to}
-            onChange={(event) => update({ to: event.target.value })}
+            value={fullEndDate(form.endDate)}
+            onChange={(event) => update({ endDate: event.target.value })}
           />
         </Field>
       </div>
-      <Field label={copy.edit.linked}>
-        <MenuSelect
-          value={form.announcementId ?? NO_LINK}
-          onValueChange={(value) => update({ announcementId: value === NO_LINK ? null : value })}
-          options={[
-            { value: NO_LINK, label: copy.edit.noLinked },
-            ...announcements.map((entry) => ({ value: entry.id, label: entry.title })),
-          ]}
-        />
-      </Field>
+      <div className="flex flex-col gap-1">
+        <p className="type-body-s-medium text-gray-900">{copy.edit.announcement}</p>
+        <Link
+          href={routes.admin.announcementEdit(form.id)}
+          className="hit-area type-body-s text-primary-600 transition-colors duration-(--duration-fast) hover:text-primary-800"
+        >
+          {form.title}
+        </Link>
+      </div>
       <Switch
         label={copy.edit.visible}
         description={
-          form.from ? copy.edit.visibleFrom(formatDate(form.from)) : copy.edit.visibleNoDate
+          form.status === 'draft'
+            ? copy.edit.visibleDraft
+            : form.startDate
+              ? copy.edit.visibleFrom(formatDate(form.startDate))
+              : copy.edit.visibleNoDate
         }
-        checked={form.visible}
-        onCheckedChange={(visible) => update({ visible })}
+        disabled={form.status === 'draft'}
+        checked={form.showOnMap}
+        onCheckedChange={(showOnMap) => update({ showOnMap })}
       />
-      <div className="flex items-center gap-2.5">
-        {isNewItem ? null : (
-          <button
-            type="button"
-            onClick={() => setConfirmDelete(true)}
-            className="hit-area flex cursor-pointer items-center gap-1.5 type-body-s-medium text-danger-700 transition-colors duration-(--duration-fast) hover:text-danger-600"
-          >
-            <Trash2 aria-hidden className="size-4" />
-            {copy.edit.delete}
-          </button>
-        )}
-        <div className="flex-1" />
-        <Button onClick={save}>{isNewItem ? copy.edit.create : copy.edit.save}</Button>
-      </div>
+      <p className="type-body-xs text-gray-500">{copy.edit.deleteNote}</p>
+      <Button onClick={save}>{copy.edit.save}</Button>
       <p role="status" className="type-body-s text-success-700 empty:hidden">
         {message}
       </p>
@@ -280,9 +294,12 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
               <h1 id="map-items-heading" className="min-w-0 flex-1 type-heading-xs text-gray-900">
                 {copy.title}
               </h1>
-              <Button icon={<Plus aria-hidden className="size-4" />} onClick={startNew}>
+              <ButtonLink
+                href={routes.admin.announcementNew}
+                icon={<Plus aria-hidden className="size-4" />}
+              >
                 {copy.add}
-              </Button>
+              </ButtonLink>
             </div>
             <p className="type-body-s text-gray-600">{copy.intro}</p>
             <SearchInput
@@ -321,7 +338,8 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
               className="max-h-96 overflow-y-auto lg:max-h-none lg:flex-1"
             >
               {shown.map((item) => {
-                const Icon = iconOf[item.kind];
+                const kind = kindOfType[item.type];
+                const Icon = iconOf[kind];
                 const current = form?.id === item.id;
                 return (
                   <li key={item.id}>
@@ -334,25 +352,17 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
                         current ? 'border-l-primary-600 bg-primary-50' : 'border-l-transparent',
                       )}
                     >
-                      <Icon aria-hidden className={cn('size-4.5 shrink-0', iconTone[item.kind])} />
+                      <Icon aria-hidden className={cn('size-4.5 shrink-0', iconTone[kind])} />
                       <span className="flex min-w-0 flex-1 flex-col">
-                        <span className="type-body-s-medium text-gray-900">{item.name}</span>
+                        <span className="type-body-s-medium text-gray-900">{nameOf(item)}</span>
                         <span className="type-body-xs text-gray-500">
                           {copy.itemMeta(
-                            copy.kinds[item.kind],
-                            item.kind === 'hazard' && item.to === '',
+                            copy.kinds[kind],
+                            item.type === 'hazard' && item.endDate === '',
                           )}
                         </span>
                       </span>
-                      <Tag
-                        kind={
-                          item.status === 'upcoming'
-                            ? 'scheduled'
-                            : item.status === 'ended'
-                              ? 'ended'
-                              : 'active'
-                        }
-                      />
+                      <Tag kind={tagOf[item.status]} />
                     </button>
                   </li>
                 );
@@ -386,7 +396,7 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
                   ? {
                       point: { lat: form.lat, lng: form.lng },
                       onChange: (point) => update(point),
-                      label: () => copy.map.pinLabel(form.name || copy.newName),
+                      label: () => copy.map.pinLabel(nameOf(form)),
                       dropLabel: copy.map.dropLabel,
                     }
                   : undefined
@@ -407,14 +417,6 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
                 tool === 'pin',
                 () => setTool('pin'),
                 !selected,
-              )}
-              {toolButton(
-                'remove',
-                copy.tools.remove,
-                Trash2,
-                false,
-                () => setConfirmDelete(true),
-                !selected || isNewItem,
               )}
             </div>
             <p className="pointer-events-none absolute top-4 left-18 z-10 hidden max-w-[calc(100%-5rem)] rounded-lg bg-gray-900 px-3 py-2 type-body-xs-medium text-static-white md:block">
@@ -448,19 +450,6 @@ export function MapItemsPage({ base, announcements, today, center }: MapItemsPag
           ) : null}
         </div>
       </div>
-
-      <ConfirmDialog
-        open={confirmDelete}
-        title={adminCopy.content.confirmDelete.title(form?.name || copy.newName)}
-        body={adminCopy.content.confirmDelete.body}
-        confirm={adminCopy.content.confirmDelete.confirm}
-        onClose={() => setConfirmDelete(false)}
-        onConfirm={() => {
-          if (form && !isNewItem) mapItemStore.remove(form.id);
-          setConfirmDelete(false);
-          close();
-        }}
-      />
     </DeveloperOnly>
   );
 }

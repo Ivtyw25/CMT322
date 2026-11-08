@@ -196,7 +196,7 @@ export function TimelineSection() {
   );
 }
 
-const stepIds = ['submitted', 'pending', 'in-progress', 'resolved'] as const;
+const stepIds = ['pending', 'in-progress', 'resolved'] as const;
 
 function stepsWithCurrent(current: number): StepEntry[] {
   return stepIds.map((id, index) => {

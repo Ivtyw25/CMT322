@@ -50,6 +50,7 @@ export const devCopy = {
   },
   /** Labels for forced states and preview frames. */
   states: {
+    recordTags: 'Record pills',
     default: 'Default',
     hover: 'Hover',
     focus: 'Focus visible',
@@ -151,6 +152,8 @@ export const devCopy = {
   },
   /** Sample values for components that need text but no real record. */
   samples: {
+    ticketId: 'MLC-261022-0398',
+    categoryLabel: 'Complaint, blocked access to home or business',
     buttonPrimary: 'Report an issue',
     buttonSecondary: 'Track a ticket',
     buttonGhost: 'View on map',

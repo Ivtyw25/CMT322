@@ -2,9 +2,13 @@ import type { Ticket, TicketReply, TicketStatus } from '@/data/models/ticket';
 
 const time = (iso: string) => Date.parse(iso);
 
-/** When the ticket last changed: its submission, a reply or a system event. */
+/** When the ticket last changed: its submission, a reply, a reporter reply or a system event. */
 export function lastActivityAt(ticket: Ticket): string {
-  const moments = [...ticket.replies.map((reply) => reply.at), ...ticket.events.map((e) => e.at)];
+  const moments = [
+    ...ticket.replies.map((reply) => reply.at),
+    ...ticket.reporterReplies.map((reply) => reply.at),
+    ...ticket.events.map((event) => event.at),
+  ];
   return moments.reduce(
     (latest, at) => (time(at) > time(latest) ? at : latest),
     ticket.submittedAt,
@@ -13,10 +17,10 @@ export function lastActivityAt(ticket: Ticket): string {
 
 /** The first moment the ticket reached a status, or null if it never has. */
 export function statusReachedAt(ticket: Ticket, status: TicketStatus): string | null {
-  if (status === 'submitted') return ticket.submittedAt;
+  if (status === 'pending') return ticket.submittedAt;
   const moments = [
     ...ticket.replies.filter((reply) => reply.status === status).map((reply) => reply.at),
-    ...(status === 'pending'
+    ...(status === 'in-progress'
       ? ticket.events.filter((event) => event.kind === 'claimed').map((event) => event.at)
       : []),
   ];
@@ -29,7 +33,12 @@ export function resolutionReply(ticket: Ticket): TicketReply | null {
   return ticket.replies.findLast((reply) => reply.status === 'resolved') ?? null;
 }
 
-/** A ticket still waiting for its first staff reply. */
-export function needsFirstReply(ticket: Ticket): boolean {
-  return ticket.replies.length === 0 && ticket.status !== 'resolved';
+/** A ticket nobody has picked up yet: Pending and unclaimed. */
+export function isUnclaimed(ticket: Ticket): boolean {
+  return ticket.status === 'pending' && ticket.handler === null;
+}
+
+/** Only the staff member who claimed a ticket can reply, change its status or priority, or resolve it. */
+export function isHandler(ticket: Ticket, staffId: string): boolean {
+  return ticket.handler?.staffId === staffId;
 }
