@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { adminCopy } from '@/content/admin';
 import { getAreas } from '@/data/api/areas';
 import { getNow } from '@/data/api/clock';
@@ -27,18 +28,20 @@ export default async function AdminAnnouncementEditPage({ params }: Params) {
     lng: stations.reduce((sum, station) => sum + station.lng, 0) / stations.length,
   };
   return (
-    <AnnouncementEditor
-      id={decodeURIComponent(id)}
-      base={base}
-      areas={areas.map((area) => ({ id: area.id, label: area.label }))}
-      stations={stations.map((station) => ({
-        code: station.code,
-        name: station.name,
-        areaId: station.areaId,
-      }))}
-      today={now.slice(0, 10)}
-      now={now}
-      center={center}
-    />
+    <Suspense>
+      <AnnouncementEditor
+        id={decodeURIComponent(id)}
+        base={base}
+        areas={areas.map((area) => ({ id: area.id, label: area.label }))}
+        stations={stations.map((station) => ({
+          code: station.code,
+          name: station.name,
+          areaId: station.areaId,
+        }))}
+        today={now.slice(0, 10)}
+        now={now}
+        center={center}
+      />
+    </Suspense>
   );
 }

@@ -2,11 +2,10 @@ import type { DeveloperDashboard } from '@/data/models/staff-dashboard';
 
 /** Figma 116:4824. */
 export const developerDashboard: DeveloperDashboard = {
-  updatedAt: '29 Oct 2026, 10:30',
-  activeAnnouncements: { count: 3, endingWithinWeek: 1 },
-  scheduled: { count: 2, nextStarts: '3 Nov, 22:00' },
+  activeAnnouncements: { count: 3 },
+  scheduled: { count: 2 },
   liveMapItems: { closures: 9, worksites: 14, hazards: 3 },
-  lastProgressUpdate: { date: '27 Oct', title: 'KOMTAR crosshead cast' },
+  lastProgressUpdate: { date: '27 Oct' },
   attention: [
     {
       id: 'attention-closure',

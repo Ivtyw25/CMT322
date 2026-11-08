@@ -7,7 +7,6 @@ import { adminCopy } from '@/content/admin';
 import { NotificationsPanel } from '@/features/admin/notifications/notifications-panel';
 import { AdminPageHead } from '@/features/admin/page-head';
 import { AdminPanel } from '@/features/admin/panel';
-import { formatFullDateTime } from '@/lib/format/date-time';
 import { useTickets } from '@/lib/tickets';
 import { authorityFigures } from './dashboard-figures';
 import { TicketCountCards } from './ticket-count-cards';
@@ -22,8 +21,7 @@ const typeShade = {
 
 /** Dashboard for the government authority (Figma 113:4668). Every figure comes from the tickets. */
 export function AuthorityDashboard() {
-  const { tickets, now } = useTickets();
-  const nowIso = now();
+  const { tickets } = useTickets();
   const figures = useMemo(() => authorityFigures(tickets), [tickets]);
   const maxArea = Math.max(1, ...figures.openByArea.map((row) => row.count));
 
@@ -31,7 +29,7 @@ export function AuthorityDashboard() {
     <div className="flex flex-col gap-6">
       <AdminPageHead
         title={adminCopy.dashboard.title}
-        intro={`${copy.intro} ${adminCopy.page.updated(formatFullDateTime(nowIso))}`}
+        intro={copy.intro}
         action={<ButtonLink href={routes.admin.tickets}>{copy.openQueue}</ButtonLink>}
       />
 

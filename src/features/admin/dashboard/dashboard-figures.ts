@@ -1,5 +1,5 @@
 import type { ReportType, Ticket, TicketStatus } from '@/data/models/ticket';
-import { isUnclaimed, resolutionReply } from '@/lib/tickets';
+import { isUnclaimed } from '@/lib/tickets';
 
 const HOUR_MS = 3_600_000;
 const DAY_MS = 24 * HOUR_MS;
@@ -14,8 +14,6 @@ export type TicketCounts = {
   counts: Record<TicketStatus, number>;
   /** Unclaimed tickets that have waited longer than the target. */
   pastTarget: number;
-  /** Null when no ticket is resolved yet. */
-  averageDaysToResolve: number | null;
 };
 
 export type AuthorityFigures = {
@@ -36,25 +34,14 @@ export function waitingBreakdown(waitedMs: number): {
 export function ticketCounts(tickets: readonly Ticket[], nowIso: string): TicketCounts {
   const now = Date.parse(nowIso);
   const counts: Record<TicketStatus, number> = { pending: 0, 'in-progress': 0, resolved: 0 };
-  const resolutionDays: number[] = [];
   let pastTarget = 0;
 
   for (const ticket of tickets) {
     counts[ticket.status] += 1;
     if (isUnclaimed(ticket) && now - Date.parse(ticket.submittedAt) > TARGET_MS) pastTarget += 1;
-    const closing = resolutionReply(ticket);
-    if (closing)
-      resolutionDays.push((Date.parse(closing.at) - Date.parse(ticket.submittedAt)) / DAY_MS);
   }
 
-  const average =
-    resolutionDays.length === 0
-      ? null
-      : Math.round(
-          (resolutionDays.reduce((sum, days) => sum + days, 0) / resolutionDays.length) * 10,
-        ) / 10;
-
-  return { counts, pastTarget, averageDaysToResolve: average };
+  return { counts, pastTarget };
 }
 
 /** Up to five tickets nobody has picked up, the one waiting longest first. */

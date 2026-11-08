@@ -50,7 +50,7 @@ export function AdminSidebar({
             label={adminCopy.shell.brandLabel}
             onClick={onNavigate}
           />
-          <p className="type-body-xs-medium text-static-on-navy-200">
+          <p className="type-body-xs-medium whitespace-nowrap text-static-on-navy-200">
             {adminCopy.shell.portalName}
           </p>
         </div>
@@ -73,7 +73,7 @@ export function AdminSidebar({
           <div key={group.id} className="flex flex-col gap-0.5">
             <p
               id={`admin-nav-${group.id}`}
-              className="pb-1.5 pl-3 type-body-xs-semibold text-static-on-navy-300"
+              className="pb-1.5 pl-3 type-body-xs-semibold whitespace-nowrap text-static-on-navy-300"
             >
               {group.label}
             </p>
@@ -99,7 +99,7 @@ export function AdminSidebar({
                       )}
                     >
                       <Icon aria-hidden className="size-4.5 shrink-0" />
-                      <span className="min-w-0 flex-1">{item.label}</span>
+                      <span className="min-w-0 flex-1 whitespace-nowrap">{item.label}</span>
                       {showBadge ? (
                         <>
                           <span
@@ -130,8 +130,10 @@ export function AdminSidebar({
           {initialsOf(staff.name)}
         </span>
         <div className="flex min-w-0 flex-1 flex-col">
-          <p className="type-body-s-semibold text-static-white">{staff.name}</p>
-          <p className="type-body-xs text-static-on-navy-200">{adminCopy.roles[staff.role]}</p>
+          <p className="type-body-s-semibold whitespace-nowrap text-static-white">{staff.name}</p>
+          <p className="type-body-xs whitespace-nowrap text-static-on-navy-200">
+            {adminCopy.roles[staff.role]}
+          </p>
         </div>
         <button
           type="button"

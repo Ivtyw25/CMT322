@@ -86,7 +86,6 @@ export const adminCopy = {
     closeMenu: 'Close menu',
     collapseSidebar: 'Close the sidebar',
     expandSidebar: 'Open the sidebar',
-    resizeSidebar: 'Resize the sidebar',
     menuTitle: 'Staff portal menu',
     logOut: 'Log out',
     loggedOut: 'You are logged out.',
@@ -124,10 +123,6 @@ export const adminCopy = {
       progress: 'Progress updates',
     },
     unclaimedBadge: (count: number) => `${count} unclaimed`,
-  },
-
-  page: {
-    updated: (when: string) => `Updated ${when}.`,
   },
 
   /** The notification feed, on the dashboard and in the top bar bell. */
@@ -169,16 +164,9 @@ export const adminCopy = {
     },
     ticketCounts: {
       label: 'Ticket status counts',
-      pending: {
-        label: 'Pending',
-        hint: (past: number) => `Nobody is handling these, ${past} past the 2-day target`,
-      },
-      inProgress: { label: 'In progress', hint: 'Being worked on' },
-      resolved: {
-        label: 'Resolved',
-        hint: (days: number | null) =>
-          days === null ? 'No resolved tickets yet' : `Average ${days} days to resolve`,
-      },
+      pending: { label: 'Pending' },
+      inProgress: { label: 'In progress' },
+      resolved: { label: 'Resolved' },
     },
     authority: {
       intro: 'Reports from commuters, residents and businesses near the works.',
@@ -195,16 +183,9 @@ export const adminCopy = {
       intro: 'What the public currently sees about the works.',
       newAnnouncement: 'New announcement',
       stats: {
-        active: {
-          label: 'Active announcements',
-          hint: (n: number) => `${n} ends within 7 days`,
-        },
-        scheduled: { label: 'Scheduled', hint: (when: string) => `Next starts ${when}` },
-        mapItems: {
-          label: 'Live map items',
-          hint: (closures: number, worksites: number, hazards: number) =>
-            `${closures} closures, ${worksites} worksites, ${hazards} hazards`,
-        },
+        active: { label: 'Active announcements' },
+        scheduled: { label: 'Scheduled' },
+        mapItems: { label: 'Live map items' },
         progress: { label: 'Last progress update' },
       },
       attention: {
@@ -292,7 +273,7 @@ export const adminCopy = {
 
   ticket: {
     back: 'All tickets',
-    categoryLine: (type: string, category: string) => `${type}, ${category}`,
+    categoryLine: (type: string, category: string) => `${type}: ${category}`,
     notFound: {
       title: 'Ticket not found',
       body: 'No ticket has this ID. Check the ID or go back to the queue.',
@@ -505,13 +486,6 @@ export const adminCopy = {
       },
       map: { label: 'Show on the traffic map', hint: 'Shows its pin on the public traffic map.' },
     },
-    preview: {
-      title: 'Public preview',
-      banner: (title: string, road: string) => `${title}. ${road}.`,
-      card: (road: string, range: string) => (range ? `${road}, ${range}` : road),
-      untitled: 'Untitled announcement',
-      to: 'to',
-    },
     history: { title: 'History', empty: 'Nothing has happened yet.' },
     messages: {
       saved: 'Draft saved.',
@@ -526,6 +500,19 @@ export const adminCopy = {
     title: 'Map items',
     intro: 'Every announcement has one pin on the public traffic map.',
     add: 'Add item',
+    placing: {
+      title: 'Add map item',
+      body: 'Choose the type, then click the map or drag the pin to the spot. Arrow keys nudge the pin 10 m.',
+      road: 'Road or area',
+      finding: 'Finding the road…',
+      lookupFailed:
+        'We could not find a road name for this spot. You can type it in the announcement.',
+      noPin: 'Click the map to place the pin.',
+      continue: 'Continue to announcement',
+      cancel: 'Cancel',
+      pinLabel: (kind: string) => `New ${kind.toLowerCase()} pin`,
+      hint: 'Placing a new item: click the map to drop the pin, or drag it.',
+    },
     searchLabel: 'Search map items',
     searchPlaceholder: 'Road or item name',
     listLabel: 'Map items',
@@ -537,8 +524,7 @@ export const adminCopy = {
       hazard: (n: number) => `Hazards ${n}`,
     },
     kinds: { closure: 'Closure', worksite: 'Worksite', hazard: 'Hazard' },
-    itemMeta: (kind: string, hazardNoEnd: boolean) =>
-      hazardNoEnd ? `${kind}, pin, no end date` : `${kind}, pin`,
+    itemMeta: (kind: string, hazardNoEnd: boolean) => (hazardNoEnd ? `${kind}, no end date` : kind),
     empty: 'No map items match this search.',
     map: {
       label: 'Traffic map of closures, worksites and hazards',

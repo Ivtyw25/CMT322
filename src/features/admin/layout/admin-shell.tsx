@@ -68,9 +68,7 @@ export function AdminShell({ children }: AdminShellProps) {
         staff={staff}
         pathname={pathname}
         unclaimedCount={unclaimedCount}
-        width={sidebar.width}
         collapsed={sidebar.collapsed}
-        onWidthChange={sidebar.setWidth}
         onCollapse={() => sidebar.setCollapsed(true)}
         onSignOut={handleSignOut}
       />

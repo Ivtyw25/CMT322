@@ -1,3 +1,13 @@
+/** Query parameter names of a new announcement's starting place (set from the Map items page). */
+export const announcementPlaceParams = {
+  type: 'type',
+  lat: 'lat',
+  lng: 'lng',
+  road: 'road',
+} as const;
+
+type AnnouncementPlace = { type: string; lat: number; lng: number; road: string };
+
 /**
  * The only place route paths are written. Every link uses these helpers.
  * Never type a path string anywhere else.
@@ -64,6 +74,13 @@ export const routes = {
     announcements: '/admin/announcements',
     announcementsWith: (query: string) => `/admin/announcements?q=${encodeURIComponent(query)}`,
     announcementNew: '/admin/announcements/new/edit',
+    announcementNewAt: (place: AnnouncementPlace) =>
+      `/admin/announcements/new/edit?${new URLSearchParams({
+        [announcementPlaceParams.type]: place.type,
+        [announcementPlaceParams.lat]: String(place.lat),
+        [announcementPlaceParams.lng]: String(place.lng),
+        [announcementPlaceParams.road]: place.road,
+      })}`,
     announcementEdit: (announcementId: string) => `/admin/announcements/${announcementId}/edit`,
     mapItems: '/admin/map-items',
     progress: '/admin/progress',

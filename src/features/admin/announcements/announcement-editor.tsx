@@ -1,8 +1,8 @@
 'use client';
 
-import { ChevronLeft, FileText, MapPin, TriangleAlert, X } from 'lucide-react';
+import { ChevronLeft, FileText, MapPin, X } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { LocationMap } from '@/components/patterns/map/location-map';
 import { Button } from '@/components/ui/button';
@@ -11,10 +11,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/field';
 import { MenuSelect } from '@/components/ui/menu-select';
 import { Switch } from '@/components/ui/switch';
-import { Tag } from '@/components/ui/tag';
 import { Textarea } from '@/components/ui/textarea';
 import { TextInput } from '@/components/ui/text-input';
-import { routes } from '@/config/routes';
+import { announcementPlaceParams, routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
 import type { AnnouncementType } from '@/data/models/announcement';
 import type { AreaId } from '@/data/models/area';
@@ -24,7 +23,7 @@ import { AdminPanel } from '@/features/admin/panel';
 import { DeveloperOnly } from '@/features/admin/developer-only';
 import { historyText } from '@/features/admin/history-text';
 import { AdminPageHead } from '@/features/admin/page-head';
-import { formatDate, formatDateRange } from '@/lib/format/dates';
+import { formatDate } from '@/lib/format/dates';
 import { formatFullDateTime } from '@/lib/format/date-time';
 import { slugify } from '@/lib/format/slug';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
@@ -72,21 +71,33 @@ function isAnnouncementType(value: string): value is AnnouncementType {
   return value === 'closure' || value === 'construction' || value === 'hazard';
 }
 
+type Place = { type: AnnouncementType; lat: number; lng: number; road: string };
+
+/** The starting place a new announcement gets from the Map items page, read from the query. */
+function placeOf(params: URLSearchParams): Place | null {
+  const type = params.get(announcementPlaceParams.type) ?? '';
+  const lat = Number(params.get(announcementPlaceParams.lat));
+  const lng = Number(params.get(announcementPlaceParams.lng));
+  if (!isAnnouncementType(type) || !Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  return { type, lat, lng, road: params.get(announcementPlaceParams.road) ?? '' };
+}
+
 function blankAnnouncement(
   areas: readonly AreaOption[],
   center: { lat: number; lng: number },
+  place: Place | null,
 ): StaffAnnouncement {
   return {
     id: NEW_ID,
-    type: 'closure',
+    type: place?.type ?? 'closure',
     status: 'draft',
     title: '',
     summary: '',
     brief: '',
-    location: '',
+    location: place?.road ?? '',
     road: '',
-    lat: center.lat,
-    lng: center.lng,
+    lat: place?.lat ?? center.lat,
+    lng: place?.lng ?? center.lng,
     areaIds: areas[0] ? [areas[0].id] : [],
     stationCodes: [],
     startDate: '',
@@ -109,7 +120,7 @@ function briefOf(summary: string): string {
   return summary.trim().split(/\s+/).slice(0, 6).join(' ');
 }
 
-/** Announcement editor (Figma 116:5269): details, dates, place, notice, publishing and preview. */
+/** Announcement editor (Figma 116:5269): details, dates, place, notice and publishing. */
 export function AnnouncementEditor({
   id,
   base,
@@ -122,6 +133,7 @@ export function AnnouncementEditor({
   const router = useRouter();
   const { staff } = useStaffSession();
   const records = useStaffRecords(announcementStore, base);
+  const params = useSearchParams();
   const existing = records.find((record) => record.id === id) ?? null;
   const isNew = id === NEW_ID;
 
@@ -130,7 +142,7 @@ export function AnnouncementEditor({
       {isNew || existing ? (
         <EditorForm
           key={id}
-          record={existing ?? blankAnnouncement(areas, center)}
+          record={existing ?? blankAnnouncement(areas, center, placeOf(params))}
           isNew={isNew}
           areas={areas}
           stations={stations}
@@ -182,10 +194,6 @@ function EditorForm({
   const areaId = draft.areaIds[0] ?? areas[0]?.id ?? '';
   const nightly = isNightly(draft);
   const duration = durationLabel(draft.startDate, draft.endDate, nightly);
-  const previewStatus =
-    draft.startDate && draft.endDate
-      ? statusFromDates(draft.startDate, draft.endDate, today)
-      : null;
   const nearby = stations.filter((station) => station.areaId === areaId);
   const nearbyNames = nearby
     .slice(0, 2)
@@ -315,12 +323,6 @@ function EditorForm({
         : copy.status[draft.status];
   const willSchedule = Boolean(draft.startDate) && draft.startDate > today;
   const publishLabel = willSchedule ? copy.schedule : copy.publish;
-  const range =
-    draft.startDate && draft.endDate
-      ? formatDateRange(draft.startDate, fullEndDate(draft.endDate))
-      : null;
-  const previewTitle = draft.title.trim() || copy.preview.untitled;
-  const previewRoad = draft.location.trim() || draft.road;
 
   return (
     <div className="flex flex-col gap-6">
@@ -464,7 +466,7 @@ function EditorForm({
               zoom={15}
               label={copy.map.label}
               interaction="snippet"
-              className="h-50 rounded-xl"
+              className="h-72 rounded-xl md:h-100"
               markers={[]}
               pin={{
                 point: { lat: draft.lat, lng: draft.lng },
@@ -551,26 +553,6 @@ function EditorForm({
               checked={draft.showOnMap}
               onCheckedChange={(checked) => change('showOnMap', checked)}
             />
-          </AdminPanel>
-
-          <AdminPanel headingId="preview-heading" title={copy.preview.title} className="gap-3 p-5">
-            <p className="flex items-center gap-2 rounded-lg bg-warning-50 px-3 py-2.5 type-body-xs text-gray-800">
-              <TriangleAlert aria-hidden className="size-4 shrink-0 text-warning-700" />
-              {copy.preview.banner(previewTitle, previewRoad || '…')}
-            </p>
-            <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 px-3.5 py-3">
-              <div className="flex flex-wrap gap-1.5">
-                <Tag kind={draft.type} />
-                <Tag kind={previewStatus ?? 'draft'} />
-              </div>
-              <p className="type-body-s-semibold text-gray-900">{previewTitle}</p>
-              <p className="type-body-xs text-gray-600">
-                {copy.preview.card(
-                  previewRoad,
-                  range ? `${range[0]} ${copy.preview.to} ${range[1]}` : '',
-                )}
-              </p>
-            </div>
           </AdminPanel>
 
           <AdminPanel headingId="history-heading" title={copy.history.title} className="gap-2 p-5">

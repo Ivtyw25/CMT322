@@ -13,10 +13,7 @@ const copy = adminCopy.dashboard.ticketCounts;
 export function TicketCountCards({ className }: { className?: string }) {
   const { tickets, now } = useTickets();
   const nowIso = now();
-  const { counts, pastTarget, averageDaysToResolve } = useMemo(
-    () => ticketCounts(tickets, nowIso),
-    [tickets, nowIso],
-  );
+  const { counts, pastTarget } = useMemo(() => ticketCounts(tickets, nowIso), [tickets, nowIso]);
 
   return (
     <div
@@ -27,19 +24,10 @@ export function TicketCountCards({ className }: { className?: string }) {
       <StatCard
         label={copy.pending.label}
         value={String(counts.pending)}
-        hint={copy.pending.hint(pastTarget)}
         tone={pastTarget > 0 ? 'danger' : 'default'}
       />
-      <StatCard
-        label={copy.inProgress.label}
-        value={String(counts['in-progress'])}
-        hint={copy.inProgress.hint}
-      />
-      <StatCard
-        label={copy.resolved.label}
-        value={String(counts.resolved)}
-        hint={copy.resolved.hint(averageDaysToResolve)}
-      />
+      <StatCard label={copy.inProgress.label} value={String(counts['in-progress'])} />
+      <StatCard label={copy.resolved.label} value={String(counts.resolved)} />
     </div>
   );
 }

@@ -26,7 +26,7 @@ export type ReportCategory = {
   id: ReportCategoryId;
   /** Select option, e.g. "Blocked access to home or business". */
   label: string;
-  /** Lower-case form for "Complaint, blocked access". */
+  /** Short form after the type, e.g. "Complaint: Blocked access". */
   shortLabel: string;
   /** Helper text under the select when this option is chosen. */
   hint: string;

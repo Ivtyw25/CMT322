@@ -11,10 +11,10 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
-import { LocationMap, type MapMarker } from '@/components/patterns/map/location-map';
+import { useRouter } from 'next/navigation';
+import { useCallback, useMemo, useState } from 'react';
+import { LocationMap, type MapMarker, type MapPoint } from '@/components/patterns/map/location-map';
 import { Button } from '@/components/ui/button';
-import { ButtonLink } from '@/components/ui/button-link';
 import { Field } from '@/components/ui/field';
 import { SearchInput } from '@/components/ui/search-input';
 import { SegmentedControl, type SegmentedOption } from '@/components/ui/segmented-control';
@@ -36,8 +36,10 @@ import {
 import { DeveloperOnly } from '@/features/admin/developer-only';
 import { cn } from '@/lib/cn';
 import { formatDate } from '@/lib/format/dates';
+import { useReverseGeocode } from '@/lib/geo/use-reverse-geocode';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
 import { useStaffSession } from '@/lib/staff-session';
+import { PlacingCard } from './placing-card';
 
 const copy = adminCopy.mapItems;
 const kinds = ['closure', 'worksite', 'hazard'] as const satisfies readonly MapItemKind[];
@@ -73,6 +75,9 @@ type MapItemsPageProps = {
 
 type Tool = 'select' | 'pin';
 
+/** A new map item being placed: its type, the pin (null until placed) and the road found for it. */
+type Placing = { kind: MapItemKind; point: MapPoint | null; road: string };
+
 const nameOf = (item: StaffAnnouncement) => item.mapName || item.title;
 
 /**
@@ -80,6 +85,7 @@ const nameOf = (item: StaffAnnouncement) => item.mapName || item.title;
  * part of its announcement, so every change here is saved onto the announcement.
  */
 export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
+  const router = useRouter();
   const { staff } = useStaffSession();
   const items = useStaffRecords(announcementStore, base);
   const [query, setQuery] = useState('');
@@ -94,6 +100,14 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
     range?: string;
   }>({});
   const [message, setMessage] = useState('');
+  const [placing, setPlacing] = useState<Placing | null>(null);
+  const roadLookup = useReverseGeocode(
+    useCallback(
+      (road: string) => setPlacing((current) => (current ? { ...current, road } : current)),
+      [],
+    ),
+  );
+  const { lookup: findRoad, cancel: cancelRoadLookup } = roadLookup;
 
   const counts = {
     all: items.length,
@@ -123,7 +137,36 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
   }));
   const fitPoints = useMemo(() => items.map((item) => ({ lat: item.lat, lng: item.lng })), [items]);
 
+  function startPlacing() {
+    close();
+    setMessage('');
+    setPlacing({ kind: 'closure', point: null, road: '' });
+  }
+
+  function stopPlacing() {
+    cancelRoadLookup();
+    setPlacing(null);
+  }
+
+  function placePin(point: MapPoint) {
+    setPlacing((current) => (current ? { ...current, point, road: '' } : current));
+    findRoad(point);
+  }
+
+  function continueToAnnouncement() {
+    if (!placing?.point) return;
+    router.push(
+      routes.admin.announcementNewAt({
+        type: typeOfKind[placing.kind],
+        lat: placing.point.lat,
+        lng: placing.point.lng,
+        road: placing.road,
+      }),
+    );
+  }
+
   function select(item: StaffAnnouncement) {
+    stopPlacing();
     setForm({ ...item, mapName: nameOf(item) });
     setErrors({});
     setMessage('');
@@ -175,6 +218,18 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
   }
 
   const selected = form !== null;
+  const placingCard = placing ? (
+    <PlacingCard
+      kind={placing.kind}
+      kindChoices={kindChoices}
+      placed={placing.point !== null}
+      road={placing.road}
+      lookup={roadLookup.status}
+      onKindChange={(kind) => setPlacing((current) => (current ? { ...current, kind } : current))}
+      onContinue={continueToAnnouncement}
+      onCancel={stopPlacing}
+    />
+  ) : null;
   const editCard = form ? (
     <div className="flex flex-col gap-3.5 rounded-2xl border border-gray-200 bg-surface p-5 shadow-panel lg:w-85">
       <div className="flex items-center gap-2">
@@ -256,6 +311,8 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
     </div>
   ) : null;
 
+  const sideCard = placingCard ?? editCard;
+
   const toolButton = (
     id: string,
     label: string,
@@ -294,12 +351,13 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
               <h1 id="map-items-heading" className="min-w-0 flex-1 type-heading-xs text-gray-900">
                 {copy.title}
               </h1>
-              <ButtonLink
-                href={routes.admin.announcementNew}
+              <Button
+                onClick={startPlacing}
+                disabled={placing !== null}
                 icon={<Plus aria-hidden className="size-4" />}
               >
                 {copy.add}
-              </ButtonLink>
+              </Button>
             </div>
             <p className="type-body-s text-gray-600">{copy.intro}</p>
             <SearchInput
@@ -392,14 +450,21 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
               fitKey={1}
               resetBounds={fitPoints}
               pin={
-                tool === 'pin' && form
+                placing
                   ? {
-                      point: { lat: form.lat, lng: form.lng },
-                      onChange: (point) => update(point),
-                      label: () => copy.map.pinLabel(nameOf(form)),
+                      point: placing.point,
+                      onChange: placePin,
+                      label: () => copy.placing.pinLabel(copy.kinds[placing.kind]),
                       dropLabel: copy.map.dropLabel,
                     }
-                  : undefined
+                  : tool === 'pin' && form
+                    ? {
+                        point: { lat: form.lat, lng: form.lng },
+                        onChange: (point) => update(point),
+                        label: () => copy.map.pinLabel(nameOf(form)),
+                        dropLabel: copy.map.dropLabel,
+                      }
+                    : undefined
               }
             />
             <div
@@ -420,7 +485,11 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
               )}
             </div>
             <p className="pointer-events-none absolute top-4 left-18 z-10 hidden max-w-[calc(100%-5rem)] rounded-lg bg-gray-900 px-3 py-2 type-body-xs-medium text-static-white md:block">
-              {tool === 'pin' ? copy.tools.pinHint : copy.tools.selectHint}
+              {placing
+                ? copy.placing.hint
+                : tool === 'pin'
+                  ? copy.tools.pinHint
+                  : copy.tools.selectHint}
             </p>
             <ul
               aria-label={copy.legend.label}
@@ -443,9 +512,9 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
               ))}
             </ul>
           </div>
-          {editCard ? (
+          {sideCard ? (
             <div className="lg:absolute lg:top-4 lg:right-4 lg:z-20 lg:max-h-[calc(100%-2rem)] lg:overflow-y-auto">
-              {editCard}
+              {sideCard}
             </div>
           ) : null}
         </div>

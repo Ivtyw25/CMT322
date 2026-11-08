@@ -5,11 +5,10 @@ export type AttentionTone = 'warning' | 'info' | 'neutral';
 
 /** Dashboard figures for the project developer (Figma 116:4824). */
 export type DeveloperDashboard = {
-  updatedAt: string;
-  activeAnnouncements: { count: number; endingWithinWeek: number };
-  scheduled: { count: number; nextStarts: string };
+  activeAnnouncements: { count: number };
+  scheduled: { count: number };
   liveMapItems: { closures: number; worksites: number; hazards: number };
-  lastProgressUpdate: { date: string; title: string };
+  lastProgressUpdate: { date: string };
   attention: {
     id: string;
     kind: AttentionKind;

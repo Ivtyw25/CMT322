@@ -161,7 +161,7 @@ export const uiCopy = {
     complaint: 'Complaint',
     inquiry: 'General inquiry',
     /** e.g. "Complaint, blocked access". */
-    withCategory: (type: string, category: string) => `${type}, ${category}`,
+    withCategory: (type: string, category: string) => `${type}: ${category}`,
   },
 
   stationStages: {

@@ -19,8 +19,6 @@ import { priorityTagOf, statusTagOf } from './ticket-tags';
 
 const copy = adminCopy.ticket;
 
-const lowerFirst = (text: string) => text.charAt(0).toLowerCase() + text.slice(1);
-
 function LocationPanel({ ticket }: { ticket: Ticket }) {
   return (
     <AdminPanel
@@ -95,9 +93,7 @@ export function TicketDetail({ ticketId, categories, templates }: TicketDetailPr
   const { ticket } = lookup;
   const category = categories.find((candidate) => candidate.id === ticket.categoryId);
   const typeLabel = adminCopy.tickets.types[ticket.type];
-  const categoryText = category
-    ? copy.categoryLine(typeLabel, lowerFirst(category.label))
-    : typeLabel;
+  const categoryText = category ? copy.categoryLine(typeLabel, category.shortLabel) : typeLabel;
   const unclaimed = isUnclaimed(ticket);
   const handler = isHandler(ticket, staff.id);
 

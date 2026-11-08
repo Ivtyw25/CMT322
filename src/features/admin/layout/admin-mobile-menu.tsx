@@ -34,7 +34,7 @@ export function AdminMobileMenu({
         <Dialog.Content
           id={id}
           aria-describedby={undefined}
-          className="fixed inset-y-0 left-0 z-50 flex w-[min(15.5rem,calc(100vw-2.5rem))] flex-col shadow-drawer outline-none data-[state=closed]:animate-menu-out data-[state=open]:animate-panel-in lg:hidden"
+          className="fixed inset-y-0 left-0 z-50 flex w-[min(18rem,calc(100vw-2.5rem))] flex-col shadow-drawer outline-none data-[state=closed]:animate-menu-out data-[state=open]:animate-panel-in lg:hidden"
         >
           <Dialog.Title className="sr-only">{adminCopy.shell.menuTitle}</Dialog.Title>
           <AdminSidebar

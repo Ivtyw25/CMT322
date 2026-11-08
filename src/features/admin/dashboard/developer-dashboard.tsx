@@ -70,36 +70,15 @@ export function DeveloperDashboard({ data }: { data: DeveloperDashboardData }) {
     <div className="flex flex-col gap-6">
       <AdminPageHead
         title={adminCopy.dashboard.title}
-        intro={`${copy.intro} ${adminCopy.page.updated(data.updatedAt)}`}
+        intro={copy.intro}
         action={<ButtonLink href={routes.admin.announcementNew}>{copy.newAnnouncement}</ButtonLink>}
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard
-          label={copy.stats.active.label}
-          value={String(data.activeAnnouncements.count)}
-          hint={copy.stats.active.hint(data.activeAnnouncements.endingWithinWeek)}
-          hintTone="warning"
-        />
-        <StatCard
-          label={copy.stats.scheduled.label}
-          value={String(data.scheduled.count)}
-          hint={copy.stats.scheduled.hint(data.scheduled.nextStarts)}
-        />
-        <StatCard
-          label={copy.stats.mapItems.label}
-          value={String(mapTotal)}
-          hint={copy.stats.mapItems.hint(
-            liveMapItems.closures,
-            liveMapItems.worksites,
-            liveMapItems.hazards,
-          )}
-        />
-        <StatCard
-          label={copy.stats.progress.label}
-          value={data.lastProgressUpdate.date}
-          hint={data.lastProgressUpdate.title}
-        />
+        <StatCard label={copy.stats.active.label} value={String(data.activeAnnouncements.count)} />
+        <StatCard label={copy.stats.scheduled.label} value={String(data.scheduled.count)} />
+        <StatCard label={copy.stats.mapItems.label} value={String(mapTotal)} />
+        <StatCard label={copy.stats.progress.label} value={data.lastProgressUpdate.date} />
       </div>
 
       <TicketCountCards />
