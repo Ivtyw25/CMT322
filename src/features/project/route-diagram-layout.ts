@@ -50,18 +50,20 @@ export const placesLayout: Readonly<
 > = {
   S31: { x: 170, y: 52 },
   S20: { x: 85, y: 277 },
-  S13: { x: 470, y: 208 },
-  S10: { x: 565, y: 205, wrapAt: 14 },
+  S13: { x: 528, y: 98 },
+  S10: { x: 535, y: 226, wrapAt: 14 },
   S08: { x: 536, y: 295 },
-  S05: { x: 360, y: 297 },
+  S05: { x: 420, y: 297 },
 };
 
-/** Dotted leader lines from a stop to its places. */
+/** Dotted leader lines from a stop (or its label) to the pin of its first place. */
 export const leaders: readonly string[] = [
-  'M 150 62 h 0',
-  'M 60 236 V 262',
-  'M 466 361 V 306',
-  'M 632 302 H 637',
+  'M 127 62 H 151',
+  'M 60 260 V 272 H 68',
+  'M 533 106 V 116',
+  'M 617 229 H 631',
+  'M 608 290 H 626 L 637 305',
+  'M 466 334 V 305',
 ];
 
 /** Path of the solid line (Macallum to PSR-A) and the lighter branches. */
