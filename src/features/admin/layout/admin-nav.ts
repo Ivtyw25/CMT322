@@ -10,8 +10,8 @@ export type AdminNavItem = {
   icon: LucideIcon;
   /** Items under this path (a ticket page, an editor) keep the item highlighted. */
   matchPrefix: string | null;
-  /** Shows the number of pending tickets after the label. */
-  pendingBadge?: boolean;
+  /** Shows the number of unclaimed tickets after the label. */
+  unclaimedBadge?: boolean;
 };
 
 export type AdminNavGroup = { id: string; label: string; items: readonly AdminNavItem[] };
@@ -26,27 +26,27 @@ const dashboard: AdminNavItem = {
   matchPrefix: null,
 };
 
-/** What each role sees in the sidebar (Figma 113:4668 and 116:4824). */
-export const adminNav = {
-  authority: [
-    { id: 'overview', label: groups.overview, items: [dashboard] },
+const ticketsGroup: AdminNavGroup = {
+  id: 'feedback',
+  label: groups.feedback,
+  items: [
     {
-      id: 'feedback',
-      label: groups.feedback,
-      items: [
-        {
-          id: 'tickets',
-          label: items.tickets,
-          href: routes.admin.tickets,
-          icon: Inbox,
-          matchPrefix: routes.admin.tickets,
-          pendingBadge: true,
-        },
-      ],
+      id: 'tickets',
+      label: items.tickets,
+      href: routes.admin.tickets,
+      icon: Inbox,
+      matchPrefix: routes.admin.tickets,
+      unclaimedBadge: true,
     },
   ],
+};
+
+/** What each role sees in the sidebar (Figma 113:4668 and 116:4824). */
+export const adminNav = {
+  authority: [{ id: 'overview', label: groups.overview, items: [dashboard] }, ticketsGroup],
   developer: [
     { id: 'overview', label: groups.overview, items: [dashboard] },
+    ticketsGroup,
     {
       id: 'traffic',
       label: groups.traffic,

@@ -3,7 +3,7 @@ import { DocsPageHead } from '@/components/patterns/docs-page-head';
 import { routes } from '@/config/routes';
 import { reportTrackCopy } from '@/content/report-track';
 import { uiCopy } from '@/content/ui';
-import type { ReportCategory, Ticket } from '@/data/models/ticket';
+import type { ReportCategory } from '@/data/models/ticket';
 import { ReportNeedHelp } from './report-need-help';
 import { TrackSearch } from './track-search';
 import { TrackView } from './track-view';
@@ -15,12 +15,11 @@ type TrackPageProps = {
   rawId: string | null;
   /** The normalised ID when it has the ticket ID format, otherwise `null`. */
   ticketId: string | null;
-  ticket: Ticket | null;
   categories: readonly ReportCategory[];
 };
 
 /** /track and /track/[id]: the search, and under it the result when the ID is well formed. */
-export function TrackPage({ rawId, ticketId, ticket, categories }: TrackPageProps) {
+export function TrackPage({ rawId, ticketId, categories }: TrackPageProps) {
   return (
     <DocsLayout
       currentHref={routes.reportTrack.track}
@@ -29,7 +28,6 @@ export function TrackPage({ rawId, ticketId, ticket, categories }: TrackPageProp
           ? [
               { id: 'status', label: track.onThisPage.status },
               { id: 'updates', label: track.onThisPage.updates },
-              { id: 'report', label: track.onThisPage.report },
             ]
           : []
       }
@@ -55,7 +53,7 @@ export function TrackPage({ rawId, ticketId, ticket, categories }: TrackPageProp
         </DocsPageHead>
         {ticketId ? (
           <div className="flex flex-col gap-8 border-t border-gray-200 pt-8">
-            <TrackView ticketId={ticketId} serverTicket={ticket} categories={categories} />
+            <TrackView ticketId={ticketId} categories={categories} />
           </div>
         ) : null}
       </div>

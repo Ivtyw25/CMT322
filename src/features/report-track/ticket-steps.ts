@@ -3,6 +3,7 @@ import { reportTrackCopy } from '@/content/report-track';
 import { uiCopy } from '@/content/ui';
 import type { Ticket, TicketStatus } from '@/data/models/ticket';
 import { formatShortDateTime } from '@/lib/format/date-time';
+import { statusReachedAt } from '@/lib/tickets';
 
 export const ticketStatusOrder: readonly TicketStatus[] = [
   'submitted',
@@ -11,21 +12,20 @@ export const ticketStatusOrder: readonly TicketStatus[] = [
   'resolved',
 ];
 
-/** The four status steps of a ticket, each with the date of its first update. */
+/** The four status steps of a ticket, each with the date it was reached. */
 export function ticketSteps(ticket: Ticket): StepEntry[] {
   const current = ticketStatusOrder.indexOf(ticket.status);
   const resolved = ticket.status === 'resolved';
   return ticketStatusOrder.map((status, index) => {
     const reached = index <= current;
-    const first = ticket.updates.find((update) => update.status === status);
+    const reachedAt = reached ? statusReachedAt(ticket, status) : null;
     const state: StepEntry['state'] =
       resolved || index < current ? 'complete' : index === current ? 'current' : 'upcoming';
-    const detail =
-      reached && first
-        ? formatShortDateTime(first.at)
-        : status === 'pending'
-          ? reportTrackCopy.submitted.next.steps.pending.detail
-          : reportTrackCopy.track.stepper.notYet;
+    const detail = reachedAt
+      ? formatShortDateTime(reachedAt)
+      : status === 'pending'
+        ? reportTrackCopy.submitted.next.steps.pending.detail
+        : reportTrackCopy.track.stepper.notYet;
     return { id: status, label: uiCopy.ticketStatus[status], state, detail };
   });
 }

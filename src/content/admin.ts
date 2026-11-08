@@ -56,24 +56,21 @@ export const adminCopy = {
     /** The prototype accepts any password; this fills the field as the design shows it. */
     prototypePassword: 'mutiara-line',
     submit: 'Log in',
-    submitting: 'Logging in',
-    codeNote: 'Next, enter the 6-digit code from your authenticator app.',
+    panel: { heading: 'Reports and works,\nhandled together' },
     rolesTitle: 'What you can manage depends on your role',
     roleList: [
       {
         role: 'authority',
         title: 'Government authority',
-        summary: 'Review, assign and reply to tickets from the public',
+        summary: 'Claim, reply to and resolve tickets from the public',
       },
       {
         role: 'developer',
         title: 'Project developer',
-        summary: 'Announcements, map items and progress updates',
+        summary: 'Announcements, map items, progress updates and tickets',
       },
     ],
     prototypeDeveloper: 'Prototype only: continue as project developer',
-    publicOnly:
-      'Commuters and residents use the public site. This portal is for authorised staff only.',
     errors: {
       emailRequired: 'Enter your work email.',
       passwordRequired: 'Enter your password.',
@@ -87,6 +84,9 @@ export const adminCopy = {
     navLabel: 'Staff portal',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
+    collapseSidebar: 'Close the sidebar',
+    expandSidebar: 'Open the sidebar',
+    resizeSidebar: 'Resize the sidebar',
     menuTitle: 'Staff portal menu',
     logOut: 'Log out',
     loggedOut: 'You are logged out.',
@@ -109,13 +109,13 @@ export const adminCopy = {
     notificationPanel: {
       authority: (waiting: number) =>
         waiting === 0
-          ? 'No tickets are waiting for a first reply.'
+          ? 'No tickets are waiting to be claimed.'
           : waiting === 1
-            ? '1 ticket is waiting for a first reply.'
-            : `${waiting} tickets are waiting for a first reply.`,
+            ? '1 ticket is waiting to be claimed.'
+            : `${waiting} tickets are waiting to be claimed.`,
       developer: (count: number) =>
         count === 1 ? '1 item needs your attention.' : `${count} items need your attention.`,
-      authorityAction: 'Open pending tickets',
+      authorityAction: 'Open unclaimed tickets',
       developerAction: 'Open the dashboard',
     },
   },
@@ -123,7 +123,7 @@ export const adminCopy = {
   nav: {
     groups: {
       overview: 'Overview',
-      feedback: 'Feedback',
+      feedback: 'Reports',
       traffic: 'Traffic',
       project: 'Project',
     },
@@ -134,7 +134,7 @@ export const adminCopy = {
       mapItems: 'Map items',
       progress: 'Progress updates',
     },
-    pendingBadge: (count: number) => `${count} pending`,
+    unclaimedBadge: (count: number) => `${count} unclaimed`,
   },
 
   page: {
@@ -144,39 +144,51 @@ export const adminCopy = {
   dashboard: {
     title: 'Dashboard',
     authority: {
-      intro: 'Feedback from commuters, residents and businesses near the works.',
+      intro: 'Reports from commuters, residents and businesses near the works.',
       openQueue: 'Open ticket queue',
       stats: {
-        newToday: { label: 'New today', hint: (n: number) => `${n} more than yesterday` },
-        waiting: {
-          label: 'Waiting for a first reply',
-          hint: (n: number) => `${n} past the 2-day target`,
+        unclaimed: {
+          label: 'Waiting to be claimed',
+          hint: (past: number) => `${past} past the 2-day target`,
         },
-        inProgress: { label: 'In progress', hint: 'Assigned to a team' },
+        pending: { label: 'Pending', hint: 'Claimed, no reply yet' },
+        inProgress: { label: 'In progress', hint: 'Being worked on' },
         resolved: {
-          label: 'Resolved this month',
-          hint: (days: number) => `Average ${days} days to resolve`,
+          label: 'Resolved',
+          hint: (days: number | null) =>
+            days === null ? 'No resolved tickets yet' : `Average ${days} days to resolve`,
         },
       },
       needsReply: {
-        title: 'Needs a reply',
+        title: 'Needs a first reply',
         hint: 'Oldest first. The target is a first reply within 2 working days.',
-        viewAll: 'View all pending tickets',
-        tableLabel: 'Tickets that need a reply',
+        viewAll: 'View unclaimed tickets',
+        tableLabel: 'Tickets that need a first reply',
         columns: { ticket: 'Ticket', subject: 'Subject', area: 'Area', waiting: 'Waiting' },
         empty: 'Every ticket has had a first reply.',
         areaLabel: 'Area',
         waitingLabel: 'Waiting',
+        waited: {
+          minutes: (n: number) => `${n} min`,
+          hours: (n: number) => (n === 1 ? '1 hour' : `${n} hours`),
+          days: (n: number) => (n === 1 ? '1 day' : `${n} days`),
+        },
       },
       byArea: {
         title: 'Open tickets by area',
-        row: (area: string, count: number) => `${area}: ${count} open tickets`,
+        empty: 'No open tickets.',
       },
       byType: {
-        title: 'Tickets this month by type',
-        share: (type: string, count: number) => `${type}: ${count} tickets`,
+        title: 'Tickets by type',
       },
-      activity: { title: 'Recent activity' },
+      activity: {
+        title: 'Recent activity',
+        empty: 'Nothing has happened yet.',
+        submitted: (id: string, name: string) => `${name} submitted ${id}`,
+        claimed: (name: string, id: string) => `${name} started working on ${id}`,
+        replied: (name: string, id: string, subject: string) =>
+          `${name} replied to ${id}: ${subject}`,
+      },
     },
     developer: {
       intro: 'What the public currently sees about the works.',
@@ -205,10 +217,11 @@ export const adminCopy = {
         mapItem: 'Add a closure or hazard to the map',
         progress: 'Post a progress update',
       },
-      assigned: {
-        title: 'Tickets assigned to your team',
-        hint: 'The authority assigns these to you. Add a site note so they can reply to the reporter.',
-        empty: 'No tickets are assigned to your team.',
+      handling: {
+        title: 'Tickets you are handling',
+        hint: 'Tickets you claimed. Reply to the reporter and move them to Resolved.',
+        empty: 'You have not claimed a ticket yet.',
+        viewAll: 'Open ticket queue',
       },
     },
   },
@@ -224,12 +237,18 @@ export const adminCopy = {
       'Type',
       'Area',
       'Submitted',
-      'Assigned to',
+      'Handled by',
       'Priority',
       'Status',
     ],
     tabsLabel: 'Ticket status',
-    tabs: { all: 'All', pending: 'Pending', 'in-progress': 'In progress', resolved: 'Resolved' },
+    tabs: {
+      all: 'All',
+      submitted: 'Submitted',
+      pending: 'Pending',
+      'in-progress': 'In progress',
+      resolved: 'Resolved',
+    },
     toolbarLabel: 'Filter tickets',
     searchLabel: 'Search tickets',
     searchPlaceholder: 'Ticket ID, subject or road',
@@ -238,7 +257,6 @@ export const adminCopy = {
     filters: {
       type: { name: 'Type', all: 'All' },
       area: { name: 'Area', all: 'All' },
-      assignee: { name: 'Assigned to', all: 'Anyone', none: 'Unassigned' },
       range: {
         name: 'Submitted',
         options: { '7': 'Last 7 days', '30': 'Last 30 days', all: 'All time' },
@@ -248,7 +266,7 @@ export const adminCopy = {
         options: { newest: 'Newest first', oldest: 'Oldest first' },
       },
     },
-    types: { complaint: 'Complaint', feedback: 'Feedback', inquiry: 'General inquiry' },
+    types: { complaint: 'Complaint', inquiry: 'General inquiry' },
     table: {
       label: 'Tickets',
       selectAll: 'Select all tickets on this page',
@@ -258,11 +276,11 @@ export const adminCopy = {
         subject: 'Subject',
         area: 'Area',
         submitted: 'Submitted',
-        assigned: 'Assigned to',
+        handledBy: 'Handled by',
         priority: 'Priority',
         status: 'Status',
       },
-      unassigned: 'Unassigned',
+      unclaimed: 'Not claimed yet',
       selected: (count: number) =>
         count === 1 ? '1 ticket selected' : `${count} tickets selected`,
     },
@@ -274,30 +292,28 @@ export const adminCopy = {
       body: 'Change the filters or search for a different ticket ID, subject or road.',
       clear: 'Clear filters',
     },
-    forbidden: 'The ticket queue is for the government authority. Opening the dashboard.',
   },
 
   ticket: {
     back: 'All tickets',
-    backToDashboard: 'Dashboard',
     categoryLine: (type: string, category: string) => `${type}, ${category}`,
     notFound: {
       title: 'Ticket not found',
       body: 'No ticket has this ID. Check the ID or go back to the queue.',
     },
-    report: {
-      title: 'Report',
-      attachments: 'Attachments',
+    handledBy: (name: string) => `Handled by ${name}`,
+    notClaimed: 'Not claimed yet',
+    conversation: { title: 'Conversation' },
+    location: {
+      title: 'Location',
       mapLabel: (location: string) => `Map of ${location}`,
       coordinates: (lat: number, lng: number) => `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
-      noPhotos: 'The reporter did not attach any photos.',
     },
-    timeline: {
-      title: 'Timeline',
-      resolvedStep: 'Resolved',
-      waiting: 'Waiting',
-      done: 'Done',
-      current: 'Latest',
+    claim: {
+      title: 'Nobody is handling this ticket yet',
+      body: 'Claim it to become its handler. The status moves to Pending and the reporter sees who is looking into it.',
+      action: 'I’m working on this',
+      claimed: (name: string) => `You are now handling this ticket as ${name}.`,
     },
     notes: {
       title: 'Internal notes',
@@ -305,59 +321,38 @@ export const adminCopy = {
       label: 'Note for staff',
       placeholder: 'Add a note for staff…',
       add: 'Add note',
-      empty: 'No internal notes yet.',
       byline: (author: string) => author,
       added: 'Internal note added.',
     },
-    update: {
-      title: 'Update ticket',
+    reply: {
+      title: 'Reply to the reporter',
+      hint: 'The reply is emailed to the reporter and added to the conversation.',
       status: 'Status',
       statusOptions: { pending: 'Pending', 'in-progress': 'In progress', resolved: 'Resolved' },
-      assignee: 'Assigned to',
-      unassigned: 'Unassigned',
       priority: 'Priority',
       priorityOptions: { normal: 'Normal', high: 'High' },
-      reply: 'Reply to the reporter',
       template: 'Reply template',
       noTemplate: 'Write your own',
       templateOption: (label: string) => `Template: ${label}`,
-      replyLabel: 'Reply message',
-      replyPlaceholder: 'Write a reply to the reporter…',
-      replyMax: 1000,
-      email: {
-        label: 'Email the reporter',
-        hint: 'An automated email goes to the reporter with this reply and the new status.',
-        hintNoEmail: 'This reporter did not share an email address, so no email is sent.',
+      subject: { label: 'Reply subject', placeholder: 'Sum up the reply', max: 100 },
+      description: {
+        label: 'Reply description',
+        placeholder: 'Write the reply to the reporter…',
+        max: 1000,
       },
-      save: 'Save and notify reporter',
-      saveOnly: 'Save changes',
-      saved: 'Ticket updated.',
-      savedAndEmailed: 'Ticket updated. The reporter will get an email.',
-      nothingChanged: 'Change the status, assignee, priority or reply to save.',
-      readOnlyTitle: 'Site note',
-      readOnlyHint:
-        'The authority changes the status and replies to the reporter. Add a site note so they know what is happening on site.',
-    },
-    siteNote: {
-      label: 'Site note',
-      placeholder: 'Write what is happening on site…',
-      add: 'Add site note',
-      added: 'Site note added to the timeline.',
+      files: { label: 'Photos and files', maxFiles: 5, maxMb: 10 },
+      errors: {
+        subject: 'Enter a reply subject',
+        description: 'Enter a reply description',
+        uploading: 'Wait for your files to finish uploading.',
+      },
+      send: 'Send reply to reporter',
+      sending: 'Sending reply…',
+      sent: 'Reply sent. The reporter was emailed.',
     },
     reporter: {
       title: 'Reporter',
-      visibility: 'Contact details are only visible to staff handling this ticket.',
-      none: 'The reporter did not share contact details.',
-    },
-    events: {
-      assigned: (team: string, by: string) => `Assigned to ${team} by ${by}`,
-      unassigned: (by: string) => `Unassigned by ${by}`,
-      status: (status: string) => `Status changed to ${status}`,
-      statusWithReply: (status: string, reply: string) =>
-        `Status changed to ${status}. Reply sent: “${reply}”`,
-      reply: (reply: string) => `Reply sent: “${reply}”`,
-      priority: (priority: string, by: string) => `Priority changed to ${priority} by ${by}`,
-      siteNote: (by: string, text: string) => `Site note from ${by} (project team): ${text}`,
+      visibility: 'Contact details are only visible to staff handling tickets.',
     },
   },
   /** Words shared by the developer's three content areas. */

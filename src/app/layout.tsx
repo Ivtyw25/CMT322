@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from 'next';
 import { commonCopy } from '@/content/common';
 import { getSiteNotice } from '@/data/api/announcements';
+import { getNow } from '@/data/api/clock';
+import { getTickets } from '@/data/api/tickets';
 import { getCurrentUser } from '@/data/api/user';
 import { AnnouncerProvider } from '@/lib/announce/announcer';
 import { cn } from '@/lib/cn';
 import { FollowsProvider } from '@/lib/follows';
 import { SessionProvider } from '@/lib/session';
+import { TicketsProvider } from '@/lib/tickets';
 import { ThemeProvider } from '@/lib/theme/theme-provider';
 import { buildShellScript } from '@/lib/theme/theme-script';
 import { googleSans, poppins } from '@/styles/fonts';
@@ -24,7 +27,12 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
-  const [user, notice] = await Promise.all([getCurrentUser(), getSiteNotice()]);
+  const [user, notice, demoTickets, mockNow] = await Promise.all([
+    getCurrentUser(),
+    getSiteNotice(),
+    getTickets(),
+    getNow(),
+  ]);
   return (
     <html
       lang="en-MY"
@@ -39,7 +47,11 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
         <ThemeProvider>
           <SessionProvider user={user}>
             <FollowsProvider accountCodes={user.followedStationCodes}>
-              <AnnouncerProvider>{children}</AnnouncerProvider>
+              <AnnouncerProvider>
+                <TicketsProvider demoTickets={demoTickets} mockNow={mockNow}>
+                  {children}
+                </TicketsProvider>
+              </AnnouncerProvider>
             </FollowsProvider>
           </SessionProvider>
         </ThemeProvider>

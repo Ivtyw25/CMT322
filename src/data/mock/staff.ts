@@ -6,12 +6,14 @@ export const staffMembers: StaffMember[] = [
     id: 'staff-nurul',
     name: 'Nurul Aisyah',
     role: 'authority',
+    organisation: 'Penang Island City Council',
     email: 'nurul.aisyah@authority.gov.my',
   },
   {
     id: 'staff-daniel',
     name: 'Daniel Lim',
     role: 'developer',
+    organisation: 'MRT Corp project team',
     email: null,
   },
 ];

@@ -1,3 +1,4 @@
+import { RequiredMark } from '@/components/ui/field';
 import { cn } from '@/lib/cn';
 
 type DocsSectionHeadingProps = {
@@ -5,10 +6,17 @@ type DocsSectionHeadingProps = {
   title: string;
   /** Stays at the smaller step from 1024 px up (the report form's sections). */
   compact?: boolean;
+  /** Adds the red `*` after the title (a required group of fields). */
+  required?: boolean;
 };
 
 /** The `h2` of a docs section. It takes focus from the "On this page" list. */
-export function DocsSectionHeading({ id, title, compact = false }: DocsSectionHeadingProps) {
+export function DocsSectionHeading({
+  id,
+  title,
+  compact = false,
+  required = false,
+}: DocsSectionHeadingProps) {
   return (
     <h2
       id={id}
@@ -16,6 +24,7 @@ export function DocsSectionHeading({ id, title, compact = false }: DocsSectionHe
       className={cn('scroll-mt-32 outline-none', compact ? 'type-heading-2xs' : 'type-heading-xs')}
     >
       {title}
+      {required ? <RequiredMark /> : null}
     </h2>
   );
 }

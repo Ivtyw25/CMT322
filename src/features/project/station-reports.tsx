@@ -5,6 +5,8 @@ import { projectCopy } from '@/content/project';
 import type { Station } from '@/data/models/station';
 import type { Ticket, TicketStatus } from '@/data/models/ticket';
 import { formatDate } from '@/lib/format/dates';
+import { isoDateOf } from '@/lib/format/date-time';
+import { lastActivityAt } from '@/lib/tickets';
 import { DocsSection } from '@/components/patterns/docs-section';
 
 const { reports: copy } = projectCopy.station;
@@ -34,11 +36,11 @@ export function StationReports({
           {tickets.map((ticket) => (
             <li key={ticket.id} className="flex items-center justify-between gap-4 px-4 py-3">
               <div className="flex min-w-0 flex-col gap-0.5">
-                <p className="type-body-s-medium text-gray-900">{ticket.title}</p>
+                <p className="type-body-s-medium text-gray-900">{ticket.subject}</p>
                 <p className="type-body-xs text-gray-500">
                   {ticket.status === 'resolved'
-                    ? copy.resolved(formatDate(ticket.updatedAt.slice(0, 10)))
-                    : copy.reported(formatDate(ticket.submittedAt.slice(0, 10)))}
+                    ? copy.resolved(formatDate(isoDateOf(lastActivityAt(ticket))))
+                    : copy.reported(formatDate(isoDateOf(ticket.submittedAt)))}
                 </p>
               </div>
               <Tag kind={tagOf[ticket.status]} />

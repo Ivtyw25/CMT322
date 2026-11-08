@@ -1,9 +1,8 @@
-import type { StaffTicket } from '@/data/models/staff-ticket';
-import type { ReportType } from '@/data/models/ticket';
+import type { ReportType, Ticket } from '@/data/models/ticket';
 
 export const PAGE_SIZE = 9;
 
-export const statusTabs = ['all', 'pending', 'in-progress', 'resolved'] as const;
+export const statusTabs = ['all', 'submitted', 'pending', 'in-progress', 'resolved'] as const;
 export type StatusTab = (typeof statusTabs)[number];
 
 export const rangeOptions = ['7', '30', 'all'] as const;
@@ -12,19 +11,14 @@ export type RangeOption = (typeof rangeOptions)[number];
 export const sortOptions = ['newest', 'oldest'] as const;
 export type SortOption = (typeof sortOptions)[number];
 
-export const reportTypes = [
-  'complaint',
-  'feedback',
-  'inquiry',
-] as const satisfies readonly ReportType[];
+export const reportTypes = ['complaint', 'inquiry'] as const satisfies readonly ReportType[];
 
-/** "all" for every select means no filtering; `assignee` also has "none" (unassigned). */
+/** "all" for every select means no filtering. */
 export type TicketFilters = {
   status: StatusTab;
   query: string;
   type: 'all' | ReportType;
   area: string;
-  assignee: string;
   range: RangeOption;
   sort: SortOption;
 };
@@ -34,7 +28,6 @@ export const defaultFilters: TicketFilters = {
   query: '',
   type: 'all',
   area: 'all',
-  assignee: 'all',
   range: '30',
   sort: 'newest',
 };
@@ -42,7 +35,7 @@ export const defaultFilters: TicketFilters = {
 const DAY_MS = 86_400_000;
 
 /** Lower-case text of everything the search box looks in. */
-function searchText(ticket: StaffTicket): string {
+function searchText(ticket: Ticket): string {
   return `${ticket.id} ${ticket.subject} ${ticket.location}`.toLowerCase();
 }
 
@@ -51,10 +44,10 @@ function searchText(ticket: StaffTicket): string {
  * `nowMs` is the mock "now", so "Last 30 days" counts back from the design's day.
  */
 export function filterTickets(
-  tickets: readonly StaffTicket[],
+  tickets: readonly Ticket[],
   filters: TicketFilters,
   nowMs: number,
-): StaffTicket[] {
+): Ticket[] {
   const text = filters.query.trim().toLowerCase();
   const since = filters.range === 'all' ? null : nowMs - Number(filters.range) * DAY_MS;
   return tickets.filter(
@@ -62,21 +55,17 @@ export function filterTickets(
       (text === '' || searchText(ticket).includes(text)) &&
       (filters.type === 'all' || ticket.type === filters.type) &&
       (filters.area === 'all' || ticket.areaLabel === filters.area) &&
-      (filters.assignee === 'all' ||
-        (filters.assignee === 'none'
-          ? ticket.assigneeId === null
-          : ticket.assigneeId === filters.assignee)) &&
       (since === null || Date.parse(ticket.submittedAt) >= since),
   );
 }
 
-export function countByStatus(tickets: readonly StaffTicket[]): Record<StatusTab, number> {
-  const counts = { all: tickets.length, pending: 0, 'in-progress': 0, resolved: 0 };
+export function countByStatus(tickets: readonly Ticket[]): Record<StatusTab, number> {
+  const counts = { all: tickets.length, submitted: 0, pending: 0, 'in-progress': 0, resolved: 0 };
   for (const ticket of tickets) counts[ticket.status] += 1;
   return counts;
 }
 
-export function sortTickets(tickets: readonly StaffTicket[], sort: SortOption): StaffTicket[] {
+export function sortTickets(tickets: readonly Ticket[], sort: SortOption): Ticket[] {
   const direction = sort === 'newest' ? -1 : 1;
   return [...tickets].sort(
     (a, b) => direction * (Date.parse(a.submittedAt) - Date.parse(b.submittedAt)),

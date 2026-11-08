@@ -45,8 +45,8 @@ const overview = {
       {
         id: 'report',
         title: 'Report an issue',
-        body: 'Send a complaint, feedback or a general inquiry, with photos and the exact location.',
-        points: ['Complaint', 'Feedback', 'General inquiry'],
+        body: 'Send a complaint or a general inquiry, with photos and the exact location.',
+        points: ['Complaint', 'General inquiry'],
       },
       {
         id: 'track',
@@ -121,12 +121,11 @@ const report = {
     files: 'Photos and files',
     contact: 'Your contact details',
   },
-  /** Radio cards. Figma shows Complaint, Feedback and General inquiry. VERIFY R1. */
+  /** Radio cards: a complaint or a general inquiry. */
   type: {
     legend: 'What are you reporting?',
     options: [
       { id: 'complaint', label: 'Complaint', hint: 'A problem caused by the works' },
-      { id: 'feedback', label: 'Feedback', hint: 'A suggestion or comment' },
       { id: 'inquiry', label: 'General inquiry', hint: 'A question for the team' },
     ],
   },
@@ -175,13 +174,17 @@ const report = {
     address: {
       label: 'Address or landmark',
       placeholder: 'Road name, building or landmark',
-      errorEmpty: 'Enter an address or landmark, or pin the spot on the map',
+      errorEmpty: 'Enter the street address of the spot',
+      finding: 'Finding the address…',
+      lookupFailed:
+        'We could not find the address for this spot. Your pin is saved: type the address instead.',
     },
     map: {
       label: 'Map. Select a point to pin the location.',
+      pinLegend: 'Pin the spot on the map',
+      errorMissing: 'Pin the spot on the map',
       useMyLocation: 'Use my current location',
       locating: 'Finding your location…',
-      pinned: (lat: string, lng: string) => `Pinned at ${lat}, ${lng}`,
       errorDenied:
         'We could not get your location. Allow location access in your browser, or type the address.',
       errorUnavailable: 'Location is not available on this device. Type the address instead.',
@@ -191,7 +194,6 @@ const report = {
         `Report location pin, ${lat}, ${lng}. Use the arrow keys to move it.`,
       pinSetNear: (station: string) => `Pin set near ${station}`,
       pinSetCurrent: 'Pin set to your current location',
-      addressNear: (station: string) => `Near ${station}`,
       addressAtStation: (station: string) => `${station} station`,
       stationChip: (code: string, station: string) => `Near ${code} ${station} station`,
       removeStation: 'Remove station',
@@ -206,12 +208,12 @@ const report = {
   },
   contact: {
     title: 'Your contact details',
-    lede: 'Filled in from your account. We send your ticket ID and status updates to this email.',
+    lede: 'Filled in from your account. We email your ticket ID and the replies from the authority to this address. The site team may call you if they need more detail.',
     fullName: { label: 'Full name', errorEmpty: 'Enter your full name' },
     phone: {
       label: 'Phone number',
       placeholder: '012-345 6789',
-      hint: 'The site team may call you if they need more detail.',
+      errorEmpty: 'Enter your phone number',
       error: 'Enter a Malaysian phone number, like 012-345 6789',
     },
     email: {
@@ -244,7 +246,7 @@ const report = {
     title: 'What happens next',
     steps: [
       { title: 'You get a ticket ID', body: 'Shown on screen and emailed to you.' },
-      { title: 'The authority reviews it', body: 'Pending, then In progress.' },
+      { title: 'A staff member picks it up', body: 'Pending, then In progress.' },
       { title: 'You see the outcome', body: 'Resolution details when you track it.' },
     ],
   },
@@ -296,7 +298,7 @@ const submitted = {
     title: 'What happens next',
     steps: {
       submitted: { title: 'Submitted' },
-      pending: { title: 'Pending review', detail: 'Usually within 1 working day' },
+      pending: { title: 'Pending', detail: 'A staff member picks it up' },
       'in-progress': { title: 'In progress', detail: 'The authority works on it' },
       resolved: { title: 'Resolved', detail: 'You see the outcome' },
     },
@@ -319,7 +321,7 @@ const submitted = {
     sentTo: (email: string, time: string) => `Sent to ${email} at ${time}`,
     subject: (id: string) => `We received your report ${id}`,
     body: (name: string, title: string) =>
-      `Hello ${name}, your report “${title}” has been received and is waiting for review. Track it any time at mutiaraconnect.my/track using your ticket ID.`,
+      `Hello ${name}, your report “${title}” has been received and is waiting for a staff member to pick it up. Track it any time at mutiaraconnect.my/track using your ticket ID.`,
   },
   actions: {
     track: 'Track this ticket',
@@ -354,8 +356,7 @@ const track = {
   },
   onThisPage: {
     status: 'Status',
-    updates: 'Updates from the authority',
-    report: 'Your report',
+    updates: 'Conversation',
   },
   search: {
     formLabel: 'Find a ticket',
@@ -394,18 +395,11 @@ const track = {
     privateTitle: 'Report details are private',
     privateBody: 'Log in with the account that sent this report to see what was sent.',
     login: 'Log in',
-    attachmentAlt: (n: number, total: number) => `Attachment ${n} of ${total}`,
-    earlier: (n: number) => (n === 1 ? 'Show 1 earlier update' : `Show ${n} earlier updates`),
     submittedOn: (date: string) => `Submitted ${date}`,
     status: { title: 'Status' },
     updates: {
-      title: 'Updates from the authority',
+      title: 'Conversation',
       empty: 'No replies yet. We email you when the authority replies.',
-    },
-    report: {
-      title: 'Your report',
-      photoAlt: (n: number, total: number) => `Photo ${n} of ${total} from your report`,
-      noPhotos: 'No photos were added.',
     },
     resolution: {
       title: 'Resolution details',

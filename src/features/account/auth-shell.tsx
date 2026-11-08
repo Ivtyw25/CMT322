@@ -8,17 +8,20 @@ export function AuthShell({
   illustration,
   children,
   footer,
+  logo = <Logo />,
 }: {
   heading: string;
   illustration: 'login' | 'signup';
   children: React.ReactNode;
   footer: React.ReactNode;
+  /** The brand link above the form. Default: the public site logo. */
+  logo?: React.ReactNode;
 }) {
   return (
     <div className="grid min-h-dvh lg:grid-cols-[712fr_728fr]">
       <div className="flex flex-col">
         <div className="relative flex min-h-dvh flex-col px-5 pt-5 pb-15 md:px-8 lg:px-14 lg:py-10">
-          <Logo />
+          {logo}
           <div
             className={cn(
               'mx-auto flex w-full max-w-100 flex-1 flex-col justify-start py-8 motion-reduce:animate-none lg:justify-center lg:py-0',

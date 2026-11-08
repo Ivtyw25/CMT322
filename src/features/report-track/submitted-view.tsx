@@ -18,12 +18,12 @@ import { formatShortDateTime } from '@/lib/format/date-time';
 import { givenName } from '@/lib/format/person';
 import { spokenTicketId } from '@/lib/reports';
 import { useSession } from '@/lib/session';
+import { useTicket, useTickets } from '@/lib/tickets';
 import { ReportNeedHelp } from './report-need-help';
 import { SubmittedEmail } from './submitted-email';
 import { SubmittedSent } from './submitted-sent';
 import { SubmittedSkeleton } from './submitted-skeleton';
 import { SubmittedTicketId } from './submitted-ticket-id';
-import { useResolvedTicket } from './use-resolved-ticket';
 
 const { submitted } = reportTrackCopy;
 const ARRIVAL_WINDOW_MS = 60_000;
@@ -62,39 +62,32 @@ function nextSteps(ticket: Ticket): StepEntry[] {
 
 type SubmittedViewProps = {
   ticketId: string;
-  /** The ticket when the mock data has it; otherwise this browser's own reports are searched. */
-  serverTicket: Ticket | null;
   categories: readonly ReportCategory[];
   careline: Careline;
 };
 
 /** The confirmation: owner only. Everyone else, and unknown IDs, get the unavailable note. */
-export function SubmittedView({
-  ticketId,
-  serverTicket,
-  categories,
-  careline,
-}: SubmittedViewProps) {
-  const resolved = useResolvedTicket(serverTicket, ticketId);
+export function SubmittedView({ ticketId, categories, careline }: SubmittedViewProps) {
+  const lookup = useTicket(ticketId);
+  const { now } = useTickets();
   const { status, user } = useSession();
   const announce = useAnnounce();
   const heading = useRef<HTMLHeadingElement>(null);
   const arrived = useRef(false);
 
-  const ticket = resolved.state === 'found' ? resolved.ticket : null;
+  const ticket = lookup.state === 'found' ? lookup.ticket : null;
   const owner = ticket !== null && user !== null && ticket.reporterId === user.id;
-  const fromThisBrowser = resolved.state === 'found' && resolved.fromThisBrowser;
 
   useEffect(() => {
-    if (!owner || !fromThisBrowser || !ticket || arrived.current) return;
-    if (Date.now() - new Date(ticket.submittedAt).getTime() >= ARRIVAL_WINDOW_MS) return;
+    if (!owner || !ticket || arrived.current) return;
+    if (Date.parse(now()) - Date.parse(ticket.submittedAt) >= ARRIVAL_WINDOW_MS) return;
     arrived.current = true;
     heading.current?.focus();
     announce(submitted.ticket.arrived(spokenTicketId(ticket.id)));
-  }, [owner, fromThisBrowser, ticket, announce]);
+  }, [owner, ticket, now, announce]);
 
   let content: React.ReactNode;
-  if (resolved.state === 'loading' || status === 'loading') {
+  if (lookup.state === 'loading' || status === 'loading') {
     content = (
       <div className="flex flex-col gap-10">
         <DocsPageHead
@@ -138,7 +131,7 @@ export function SubmittedView({
       <div className="flex flex-col gap-10">
         <DocsPageHead
           title={submitted.header.title}
-          lede={submitted.header.lede(givenName(user.name), user.email)}
+          lede={submitted.header.lede(givenName(ticket.reporter.name), ticket.reporter.email)}
           breadcrumb={breadcrumb}
           breadcrumbCurrent={breadcrumbCurrent}
           titleRef={heading}
@@ -162,7 +155,7 @@ export function SubmittedView({
           />
         </DocsSection>
         <DocsSection id="confirmation-email" title={submitted.email.title}>
-          <SubmittedEmail ticket={ticket} name={user.name} address={user.email} />
+          <SubmittedEmail ticket={ticket} />
         </DocsSection>
         <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center">
           <ButtonLink href={routes.reportTrack.ticket(ticket.id)}>

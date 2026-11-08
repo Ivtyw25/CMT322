@@ -33,11 +33,25 @@ export function useFieldControl(): {
   };
 }
 
+/** The red `*` after the label of a required field. Hidden from screen readers, which hear "(required)". */
+export function RequiredMark() {
+  return (
+    <>
+      <span aria-hidden className="ml-0.5 text-danger-700">
+        {uiCopy.form.requiredMark}
+      </span>
+      <span className="sr-only"> {uiCopy.form.required}</span>
+    </>
+  );
+}
+
 type FieldProps = {
   label: string;
   hint?: string;
   /** Adds the "(optional)" note after the label. */
   optional?: boolean;
+  /** Adds the red `*` after the label. */
+  required?: boolean;
   /** Error message. Present means invalid. */
   error?: string;
   /** Keeps the label for screen readers only (footer newsletter, select beside an input). */
@@ -52,6 +66,7 @@ export function Field({
   label,
   hint,
   optional = false,
+  required = false,
   error,
   hideLabel = false,
   tone = 'default',
@@ -77,6 +92,7 @@ export function Field({
           )}
         >
           {label}
+          {required ? <RequiredMark /> : null}
           {optional ? (
             <span className={cn('ml-1', onNavy ? 'text-static-on-navy-200' : 'text-gray-500')}>
               {uiCopy.form.optional}

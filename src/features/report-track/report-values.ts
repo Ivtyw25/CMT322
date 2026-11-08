@@ -8,7 +8,14 @@ const { details, contact, consent, category, location, files } = reportTrackCopy
 export type ReportPoint = { lat: number; lng: number };
 
 /** What a station needs to be the place a report is near. */
-export type ReportStation = { code: StationCode; name: string; lat: number; lng: number };
+export type ReportStation = {
+  code: StationCode;
+  name: string;
+  /** Place name for the staff queue, e.g. "George Town". */
+  area: string;
+  lat: number;
+  lng: number;
+};
 
 export type ReportValues = {
   type: ReportType;
@@ -28,6 +35,7 @@ export type ReportFieldName =
   | 'category'
   | 'subject'
   | 'description'
+  | 'pin'
   | 'address'
   | 'files'
   | 'name'
@@ -40,6 +48,7 @@ export const reportFieldOrder: readonly ReportFieldName[] = [
   'category',
   'subject',
   'description',
+  'pin',
   'address',
   'files',
   'name',
@@ -69,7 +78,6 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_DIGITS = { min: 9, max: 12 } as const;
 
 function phoneIsValid(phone: string): boolean {
-  if (phone.trim() === '') return true;
   if (!/^[\d\s+-]+$/.test(phone)) return false;
   const digits = phone.replace(/\D/g, '').length;
   return digits >= PHONE_DIGITS.min && digits <= PHONE_DIGITS.max;
@@ -90,10 +98,14 @@ export function reportRules(values: ReportValues, uploading: boolean): FieldRule
       if (length < details.description.min) return details.description.errorShort;
       return length > details.description.max ? details.description.errorLong : null;
     },
+    pin: () => (values.pin ? null : location.map.errorMissing),
     address: () => (values.address.trim().length < 3 ? location.address.errorEmpty : null),
     files: () => (uploading ? files.waitUploading : null),
     name: () => (values.name.trim() === '' ? contact.fullName.errorEmpty : null),
-    phone: () => (phoneIsValid(values.phone) ? null : contact.phone.error),
+    phone: () => {
+      if (values.phone.trim() === '') return contact.phone.errorEmpty;
+      return phoneIsValid(values.phone) ? null : contact.phone.error;
+    },
     email: () => {
       const email = values.email.trim();
       if (email === '') return contact.email.errorEmpty;

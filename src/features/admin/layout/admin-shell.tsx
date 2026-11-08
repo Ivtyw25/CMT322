@@ -8,10 +8,11 @@ import { adminCopy } from '@/content/admin';
 import { useAnnounce } from '@/lib/announce/announcer';
 import { useMediaQuery } from '@/lib/dom/use-media-query';
 import { useStaffSession } from '@/lib/staff-session';
-import { useStaffTickets } from '@/features/admin/tickets/staff-tickets-provider';
+import { useTickets } from '@/lib/tickets';
 import { AdminMobileMenu } from './admin-mobile-menu';
-import { AdminSidebar } from './admin-sidebar';
+import { AdminSidebarFrame } from './admin-sidebar-frame';
 import { AdminTopbar } from './admin-topbar';
+import { useSidebarLayout } from './use-sidebar-layout';
 
 type AdminShellProps = {
   /** Items on the developer dashboard that need attention, for the bell. */
@@ -29,8 +30,10 @@ export function AdminShell({ attentionCount, children }: AdminShellProps) {
   const pathname = usePathname();
   const announce = useAnnounce();
   const { status, staff, signOut } = useStaffSession();
-  const { pendingCount } = useStaffTickets();
+  const { unclaimedCount } = useTickets();
   const menuId = useId();
+  const sidebarId = useId();
+  const sidebar = useSidebarLayout();
   const [menuRequested, setMenuRequested] = useState(false);
   const isDesktop = useMediaQuery('(min-width: 64rem)');
 
@@ -62,31 +65,36 @@ export function AdminShell({ attentionCount, children }: AdminShellProps) {
   return (
     <div className="flex min-h-dvh bg-gray-50">
       <SkipLink />
-      <aside className="sticky top-0 hidden h-dvh w-62 shrink-0 lg:block">
-        <AdminSidebar
-          staff={staff}
-          pathname={pathname}
-          pendingCount={pendingCount}
-          onSignOut={handleSignOut}
-          className="h-full"
-        />
-      </aside>
+      <AdminSidebarFrame
+        id={sidebarId}
+        staff={staff}
+        pathname={pathname}
+        unclaimedCount={unclaimedCount}
+        width={sidebar.width}
+        collapsed={sidebar.collapsed}
+        onWidthChange={sidebar.setWidth}
+        onCollapse={() => sidebar.setCollapsed(true)}
+        onSignOut={handleSignOut}
+      />
       <AdminMobileMenu
         id={menuId}
         open={menuOpen}
         onOpenChange={setMenuRequested}
         staff={staff}
         pathname={pathname}
-        pendingCount={pendingCount}
+        unclaimedCount={unclaimedCount}
         onSignOut={handleSignOut}
       />
       <div className="flex min-w-0 flex-1 flex-col">
         <AdminTopbar
           role={staff.role}
-          notificationCount={staff.role === 'authority' ? pendingCount : attentionCount}
+          notificationCount={staff.role === 'authority' ? unclaimedCount : attentionCount}
           menuId={menuId}
           menuOpen={menuOpen}
           onOpenMenu={() => setMenuRequested(true)}
+          sidebarCollapsed={sidebar.collapsed}
+          sidebarId={sidebarId}
+          onExpandSidebar={() => sidebar.setCollapsed(false)}
         />
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 px-5 py-6 md:px-8 md:py-7">
           {children}

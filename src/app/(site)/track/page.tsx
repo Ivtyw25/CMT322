@@ -7,5 +7,5 @@ const { meta } = reportTrackCopy.track;
 export const metadata: Metadata = { title: meta.title, description: meta.description };
 
 export default function TrackSearchPage() {
-  return <TrackPage rawId={null} ticketId={null} ticket={null} categories={[]} />;
+  return <TrackPage rawId={null} ticketId={null} categories={[]} />;
 }

@@ -1,4 +1,5 @@
-import { TICKET_ID_PATTERN } from '@/data/models/ticket';
+import { TICKET_ID_PATTERN, type TicketId } from '@/data/models/ticket';
+import { isoDateOf } from '@/lib/format/date-time';
 
 const DASHES = /[‐-―−]/g;
 
@@ -26,4 +27,17 @@ export function spokenTicketId(id: string): string {
     .split('-')
     .map((part) => part.split('').join(' '))
     .join(', ');
+}
+
+/** The first ticket number when nothing newer exists, so new IDs look like the demo ones. */
+const FIRST_SEQUENCE = 500;
+
+/** The next ticket ID: `MLC-YYMMDD-NNNN` dated on `at`, numbered after every ID already taken. */
+export function newTicketId(at: string, takenIds: readonly string[]): TicketId {
+  const day = isoDateOf(at).replaceAll('-', '').slice(2);
+  const highest = takenIds.reduce((max, id) => {
+    const sequence = Number.parseInt(id.slice(-4), 10);
+    return Number.isNaN(sequence) ? max : Math.max(max, sequence);
+  }, FIRST_SEQUENCE - 1);
+  return `MLC-${day}-${String(highest + 1).padStart(4, '0')}`;
 }

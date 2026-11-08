@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { reportTrackCopy } from '@/content/report-track';
-import { getReportCategories, getTicket, getTicketIds } from '@/data/api/tickets';
+import { getReportCategories, getTicketIds } from '@/data/api/tickets';
 import { TrackPage } from '@/features/report-track/track-page';
 import { normaliseTicketId, ticketIdProblem } from '@/lib/reports';
 
@@ -25,11 +25,6 @@ export default async function TrackTicketPage({ params }: Params) {
   const rawId = decodeURIComponent((await params).ticketId);
   const id = normaliseTicketId(rawId);
   const valid = ticketIdProblem(id) === null;
-  const [ticket, categories] = await Promise.all([
-    valid ? getTicket(id) : null,
-    getReportCategories(),
-  ]);
-  return (
-    <TrackPage rawId={rawId} ticketId={valid ? id : null} ticket={ticket} categories={categories} />
-  );
+  const categories = await getReportCategories();
+  return <TrackPage rawId={rawId} ticketId={valid ? id : null} categories={categories} />;
 }

@@ -57,7 +57,9 @@ export const uiCopy = {
 
   form: {
     optional: '(optional)',
-    requiredNote: 'All fields are required unless marked optional.',
+    required: '(required)',
+    requiredMark: '*',
+    requiredLegend: 'Fields marked * are required',
     errorSummaryTitle: 'There is a problem',
     errors: {
       required: (field: string) => `Enter ${field}`,
@@ -127,10 +129,21 @@ export const uiCopy = {
   /** Ticket status words outside the tags (stepper, update log). */
   ticketStatus: {
     submitted: 'Submitted',
-    pending: 'Pending review',
+    pending: 'Pending',
     'in-progress': 'In progress',
     resolved: 'Resolved',
-    statusLine: (status: string) => `Status: ${status}`,
+  },
+
+  /** The conversation on a ticket, shown on Track and in the staff portal. */
+  ticketThread: {
+    label: 'Conversation',
+    submittedBy: (name: string) => `Submitted by ${name}`,
+    repliedBy: (name: string, organisation: string) => `${name}, ${organisation}`,
+    statusSet: (status: string) => `Status set to ${status}`,
+    claimed: (name: string) => `${name} is handling this ticket. Status set to Pending.`,
+    priorityChanged: (name: string, priority: string) => `${name} set the priority to ${priority}`,
+    attachments: 'Attachments',
+    photoAlt: (fileName: string) => `Photo: ${fileName}`,
   },
 
   timeline: {
@@ -148,7 +161,6 @@ export const uiCopy = {
 
   reportTypes: {
     complaint: 'Complaint',
-    feedback: 'Feedback',
     inquiry: 'General inquiry',
     /** e.g. "Complaint, blocked access". */
     withCategory: (type: string, category: string) => `${type}, ${category}`,

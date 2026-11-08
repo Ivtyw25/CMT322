@@ -12,8 +12,7 @@ import { useAnnounce } from '@/lib/announce/announcer';
 import { formatDate } from '@/lib/format/dates';
 import { isoDateOf } from '@/lib/format/date-time';
 import { takeSearchSubmitted } from './track-arrival';
-import { TrackReportSection } from './track-report-section';
-import { TrackUpdates } from './track-updates';
+import { TrackConversation } from './track-conversation';
 import { ticketSteps } from './ticket-steps';
 
 const { result, onThisPage } = reportTrackCopy.track;
@@ -53,7 +52,7 @@ export function TrackResult({ ticket, category }: TrackResultProps) {
           <p className="type-body-s text-gray-600">{ticket.id}</p>
           <Tag kind={tagOf[ticket.status]} />
         </div>
-        <h2 className="type-heading-s wrap-anywhere">{ticket.title}</h2>
+        <h2 className="type-heading-s wrap-anywhere">{ticket.subject}</h2>
         <ul className="flex flex-col gap-2 type-body-s text-gray-600 md:flex-row md:flex-wrap md:gap-x-5">
           <li className="flex items-center gap-1.5">
             <TagIcon aria-hidden className="size-4 shrink-0" />
@@ -73,10 +72,7 @@ export function TrackResult({ ticket, category }: TrackResultProps) {
         <Stepper steps={ticketSteps(ticket)} tone="primary" />
       </DocsSection>
       <DocsSection id="updates" title={onThisPage.updates}>
-        <TrackUpdates updates={ticket.updates} />
-      </DocsSection>
-      <DocsSection id="report" title={result.report.title}>
-        <TrackReportSection ticket={ticket} />
+        <TrackConversation ticket={ticket} />
       </DocsSection>
     </div>
   );

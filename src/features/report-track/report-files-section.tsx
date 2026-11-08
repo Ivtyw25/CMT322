@@ -11,12 +11,12 @@ const { files } = reportTrackCopy.report;
 type FilesSectionProps = {
   /** Shown when a submit was blocked because a photo is still uploading. */
   error: string | null;
-  onFileCountChange: (count: number) => void;
+  onFilesChange: (files: File[]) => void;
   onBusyChange: (busy: boolean) => void;
 };
 
 /** "Photos and files": optional, up to 5 files. */
-export function ReportFilesSection({ error, onFileCountChange, onBusyChange }: FilesSectionProps) {
+export function ReportFilesSection({ error, onFilesChange, onBusyChange }: FilesSectionProps) {
   return (
     <section aria-labelledby="files" className="flex flex-col gap-5 border-t border-gray-200 pt-10">
       <div className="flex flex-col gap-1.5">
@@ -27,7 +27,7 @@ export function ReportFilesSection({ error, onFileCountChange, onBusyChange }: F
         <FileUpload
           maxFiles={files.maxFiles}
           maxMegabytes={files.maxMb}
-          onFilesChange={(list) => onFileCountChange(list.length)}
+          onFilesChange={onFilesChange}
           onBusyChange={onBusyChange}
         />
         {error ? (

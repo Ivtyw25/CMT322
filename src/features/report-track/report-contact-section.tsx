@@ -23,7 +23,7 @@ export function ReportContactSection({ values, update, errorOf, onBlur }: Report
       </div>
       <div className="grid gap-5 md:grid-cols-2">
         <div id={reportFieldId('name')} className="scroll-mt-35">
-          <Field label={contact.fullName.label} error={errorOf('name') ?? undefined}>
+          <Field label={contact.fullName.label} required error={errorOf('name') ?? undefined}>
             <TextInput
               name="name"
               autoComplete="name"
@@ -34,7 +34,7 @@ export function ReportContactSection({ values, update, errorOf, onBlur }: Report
           </Field>
         </div>
         <div id={reportFieldId('phone')} className="scroll-mt-35">
-          <Field label={contact.phone.label} optional error={errorOf('phone') ?? undefined}>
+          <Field label={contact.phone.label} required error={errorOf('phone') ?? undefined}>
             <TextInput
               name="phone"
               type="tel"
@@ -48,7 +48,7 @@ export function ReportContactSection({ values, update, errorOf, onBlur }: Report
         </div>
       </div>
       <div id={reportFieldId('email')} className="scroll-mt-35">
-        <Field label={contact.email.label} error={errorOf('email') ?? undefined}>
+        <Field label={contact.email.label} required error={errorOf('email') ?? undefined}>
           <TextInput
             name="email"
             type="email"

@@ -6,12 +6,12 @@ import { ButtonLink } from '@/components/ui/button-link';
 import { Callout } from '@/components/ui/callout';
 import { routes } from '@/config/routes';
 import { reportTrackCopy } from '@/content/report-track';
-import type { ReportCategory, Ticket } from '@/data/models/ticket';
+import type { ReportCategory } from '@/data/models/ticket';
 import { useAnnounce } from '@/lib/announce/announcer';
+import { useTicket } from '@/lib/tickets';
 import { takeSearchSubmitted } from './track-arrival';
 import { TrackResult } from './track-result';
 import { TRACK_INPUT_NAME } from './track-search';
-import { useResolvedTicket } from './use-resolved-ticket';
 
 const { notFound, errors, loading } = reportTrackCopy.track;
 
@@ -51,13 +51,12 @@ function TrackNotFound({ id }: { id: string }) {
 
 type TrackViewProps = {
   ticketId: string;
-  serverTicket: Ticket | null;
   categories: readonly ReportCategory[];
 };
 
 /** What sits under the search on /track/[id]: the ticket, or why there is none. */
-export function TrackView({ ticketId, serverTicket, categories }: TrackViewProps) {
-  const resolved = useResolvedTicket(serverTicket, ticketId);
+export function TrackView({ ticketId, categories }: TrackViewProps) {
+  const resolved = useTicket(ticketId);
 
   if (resolved.state === 'loading') {
     return (

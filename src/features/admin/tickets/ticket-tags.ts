@@ -1,7 +1,8 @@
 import type { TagKind } from '@/components/ui/tag';
-import type { StaffTicketStatus, TicketPriority } from '@/data/models/staff-ticket';
+import type { TicketPriority, TicketStatus } from '@/data/models/ticket';
 
-export const statusTagOf: Record<StaffTicketStatus, TagKind> = {
+export const statusTagOf: Record<TicketStatus, TagKind> = {
+  submitted: 'submitted',
   pending: 'pending',
   'in-progress': 'inProgress',
   resolved: 'resolved',

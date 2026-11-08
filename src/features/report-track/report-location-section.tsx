@@ -1,8 +1,9 @@
 'use client';
 
-import { CircleAlert, LocateFixed, MapPin, X } from 'lucide-react';
+import { CircleAlert, LoaderCircle, LocateFixed, MapPin, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
+import { Field, RequiredMark } from '@/components/ui/field';
+import type { AddressLookupStatus } from '@/lib/geo/use-reverse-geocode';
 import { TextInput } from '@/components/ui/text-input';
 import { LocationMap, type MapPoint } from '@/components/patterns/map/location-map';
 import { reportTrackCopy } from '@/content/report-track';
@@ -26,6 +27,10 @@ type LocationSectionProps = ReportSectionProps & {
   view: MapView;
   onPinChange: (point: ReportPoint) => void;
   onRemoveStation: () => void;
+  /** The visitor typed in the address field. */
+  onAddressTyped: (address: string) => void;
+  /** Where the address from the pin stands. */
+  addressLookup: AddressLookupStatus;
   /** Geolocation: undefined when the browser has none (the button is not shown). */
   locate?: { status: LocationStatus; onLocate: () => void };
 };
@@ -38,13 +43,14 @@ const locationError = {
 /** "Location": address, station chip, and the map where the pin is placed. */
 export function ReportLocationSection({
   values,
-  update,
   errorOf,
   onBlur,
   stations,
   view,
   onPinChange,
   onRemoveStation,
+  onAddressTyped,
+  addressLookup,
   locate,
 }: LocationSectionProps) {
   const station = stations.find((entry) => entry.code === values.stationCode);
@@ -63,17 +69,29 @@ export function ReportLocationSection({
         <p className="type-body-s text-gray-600">{location.lede}</p>
       </div>
       <div id={reportFieldId('address')} className="flex scroll-mt-35 flex-col gap-2">
-        <Field label={location.address.label} error={errorOf('address') ?? undefined}>
+        <Field label={location.address.label} required error={errorOf('address') ?? undefined}>
           <TextInput
             name="address"
             autoComplete="street-address"
             leadingIcon={<MapPin className="size-4" />}
             value={values.address}
             placeholder={location.address.placeholder}
-            onChange={(event) => update({ address: event.target.value })}
+            onChange={(event) => onAddressTyped(event.target.value)}
             onBlur={() => onBlur('address')}
           />
         </Field>
+        {addressLookup === 'loading' ? (
+          <p role="status" className="flex items-center gap-1.5 type-body-xs text-gray-600">
+            <LoaderCircle aria-hidden className="size-3.5 shrink-0 animate-spin" />
+            {location.address.finding}
+          </p>
+        ) : null}
+        {addressLookup === 'failed' ? (
+          <p role="status" className="flex items-start gap-1.5 type-body-s text-warning-700">
+            <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
+            {location.address.lookupFailed}
+          </p>
+        ) : null}
         {station ? (
           <p className="inline-flex w-fit items-center gap-1 rounded-full bg-primary-50 py-1 pr-1 pl-3 type-body-xs-medium text-primary-700">
             {location.map.stationChip(station.code, station.name)}
@@ -88,7 +106,11 @@ export function ReportLocationSection({
           </p>
         ) : null}
       </div>
-      <div className="flex flex-col gap-2">
+      <div id={reportFieldId('pin')} className="flex scroll-mt-35 flex-col gap-2">
+        <p className="type-body-s-medium text-gray-900">
+          {location.map.pinLegend}
+          <RequiredMark />
+        </p>
         <LocationMap
           center={view.center}
           zoom={view.zoom}
@@ -125,6 +147,12 @@ export function ReportLocationSection({
           }
           className="h-75 rounded-xl md:h-95"
         />
+        {errorOf('pin') ? (
+          <p className="flex items-start gap-1.5 type-body-s text-danger-700">
+            <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
+            {errorOf('pin')}
+          </p>
+        ) : null}
         {problem ? (
           <p className="flex items-start gap-1.5 type-body-s text-danger-700">
             <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />

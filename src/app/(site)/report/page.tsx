@@ -42,7 +42,13 @@ export default async function ReportPage() {
         />
         <ReportForm
           categories={categories}
-          stations={stations.map(({ code, name, lat, lng }) => ({ code, name, lat, lng }))}
+          stations={stations.map(({ code, name, area, lat, lng }) => ({
+            code,
+            name,
+            area,
+            lat,
+            lng,
+          }))}
         />
       </div>
     </DocsLayout>

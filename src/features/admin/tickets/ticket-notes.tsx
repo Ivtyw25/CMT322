@@ -7,17 +7,17 @@ import { Field } from '@/components/ui/field';
 import { Textarea } from '@/components/ui/textarea';
 import { adminCopy } from '@/content/admin';
 import type { StaffMember } from '@/data/models/staff';
-import type { StaffTicket } from '@/data/models/staff-ticket';
+import type { Ticket } from '@/data/models/ticket';
 import { AdminPanel } from '@/features/admin/panel';
 import { formatFullDateTime } from '@/lib/format/date-time';
-import { useStaffTickets } from './staff-tickets-provider';
+import { useTickets } from '@/lib/tickets';
 
 const copy = adminCopy.ticket.notes;
 const MAX = 500;
 
 /** Notes only staff can read (Figma 115:5184). */
-export function TicketNotes({ ticket, staff }: { ticket: StaffTicket; staff: StaffMember }) {
-  const { record, now } = useStaffTickets();
+export function TicketNotes({ ticket, staff }: { ticket: Ticket; staff: StaffMember }) {
+  const { addNote } = useTickets();
   const [text, setText] = useState('');
   const [message, setMessage] = useState('');
   const note = text.trim();
@@ -25,16 +25,7 @@ export function TicketNotes({ ticket, staff }: { ticket: StaffTicket; staff: Sta
   function add(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (note === '' || text.length > MAX) return;
-    record(ticket.id, {
-      notes: [
-        {
-          id: `${ticket.id}-n${ticket.notes.length + 1}`,
-          at: now(),
-          author: staff.name,
-          text: note,
-        },
-      ],
-    });
+    addNote(ticket.id, note, staff);
     setText('');
     setMessage(copy.added);
   }

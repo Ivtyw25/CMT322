@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Tag } from '@/components/ui/tag';
 import { routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
-import type { Assignee, StaffTicket } from '@/data/models/staff-ticket';
+import type { Ticket } from '@/data/models/ticket';
 import { cn } from '@/lib/cn';
 import { formatShortDateTime } from '@/lib/format/date-time';
 import { priorityTagOf, statusTagOf } from './ticket-tags';
@@ -14,8 +14,7 @@ import { priorityTagOf, statusTagOf } from './ticket-tags';
 const copy = adminCopy.tickets;
 
 type TicketResultsProps = {
-  tickets: readonly StaffTicket[];
-  assignees: readonly Assignee[];
+  tickets: readonly Ticket[];
   selected: ReadonlySet<string>;
   onToggle: (ticketId: string) => void;
   onToggleAll: (checked: boolean) => void;
@@ -28,13 +27,7 @@ const bodyCell = 'px-4 py-3 align-middle';
  * The ticket list. From 1280 px it is a table (Figma 115:4796); below that each ticket is a card,
  * because seven columns do not fit. Each row or card has one link, stretched over its whole area.
  */
-export function TicketResults({
-  tickets,
-  assignees,
-  selected,
-  onToggle,
-  onToggleAll,
-}: TicketResultsProps) {
+export function TicketResults({ tickets, selected, onToggle, onToggleAll }: TicketResultsProps) {
   const allChecked = tickets.length > 0 && tickets.every((ticket) => selected.has(ticket.id));
   const someChecked = !allChecked && tickets.some((ticket) => selected.has(ticket.id));
   const headBox = useRef<HTMLInputElement>(null);
@@ -42,8 +35,6 @@ export function TicketResults({
     if (headBox.current) headBox.current.indeterminate = someChecked;
   }, [someChecked]);
 
-  const assigneeOf = (ticket: StaffTicket): string =>
-    assignees.find((assignee) => assignee.id === ticket.assigneeId)?.label ?? copy.table.unassigned;
   const checkLabel = (ticketId: string) => (
     <span className="sr-only">{copy.table.selectRow(ticketId)}</span>
   );
@@ -75,7 +66,7 @@ export function TicketResults({
               {copy.table.columns.submitted}
             </th>
             <th scope="col" className={headCell}>
-              {copy.table.columns.assigned}
+              {copy.table.columns.handledBy}
             </th>
             <th scope="col" className={headCell}>
               {copy.table.columns.priority}
@@ -118,10 +109,10 @@ export function TicketResults({
                 className={cn(
                   bodyCell,
                   'type-body-s',
-                  ticket.assigneeId ? 'text-gray-700' : 'text-gray-400',
+                  ticket.handler ? 'text-gray-700' : 'text-gray-400',
                 )}
               >
-                {assigneeOf(ticket)}
+                {ticket.handler?.name ?? copy.table.unclaimed}
               </td>
               <td className={bodyCell}>
                 <Tag kind={priorityTagOf[ticket.priority]} />
@@ -172,14 +163,11 @@ export function TicketResults({
                 </dd>
               </div>
               <div className="flex flex-col gap-0.5">
-                <dt className="type-body-xs text-gray-500">{copy.table.columns.assigned}</dt>
+                <dt className="type-body-xs text-gray-500">{copy.table.columns.handledBy}</dt>
                 <dd
-                  className={cn(
-                    'type-body-s',
-                    ticket.assigneeId ? 'text-gray-700' : 'text-gray-400',
-                  )}
+                  className={cn('type-body-s', ticket.handler ? 'text-gray-700' : 'text-gray-400')}
                 >
-                  {assigneeOf(ticket)}
+                  {ticket.handler?.name ?? copy.table.unclaimed}
                 </dd>
               </div>
               <div className="flex flex-col items-start gap-0.5">

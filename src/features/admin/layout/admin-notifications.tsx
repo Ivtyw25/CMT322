@@ -10,7 +10,7 @@ import { cn } from '@/lib/cn';
 
 type AdminNotificationsProps = {
   role: StaffRole;
-  /** Tickets waiting for a first reply (authority) or items needing attention (developer). */
+  /** Tickets waiting to be claimed (authority) or items needing attention (developer). */
   count: number;
 };
 
@@ -51,7 +51,7 @@ export function AdminNotifications({ role, count }: AdminNotificationsProps) {
           </p>
           <Popover.Close asChild>
             <Link
-              href={authority ? routes.admin.ticketsByStatus('pending') : routes.admin.dashboard}
+              href={authority ? routes.admin.ticketsByStatus('submitted') : routes.admin.dashboard}
               className="type-body-s-medium text-primary-600 transition-colors duration-(--duration-fast) hover:text-primary-800"
             >
               {authority ? copy.authorityAction : copy.developerAction}

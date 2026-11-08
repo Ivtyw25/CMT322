@@ -29,8 +29,8 @@ export function ReportTypeSection({
   const categoryError = errorOf('category');
   return (
     <section aria-labelledby="type" className="flex flex-col gap-5">
-      <DocsSectionHeading compact id="type" title={type.legend} />
-      <div role="radiogroup" aria-labelledby="type" className="grid gap-3 md:grid-cols-3">
+      <DocsSectionHeading compact required id="type" title={type.legend} />
+      <div role="radiogroup" aria-labelledby="type" className="grid gap-3 md:grid-cols-2">
         {type.options.map((option) => (
           <RadioCard
             key={option.id}
@@ -44,7 +44,7 @@ export function ReportTypeSection({
         ))}
       </div>
       <div id={reportFieldId('category')} className="group scroll-mt-35">
-        <Field label={category.label} error={categoryError ?? undefined}>
+        <Field label={category.label} required error={categoryError ?? undefined}>
           <MenuSelect
             name="category"
             value={values.categoryId}
@@ -80,7 +80,7 @@ export function ReportDetailsSection({ values, update, errorOf, onBlur }: Report
     >
       <DocsSectionHeading compact id="details" title={details.title} />
       <div id={reportFieldId('subject')} className="scroll-mt-35">
-        <Field label={details.subject.label} error={errorOf('subject') ?? undefined}>
+        <Field label={details.subject.label} required error={errorOf('subject') ?? undefined}>
           <TextInput
             name="subject"
             value={values.subject}
@@ -92,7 +92,11 @@ export function ReportDetailsSection({ values, update, errorOf, onBlur }: Report
         </Field>
       </div>
       <div id={reportFieldId('description')} className="scroll-mt-35">
-        <Field label={details.description.label} error={errorOf('description') ?? undefined}>
+        <Field
+          label={details.description.label}
+          required
+          error={errorOf('description') ?? undefined}
+        >
           <Textarea
             name="description"
             value={values.description}

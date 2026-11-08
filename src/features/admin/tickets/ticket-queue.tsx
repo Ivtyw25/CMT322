@@ -2,20 +2,19 @@
 
 import { ArrowDownUp, CalendarDays, Download, Filter, SearchX } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChipSelect } from '@/components/ui/chip-select';
 import { Pagination } from '@/components/ui/pagination';
 import { SearchInput } from '@/components/ui/search-input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
 import { uiCopy } from '@/content/ui';
 import { AdminPageHead } from '@/features/admin/page-head';
 import { formatShortDateTime } from '@/lib/format/date-time';
 import { useQueryParams } from '@/lib/url/use-query-params';
 import { useStaffSession } from '@/lib/staff-session';
-import { useStaffTickets } from './staff-tickets-provider';
+import { useTickets } from '@/lib/tickets';
 import { buildCsv, downloadCsv } from './ticket-csv';
 import {
   countByStatus,
@@ -42,7 +41,6 @@ const queryDefaults = {
   status: defaultFilters.status,
   type: defaultFilters.type,
   area: defaultFilters.area,
-  assignee: defaultFilters.assignee,
   range: defaultFilters.range,
   sort: defaultFilters.sort,
 };
@@ -54,15 +52,8 @@ export function TicketQueue() {
   const searchParams = useSearchParams();
   const params = useQueryParams(queryDefaults);
   const { staff } = useStaffSession();
-  const { tickets, assignees, today } = useStaffTickets();
+  const { tickets, now } = useTickets();
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
-
-  const isAuthority = staff?.role === 'authority';
-  // The queue is the authority's tool; a developer who opens it goes back to the dashboard.
-  const redirect = staff !== null && !isAuthority;
-  useEffect(() => {
-    if (redirect) router.replace(routes.admin.dashboard);
-  }, [redirect, router]);
 
   const rawStatus = searchParams.get('status');
   const rawType = searchParams.get('type');
@@ -73,12 +64,11 @@ export function TicketQueue() {
     query: searchParams.get('q') ?? '',
     type: isReportTypeFilter(rawType) ? rawType : defaultFilters.type,
     area: searchParams.get('area') ?? defaultFilters.area,
-    assignee: searchParams.get('assignee') ?? defaultFilters.assignee,
     range: isRangeOption(rawRange) ? rawRange : defaultFilters.range,
     sort: isSortOption(rawSort) ? rawSort : defaultFilters.sort,
   };
 
-  const nowMs = Date.parse(today);
+  const nowMs = Date.parse(now());
   const areaOptions = useMemo(
     () => [...new Set(tickets.map((ticket) => ticket.areaLabel))].toSorted(),
     [tickets],
@@ -102,7 +92,6 @@ export function TicketQueue() {
     filters.query !== '' ||
     filters.type !== 'all' ||
     filters.area !== 'all' ||
-    filters.assignee !== 'all' ||
     filters.range !== defaultFilters.range ||
     filters.status !== 'all';
 
@@ -147,15 +136,14 @@ export function TicketQueue() {
       copy.types[ticket.type],
       ticket.areaLabel,
       formatShortDateTime(ticket.submittedAt),
-      assignees.find((assignee) => assignee.id === ticket.assigneeId)?.label ??
-        copy.table.unassigned,
+      ticket.handler?.name ?? copy.table.unclaimed,
       uiCopy.tags[priorityTagOf[ticket.priority]],
       uiCopy.tags[statusTagOf[ticket.status]],
     ]);
     downloadCsv(copy.csvName, buildCsv(copy.csvColumns, rows));
   }
 
-  if (!staff || !isAuthority) return null;
+  if (!staff) return null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -222,17 +210,6 @@ export function TicketQueue() {
             ]}
           />
           <ChipSelect
-            label={copy.filters.assignee.name}
-            prefix={copy.filters.assignee.name}
-            value={filters.assignee}
-            onValueChange={(value) => change({ assignee: value })}
-            options={[
-              { value: 'all', label: copy.filters.assignee.all },
-              { value: 'none', label: copy.filters.assignee.none },
-              ...assignees.map((assignee) => ({ value: assignee.id, label: assignee.label })),
-            ]}
-          />
-          <ChipSelect
             label={copy.filters.range.name}
             icon={<CalendarDays className="size-4" />}
             value={filters.range}
@@ -280,7 +257,6 @@ export function TicketQueue() {
             ) : (
               <TicketResults
                 tickets={pageTickets}
-                assignees={assignees}
                 selected={selected}
                 onToggle={toggle}
                 onToggleAll={toggleAll}

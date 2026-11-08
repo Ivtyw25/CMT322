@@ -13,7 +13,7 @@ type AdminMobileMenuProps = {
   onOpenChange: (open: boolean) => void;
   staff: StaffMember;
   pathname: string;
-  pendingCount: number;
+  unclaimedCount: number;
   onSignOut: () => void;
 };
 
@@ -24,7 +24,7 @@ export function AdminMobileMenu({
   onOpenChange,
   staff,
   pathname,
-  pendingCount,
+  unclaimedCount,
   onSignOut,
 }: AdminMobileMenuProps) {
   return (
@@ -40,7 +40,7 @@ export function AdminMobileMenu({
           <AdminSidebar
             staff={staff}
             pathname={pathname}
-            pendingCount={pendingCount}
+            unclaimedCount={unclaimedCount}
             onNavigate={() => onOpenChange(false)}
             onSignOut={onSignOut}
             className="h-full"

@@ -22,9 +22,13 @@ export function SubmittedSent({
       items={[
         { id: 'type', label: rows.type, value: uiCopy.reportTypes[ticket.type] },
         { id: 'category', label: rows.category, value: category?.label ?? ticket.categoryId },
-        { id: 'subject', label: rows.subject, value: ticket.title },
+        { id: 'subject', label: rows.subject, value: ticket.subject },
         { id: 'location', label: rows.location, value: ticket.location },
-        { id: 'attachments', label: rows.attachments, value: attachments(ticket.attachmentCount) },
+        {
+          id: 'attachments',
+          label: rows.attachments,
+          value: attachments(ticket.attachments.length),
+        },
         { id: 'submitted', label: rows.submitted, value: submitted },
       ]}
       className="[&_dd]:wrap-anywhere"

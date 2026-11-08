@@ -1,6 +1,6 @@
 'use client';
 
-import { ExternalLink, Menu, Search } from 'lucide-react';
+import { ExternalLink, Menu, PanelLeftOpen, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -17,6 +17,10 @@ type AdminTopbarProps = {
   menuId: string;
   menuOpen: boolean;
   onOpenMenu: () => void;
+  /** The desktop sidebar is closed: show the button that opens it again. */
+  sidebarCollapsed: boolean;
+  sidebarId: string;
+  onExpandSidebar: () => void;
 };
 
 /** The staff top bar (Figma 112:4704): search, public site link, theme and notifications. */
@@ -26,6 +30,9 @@ export function AdminTopbar({
   menuId,
   menuOpen,
   onOpenMenu,
+  sidebarCollapsed,
+  sidebarId,
+  onExpandSidebar,
 }: AdminTopbarProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -53,6 +60,18 @@ export function AdminTopbar({
       >
         <Menu aria-hidden className="size-5" />
       </IconButton>
+      {sidebarCollapsed ? (
+        <IconButton
+          variant="plain"
+          aria-label={adminCopy.shell.expandSidebar}
+          aria-expanded={false}
+          aria-controls={sidebarId}
+          onClick={onExpandSidebar}
+          className="-ml-2 hidden lg:inline-flex"
+        >
+          <PanelLeftOpen aria-hidden className="size-5" />
+        </IconButton>
+      ) : null}
 
       <form
         role="search"

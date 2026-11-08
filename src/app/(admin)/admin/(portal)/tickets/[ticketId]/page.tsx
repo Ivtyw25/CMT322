@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { adminCopy } from '@/content/admin';
-import { getStaffTicketIds } from '@/data/api/staff-tickets';
-import { getReportCategories } from '@/data/api/tickets';
+import { getReplyTemplates, getReportCategories, getTicketIds } from '@/data/api/tickets';
 import { TicketDetail } from '@/features/admin/tickets/ticket-detail';
 
 type Params = { params: Promise<{ ticketId: string }> };
@@ -9,7 +8,7 @@ type Params = { params: Promise<{ ticketId: string }> };
 const normalise = (raw: string) => decodeURIComponent(raw).trim().toUpperCase();
 
 export async function generateStaticParams() {
-  return (await getStaffTicketIds()).map((ticketId) => ({ ticketId }));
+  return (await getTicketIds()).map((ticketId) => ({ ticketId }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -18,6 +17,6 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function AdminTicketPage({ params }: Params) {
   const ticketId = normalise((await params).ticketId);
-  const categories = await getReportCategories();
-  return <TicketDetail ticketId={ticketId} categories={categories} />;
+  const [categories, templates] = await Promise.all([getReportCategories(), getReplyTemplates()]);
+  return <TicketDetail ticketId={ticketId} categories={categories} templates={templates} />;
 }

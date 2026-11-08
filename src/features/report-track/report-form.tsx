@@ -7,15 +7,17 @@ import { Button } from '@/components/ui/button';
 import { ButtonLink } from '@/components/ui/button-link';
 import { Callout } from '@/components/ui/callout';
 import { Checkbox } from '@/components/ui/checkbox';
+import { RequiredMark } from '@/components/ui/field';
 import { routes } from '@/config/routes';
 import { reportTrackCopy } from '@/content/report-track';
-import { submitReport } from '@/data/api/reports';
+import { uiCopy } from '@/content/ui';
 import type { ReportCategory } from '@/data/models/ticket';
 import { useAnnounce } from '@/lib/announce/announcer';
 import { formatShortDateTime } from '@/lib/format/date-time';
 import { useFieldValidation } from '@/lib/forms/use-field-validation';
-import { readSubmittedReports, storeSubmittedReport } from '@/lib/reports';
+import { useReverseGeocode } from '@/lib/geo/use-reverse-geocode';
 import { useSession } from '@/lib/session';
+import { useTickets } from '@/lib/tickets';
 import { ReportContactSection } from './report-contact-section';
 import { ReportDetailsSection, ReportTypeSection } from './report-details-section';
 import { ReportFilesSection } from './report-files-section';
@@ -60,6 +62,7 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
   const router = useRouter();
   const announce = useAnnounce();
   const { user } = useSession();
+  const { submitTicket } = useTickets();
   const [values, setValues] = useState<ReportValues>(() => ({
     ...emptyReportValues,
     name: user?.name ?? '',
@@ -69,7 +72,7 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
     center: lineCentre(stations),
     zoom: DEFAULT_ZOOM,
   }));
-  const [fileCount, setFileCount] = useState(0);
+  const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [pending, setPending] = useState(false);
   const [failedKey, setFailedKey] = useState(0);
@@ -116,30 +119,37 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
     [categories],
   );
 
-  const { saved, clear: clearDraft } = useReportDraft({ values, fileCount, onRestore: restore });
+  const { saved, clear: clearDraft } = useReportDraft({
+    values,
+    fileCount: files.length,
+    onRestore: restore,
+  });
 
-  const applyStation = useCallback((station: ReportStation) => {
-    stationFromQuery.current = true;
-    const point = { lat: station.lat, lng: station.lng };
-    setValues((current) => ({
-      ...current,
-      stationCode: station.code,
-      address: location.map.addressAtStation(station.name),
-      pin: point,
-    }));
-    setView({ center: point, zoom: PIN_ZOOM });
-  }, []);
+  const addressLookup = useReverseGeocode(
+    useCallback((address: string) => update({ address }), [update]),
+  );
+  const { cancel: cancelLookup } = addressLookup;
+
+  const applyStation = useCallback(
+    (station: ReportStation) => {
+      cancelLookup();
+      stationFromQuery.current = true;
+      const point = { lat: station.lat, lng: station.lng };
+      setValues((current) => ({
+        ...current,
+        stationCode: station.code,
+        address: location.map.addressAtStation(station.name),
+        pin: point,
+      }));
+      setView({ center: point, zoom: PIN_ZOOM });
+    },
+    [cancelLookup],
+  );
 
   function placePin(point: ReportPoint, message?: string) {
     const station = nearestStation(stations, point);
-    setValues((current) => ({
-      ...current,
-      pin: point,
-      address:
-        station && current.address.trim() === ''
-          ? location.map.addressNear(station.name)
-          : current.address,
-    }));
+    update({ pin: point, stationCode: station?.code ?? null });
+    addressLookup.lookup(point);
     if (message) say(message);
     else if (station) say(location.map.pinSetNear(station.name));
   }
@@ -167,6 +177,7 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
     validation.reset();
     setSummaryOpen(false);
     setNotice(null);
+    cancelLookup();
     setValues({ ...emptyReportValues, name: values.name, email: values.email });
     setView({ center: lineCentre(stations), zoom: DEFAULT_ZOOM });
     document.getElementById('type')?.focus();
@@ -178,22 +189,30 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
     const found = validation.validateAll();
     setSubmitCount((count) => count + 1);
     setSummaryOpen(found.length > 0);
-    if (found.length > 0) return;
+    if (found.length > 0 || !values.pin) return;
     setPending(true);
     announce(actions.sending);
     try {
-      const ticket = await submitReport({
-        type: values.type,
-        categoryId: values.categoryId as ReportCategory['id'],
-        title: values.subject.trim(),
-        description: values.description.trim(),
-        location: values.address.trim(),
-        stationCode: values.stationCode,
-        reporterId: user?.id ?? '',
-        attachmentCount: fileCount,
-        sentCount: readSubmittedReports().length,
-      });
-      storeSubmittedReport(ticket);
+      const nearest = nearestStation(stations, values.pin);
+      const ticket = await submitTicket(
+        {
+          type: values.type,
+          categoryId: values.categoryId as ReportCategory['id'],
+          subject: values.subject.trim(),
+          description: values.description.trim(),
+          location: values.address.trim(),
+          coordinates: values.pin,
+          stationCode: values.stationCode,
+          areaLabel: nearest?.area ?? '',
+          reporterId: user?.id ?? null,
+          reporter: {
+            name: values.name.trim(),
+            email: values.email.trim(),
+            phone: values.phone.trim(),
+          },
+        },
+        files,
+      );
       clearDraft();
       router.push(routes.reportTrack.submitted(ticket.id));
     } catch {
@@ -222,6 +241,7 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
       onSubmit={handleSubmit}
       className="flex flex-col gap-10"
     >
+      <p className="-mb-4 type-body-s text-gray-600">{uiCopy.form.requiredLegend}</p>
       <Suspense fallback={null}>
         <ReportStationQuery stations={stations} onStation={applyStation} />
       </Suspense>
@@ -266,20 +286,31 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
           view={view}
           onPinChange={handlePinChange}
           onRemoveStation={() => update({ stationCode: null })}
+          onAddressTyped={(address) => {
+            cancelLookup();
+            update({ address });
+          }}
+          addressLookup={addressLookup.status}
           locate={
             locator.supported ? { status: locator.status, onLocate: locator.locate } : undefined
           }
         />
         <ReportFilesSection
           error={validation.errorOf('files')}
-          onFileCountChange={setFileCount}
+          onFilesChange={setFiles}
           onBusyChange={setUploading}
         />
         <ReportContactSection {...sectionProps} />
         <div id={reportFieldId('consent')} className="scroll-mt-35 border-t border-gray-200 pt-10">
           <Checkbox
             name="consent"
-            label={consent.label}
+            required
+            label={
+              <span>
+                {consent.label}
+                <RequiredMark />
+              </span>
+            }
             checked={values.consent}
             error={validation.errorOf('consent') ?? undefined}
             onChange={(event) => {

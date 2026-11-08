@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useSyncExternalStore, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronRight, X } from 'lucide-react';
 import { routes, profileSections } from '@/config/routes';
 import { accountCopy } from '@/content/account';
@@ -17,42 +17,35 @@ import { Breadcrumb } from '@/components/ui/breadcrumb';
 import type { AccountProfile } from '@/data/models/account';
 import type { Area } from '@/data/models/area';
 import type { Station } from '@/data/models/station';
-import type { Ticket } from '@/data/models/ticket';
 import { useSession } from '@/lib/session';
 import { useFollowedStations } from '@/lib/follows';
 import { writeFollows } from '@/lib/follows/follows';
-import { readSubmittedReports } from '@/lib/reports';
+import { lastActivityAt, useTickets } from '@/lib/tickets';
 import { useProfile, saveProfile, clearProfile } from '@/lib/profile/profile';
 import { authDelay } from '@/lib/auth/auth';
 import { initialsOf } from '@/lib/format/person';
 import { formatDate } from '@/lib/format/dates';
-import { formatClockTime } from '@/lib/format/date-time';
+import { formatClockTime, isoDateOf } from '@/lib/format/date-time';
 import { AccountSectionBar } from './account-section-bar';
 import { ProfileDetails } from './profile-details';
 import { ProfileSecurity } from './profile-security';
 import { AccountSidebar } from './account-sidebar';
 import { ProfileCard, profileLabel, profileRow, profileRowAction } from './profile-card';
 
-const subscribe = () => () => {};
-const browserReady = () => true;
-const serverReady = () => false;
-
 export function ProfilePage({
   profile,
   areas,
   stations,
-  tickets,
 }: {
   profile: AccountProfile;
   areas: Area[];
   stations: Station[];
-  tickets: Ticket[];
 }) {
   const copy = accountCopy.account;
   const { user, signOut } = useSession();
   const overrides = useProfile();
+  const { tickets } = useTickets();
   const follows = useFollowedStations();
-  const hydrated = useSyncExternalStore(subscribe, browserReady, serverReady);
   const [message, setMessage] = useState('');
   const [removed, setRemoved] = useState<Station | null>(null);
   const [requested, setRequested] = useState(false);
@@ -86,12 +79,9 @@ export function ProfilePage({
     phone: overrides.phone ?? profile.phone ?? '',
     homeArea: overrides.homeArea ?? user.homeArea,
   };
-  const allTickets = [
-    ...(hydrated ? readSubmittedReports().filter((ticket) => ticket.reporterId === user.id) : []),
-    ...tickets,
-  ]
-    .filter((ticket, index, list) => list.findIndex((other) => other.id === ticket.id) === index)
-    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  const allTickets = tickets
+    .filter((ticket) => ticket.reporterId === user.id)
+    .toSorted((a, b) => Date.parse(lastActivityAt(b)) - Date.parse(lastActivityAt(a)));
   const navLabels = [
     copy.nav.items.details,
     copy.nav.items.reports,
@@ -196,13 +186,13 @@ export function ProfilePage({
                 >
                   <span className="min-w-0">
                     <span className="block min-h-10 type-body-s-medium wrap-anywhere md:min-h-0">
-                      {ticket.title}
+                      {ticket.subject}
                     </span>
                     <span className="mt-0.5 block type-body-xs text-gray-600">
                       {copy.reports.meta(
                         ticket.id,
-                        formatDate(ticket.updatedAt.slice(0, 10)),
-                        formatClockTime(ticket.updatedAt),
+                        formatDate(isoDateOf(lastActivityAt(ticket))),
+                        formatClockTime(lastActivityAt(ticket)),
                       )}
                     </span>
                   </span>

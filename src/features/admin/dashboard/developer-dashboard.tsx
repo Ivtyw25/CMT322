@@ -13,8 +13,9 @@ import type {
 } from '@/data/models/staff-dashboard';
 import { AdminPageHead } from '@/features/admin/page-head';
 import { AdminPanel } from '@/features/admin/panel';
-import { useStaffTickets } from '@/features/admin/tickets/staff-tickets-provider';
 import { cn } from '@/lib/cn';
+import { useStaffSession } from '@/lib/staff-session';
+import { useTickets } from '@/lib/tickets';
 import { StatCard } from './stat-card';
 
 const copy = adminCopy.dashboard.developer;
@@ -56,10 +57,11 @@ const quickActions: readonly { id: string; label: string; href: string; icon: Lu
 
 /** Dashboard for the project developer (Figma 116:4824). */
 export function DeveloperDashboard({ data }: { data: DeveloperDashboardData }) {
-  const { getTicket } = useStaffTickets();
+  const { staff } = useStaffSession();
+  const { tickets } = useTickets();
   const { liveMapItems } = data;
   const mapTotal = liveMapItems.closures + liveMapItems.worksites + liveMapItems.hazards;
-  const assigned = data.assignedTicketIds.flatMap((id) => getTicket(id) ?? []);
+  const handling = tickets.filter((ticket) => ticket.handler?.staffId === staff?.id);
 
   return (
     <div className="flex flex-col gap-6">
@@ -159,15 +161,23 @@ export function DeveloperDashboard({ data }: { data: DeveloperDashboardData }) {
           </AdminPanel>
 
           <AdminPanel
-            headingId="assigned-heading"
-            title={copy.assigned.title}
-            hint={copy.assigned.hint}
+            headingId="handling-heading"
+            title={copy.handling.title}
+            hint={copy.handling.hint}
+            action={
+              <Link
+                href={routes.admin.tickets}
+                className="shrink-0 type-body-s-medium text-primary-600 transition-colors duration-(--duration-fast) hover:text-primary-800"
+              >
+                {copy.handling.viewAll}
+              </Link>
+            }
           >
-            {assigned.length === 0 ? (
-              <p className="type-body-s text-gray-600">{copy.assigned.empty}</p>
+            {handling.length === 0 ? (
+              <p className="type-body-s text-gray-600">{copy.handling.empty}</p>
             ) : (
               <ul>
-                {assigned.map((ticket) => (
+                {handling.map((ticket) => (
                   <li key={ticket.id} className="border-t border-gray-200">
                     <Link
                       href={routes.admin.ticket(ticket.id)}

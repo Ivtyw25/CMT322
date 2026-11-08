@@ -5,7 +5,6 @@ import { prepare, settle, whenHydrated } from '../support/browser';
 import { SAMPLE_TICKET_ID } from '../support/pages';
 
 const { track } = reportTrackCopy;
-const STORE_KEY = 'mlc-submitted-reports';
 
 async function open(page: Page, path: string, signedIn = false, width = 1440) {
   await prepare(page, { signedIn });
@@ -71,7 +70,6 @@ test.describe('track a ticket: result', () => {
     await expect(steps.locator('[aria-current="step"]')).toContainText('In progress');
     await expect(page.locator('time')).toHaveCount(3);
     await expect(page.getByText('Since Monday the new hoarding')).toBeVisible();
-    await expect(page.getByRole('img', { name: track.result.attachmentAlt(1, 2) })).toBeVisible();
     await expect(page.getByText(track.result.resolution.pending)).toBeVisible();
   });
 
@@ -94,47 +92,6 @@ test.describe('track a ticket: result', () => {
     await expect(steps.getByText('Completed')).toHaveCount(4);
     await expect(page.getByText(track.result.resolution.title)).toBeVisible();
     await expect(page.getByText(track.result.resolution.pending)).toHaveCount(0);
-  });
-
-  test('long histories show five updates and reveal the rest with focus', async ({ page }) => {
-    await page.addInitScript(
-      ([key]) => {
-        const updates = Array.from({ length: 8 }, (_, index) => ({
-          id: `long-${index}`,
-          at: `2026-10-2${index}T10:00:00+08:00`,
-          status: 'pending',
-          author: 'Penang Island City Council',
-          message: `Update number ${index + 1}`,
-        }));
-        window.localStorage.setItem(
-          key,
-          JSON.stringify([
-            {
-              id: 'MLC-261020-0600',
-              type: 'complaint',
-              categoryId: 'noise',
-              title: 'Long history',
-              description: 'Text',
-              location: 'Somewhere',
-              stationCode: null,
-              status: 'pending',
-              submittedAt: '2026-10-20T10:00:00+08:00',
-              updatedAt: '2026-10-27T10:00:00+08:00',
-              reporterId: 'user-meiling',
-              attachmentCount: 0,
-              updates,
-              resolution: null,
-            },
-          ]),
-        );
-      },
-      [STORE_KEY] as const,
-    );
-    await open(page, routes.reportTrack.ticket('MLC-261020-0600'), true);
-    await expect(page.getByText(/Update number/)).toHaveCount(5);
-    await page.getByRole('button', { name: track.result.earlier(3) }).click();
-    await expect(page.getByText(/Update number/)).toHaveCount(8);
-    await expect(page.locator('[data-update="long-2"]')).toBeFocused();
   });
 
   test('has no horizontal scroll at 320 px', async ({ page }) => {

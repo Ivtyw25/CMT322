@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { reportTrackCopy } from '@/content/report-track';
 import { getSiteInfo } from '@/data/api/site-info';
-import { getReportCategories, getTicket } from '@/data/api/tickets';
+import { getReportCategories } from '@/data/api/tickets';
 import { SubmittedView } from '@/features/report-track/submitted-view';
 import { normaliseTicketId } from '@/lib/reports';
 
@@ -20,18 +20,7 @@ export default async function ReportSubmittedPage({
 }) {
   const { ticketId } = await params;
   const id = normaliseTicketId(decodeURIComponent(ticketId));
-  const [ticket, categories, siteInfo] = await Promise.all([
-    getTicket(id),
-    getReportCategories(),
-    getSiteInfo(),
-  ]);
+  const [categories, siteInfo] = await Promise.all([getReportCategories(), getSiteInfo()]);
 
-  return (
-    <SubmittedView
-      ticketId={id}
-      serverTicket={ticket}
-      categories={categories}
-      careline={siteInfo.careline}
-    />
-  );
+  return <SubmittedView ticketId={id} categories={categories} careline={siteInfo.careline} />;
 }
