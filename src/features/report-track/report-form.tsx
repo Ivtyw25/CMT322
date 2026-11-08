@@ -10,7 +10,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RequiredMark } from '@/components/ui/field';
 import { routes } from '@/config/routes';
 import { reportTrackCopy } from '@/content/report-track';
-import { uiCopy } from '@/content/ui';
 import type { ReportCategory } from '@/data/models/ticket';
 import { useAnnounce } from '@/lib/announce/announcer';
 import { formatShortDateTime } from '@/lib/format/date-time';
@@ -119,7 +118,7 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
     [categories],
   );
 
-  const { saved, clear: clearDraft } = useReportDraft({
+  const { clear: clearDraft } = useReportDraft({
     values,
     fileCount: files.length,
     onRestore: restore,
@@ -241,7 +240,6 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
       onSubmit={handleSubmit}
       className="flex flex-col gap-10"
     >
-      <p className="-mb-4 type-body-s text-gray-600">{uiCopy.form.requiredLegend}</p>
       <Suspense fallback={null}>
         <ReportStationQuery stations={stations} onStation={applyStation} />
       </Suspense>
@@ -328,7 +326,6 @@ export function ReportForm({ categories, stations }: ReportFormProps) {
         <ButtonLink variant="secondary" href={routes.reportTrack.overview}>
           {actions.cancel}
         </ButtonLink>
-        {saved ? <p className="type-body-xs text-gray-500">{draft.saved}</p> : null}
       </div>
     </form>
   );

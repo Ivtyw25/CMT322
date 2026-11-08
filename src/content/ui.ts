@@ -59,7 +59,6 @@ export const uiCopy = {
     optional: '(optional)',
     required: '(required)',
     requiredMark: '*',
-    requiredLegend: 'Fields marked * are required',
     errorSummaryTitle: 'There is a problem',
     errors: {
       required: (field: string) => `Enter ${field}`,

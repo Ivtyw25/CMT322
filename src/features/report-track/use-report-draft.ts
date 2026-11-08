@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { readJson, removeKey, writeJson } from '@/lib/storage';
 import type { ReportValues } from './report-values';
 
@@ -46,10 +46,9 @@ type Options = {
 
 /**
  * The report draft in this browser (`mlc-report-draft`): restored on mount, written 500 ms after
- * the last change. Storage that is blocked changes nothing visible, and `saved` never turns true.
+ * the last change. Storage that is blocked changes nothing visible.
  */
 export function useReportDraft({ values, fileCount, onRestore }: Options) {
-  const [saved, setSaved] = useState(false);
   const restoreRef = useRef(onRestore);
 
   useEffect(() => {
@@ -81,7 +80,6 @@ export function useReportDraft({ values, fileCount, onRestore }: Options) {
         fileCount,
       };
       writeJson(DRAFT_KEY, draft);
-      setSaved(readJson(DRAFT_KEY) !== null);
     }, SAVE_DELAY_MS);
     return () => clearTimeout(timer);
   }, [values, fileCount]);
@@ -89,8 +87,7 @@ export function useReportDraft({ values, fileCount, onRestore }: Options) {
   /** Deletes the draft (after a sent report, or "Start over"). New typing starts a new draft. */
   const clear = useCallback(() => {
     removeKey(DRAFT_KEY);
-    setSaved(false);
   }, []);
 
-  return { saved, clear };
+  return { clear };
 }

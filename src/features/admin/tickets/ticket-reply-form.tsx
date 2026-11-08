@@ -94,7 +94,6 @@ export function TicketReplyForm({ ticket, staff, templates }: TicketReplyFormPro
   return (
     <form noValidate onSubmit={send} className="flex flex-col gap-4">
       <p className="type-body-xs text-gray-600">{copy.hint}</p>
-      <p className="type-body-xs text-gray-600">{uiCopy.form.requiredLegend}</p>
 
       <div className="flex flex-col gap-1.5">
         <p aria-hidden className="type-body-s-medium text-gray-900">

@@ -77,7 +77,6 @@ test.describe('report: access and resting state', () => {
     await expect(field(page, report.contact.email.label)).toHaveValue(mockUser.email);
     await expect(pinMarker(page)).toHaveCount(0);
     await expect(summaryTitle(page)).toHaveCount(0);
-    await expect(page.getByText(report.draft.saved)).toHaveCount(0);
   });
 
   test('has five sections with the "On this page" list at 1440', async ({ page }) => {
@@ -487,7 +486,9 @@ test.describe('report: draft in this browser', () => {
   async function typeDraft(page: Page) {
     await field(page, report.details.subject.label).fill('Driveway blocked');
     await field(page, report.location.address.label).fill('Lebuh Kampung Jawa');
-    await expect(page.getByText(report.draft.saved)).toBeVisible();
+    await expect
+      .poll(() => page.evaluate(() => localStorage.getItem('mlc-report-draft')))
+      .not.toBeNull();
   }
 
   test('saves while typing, restores on return and starts over on request', async ({ page }) => {
@@ -575,7 +576,6 @@ test.describe('report: draft in this browser', () => {
     await whenHydrated(page, 'form input');
     await field(page, report.details.subject.label).fill('Driveway blocked');
     await page.waitForTimeout(800);
-    await expect(page.getByText(report.draft.saved)).toHaveCount(0);
     await expect(field(page, report.details.subject.label)).toHaveValue('Driveway blocked');
   });
 });
@@ -619,7 +619,9 @@ test.describe('report: sending', () => {
   test('cancel goes to the overview and keeps the draft', async ({ page }) => {
     await open(page);
     await field(page, report.details.subject.label).fill('Driveway blocked');
-    await expect(page.getByText(report.draft.saved)).toBeVisible();
+    await expect
+      .poll(() => page.evaluate(() => localStorage.getItem('mlc-report-draft')))
+      .not.toBeNull();
     await page.getByRole('link', { name: report.actions.cancel }).click();
     await expect(page).toHaveURL(new RegExp(`${routes.reportTrack.overview}$`));
     expect(await page.evaluate((key) => localStorage.getItem(key), DRAFT_KEY)).not.toBeNull();

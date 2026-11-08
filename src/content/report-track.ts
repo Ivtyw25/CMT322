@@ -166,7 +166,6 @@ const report = {
     restored: (time: string) => `We restored your draft from ${time}.`,
     photosNote: 'Photos are not saved in a draft. Add them again if you need them.',
     startOver: 'Start over',
-    saved: 'Draft saved in this browser',
   },
   location: {
     title: 'Location',

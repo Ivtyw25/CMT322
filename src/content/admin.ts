@@ -352,7 +352,6 @@ export const adminCopy = {
     },
     reporter: {
       title: 'Reporter',
-      visibility: 'Contact details are only visible to staff handling tickets.',
     },
   },
   /** Words shared by the developer's three content areas. */

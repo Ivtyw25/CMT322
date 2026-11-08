@@ -65,7 +65,6 @@ function ReporterCard({ ticket }: { ticket: Ticket }) {
           {reporter.phone}
         </li>
       </ul>
-      <p className="type-body-xs text-gray-500">{copy.reporter.visibility}</p>
     </AdminPanel>
   );
 }
