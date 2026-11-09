@@ -1,4 +1,5 @@
 import type { StaffProgressUpdate } from '@/data/models/staff-content';
+import type { StationProgress } from '@/data/models/station';
 import { createRecordStore } from '@/lib/staff-records/record-store';
 
 export const progressStore = createRecordStore<StaffProgressUpdate>('mlc-staff-progress-updates');
@@ -7,6 +8,6 @@ export const progressStore = createRecordStore<StaffProgressUpdate>('mlc-staff-p
 export type ProgressStation = {
   code: string;
   name: string;
-  /** Whole-station completion now, 0 to 100. */
-  percent: number;
+  /** Progress before any staff update, as in the station records. */
+  progress: StationProgress | null;
 };

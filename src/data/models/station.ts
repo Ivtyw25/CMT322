@@ -9,6 +9,16 @@ export type StationCode = `${'S' | 'A'}${number}`;
 export type StationStageId =
   'site-clearing' | 'piling' | 'piers' | 'structure' | 'systems' | 'testing';
 
+/** The six stages in build order. */
+export const STATION_STAGE_ORDER: readonly StationStageId[] = [
+  'site-clearing',
+  'piling',
+  'piers',
+  'structure',
+  'systems',
+  'testing',
+];
+
 export type StationStage =
   | {
       id: StationStageId;
@@ -19,8 +29,6 @@ export type StationStage =
   | {
       id: StationStageId;
       status: 'in-progress';
-      /** Progress note, e.g. "6 of 10 piers complete". */
-      detail: string;
     }
   | {
       id: StationStageId;
@@ -38,19 +46,6 @@ export type StationProgress = {
   currentStageId: StationStageId;
   /** ISO 8601 date of the last progress update. */
   updatedAt: string;
-};
-
-export type StationSiteUpdate = {
-  id: string;
-  /** ISO 8601 date. */
-  date: string;
-  text: string;
-};
-
-export type StationConnection = {
-  code: StationCode;
-  /** Track distance in km. Null where no figure has been published. */
-  distanceKm: number | null;
 };
 
 export type Station = {
@@ -78,7 +73,7 @@ export type Station = {
   /** Every Mutiara Line station is elevated. */
   structure: 'elevated';
   /** Neighbouring stations shown under "Connects to". */
-  connectsTo: StationConnection[];
+  connectsTo: StationCode[];
   /** Other transport you can change to here. Empty when there is none. */
   interchanges: string[];
   /** The kinds of transport in `interchanges`, for icons in the line diagram. */
@@ -89,6 +84,4 @@ export type Station = {
   progress: StationProgress | null;
   /** All six stages, in build order. */
   stages: StationStage[];
-  /** Short notes from the station site, newest first. Separate from the line-wide site updates. */
-  siteUpdates: StationSiteUpdate[];
 };

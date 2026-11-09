@@ -1,15 +1,17 @@
+'use client';
+
 import Link from 'next/link';
-import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
 import { Stepper, type StepEntry } from '@/components/patterns/stepper';
 import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
-import type { Station, StationStage } from '@/data/models/station';
+import type { StationStage } from '@/data/models/station';
 import { formatDate } from '@/lib/format/dates';
 import { DocsSection } from '@/components/patterns/docs-section';
+import { StationUpdateEntry } from './station-update-entry';
+import { useLiveStation, type LiveStationInput } from './use-live-station';
 
 const { construction: copy } = projectCopy.station;
-const MAX_UPDATES = 3;
 
 function stageEntry(stage: StationStage): StepEntry {
   const label = uiCopy.stationStages[stage.id];
@@ -21,9 +23,8 @@ function stageEntry(stage: StationStage): StepEntry {
       detail: uiCopy.stationStages.completedIn(formatDate(stage.completedIn)),
     };
   }
-  if (stage.status === 'in-progress') {
-    return { id: stage.id, label, state: 'current', detail: stage.detail };
-  }
+  if (stage.status === 'in-progress') return { id: stage.id, label, state: 'current' };
+  if (stage.when === '') return { id: stage.id, label, state: 'upcoming' };
   return {
     id: stage.id,
     label,
@@ -34,10 +35,13 @@ function stageEntry(stage: StationStage): StepEntry {
   };
 }
 
-/** "Construction progress": the percentage card, the six build stages and the latest site notes. */
-export function StationProgress({ id, station }: { id: string; station: Station }) {
-  const { progress } = station;
-  const updates = station.siteUpdates.slice(0, MAX_UPDATES);
+/**
+ * "Construction progress": the percentage card, the six build stages and the timeline of the
+ * project developer's progress updates. The newest update that sets a percentage drives the card
+ * and the stages, so the page always matches what the developer published.
+ */
+export function StationProgress({ id, ...input }: { id: string } & LiveStationInput) {
+  const { progress, stages, updates } = useLiveStation(input);
   return (
     <DocsSection id={id} title={copy.title}>
       <p className="-mt-2 type-body-m text-gray-600">{copy.lede}</p>
@@ -69,23 +73,15 @@ export function StationProgress({ id, station }: { id: string; station: Station 
           </>
         )}
       </div>
-      <Stepper variant="stages" label={copy.stagesLabel} steps={station.stages.map(stageEntry)} />
+      <Stepper variant="stages" label={copy.stagesLabel} steps={stages.map(stageEntry)} />
       <div className="flex flex-col gap-3">
         <h3 className="type-body-m-semibold text-gray-900">{copy.siteUpdates.title}</h3>
         {updates.length > 0 ? (
-          <ul className="flex flex-col gap-4">
-            {updates.map((update) => (
-              <li key={update.id} className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-                <ImagePlaceholder decorative className="h-23 w-full shrink-0 rounded-lg sm:w-35" />
-                <div className="flex flex-col gap-1">
-                  <time dateTime={update.date} className="type-body-xs text-gray-500">
-                    {formatDate(update.date)}
-                  </time>
-                  <p className="type-body-s text-gray-800">{update.text}</p>
-                </div>
-              </li>
+          <ol aria-label={copy.siteUpdates.title} className="flex flex-col">
+            {updates.map((update, index) => (
+              <StationUpdateEntry key={update.id} update={update} first={index === 0} />
             ))}
-          </ul>
+          </ol>
         ) : (
           <p className="type-body-s text-gray-600">{copy.siteUpdates.empty}</p>
         )}

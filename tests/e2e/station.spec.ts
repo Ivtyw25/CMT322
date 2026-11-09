@@ -88,7 +88,7 @@ test.describe('station: header', () => {
     );
   });
 
-  test('four figures read label then value', async ({ page }) => {
+  test('three figures read label then value, with no distances', async ({ page }) => {
     await open(page);
     const stats = page
       .getByRole('list', { name: copy.stats.label })
@@ -98,7 +98,7 @@ test.describe('station: header', () => {
     );
     await expect(stats.first()).toContainText(copy.stats.traffic);
     await expect(stats.first()).toContainText(copy.stats.reports);
-    await expect(stats.first()).toContainText('0.79 km');
+    await expect(page.locator('main')).not.toContainText(' km');
   });
 
   test('Report an issue here goes to the report form for this station', async ({ page }) => {
@@ -116,9 +116,6 @@ test.describe('station: header', () => {
       copy.stats.progressNotStarted,
     );
     await expect(heading(page, copy.construction.notStarted.title)).toBeVisible();
-    if (notStarted?.siteUpdates.length === 0) {
-      await expect(page.getByText(copy.construction.siteUpdates.empty)).toBeVisible();
-    }
     await expect(page.getByText(uiCopy.tags.construction, { exact: true })).toHaveCount(0);
   });
 });
@@ -187,7 +184,12 @@ test.describe('station: sections', () => {
     await expect(stages.nth(2)).toContainText(uiCopy.tags.inProgress);
     await expect(stages.nth(2)).toHaveAttribute('aria-current', 'step');
     await expect(stages.nth(5)).toContainText(uiCopy.stationStages.target('Dec 2031'));
+    await expect(stages.nth(2)).not.toContainText('piers complete');
     await expect(heading(page, copy.construction.siteUpdates.title)).toBeVisible();
+    const timeline = page.getByRole('list', { name: copy.construction.siteUpdates.title });
+    await expect(timeline.getByRole('article').first()).toContainText(
+      'Crosshead cast on the pier facing KOMTAR Tower',
+    );
     await expect(page.getByRole('link', { name: copy.construction.link })).toHaveAttribute(
       'href',
       routes.project.construction,
@@ -209,14 +211,19 @@ test.describe('station: sections', () => {
     );
   });
 
-  test('reports are plain rows with a status tag; the prompt links to the report form', async ({
+  test('reports open on the Track page by ticket ID; the prompt links to the report form', async ({
     page,
   }) => {
     await open(page);
     const tickets = await getTicketsNearStation('S20');
+    const first = tickets[0];
     const reports = page.locator('#reports').locator('xpath=..');
     await expect(reports.locator('ul > li')).toHaveCount(Math.min(5, tickets.length));
-    await expect(reports.locator('ul a')).toHaveCount(0);
+    await expect(reports.locator('ul a').first()).toHaveAttribute(
+      'href',
+      routes.reportTrack.ticket(first?.id ?? ''),
+    );
+    await expect(reports.locator('ul > li').first()).toContainText(first?.id ?? '');
     await expect(heading(page, copy.reports.cta.title('KOMTAR'))).toBeVisible();
     await expect(
       page.locator('#main').getByRole('link', { name: copy.reports.cta.action, exact: true }),
@@ -248,7 +255,7 @@ test.describe('station: rail', () => {
       'href',
       routes.project.station('S19'),
     );
-    await expect(rail).toContainText('0.79 km');
+    await expect(rail).not.toContainText(' km');
   });
 
   test('the urgent help card calls the careline and mentions 999', async ({ page }) => {

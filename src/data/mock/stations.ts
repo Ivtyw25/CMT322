@@ -1,19 +1,16 @@
-import type { Station, StationProgress, StationStage, StationStageId } from '@/data/models/station';
+import {
+  STATION_STAGE_ORDER,
+  type Station,
+  type StationProgress,
+  type StationStage,
+  type StationStageId,
+} from '@/data/models/station';
 
 /*
  * The 22 stations in line order, Penang Sentral to PSR-A (docs/BRIEFING.md §3, Figma 100:3723).
  * KOMTAR (S20) is exactly as Figma 95:3102. Progress figures, stages and notes for the other
  * stations are invented mock records.
  */
-
-const STAGE_ORDER: StationStageId[] = [
-  'site-clearing',
-  'piling',
-  'piers',
-  'structure',
-  'systems',
-  'testing',
-];
 
 /** When each stage is planned on Segment 1 if it has not started yet. */
 const SEGMENT_1_PLAN: Record<StationStageId, string> = {
@@ -42,17 +39,18 @@ function planned(id: StationStageId, plan: Record<StationStageId, string>): Stat
 /** Builds the six stages: finished ones with their month, the current one, then the plan. */
 function segment1Stages(
   completed: Partial<Record<StationStageId, string>>,
-  current: { id: StationStageId; detail: string },
+  current: StationStageId,
 ): StationStage[] {
-  return STAGE_ORDER.map((id): StationStage => {
+  return STATION_STAGE_ORDER.map((id): StationStage => {
     const completedIn = completed[id];
     if (completedIn) return { id, status: 'done', completedIn };
-    if (id === current.id) return { id, status: 'in-progress', detail: current.detail };
+    if (id === current) return { id, status: 'in-progress' };
     return planned(id, SEGMENT_1_PLAN);
   });
 }
 
-const segment2Stages = (): StationStage[] => STAGE_ORDER.map((id) => planned(id, SEGMENT_2_PLAN));
+const segment2Stages = (): StationStage[] =>
+  STATION_STAGE_ORDER.map((id) => planned(id, SEGMENT_2_PLAN));
 
 function progress(
   percent: number,
@@ -79,19 +77,12 @@ export const stations: Station[] = [
     serves:
       'Serves Butterworth, with links to KTM trains, the Penang ferry and Rapid Penang buses.',
     structure: 'elevated',
-    connectsTo: [{ code: 'S30', distanceKm: null }],
+    connectsTo: ['S30'],
     interchanges: ['KTM Butterworth', 'Ferry terminal', 'Rapid Penang bus terminal'],
     interchangeModes: ['rail', 'ferry', 'bus'],
     nearby: ['Penang Sentral transport hub', 'Butterworth town centre'],
     progress: null,
     stages: segment2Stages(),
-    siteUpdates: [
-      {
-        id: 's31-2026-09-30',
-        date: '2026-09-30',
-        text: 'Survey teams finished mapping the ground for the station link to Penang Sentral.',
-      },
-    ],
   },
   {
     code: 'S30',
@@ -107,16 +98,12 @@ export const stations: Station[] = [
     lede: 'Butterworth, on the Macallum to Penang Sentral segment. The station name is provisional.',
     serves: 'Serves the homes and shops along Jalan Bagan Luar in Butterworth.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S31', distanceKm: null },
-      { code: 'S19', distanceKm: null },
-    ],
+    connectsTo: ['S31', 'S19'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Jalan Bagan Luar shops and offices'],
     progress: null,
     stages: segment2Stages(),
-    siteUpdates: [],
   },
   {
     code: 'S19',
@@ -132,16 +119,12 @@ export const stations: Station[] = [
     lede: 'George Town, where the Macallum to Penang Sentral segment begins. Works here start in January 2027.',
     serves: 'Serves the Macallum Street and Weld Quay area, where the two routes meet.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S20', distanceKm: 0.79 },
-      { code: 'S30', distanceKm: null },
-    ],
+    connectsTo: ['S20', 'S30'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Gat Lebuh Macallum', 'Weld Quay'],
     progress: null,
     stages: segment2Stages(),
-    siteUpdates: [],
   },
   {
     code: 'S20',
@@ -158,27 +141,12 @@ export const stations: Station[] = [
     serves: 'Serves KOMTAR Tower, the KOMTAR bus terminal and the George Town UNESCO site.',
     structure: 'elevated',
     // VERIFY: Figma lists only S19 Macallum under "Connects to"; S18 Bandar Sri Pinang is also next to KOMTAR.
-    connectsTo: [{ code: 'S19', distanceKm: 0.79 }],
+    connectsTo: ['S19'],
     interchanges: ['KOMTAR bus terminal'],
     interchangeModes: ['bus'],
     nearby: ['KOMTAR Tower', 'George Town UNESCO site'],
     progress: progress(38, 'piers', '2026-10-27'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-03', piling: '2025-11' },
-      { id: 'piers', detail: '6 of 10 piers complete' },
-    ),
-    siteUpdates: [
-      {
-        id: 's20-2026-10-27',
-        date: '2026-10-27',
-        text: 'Crosshead cast on the pier facing KOMTAR Tower. Night lifting works start on 3 November.',
-      },
-      {
-        id: 's20-2026-10-14',
-        date: '2026-10-14',
-        text: 'Traffic moved to the new lane layout on Jalan Dr Lim Chwee Leong so pier work can continue.',
-      },
-    ],
+    stages: segment1Stages({ 'site-clearing': '2025-03', piling: '2025-11' }, 'piers'),
   },
   {
     code: 'S18',
@@ -194,25 +162,12 @@ export const stations: Station[] = [
     lede: 'George Town, on the PSR-A to KOMTAR segment, beside Lebuhraya Tun Dr Lim Chong Eu.',
     serves: 'Serves Bandar Sri Pinang and the homes beside Lebuhraya Tun Dr Lim Chong Eu.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S20', distanceKm: null },
-      { code: 'S17', distanceKm: null },
-    ],
+    connectsTo: ['S20', 'S17'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Bandar Sri Pinang housing', 'Lebuhraya Tun Dr Lim Chong Eu'],
     progress: progress(14, 'piling', '2026-10-08'),
-    stages: segment1Stages(
-      { 'site-clearing': '2026-06' },
-      { id: 'piling', detail: 'Bored piling started on 8 Oct 2026' },
-    ),
-    siteUpdates: [
-      {
-        id: 's18-2026-10-08',
-        date: '2026-10-08',
-        text: 'Bored piling began behind site hoarding on the station footprint.',
-      },
-    ],
+    stages: segment1Stages({ 'site-clearing': '2026-06' }, 'piling'),
   },
   {
     code: 'S17',
@@ -228,19 +183,12 @@ export const stations: Station[] = [
     lede: 'Jelutong, on the PSR-A to KOMTAR segment, near the Sungai Pinang river mouth.',
     serves: 'Serves the Sungai Pinang and Jelutong neighbourhoods.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S18', distanceKm: null },
-      { code: 'S16', distanceKm: null },
-    ],
+    connectsTo: ['S18', 'S16'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Sungai Pinang river', 'Jalan Sungai Pinang'],
     progress: progress(29, 'piers', '2026-10-16'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-04', piling: '2026-02' },
-      { id: 'piers', detail: '3 of 9 piers complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2025-04', piling: '2026-02' }, 'piers'),
   },
   {
     code: 'S16',
@@ -256,19 +204,12 @@ export const stations: Station[] = [
     lede: 'Jelutong, on the PSR-A to KOMTAR segment, on the coastal side of the expressway.',
     serves: 'Serves East Jelutong and the coastal side of the expressway.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S17', distanceKm: null },
-      { code: 'S15', distanceKm: null },
-    ],
+    connectsTo: ['S17', 'S15'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Jelutong town', 'Lebuhraya Tun Dr Lim Chong Eu'],
     progress: progress(33, 'piers', '2026-10-16'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-04', piling: '2026-01' },
-      { id: 'piers', detail: '4 of 9 piers complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2025-04', piling: '2026-01' }, 'piers'),
   },
   {
     code: 'S15',
@@ -284,19 +225,12 @@ export const stations: Station[] = [
     lede: 'Jelutong, on the PSR-A to KOMTAR segment, along the eastern waterfront.',
     serves: 'Serves the eastern waterfront between Jelutong and Gelugor.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S16', distanceKm: null },
-      { code: 'S14', distanceKm: null },
-    ],
+    connectsTo: ['S16', 'S14'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Eastern waterfront', 'Lebuhraya Tun Dr Lim Chong Eu'],
     progress: progress(31, 'piers', '2026-10-16'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-05', piling: '2026-02' },
-      { id: 'piers', detail: '3 of 8 piers complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2025-05', piling: '2026-02' }, 'piers'),
   },
   {
     code: 'S14',
@@ -312,19 +246,12 @@ export const stations: Station[] = [
     lede: 'Gelugor, on the PSR-A to KOMTAR segment, close to Jalan Gelugor.',
     serves: 'Serves Gelugor town and the homes and schools around Jalan Gelugor.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S15', distanceKm: null },
-      { code: 'S13', distanceKm: null },
-    ],
+    connectsTo: ['S15', 'S13'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Gelugor town', 'Jalan Gelugor'],
     progress: progress(41, 'piers', '2026-10-20'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-03', piling: '2025-10' },
-      { id: 'piers', detail: '7 of 10 piers complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2025-03', piling: '2025-10' }, 'piers'),
   },
   {
     code: 'S13',
@@ -340,25 +267,15 @@ export const stations: Station[] = [
     lede: 'Gelugor, on the PSR-A to KOMTAR segment. The closest station to the USM main campus.',
     serves: 'Serves Universiti Sains Malaysia (USM) and nearby sports and youth facilities.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S14', distanceKm: null },
-      { code: 'S12', distanceKm: null },
-    ],
+    connectsTo: ['S14', 'S12'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Universiti Sains Malaysia (USM) main campus'],
     progress: progress(46, 'structure', '2026-10-21'),
     stages: segment1Stages(
       { 'site-clearing': '2025-02', piling: '2025-09', piers: '2026-08' },
-      { id: 'structure', detail: 'Concourse level slab being cast' },
+      'structure',
     ),
-    siteUpdates: [
-      {
-        id: 's13-2026-10-21',
-        date: '2026-10-21',
-        text: 'Formwork is up for the concourse slab. The temporary footpath beside the USM gate stays open.',
-      },
-    ],
   },
   {
     code: 'S12',
@@ -374,19 +291,12 @@ export const stations: Station[] = [
     lede: 'Gelugor, on the PSR-A to KOMTAR segment, serving the Batu Uban neighbourhood.',
     serves: 'Serves Batu Uban and the southern side of the USM campus.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S13', distanceKm: null },
-      { code: 'S11', distanceKm: null },
-    ],
+    connectsTo: ['S13', 'S11'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Batu Uban', 'Masjid Jamek Batu Uban'],
     progress: progress(39, 'piers', '2026-10-20'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-03', piling: '2025-12' },
-      { id: 'piers', detail: '5 of 8 piers complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2025-03', piling: '2025-12' }, 'piers'),
   },
   {
     code: 'S11',
@@ -402,19 +312,15 @@ export const stations: Station[] = [
     lede: 'Sungai Dua, on the PSR-A to KOMTAR segment, next to the Sungai Dua Depot.',
     serves: 'Serves Sungai Dua and the Sungai Dua Depot, where trains will be kept and maintained.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S12', distanceKm: null },
-      { code: 'S10', distanceKm: null },
-    ],
+    connectsTo: ['S12', 'S10'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Sungai Dua Depot', 'Jalan Sungai Dua'],
     progress: progress(48, 'structure', '2026-10-18'),
     stages: segment1Stages(
       { 'site-clearing': '2025-02', piling: '2025-08', piers: '2026-07' },
-      { id: 'structure', detail: 'Platform beams being placed' },
+      'structure',
     ),
-    siteUpdates: [],
   },
   {
     code: 'S10',
@@ -430,19 +336,12 @@ export const stations: Station[] = [
     lede: 'Sungai Nibong, on the PSR-A to KOMTAR segment. Change here for the Sungai Nibong bus terminal.',
     serves: 'Serves the Sungai Nibong bus terminal and the homes and shops around it.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S11', distanceKm: null },
-      { code: 'S09', distanceKm: null },
-    ],
+    connectsTo: ['S11', 'S09'],
     interchanges: ['Sungai Nibong bus terminal'],
     interchangeModes: ['bus'],
     nearby: ['Sungai Nibong bus terminal', 'Jalan Sultan Azlan Shah'],
     progress: progress(42, 'piers', '2026-10-22'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-02', piling: '2025-10' },
-      { id: 'piers', detail: '8 of 11 piers complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2025-02', piling: '2025-10' }, 'piers'),
   },
   {
     code: 'S09',
@@ -458,25 +357,12 @@ export const stations: Station[] = [
     lede: 'Bayan Lepas, on the PSR-A to KOMTAR segment, beside Bukit Jambul Complex.',
     serves: 'Serves Bukit Jambul, its shopping complex and the homes around it.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S10', distanceKm: null },
-      { code: 'S08', distanceKm: null },
-    ],
+    connectsTo: ['S10', 'S08'],
     interchanges: ['Rapid Penang bus hub'],
     interchangeModes: ['bus'],
     nearby: ['Bukit Jambul Complex', 'SK Bayan Baru'],
     progress: progress(36, 'piers', '2026-10-26'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-03', piling: '2026-01' },
-      { id: 'piers', detail: '5 of 9 piers complete' },
-    ),
-    siteUpdates: [
-      {
-        id: 's09-2026-10-26',
-        date: '2026-10-26',
-        text: 'Traffic now runs in the inner lane beside the station site while the next two piers are built.',
-      },
-    ],
+    stages: segment1Stages({ 'site-clearing': '2025-03', piling: '2026-01' }, 'piers'),
   },
   {
     code: 'S08',
@@ -492,25 +378,12 @@ export const stations: Station[] = [
     lede: 'Bayan Baru, on the PSR-A to KOMTAR segment, next to SPICE Arena.',
     serves: 'Serves SPICE Arena and the offices and homes of Bayan Baru.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S09', distanceKm: null },
-      { code: 'S07', distanceKm: null },
-    ],
+    connectsTo: ['S09', 'S07'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['SPICE Arena', 'SPICE Convention Centre'],
     progress: progress(34, 'piers', '2026-10-12'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-04', piling: '2026-01' },
-      { id: 'piers', detail: '4 of 8 piers complete' },
-    ),
-    siteUpdates: [
-      {
-        id: 's08-2026-10-12',
-        date: '2026-10-12',
-        text: 'Pier cap lifting on Jalan Mayang Pasir finished over the weekend. The road is fully open again.',
-      },
-    ],
+    stages: segment1Stages({ 'site-clearing': '2025-04', piling: '2026-01' }, 'piers'),
   },
   {
     code: 'S07',
@@ -526,19 +399,12 @@ export const stations: Station[] = [
     lede: 'Bayan Baru, on the PSR-A to KOMTAR segment, on Jalan Tengah.',
     serves: 'Serves Bayan Baru town centre and the offices along Jalan Tengah.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S08', distanceKm: null },
-      { code: 'S06', distanceKm: null },
-    ],
+    connectsTo: ['S08', 'S06'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Bayan Baru town centre'],
     progress: progress(30, 'piers', '2026-10-12'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-05', piling: '2026-03' },
-      { id: 'piers', detail: '3 of 8 piers complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2025-05', piling: '2026-03' }, 'piers'),
   },
   {
     code: 'S06',
@@ -555,25 +421,12 @@ export const stations: Station[] = [
     serves:
       'Serves the factories and offices at the north end of the Bayan Lepas Free Industrial Zone.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S07', distanceKm: null },
-      { code: 'S05', distanceKm: null },
-    ],
+    connectsTo: ['S07', 'S05'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Bayan Lepas Free Industrial Zone, Phase 3'],
     progress: progress(17, 'piling', '2026-10-15'),
-    stages: segment1Stages(
-      { 'site-clearing': '2026-04' },
-      { id: 'piling', detail: 'Foundations started after water mains were moved' },
-    ),
-    siteUpdates: [
-      {
-        id: 's06-2026-10-15',
-        date: '2026-10-15',
-        text: 'Two water mains were moved to clear space for the station foundations. Supply was not interrupted.',
-      },
-    ],
+    stages: segment1Stages({ 'site-clearing': '2026-04' }, 'piling'),
   },
   {
     code: 'S05',
@@ -590,19 +443,12 @@ export const stations: Station[] = [
     serves:
       'Serves the factories and offices at the south end of the Bayan Lepas Free Industrial Zone.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S06', distanceKm: null },
-      { code: 'S04', distanceKm: null },
-    ],
+    connectsTo: ['S06', 'S04'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Bayan Lepas Free Industrial Zone, Phase 4', 'Lebuh Kampung Jawa'],
     progress: progress(21, 'piling', '2026-10-19'),
-    stages: segment1Stages(
-      { 'site-clearing': '2026-02' },
-      { id: 'piling', detail: '18 of 40 piles complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2026-02' }, 'piling'),
   },
   {
     code: 'S04',
@@ -618,19 +464,12 @@ export const stations: Station[] = [
     lede: 'Bayan Lepas, on the PSR-A to KOMTAR segment, serving Sungai Tiram.',
     serves: 'Serves Sungai Tiram and the homes near the Bayan Lepas industrial area.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S05', distanceKm: null },
-      { code: 'S03', distanceKm: null },
-    ],
+    connectsTo: ['S05', 'S03'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Sungai Tiram', 'Jalan Sungai Tiram'],
     progress: progress(24, 'piers', '2026-09-28'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-06', piling: '2026-05' },
-      { id: 'piers', detail: '2 of 8 piers complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2025-06', piling: '2026-05' }, 'piers'),
   },
   {
     code: 'S03',
@@ -646,19 +485,12 @@ export const stations: Station[] = [
     lede: 'Bayan Lepas, on the PSR-A to KOMTAR segment. Walk to the airport terminal from here.',
     serves: 'Serves Penang International Airport and its terminal.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S04', distanceKm: null },
-      { code: 'S02', distanceKm: null },
-    ],
+    connectsTo: ['S04', 'S02'],
     interchanges: ['Penang International Airport terminal'],
     interchangeModes: ['air'],
     nearby: ['Penang International Airport terminal'],
     progress: progress(27, 'piers', '2026-10-05'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-05', piling: '2026-04' },
-      { id: 'piers', detail: '3 of 9 piers complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2025-05', piling: '2026-04' }, 'piers'),
   },
   {
     code: 'S02',
@@ -674,19 +506,12 @@ export const stations: Station[] = [
     lede: 'Permatang Damar Laut, on the PSR-A to KOMTAR segment, south of the airport.',
     serves: 'Serves the coastal village of Permatang Damar Laut.',
     structure: 'elevated',
-    connectsTo: [
-      { code: 'S03', distanceKm: null },
-      { code: 'A01', distanceKm: null },
-    ],
+    connectsTo: ['S03', 'A01'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Permatang Damar Laut village'],
     progress: progress(12, 'piling', '2026-09-24'),
-    stages: segment1Stages(
-      { 'site-clearing': '2026-03' },
-      { id: 'piling', detail: '9 of 36 piles complete' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({ 'site-clearing': '2026-03' }, 'piling'),
   },
   {
     code: 'A01',
@@ -702,15 +527,11 @@ export const stations: Station[] = [
     lede: 'Penang South Reclamation, at the southern end of the line. The station name is provisional.',
     serves: 'Serves Penang South Reclamation Island A, at the southern end of the line.',
     structure: 'elevated',
-    connectsTo: [{ code: 'S02', distanceKm: null }],
+    connectsTo: ['S02'],
     interchanges: [],
     interchangeModes: [],
     nearby: ['Penang South Reclamation island A'],
     progress: progress(6, 'site-clearing', '2026-09-24'),
-    stages: segment1Stages(
-      {},
-      { id: 'site-clearing', detail: 'Site survey and clearing under way' },
-    ),
-    siteUpdates: [],
+    stages: segment1Stages({}, 'site-clearing'),
   },
 ];

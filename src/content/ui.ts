@@ -134,6 +134,7 @@ export const uiCopy = {
   /** The conversation on a ticket, shown on Track and in the staff portal. */
   ticketThread: {
     label: 'Conversation',
+    submitted: 'Submitted',
     submittedBy: (name: string) => `Submitted by ${name}`,
     repliedBy: (name: string, organisation: string) => `${name}, ${organisation}`,
     statusSet: (status: string) => `Status set to ${status}`,
@@ -196,7 +197,6 @@ export const uiCopy = {
     following: 'Following',
     /** Visually hidden on the bell chip. */
     followingSr: 'You follow this station',
-    distance: (km: number) => `${km} km`,
     /** Segment names as Figma writes them. */
     segments: {
       1: 'PSR-A to KOMTAR',

@@ -1,3 +1,5 @@
+import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
 import { Tag, type TagKind } from '@/components/ui/tag';
 import { ButtonLink } from '@/components/ui/button-link';
 import { routes } from '@/config/routes';
@@ -17,7 +19,10 @@ const tagOf: Record<TicketStatus, TagKind> = {
   resolved: 'resolved',
 };
 
-/** "Reports near this station": up to five tickets, rows are not links, then the report prompt. */
+/**
+ * "Reports near this station": up to five tickets, each opening the report on the Track page by
+ * its ticket ID, then the report prompt.
+ */
 export function StationReports({
   id,
   station,
@@ -33,16 +38,28 @@ export function StationReports({
       {tickets.length > 0 ? (
         <ul className="divide-y divide-gray-200 overflow-hidden rounded-2xl border border-gray-200 bg-surface">
           {tickets.map((ticket) => (
-            <li key={ticket.id} className="flex items-center justify-between gap-4 px-4 py-3">
+            <li
+              key={ticket.id}
+              className="relative flex items-center justify-between gap-4 px-4 py-3 transition-colors duration-(--duration-fast) hover:bg-gray-50"
+            >
               <div className="flex min-w-0 flex-col gap-0.5">
-                <p className="type-body-s-medium text-gray-900">{ticket.subject}</p>
+                <Link
+                  href={routes.reportTrack.ticket(ticket.id)}
+                  className="type-body-s-medium wrap-anywhere text-gray-900 before:absolute before:inset-0 focus-visible:outline-none focus-visible:before:outline-2 focus-visible:before:-outline-offset-2 focus-visible:before:outline-primary-600"
+                >
+                  {ticket.subject}
+                </Link>
+                <p className="type-body-xs text-gray-500">{ticket.id}</p>
                 <p className="type-body-xs text-gray-500">
                   {ticket.status === 'resolved'
                     ? copy.resolved(formatDate(isoDateOf(lastActivityAt(ticket))))
                     : copy.reported(formatDate(isoDateOf(ticket.submittedAt)))}
                 </p>
               </div>
-              <Tag kind={tagOf[ticket.status]} />
+              <div className="flex shrink-0 items-center gap-2">
+                <Tag kind={tagOf[ticket.status]} />
+                <ChevronRight aria-hidden className="size-4 text-gray-400" />
+              </div>
             </li>
           ))}
         </ul>

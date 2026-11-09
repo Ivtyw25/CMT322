@@ -66,18 +66,19 @@ test.describe('track a ticket: result', () => {
     await open(page, routes.reportTrack.ticket(SAMPLE_TICKET_ID), true);
     await expect(page.locator('#result h2')).toHaveText('Driveway blocked by site hoarding');
     const steps = page.getByRole('list', { name: 'Ticket status' });
-    await expect(steps.getByRole('listitem')).toHaveCount(4);
+    await expect(steps.getByRole('listitem')).toHaveCount(3);
     await expect(steps.locator('[aria-current="step"]')).toContainText('In progress');
-    await expect(page.locator('time')).toHaveCount(3);
+    await expect(page.locator('time')).toHaveCount(4);
     await expect(page.getByText('Since Monday the new hoarding')).toBeVisible();
     await expect(page.getByText(track.result.resolution.pending)).toBeVisible();
   });
 
-  test('guests see status and replies but not the report text', async ({ page }) => {
+  test('guests see the report text without the reporter details', async ({ page }) => {
     await open(page, routes.reportTrack.ticket(SAMPLE_TICKET_ID));
     await expect(page.locator('#result h2')).toBeVisible();
-    await expect(page.getByText('Since Monday the new hoarding')).toHaveCount(0);
-    await expect(page.getByText(track.result.privateTitle)).toBeVisible();
+    await expect(page.getByText('Since Monday the new hoarding')).toBeVisible();
+    await expect(page.getByText(/^Submitted by /)).toHaveCount(0);
+    await expect(page.getByText(track.result.ownerPrompt)).toBeVisible();
     await expect(
       page.locator('#main').getByRole('link', { name: track.result.login }),
     ).toHaveAttribute(
@@ -87,9 +88,9 @@ test.describe('track a ticket: result', () => {
   });
 
   test('a resolved ticket completes every step and shows the resolution', async ({ page }) => {
-    await open(page, routes.reportTrack.ticket('MLC-261015-0233'), true);
+    await open(page, routes.reportTrack.ticket('MLC-261024-0417'), true);
     const steps = page.getByRole('list', { name: 'Ticket status' });
-    await expect(steps.getByText('Completed')).toHaveCount(4);
+    await expect(steps.getByText('Completed')).toHaveCount(3);
     await expect(page.getByText(track.result.resolution.title)).toBeVisible();
     await expect(page.getByText(track.result.resolution.pending)).toHaveCount(0);
   });

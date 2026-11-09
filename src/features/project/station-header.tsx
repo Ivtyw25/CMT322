@@ -10,14 +10,14 @@ import { StationFollowButton } from './station-follow-button';
 
 const { station: copy } = projectCopy;
 
-export type StationStat = { id: string; label: string; value: string };
+export type StationStat = { id: string; label: string; value: React.ReactNode };
 
 type StationHeaderProps = {
   station: Station;
   stats: readonly StationStat[];
 };
 
-/** Full-bleed band: breadcrumb, code chip, name, lede, actions and the four figures. */
+/** Full-bleed band: breadcrumb, code chip, name, lede, actions and the three figures. */
 export function StationHeader({ station, stats }: StationHeaderProps) {
   const underConstruction = station.progress !== null && station.progress.percent < 100;
   return (
@@ -66,16 +66,14 @@ export function StationHeader({ station, stats }: StationHeaderProps) {
         </div>
         <dl
           aria-label={copy.stats.label}
-          className="grid grid-cols-2 overflow-hidden rounded-2xl border border-gray-200 bg-surface md:grid-cols-4"
+          className="grid grid-cols-3 overflow-hidden rounded-2xl border border-gray-200 bg-surface"
         >
           {stats.map((stat, index) => (
             <div
               key={stat.id}
               className={cn(
-                'flex flex-col-reverse justify-end gap-0.5 border-gray-200 px-5 py-4 md:px-6',
-                index % 2 === 1 && 'border-l',
-                index >= 2 && 'border-t md:border-t-0',
-                index > 0 && 'md:border-l',
+                'flex min-w-0 flex-col-reverse justify-end gap-0.5 border-gray-200 px-3 py-4 sm:px-5 md:px-6',
+                index > 0 && 'border-l',
               )}
             >
               <dt className="type-body-s text-gray-600">{stat.label}</dt>

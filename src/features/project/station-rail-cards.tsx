@@ -10,7 +10,7 @@ import type { SiteInfo } from '@/data/models/site-info';
 
 const { glance, help } = projectCopy.station;
 
-export type Neighbour = { code: string; name: string; distanceKm: number | null };
+export type Neighbour = { code: string; name: string };
 
 /** "Station at a glance": code, line, type, segment, neighbours, interchanges and landmarks. */
 export function StationGlance({
@@ -42,9 +42,6 @@ export function StationGlance({
               >
                 {`${neighbour.code} ${neighbour.name}`}
               </Link>
-              {neighbour.distanceKm !== null
-                ? `, ${uiCopy.station.distance(neighbour.distanceKm)}`
-                : ''}
             </li>
           ))}
         </ul>

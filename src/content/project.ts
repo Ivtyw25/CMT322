@@ -351,13 +351,10 @@ export const projectCopy = {
       progressNotStarted: 'Not started',
       traffic: 'Active traffic changes',
       reports: 'Reports nearby',
-      /** e.g. "To S19 Macallum". */
-      nextStation: (code: string, name: string) => `To ${code} ${name}`,
-      distanceUnknown: 'Not published',
     },
     traffic: {
       title: 'Traffic around this station',
-      lede: (name: string) => `Closures, lane changes and detours within 1 km of ${name}.`,
+      lede: (name: string) => `Closures, lane changes and detours near ${name}.`,
       empty: {
         title: (name: string) => `No road changes within 1 km of ${name} right now`,
         body: 'New closures are posted here at least a week before they start. Check the traffic map for works further along the line.',
@@ -382,7 +379,7 @@ export const projectCopy = {
       },
       stagesLabel: 'Build stages',
       siteUpdates: {
-        title: 'Latest site updates',
+        title: 'Site updates',
         empty:
           'No updates from this station site yet. Line-wide news is on the Construction progress page.',
       },
@@ -398,11 +395,11 @@ export const projectCopy = {
     },
     reports: {
       title: 'Reports near this station',
-      lede: 'Issues other commuters have reported within 500 m. Names and contact details are never shown.',
+      lede: 'Issues other commuters have reported nearby. Open one to see the report and follow it.',
       reported: (date: string) => `Reported ${date}`,
       resolved: (date: string) => `Resolved ${date}`,
       empty: {
-        title: (name: string) => `No reports within 500 m of ${name}`,
+        title: (name: string) => `No reports near ${name}`,
         body: 'If you see a problem at the worksite, send a report and we will pass it to the project team.',
       },
       cta: {

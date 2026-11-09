@@ -20,7 +20,7 @@ import { RowMenu } from '@/features/admin/row-menu';
 import { formatDate } from '@/lib/format/dates';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
 import { useQueryParams } from '@/lib/url/use-query-params';
-import { progressStore, type ProgressStation } from './progress-store';
+import { progressStore, type ProgressStation } from '@/lib/staff-records/progress-store';
 
 const copy = adminCopy.progress;
 const PAGE_SIZE = 10;

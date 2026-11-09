@@ -14,8 +14,8 @@ type TicketThreadProps = {
   ticket: Ticket;
   /** Staff also see priority changes; the reporter does not. */
   viewer: 'reporter' | 'staff';
-  /** Replaces the details of the submission, for a visitor who did not send the report. */
-  submissionNotice?: React.ReactNode;
+  /** For a visitor who did not send the report: the report without the reporter's name or files. */
+  hideReporter?: boolean;
   /** The reporter's own replies. Staff always see them; the Track page shows them to the reporter only. */
   showReporterReplies?: boolean;
   className?: string;
@@ -67,7 +67,7 @@ function NodeHeader({ who, at }: { who: string; at: string }) {
 export function TicketThread({
   ticket,
   viewer,
-  submissionNotice,
+  hideReporter = false,
   showReporterReplies = viewer === 'staff',
   className,
 }: TicketThreadProps) {
@@ -95,18 +95,17 @@ export function TicketThread({
             </span>
             {node.kind === 'submission' ? (
               <div className="flex min-w-0 flex-1 flex-col gap-2">
-                {submissionNotice ?? (
-                  <>
-                    <NodeHeader who={copy.submittedBy(ticket.reporter.name)} at={node.at} />
-                    <h3 className="type-body-m-semibold wrap-anywhere text-gray-900">
-                      {ticket.subject}
-                    </h3>
-                    <p className="type-body-m wrap-anywhere whitespace-pre-line text-gray-700">
-                      {ticket.description}
-                    </p>
-                    <TicketAttachments attachments={ticket.attachments} />
-                  </>
-                )}
+                <NodeHeader
+                  who={hideReporter ? copy.submitted : copy.submittedBy(ticket.reporter.name)}
+                  at={node.at}
+                />
+                <h3 className="type-body-m-semibold wrap-anywhere text-gray-900">
+                  {ticket.subject}
+                </h3>
+                <p className="type-body-m wrap-anywhere whitespace-pre-line text-gray-700">
+                  {ticket.description}
+                </p>
+                {hideReporter ? null : <TicketAttachments attachments={ticket.attachments} />}
               </div>
             ) : null}
             {node.kind === 'reply' ? (

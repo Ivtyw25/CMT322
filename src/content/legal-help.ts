@@ -247,7 +247,7 @@ export const legalHelpCopy = {
         title: '3. Who we share it with',
         paragraphs: [
           'We share report details with the project owner, its contractors and the relevant authority, such as the local council, only so they can investigate and fix the issue.',
-          'Station pages show nearby reports by issue, area and status only. Your name and contact details are never shown.',
+          'Station pages list nearby reports. Anyone who opens one, or has its ticket number, can read what was reported and the replies. Your name, contact details and files are never shown.',
           'We do not sell your personal data or use it for advertising.',
         ],
       },

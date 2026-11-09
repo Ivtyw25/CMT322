@@ -3,21 +3,18 @@
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ButtonLink } from '@/components/ui/button-link';
 import { Field } from '@/components/ui/field';
 import { MenuSelect } from '@/components/ui/menu-select';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { TextInput } from '@/components/ui/text-input';
 import { routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
 import { uiCopy } from '@/content/ui';
-import type { ConstructionPhase } from '@/data/models/construction-update';
 import type { StaffProgressUpdate } from '@/data/models/staff-content';
-import type { StationCode } from '@/data/models/station';
+import { STATION_STAGE_ORDER, type StationCode, type StationStageId } from '@/data/models/station';
 import { DeveloperOnly } from '@/features/admin/developer-only';
 import { AdminPageHead } from '@/features/admin/page-head';
 import { AdminPanel } from '@/features/admin/panel';
@@ -27,20 +24,15 @@ import { slugify } from '@/lib/format/slug';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
 import { useStaffSession } from '@/lib/staff-session';
 import { PhotoList } from './photo-list';
-import { progressStore, type ProgressStation } from './progress-store';
+import { progressStore, type ProgressStation } from '@/lib/staff-records/progress-store';
+import { liveProgress, liveUpdatesFor } from '@/lib/station-progress/live-progress';
 
 const copy = adminCopy.progressEditor;
 const NEW_ID = 'new';
 
-const phases = [
-  'utility-relocation',
-  'piling',
-  'viaduct',
-  'stations',
-] as const satisfies readonly ConstructionPhase[];
-const phaseOptions = phases.map((phase) => ({
-  value: phase,
-  label: uiCopy.constructionPhases[phase],
+const stageOptions = STATION_STAGE_ORDER.map((stage) => ({
+  value: stage,
+  label: uiCopy.stationStages[stage],
 }));
 type PublishMode = 'now' | 'later';
 const modeOptions = [
@@ -61,19 +53,28 @@ type ProgressEditorProps = {
   now: string;
 };
 
-function isPhase(value: string): value is ConstructionPhase {
-  return phases.some((phase) => phase === value);
+function isStage(value: string): value is StationStageId {
+  return STATION_STAGE_ORDER.some((stage) => stage === value);
 }
 
 function isMode(value: string): value is PublishMode {
   return value === 'now' || value === 'later';
 }
 
-/** Progress update editor (Figma 117:5669): the update, its photos, publishing and the preview. */
+/** Progress update editor (Figma 117:5669): the update, its photos and publishing. */
 export function ProgressEditor({ id, base, stations, today, now }: ProgressEditorProps) {
   const router = useRouter();
   const { staff } = useStaffSession();
   const records = useStaffRecords(progressStore, base);
+  // The station as commuters see it now, with this browser's published updates on top.
+  const liveStations = useMemo(
+    () =>
+      stations.map((entry) => ({
+        ...entry,
+        progress: liveProgress(entry.progress, liveUpdatesFor(entry.code, records, today)),
+      })),
+    [stations, records, today],
+  );
   const existing = records.find((record) => record.id === id) ?? null;
   const isNew = id === NEW_ID;
   const firstStation = stations[0];
@@ -94,15 +95,13 @@ export function ProgressEditor({ id, base, stations, today, now }: ProgressEdito
     id: NEW_ID,
     title: '',
     stationCode: firstStation?.code ?? 'S20',
-    phase: 'viaduct',
+    stage: firstStation?.progress?.currentStageId ?? 'site-clearing',
     body: '',
     state: 'draft',
     author: staff?.name ?? '',
     date: '',
     photos: [],
-    stationProgress: null,
-    emailFollowers: false,
-    showOnHome: true,
+    percent: null,
     savedAt: '',
   };
 
@@ -112,7 +111,7 @@ export function ProgressEditor({ id, base, stations, today, now }: ProgressEdito
         key={id}
         record={existing ?? blank}
         isNew={isNew}
-        stations={stations}
+        stations={liveStations}
         today={today}
         now={now}
         staffName={staff?.name ?? ''}
@@ -142,9 +141,8 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
   const [message, setMessage] = useState('');
 
   const station = stations.find((entry) => entry.code === draft.stationCode);
-  const stationLabel = station ? `${station.code} ${station.name}` : draft.stationCode;
-  const from = draft.stationProgress?.from ?? station?.percent ?? 0;
-  const to = draft.stationProgress?.to ?? from;
+  const currentPercent = station?.progress?.percent ?? 0;
+  const percent = draft.percent ?? currentPercent;
   const missingAlt = draft.photos.some((photo) => photo.alt.trim() === '');
   const wasPublished = record.state === 'published';
 
@@ -186,7 +184,7 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
       state,
       date,
       author: draft.author || staffName,
-      stationProgress: to === from ? null : { from, to },
+      percent,
       savedAt: now,
     });
     onSaved(savedId);
@@ -208,12 +206,6 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
         ? copy.status.scheduled(formatDate(record.date))
         : copy.status.draft(record.savedAt ? formatFullDateTime(record.savedAt) : '');
   const primaryLabel = wasPublished ? copy.update : mode === 'later' ? copy.schedule : copy.publish;
-  const previewDate =
-    mode === 'later' && draft.date
-      ? formatDate(draft.date)
-      : wasPublished
-        ? formatDate(record.date)
-        : formatDate(today);
 
   return (
     <div className="flex flex-col gap-6">
@@ -260,7 +252,13 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
                   value={draft.stationCode}
                   onValueChange={(code) => {
                     const picked = stations.find((entry) => entry.code === code);
-                    if (picked) change({ stationCode: picked.code, stationProgress: null });
+                    if (picked) {
+                      change({
+                        stationCode: picked.code,
+                        stage: picked.progress?.currentStageId ?? 'site-clearing',
+                        percent: null,
+                      });
+                    }
                   }}
                   options={stations.map((entry) => ({
                     value: entry.code,
@@ -270,11 +268,11 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
               </Field>
               <Field label={copy.fields.stage}>
                 <MenuSelect
-                  value={draft.phase}
+                  value={draft.stage}
                   onValueChange={(value) => {
-                    if (isPhase(value)) change({ phase: value });
+                    if (isStage(value)) change({ stage: value });
                   }}
-                  options={phaseOptions}
+                  options={stageOptions}
                 />
               </Field>
             </div>
@@ -295,23 +293,21 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
                   htmlFor="station-progress"
                   className="type-body-s-semibold text-primary-700"
                 >
-                  {copy.fields.progressValue(from, to)}
+                  {copy.fields.progressValue(percent)}
                 </output>
               </div>
               <input
                 id="station-progress"
                 type="range"
-                min={from}
+                min={0}
                 max={100}
-                value={to}
+                value={percent}
                 aria-describedby="station-progress-hint"
-                onChange={(event) =>
-                  change({ stationProgress: { from, to: Number(event.target.value) } })
-                }
+                onChange={(event) => change({ percent: Number(event.target.value) })}
                 className="h-2 w-full cursor-pointer accent-primary-600"
               />
               <p id="station-progress-hint" className="type-body-xs text-gray-500">
-                {copy.fields.progressHint(station?.name ?? draft.stationCode)}
+                {copy.fields.progressHint(station?.name ?? draft.stationCode, currentPercent)}
               </p>
             </div>
           </AdminPanel>
@@ -357,37 +353,6 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
                 />
               </Field>
             ) : null}
-            <Switch
-              label={copy.email.label(stationLabel)}
-              description={copy.email.hint}
-              checked={draft.emailFollowers}
-              onCheckedChange={(checked) => change({ emailFollowers: checked })}
-            />
-            <Switch
-              label={copy.home.label}
-              description={copy.home.hint}
-              checked={draft.showOnHome}
-              onCheckedChange={(checked) => change({ showOnHome: checked })}
-            />
-          </AdminPanel>
-
-          <AdminPanel
-            headingId="preview-heading"
-            title={copy.sections.preview}
-            className="gap-3 p-5"
-          >
-            <div className="flex items-start gap-3">
-              <ImagePlaceholder decorative className="h-16 w-24 shrink-0 rounded-md" />
-              <div className="flex min-w-0 flex-col gap-0.5">
-                <p className="type-body-xs text-gray-600">{previewDate}</p>
-                <p className="type-body-s-medium text-gray-900">
-                  {draft.title.trim() || copy.preview.untitled}
-                </p>
-              </div>
-            </div>
-            <p className="type-body-xs text-gray-500">
-              {copy.preview.note(station?.name ?? draft.stationCode)}
-            </p>
           </AdminPanel>
         </div>
       </div>

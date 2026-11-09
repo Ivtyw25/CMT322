@@ -35,38 +35,22 @@ function Resolution({ ticket }: { ticket: Ticket }) {
 }
 
 /**
- * The conversation: the report, the replies of the authority and the reporter's own replies. Only
- * the reporter (the account that sent the report, or the browser it was sent from) sees what the
- * report said and can reply; anyone with the ticket ID sees the authority's replies.
+ * The conversation: the report, the replies of the authority and the reporter's own replies.
+ * Anyone with the ticket ID sees the report and the authority's replies, without the reporter's
+ * name or files. Only the reporter (the account that sent the report, or the browser it was sent
+ * from) sees their own replies and can reply.
  */
 export function TrackConversation({ ticket }: { ticket: Ticket }) {
   const { status, user } = useSession();
   const { sentFromHere } = useTickets();
   const owner = (user !== null && ticket.reporterId === user.id) || sentFromHere(ticket.id);
 
-  const notice =
-    status === 'loading' ? (
-      <div aria-hidden className="h-16 rounded-md bg-gray-100" />
-    ) : owner ? undefined : (
-      <div className="flex flex-col items-start gap-3">
-        <Callout tone="info" className="w-full">
-          <p className="type-body-s-semibold text-gray-900">{result.privateTitle}</p>
-          <p>{result.privateBody}</p>
-        </Callout>
-        {status === 'guest' ? (
-          <ButtonLink href={routes.account.loginReturningTo(routes.reportTrack.ticket(ticket.id))}>
-            {result.login}
-          </ButtonLink>
-        ) : null}
-      </div>
-    );
-
   return (
     <div className="flex flex-col gap-5">
       <TicketThread
         ticket={ticket}
         viewer="reporter"
-        submissionNotice={notice}
+        hideReporter={!owner}
         showReporterReplies={owner}
       />
       {ticket.replies.length === 0 ? (
@@ -74,6 +58,17 @@ export function TrackConversation({ ticket }: { ticket: Ticket }) {
       ) : null}
       <Resolution ticket={ticket} />
       {owner ? <TrackReplyForm ticket={ticket} /> : null}
+      {!owner && status === 'guest' ? (
+        <div className="flex flex-col items-start gap-3">
+          <p className="type-body-s text-gray-600">{result.ownerPrompt}</p>
+          <ButtonLink
+            variant="secondary"
+            href={routes.account.loginReturningTo(routes.reportTrack.ticket(ticket.id))}
+          >
+            {result.login}
+          </ButtonLink>
+        </div>
+      ) : null}
     </div>
   );
 }

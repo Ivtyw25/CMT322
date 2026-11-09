@@ -390,8 +390,8 @@ const track = {
     missing: (id: string) => `No ticket found for ${id}`,
   },
   result: {
-    privateTitle: 'Report details are private',
-    privateBody: 'Log in with the account that sent this report to see what was sent.',
+    ownerPrompt:
+      'Sent this report? Log in with the account you used to see your replies and reply.',
     login: 'Log in',
     submittedOn: (date: string) => `Submitted ${date}`,
     status: { title: 'Status' },

@@ -1,4 +1,6 @@
+import type { ConstructionPhase } from '@/data/models/construction-update';
 import type { StaffAnnouncement, StaffProgressUpdate } from '@/data/models/staff-content';
+import type { StationStageId } from '@/data/models/station';
 import { announcements } from './announcements';
 import { constructionUpdates } from './construction-updates';
 import { hazards } from './hazards';
@@ -136,6 +138,14 @@ export const staffAnnouncements: StaffAnnouncement[] = [
   ...drafts,
 ];
 
+/** The station stage a line-wide construction phase belongs to. */
+const stageOf: Record<ConstructionPhase, StationStageId> = {
+  'utility-relocation': 'site-clearing',
+  piling: 'piling',
+  viaduct: 'piers',
+  stations: 'structure',
+};
+
 /*
  * Staff view of the site updates (Figma 117:5417). The two drafts and the scheduled update are
  * the ones the Figma list shows beside the published updates; authors alternate as in Figma.
@@ -144,7 +154,7 @@ const published: StaffProgressUpdate[] = constructionUpdates.map((item, index) =
   id: item.id,
   title: item.title,
   stationCode: item.stationCodes[0] ?? 'S20',
-  phase: item.phase,
+  stage: stageOf[item.phase],
   body: item.body,
   state: 'published',
   author: Math.floor(index / 2) % 2 === 0 ? DANIEL : FARAH,
@@ -154,10 +164,84 @@ const published: StaffProgressUpdate[] = constructionUpdates.map((item, index) =
     fileName: `${item.id}-${photo + 1}.jpg`,
     alt: item.title,
   })),
-  stationProgress: null,
-  emailFollowers: false,
-  showOnHome: true,
+  percent: null,
   savedAt: `${item.date}T10:00:00+08:00`,
+}));
+
+type SiteNote = Pick<
+  StaffProgressUpdate,
+  'id' | 'title' | 'stationCode' | 'stage' | 'body' | 'date' | 'photos'
+>;
+
+/** Station site notes, published as progress updates. */
+const siteNoteRecords: SiteNote[] = [
+  {
+    id: 'komtar-new-lane-layout',
+    title: 'New lane layout on Jalan Dr Lim Chwee Leong',
+    stationCode: 'S20',
+    stage: 'piers',
+    body: 'Traffic moved to the new lane layout on Jalan Dr Lim Chwee Leong so pier work can continue.',
+    date: '2026-10-14',
+    photos: [
+      {
+        id: 'p1',
+        fileName: 'komtar-lane-layout.jpg',
+        alt: 'Traffic using the new lane layout beside the KOMTAR worksite',
+      },
+    ],
+  },
+  {
+    id: 'concourse-formwork-jalan-universiti',
+    title: 'Concourse slab formwork up at Jalan Universiti',
+    stationCode: 'S13',
+    stage: 'structure',
+    body: 'Formwork is up for the concourse slab. The temporary footpath beside the USM gate stays open.',
+    date: '2026-10-21',
+    photos: [
+      {
+        id: 'p1',
+        fileName: 'concourse-formwork.jpg',
+        alt: 'Timber formwork for the concourse slab above the station site',
+      },
+      {
+        id: 'p2',
+        fileName: 'usm-gate-footpath.jpg',
+        alt: 'The temporary footpath beside the USM gate',
+      },
+    ],
+  },
+  {
+    id: 'inner-lane-traffic-s09',
+    title: 'Traffic moved to the inner lane',
+    stationCode: 'S09',
+    stage: 'piers',
+    body: 'Traffic now runs in the inner lane beside the station site while the next two piers are built.',
+    date: '2026-10-26',
+    photos: [],
+  },
+  {
+    id: 'pier-cap-lifting-mayang-pasir',
+    title: 'Pier cap lifting finished on Jalan Mayang Pasir',
+    stationCode: 'S08',
+    stage: 'piers',
+    body: 'Pier cap lifting on Jalan Mayang Pasir finished over the weekend. The road is fully open again.',
+    date: '2026-10-12',
+    photos: [
+      {
+        id: 'p1',
+        fileName: 'mayang-pasir-pier-cap.jpg',
+        alt: 'A pier cap in place over Jalan Mayang Pasir',
+      },
+    ],
+  },
+];
+
+const siteNotes: StaffProgressUpdate[] = siteNoteRecords.map((note, index) => ({
+  ...note,
+  state: 'published',
+  author: index % 2 === 0 ? DANIEL : FARAH,
+  percent: null,
+  savedAt: `${note.date}T10:00:00+08:00`,
 }));
 
 const extraUpdates: StaffProgressUpdate[] = [
@@ -165,7 +249,7 @@ const extraUpdates: StaffProgressUpdate[] = [
     id: 'sixth-pier-komtar',
     title: 'Sixth pier completed at KOMTAR',
     stationCode: 'S20',
-    phase: 'viaduct',
+    stage: 'piers',
     body: 'The sixth of ten piers outside KOMTAR Tower is complete. Crosshead lifting starts on 3 November at night, with one lane closed on Jalan Magazine.',
     state: 'draft',
     author: DANIEL,
@@ -178,43 +262,41 @@ const extraUpdates: StaffProgressUpdate[] = [
       },
       { id: 'p2', fileName: 'komtar-pier-6-wide.jpg', alt: '' },
     ],
-    stationProgress: { from: 38, to: 41 },
-    emailFollowers: true,
-    showOnHome: true,
+    percent: 41,
     savedAt: '2026-10-29T10:42:00+08:00',
   },
   {
     id: 'crosshead-cast-komtar-tower',
     title: 'Crosshead cast on the pier facing KOMTAR Tower',
     stationCode: 'S20',
-    phase: 'viaduct',
-    body: 'The crosshead on the pier facing KOMTAR Tower has been cast and is curing.',
+    stage: 'piers',
+    body: 'Crosshead cast on the pier facing KOMTAR Tower. Night lifting works start on 3 November.',
     state: 'published',
     author: DANIEL,
     date: '2026-10-27',
     photos: [
       { id: 'p1', fileName: 'crosshead-cast.jpg', alt: 'The cast crosshead on top of the pier' },
     ],
-    stationProgress: null,
-    emailFollowers: false,
-    showOnHome: true,
+    percent: null,
     savedAt: '2026-10-27T10:00:00+08:00',
   },
   {
     id: 'viaduct-foundations-sungai-nibong',
     title: 'Viaduct foundation works at Sungai Nibong',
     stationCode: 'S10',
-    phase: 'viaduct',
+    stage: 'piers',
     body: '',
     state: 'draft',
     author: FARAH,
     date: '',
     photos: [],
-    stationProgress: null,
-    emailFollowers: false,
-    showOnHome: false,
+    percent: null,
     savedAt: '2026-10-28T14:10:00+08:00',
   },
 ];
 
-export const staffProgressUpdates: StaffProgressUpdate[] = [...extraUpdates, ...published];
+export const staffProgressUpdates: StaffProgressUpdate[] = [
+  ...extraUpdates,
+  ...siteNotes,
+  ...published,
+];

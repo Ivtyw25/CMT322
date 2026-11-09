@@ -15,7 +15,7 @@ export default async function AdminProgressPage() {
         stations={stations.map((station) => ({
           code: station.code,
           name: station.name,
-          percent: station.progress?.percent ?? 0,
+          progress: station.progress,
         }))}
       />
     </Suspense>

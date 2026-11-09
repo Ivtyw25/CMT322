@@ -4,18 +4,20 @@ import { Container } from '@/components/layout/container';
 import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
 import { getAnnouncements } from '@/data/api/announcements';
+import { getToday } from '@/data/api/clock';
 import { getRoadWorks } from '@/data/api/road-works';
 import { getSiteInfo } from '@/data/api/site-info';
+import { getStaffProgressUpdates } from '@/data/api/staff-content';
 import { getStation, getStationCodes, getStations } from '@/data/api/stations';
 import { getTicketsNearStation } from '@/data/api/tickets';
 import { StationAlertsCard } from '@/features/project/station-alerts-card';
 import { StationHeader, type StationStat } from '@/features/project/station-header';
+import { StationPercent } from '@/features/project/station-percent';
 import { StationProgress } from '@/features/project/station-progress';
 import { StationGlance, StationUrgentHelp } from '@/features/project/station-rail-cards';
 import { StationReports } from '@/features/project/station-reports';
 import { StationTraffic } from '@/features/project/station-traffic';
 import { StationWorksites } from '@/features/project/station-worksites';
-import { uiCopy } from '@/content/ui';
 
 const { station: copy } = projectCopy;
 const MAX_NOTICES = 5;
@@ -44,46 +46,31 @@ export default async function StationPage({ params }: StationPageProps) {
   const station = await getStation(stationCode);
   if (!station) notFound();
 
-  const [stations, announcements, roadWorks, tickets, siteInfo] = await Promise.all([
-    getStations(),
-    getAnnouncements({ stationCode: station.code }),
-    getRoadWorks({ stationCode: station.code }),
-    getTicketsNearStation(station.code),
-    getSiteInfo(),
-  ]);
+  const [stations, announcements, roadWorks, tickets, siteInfo, progressUpdates, today] =
+    await Promise.all([
+      getStations(),
+      getAnnouncements({ stationCode: station.code }),
+      getRoadWorks({ stationCode: station.code }),
+      getTicketsNearStation(station.code),
+      getSiteInfo(),
+      getStaffProgressUpdates(),
+      getToday(),
+    ]);
 
   const notices = announcements.filter((item) => item.status !== 'ended').slice(0, MAX_NOTICES);
   const activeCount = announcements.filter((item) => item.status === 'active').length;
   const nameOf = new Map(stations.map((item) => [item.code, item.name]));
-  const neighbours = station.connectsTo.map((link) => ({
-    code: link.code,
-    name: nameOf.get(link.code) ?? link.code,
-    distanceKm: link.distanceKm,
-  }));
-  const measured = neighbours.find((neighbour) => neighbour.distanceKm !== null);
-  const first = neighbours[0];
+  const neighbours = station.connectsTo.map((code) => ({ code, name: nameOf.get(code) ?? code }));
+  const live = {
+    station: { code: station.code, progress: station.progress, stages: station.stages },
+    updates: progressUpdates.filter((update) => update.stationCode === station.code),
+    today,
+  };
 
   const stats: StationStat[] = [
-    {
-      id: 'progress',
-      label: copy.stats.progress,
-      value: station.progress
-        ? copy.stats.progressValue(station.progress.percent)
-        : copy.stats.progressNotStarted,
-    },
+    { id: 'progress', label: copy.stats.progress, value: <StationPercent {...live} /> },
     { id: 'traffic', label: copy.stats.traffic, value: String(activeCount) },
     { id: 'reports', label: copy.stats.reports, value: String(tickets.length) },
-    measured
-      ? {
-          id: 'distance',
-          label: copy.stats.nextStation(measured.code, measured.name),
-          value: uiCopy.station.distance(measured.distanceKm ?? 0),
-        }
-      : {
-          id: 'distance',
-          label: copy.stats.nextStation(first?.code ?? '', first?.name ?? ''),
-          value: copy.stats.distanceUnknown,
-        },
   ];
 
   const works = [...announcements.filter((item) => item.status !== 'ended'), ...roadWorks].map(
@@ -96,7 +83,7 @@ export default async function StationPage({ params }: StationPageProps) {
       <Container className="grid gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_clamp(18.75rem,33%,24.5rem)] lg:gap-12 lg:py-12">
         <div className="flex max-w-190 flex-col gap-12 lg:max-w-none lg:gap-14">
           <StationTraffic id="traffic" name={station.name} notices={notices} />
-          <StationProgress id="progress" station={station} />
+          <StationProgress id="progress" {...live} />
           <StationWorksites id="worksites" station={station} works={works} />
           <StationReports id="reports" station={station} tickets={tickets.slice(0, MAX_REPORTS)} />
         </div>

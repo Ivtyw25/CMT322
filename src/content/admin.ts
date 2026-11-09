@@ -591,7 +591,6 @@ export const adminCopy = {
       update: 'Update',
       photos: 'Photos',
       publishing: 'Publishing',
-      preview: 'Public preview',
     },
     fields: {
       title: 'Title',
@@ -599,18 +598,14 @@ export const adminCopy = {
       stage: 'Construction stage',
       body: 'What happened',
       progress: 'Station progress',
-      progressHint: (station: string) => `Updates the progress bar on the ${station} station page.`,
-      progressValue: (from: number, to: number) => `${from}% to ${to}%`,
+      progressHint: (station: string, now: number) =>
+        `Drag to set the progress bar on the ${station} station page. It is ${now}% now.`,
+      progressValue: (percent: number) => `${percent}%`,
       publish: 'Publish',
       scheduleDate: 'Publish on',
     },
     bodyMax: 600,
     publishModes: { now: 'Now, when I click Publish update', later: 'On a later date' },
-    email: {
-      label: (station: string) => `Email followers of ${station}`,
-      hint: 'People following this station get an email when the update goes live.',
-    },
-    home: { label: 'Show on the Home page', hint: 'Appears in Latest construction progress.' },
     photos: {
       drop: 'Drag photos here or browse',
       dropActive: 'Drop photos to add them',
@@ -623,15 +618,9 @@ export const adminCopy = {
       remove: (name: string) => `Remove ${name}`,
       removed: (name: string) => `${name} removed.`,
       altLabel: (name: string) => `Description of ${name}`,
-      altPlaceholder: 'Describe this photo for screen reader users',
+      altPlaceholder: 'Describe what the photo shows. It appears under the photo.',
       altMissing: 'A description is needed before you can publish.',
       empty: 'No photos yet.',
-    },
-    preview: {
-      note: (station: string) =>
-        `As it appears under Latest site updates on the ${station} station page.`,
-      untitled: 'Untitled update',
-      noDate: 'Date set when published',
     },
     errors: {
       title: 'Enter a title.',
