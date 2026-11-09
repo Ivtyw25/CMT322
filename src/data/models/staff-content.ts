@@ -25,13 +25,14 @@ export type OfficialNotice = {
  * `endDate`: it stays until someone removes it.
  *
  * Every announcement owns exactly one pin on the public traffic map. Its type, `mapName`, `lat`,
- * `lng`, dates and `showOnMap` are the map pin; the Map pins page edits these same fields.
+ * `lng` and dates are the map pin; the Map pins page edits these same fields. `showOnMap` follows
+ * from the status: a published announcement's pin is always on the public map.
  */
 export type StaffAnnouncement = Omit<Announcement, 'status'> & {
   status: StaffAnnouncementStatus;
   /** Name on the public map. */
   mapName: string;
-  /** Whether the pin is visible on the public map. */
+  /** Whether the pin is on the public map: true once published. */
   showOnMap: boolean;
   notice: OfficialNotice | null;
   /** Oldest first. */

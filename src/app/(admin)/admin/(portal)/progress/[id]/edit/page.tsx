@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { adminCopy } from '@/content/admin';
 import { getNow } from '@/data/api/clock';
 import { getProgressUpdates, getStageBases } from '@/data/api/progress-updates';
@@ -22,16 +23,18 @@ export default async function AdminProgressEditPage({ params }: Params) {
     getNow(),
   ]);
   return (
-    <ProgressEditor
-      id={decodeURIComponent(id)}
-      base={base}
-      stations={stations.map((station) => ({
-        code: station.code,
-        name: station.name,
-        base: bases.find((entry) => entry.code === station.code)?.stages ?? station.stages,
-      }))}
-      today={now.slice(0, 10)}
-      now={now}
-    />
+    <Suspense>
+      <ProgressEditor
+        id={decodeURIComponent(id)}
+        base={base}
+        stations={stations.map((station) => ({
+          code: station.code,
+          name: station.name,
+          base: bases.find((entry) => entry.code === station.code)?.stages ?? station.stages,
+        }))}
+        today={now.slice(0, 10)}
+        now={now}
+      />
+    </Suspense>
   );
 }

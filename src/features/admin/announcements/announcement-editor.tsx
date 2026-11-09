@@ -286,8 +286,8 @@ function EditorForm({
         mode === 'draft' ? draft.duration : durationLabel(draft.startDate, draft.endDate, nightly),
       brief: draft.brief || briefOf(draft.summary),
       publishedAt: mode === 'draft' ? draft.publishedAt : today,
-      // Publishing shows the pin; once live, Map pins decides whether it stays shown.
-      showOnMap: mode === 'draft' ? false : record.status === 'draft' ? true : draft.showOnMap,
+      // A published announcement's pin is always on the public map.
+      showOnMap: mode !== 'draft',
       history: [...draft.history, ...entries],
     });
     setDraft((current) => ({

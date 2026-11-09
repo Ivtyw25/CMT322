@@ -6,6 +6,9 @@ export const announcementPlaceParams = {
   road: 'road',
 } as const;
 
+/** Query parameter naming a station on the Progress pages. */
+export const progressStationParam = 'station';
+
 type AnnouncementPlace = { type: string; lat: number; lng: number; road: string };
 
 /**
@@ -84,8 +87,11 @@ export const routes = {
     announcementEdit: (announcementId: string) => `/admin/announcements/${announcementId}/edit`,
     mapItems: '/admin/map-items',
     progress: '/admin/progress',
+    progressFor: (stationCode: string) => `/admin/progress?${progressStationParam}=${stationCode}`,
     progressEditor: (updateId: string) => `/admin/progress/${updateId}/edit`,
     progressNew: '/admin/progress/new/edit',
+    progressNewFor: (stationCode: string) =>
+      `/admin/progress/new/edit?${progressStationParam}=${stationCode}`,
   },
   dev: {
     components: '/dev/components',

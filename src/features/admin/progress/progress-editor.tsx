@@ -2,7 +2,7 @@
 
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ButtonLink } from '@/components/ui/button-link';
@@ -10,7 +10,7 @@ import { Field } from '@/components/ui/field';
 import { MenuSelect } from '@/components/ui/menu-select';
 import { Textarea } from '@/components/ui/textarea';
 import { TextInput } from '@/components/ui/text-input';
-import { routes } from '@/config/routes';
+import { progressStationParam, routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
 import { uiCopy } from '@/content/ui';
 import type { ProgressUpdate } from '@/data/models/progress-update';
@@ -83,7 +83,8 @@ export function ProgressEditor({ id, base, stations, today, now }: ProgressEdito
   );
   const existing = records.find((record) => record.id === id) ?? null;
   const isNew = id === NEW_ID;
-  const firstStation = stations[0];
+  const asked = useSearchParams().get(progressStationParam)?.toUpperCase();
+  const firstStation = stations.find((entry) => entry.code === asked) ?? stations[0];
 
   if (!isNew && !existing) {
     return (
@@ -230,7 +231,7 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
   return (
     <div className="flex flex-col gap-6">
       <Link
-        href={routes.admin.progress}
+        href={routes.admin.progressFor(draft.stationCode)}
         className="hit-area flex w-fit items-center gap-1.5 type-body-s-medium text-primary-600 transition-colors duration-(--duration-fast) hover:text-primary-800"
       >
         <ChevronLeft aria-hidden className="size-4" />

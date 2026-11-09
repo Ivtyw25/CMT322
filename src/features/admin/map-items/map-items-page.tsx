@@ -18,7 +18,6 @@ import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { SearchInput } from '@/components/ui/search-input';
 import { SegmentedControl, type SegmentedOption } from '@/components/ui/segmented-control';
-import { Switch } from '@/components/ui/switch';
 import { Tag } from '@/components/ui/tag';
 import { TextInput } from '@/components/ui/text-input';
 import { routes } from '@/config/routes';
@@ -35,7 +34,6 @@ import {
 } from '@/features/admin/announcements/announcement-store';
 import { DeveloperOnly } from '@/features/admin/developer-only';
 import { cn } from '@/lib/cn';
-import { formatDate } from '@/lib/format/dates';
 import { useReverseGeocode } from '@/lib/geo/use-reverse-geocode';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
 import { useStaffSession } from '@/lib/staff-session';
@@ -232,7 +230,8 @@ export function MapItemsPage({ base, today, now, center, stations }: MapItemsPag
       ...pinPlaceOf(formStation),
       mapName: form.mapName.trim(),
       status,
-      showOnMap: isDraft ? false : form.showOnMap,
+      // A published announcement's pin is always on the public map.
+      showOnMap: !isDraft,
       duration: isDraft
         ? form.duration
         : durationLabel(form.startDate, form.endDate, isNightly(form)),
@@ -328,19 +327,6 @@ export function MapItemsPage({ base, today, now, center, stations }: MapItemsPag
           {form.title}
         </Link>
       </div>
-      <Switch
-        label={copy.edit.visible}
-        description={
-          form.status === 'draft'
-            ? copy.edit.visibleDraft
-            : form.startDate
-              ? copy.edit.visibleFrom(formatDate(form.startDate))
-              : copy.edit.visibleNoDate
-        }
-        disabled={form.status === 'draft'}
-        checked={form.showOnMap}
-        onCheckedChange={(showOnMap) => update({ showOnMap })}
-      />
       <p className="type-body-xs text-gray-500">{copy.edit.deleteNote}</p>
       <Button onClick={save}>{copy.edit.save}</Button>
       <p role="status" className="type-body-s text-success-700 empty:hidden">
