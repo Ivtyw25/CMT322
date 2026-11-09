@@ -1,16 +1,10 @@
 import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
-import type { StaffProgressUpdate } from '@/data/models/staff-content';
+import type { ProgressUpdate } from '@/data/models/progress-update';
 import { cn } from '@/lib/cn';
 import { formatDate } from '@/lib/format/dates';
 
 /** One progress update on the station timeline: date, title, what happened and the photos. */
-export function StationUpdateEntry({
-  update,
-  first,
-}: {
-  update: StaffProgressUpdate;
-  first: boolean;
-}) {
+export function StationUpdateEntry({ update, first }: { update: ProgressUpdate; first: boolean }) {
   const titleId = `update-${update.id}-title`;
   return (
     <li className="group">

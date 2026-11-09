@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tag, type TagKind } from '@/components/ui/tag';
 import { routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
-import type { ProgressState, StaffProgressUpdate } from '@/data/models/staff-content';
+import type { ProgressState, ProgressUpdate } from '@/data/models/progress-update';
 import { DeveloperOnly } from '@/features/admin/developer-only';
 import { AdminPageHead } from '@/features/admin/page-head';
 import { RowMenu } from '@/features/admin/row-menu';
@@ -43,8 +43,8 @@ const isTab = (value: string | null): value is Tab => tabs.some((tab) => tab ===
 const rowGrid = 'lg:grid-cols-[4.5rem_1fr_11.875rem_6.875rem_6rem_2rem]';
 
 type ProgressPageProps = {
-  base: readonly StaffProgressUpdate[];
-  stations: readonly ProgressStation[];
+  base: readonly ProgressUpdate[];
+  stations: readonly Pick<ProgressStation, 'code' | 'name'>[];
 };
 
 /** Progress updates (Figma 117:5417): status tabs and the list of updates. */
@@ -54,10 +54,10 @@ export function ProgressPage({ base, stations }: ProgressPageProps) {
   const searchParams = useSearchParams();
   const params = useQueryParams({ status: 'all' });
   const records = useStaffRecords(progressStore, base);
-  const [toDelete, setToDelete] = useState<StaffProgressUpdate | null>(null);
+  const [toDelete, setToDelete] = useState<ProgressUpdate | null>(null);
 
   const names = useMemo(
-    () => new Map(stations.map((station) => [station.code, station.name])),
+    () => new Map<string, string>(stations.map((station) => [station.code, station.name])),
     [stations],
   );
   const nameOf = (code: string) => names.get(code) ?? code;

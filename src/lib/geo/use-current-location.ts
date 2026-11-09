@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState, useSyncExternalStore } from 'react';
-import type { ReportPoint } from './report-values';
+import type { GeoPoint } from './reverse-geocode';
 
 const TIMEOUT_MS = 10_000;
 
@@ -11,7 +11,7 @@ const subscribeNever = () => () => {};
 const supportsGeolocation = () => Boolean(navigator.geolocation);
 
 /** "Use my current location": one reading, 10 s timeout, no high accuracy. */
-export function useCurrentLocation(onFound: (point: ReportPoint) => void) {
+export function useCurrentLocation(onFound: (point: GeoPoint) => void) {
   const [status, setStatus] = useState<LocationStatus>('idle');
   const supported = useSyncExternalStore(subscribeNever, supportsGeolocation, () => false);
 

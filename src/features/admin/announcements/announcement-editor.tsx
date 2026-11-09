@@ -3,29 +3,29 @@
 import { ChevronLeft, FileText, MapPin, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { LocationMap } from '@/components/patterns/map/location-map';
 import { Button } from '@/components/ui/button';
 import { ButtonLink } from '@/components/ui/button-link';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/field';
 import { MenuSelect } from '@/components/ui/menu-select';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { TextInput } from '@/components/ui/text-input';
 import { announcementPlaceParams, routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
 import type { AnnouncementType } from '@/data/models/announcement';
-import type { AreaId } from '@/data/models/area';
-import type { StationCode } from '@/data/models/station';
 import type { StaffAnnouncement, StaffHistoryEntry } from '@/data/models/staff-content';
 import { AdminPanel } from '@/features/admin/panel';
 import { DeveloperOnly } from '@/features/admin/developer-only';
-import { historyText } from '@/features/admin/history-text';
 import { AdminPageHead } from '@/features/admin/page-head';
+import { LocateButton, NearestStation } from '@/features/admin/pin-place';
+import { pinPlaceOf, stationNear, type PinStation } from '@/features/admin/pin-station';
 import { formatDate } from '@/lib/format/dates';
 import { formatFullDateTime } from '@/lib/format/date-time';
 import { slugify } from '@/lib/format/slug';
+import type { GeoPoint } from '@/lib/geo/reverse-geocode';
+import { useReverseGeocode } from '@/lib/geo/use-reverse-geocode';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
 import { useStaffSession } from '@/lib/staff-session';
 import {
@@ -42,15 +42,12 @@ const copy = adminCopy.announcementEditor;
 const NEW_ID = 'new';
 const BYTES_PER_KB = 1024;
 
-type AreaOption = { id: AreaId; label: string };
-type StationOption = { code: StationCode; name: string; areaId: AreaId };
-
 type AnnouncementEditorProps = {
   /** The route's ID, or "new". */
   id: string;
   base: readonly StaffAnnouncement[];
-  areas: readonly AreaOption[];
-  stations: readonly StationOption[];
+  /** Every station, to find the one nearest the pin. */
+  stations: readonly PinStation[];
   /** Today as "YYYY-MM-DD", the mock day. */
   today: string;
   /** The mock "now" as an ISO date-time. */
@@ -59,7 +56,7 @@ type AnnouncementEditorProps = {
   center: { lat: number; lng: number };
 };
 
-type Errors = Partial<Record<'title' | 'summary' | 'start' | 'end' | 'road', string>>;
+type Errors = Partial<Record<'title' | 'summary' | 'start' | 'end' | 'road' | 'pin', string>>;
 type SaveMode = 'draft' | 'publish';
 
 const typeOptions = (['closure', 'construction', 'hazard'] as const).map((type) => ({
@@ -83,7 +80,6 @@ function placeOf(params: URLSearchParams): Place | null {
 }
 
 function blankAnnouncement(
-  areas: readonly AreaOption[],
   center: { lat: number; lng: number },
   place: Place | null,
 ): StaffAnnouncement {
@@ -98,7 +94,7 @@ function blankAnnouncement(
     road: '',
     lat: place?.lat ?? center.lat,
     lng: place?.lng ?? center.lng,
-    areaIds: areas[0] ? [areas[0].id] : [],
+    areaIds: [],
     stationCodes: [],
     startDate: '',
     endDate: '',
@@ -118,11 +114,15 @@ function briefOf(summary: string): string {
   return summary.trim().split(/\s+/).slice(0, 6).join(' ');
 }
 
-/** Announcement editor (Figma 116:5269): details, dates, place, notice and publishing. */
+/**
+ * Announcement editor (Figma 116:5269): details, dates, place and notice. The pin decides where
+ * the announcement is: the road comes from the pin's address and the station is the one nearest
+ * to it. Publishing needs no choices: a live announcement always shows in the site banner, on the
+ * traffic map and on its station page, and is emailed to that station's followers.
+ */
 export function AnnouncementEditor({
   id,
   base,
-  areas,
   stations,
   today,
   now,
@@ -134,15 +134,16 @@ export function AnnouncementEditor({
   const params = useSearchParams();
   const existing = records.find((record) => record.id === id) ?? null;
   const isNew = id === NEW_ID;
+  const place = placeOf(params);
 
   return (
     <DeveloperOnly>
       {isNew || existing ? (
         <EditorForm
           key={id}
-          record={existing ?? blankAnnouncement(areas, center, placeOf(params))}
+          record={existing ?? blankAnnouncement(center, place)}
           isNew={isNew}
-          areas={areas}
+          pinned={!isNew || place !== null}
           stations={stations}
           today={today}
           now={now}
@@ -165,8 +166,9 @@ export function AnnouncementEditor({
 type EditorFormProps = {
   record: StaffAnnouncement;
   isNew: boolean;
-  areas: readonly AreaOption[];
-  stations: readonly StationOption[];
+  /** Whether the record already has a place (a new announcement may not yet). */
+  pinned: boolean;
+  stations: readonly PinStation[];
   today: string;
   now: string;
   staffName: string;
@@ -176,7 +178,7 @@ type EditorFormProps = {
 function EditorForm({
   record,
   isNew,
-  areas,
+  pinned: startsPinned,
   stations,
   today,
   now,
@@ -188,15 +190,27 @@ function EditorForm({
   const [message, setMessage] = useState('');
   const [noticeError, setNoticeError] = useState('');
   const fileInput = useRef<HTMLInputElement>(null);
+  const [pinned, setPinned] = useState(startsPinned);
+  const roadLookup = useReverseGeocode(
+    useCallback((road: string) => {
+      setDraft((current) => ({ ...current, location: road }));
+      setErrors((current) => ({ ...current, road: undefined }));
+    }, []),
+  );
 
-  const areaId = draft.areaIds[0] ?? areas[0]?.id ?? '';
   const nightly = isNightly(draft);
   const duration = durationLabel(draft.startDate, draft.endDate, nightly);
-  const nearby = stations.filter((station) => station.areaId === areaId);
-  const nearbyNames = nearby
-    .slice(0, 2)
-    .map((station) => `${station.code} ${station.name}`)
-    .join(copy.publishing.and);
+  const point = { lat: draft.lat, lng: draft.lng };
+  const station = stationNear(stations, pinned ? point : null);
+
+  /** The pin moved: the road and the nearest station follow it. */
+  function placePin(next: GeoPoint) {
+    setDraft((current) => ({ ...current, ...next }));
+    setPinned(true);
+    setErrors((current) => ({ ...current, pin: undefined }));
+    setMessage('');
+    roadLookup.lookup(next);
+  }
 
   function change<K extends keyof StaffAnnouncement>(key: K, value: StaffAnnouncement[K]) {
     setDraft((current) => ({ ...current, [key]: value }));
@@ -208,6 +222,7 @@ function EditorForm({
     if (draft.title.trim() === '') found.title = copy.errors.title;
     if (mode === 'draft') return found;
     if (draft.summary.trim() === '') found.summary = copy.errors.summary;
+    if (!pinned) found.pin = copy.errors.pin;
     if (draft.location.trim() === '') found.road = copy.errors.road;
     if (draft.startDate === '') found.start = copy.errors.start;
     if (draft.endDate === '') {
@@ -266,12 +281,13 @@ function EditorForm({
       status,
       road: road || draft.location,
       mapName: draft.mapName.trim() || draft.title.trim(),
-      stationCodes: nearby.map((station) => station.code),
+      ...pinPlaceOf(station),
       duration:
         mode === 'draft' ? draft.duration : durationLabel(draft.startDate, draft.endDate, nightly),
       brief: draft.brief || briefOf(draft.summary),
       publishedAt: mode === 'draft' ? draft.publishedAt : today,
-      showOnMap: mode === 'draft' ? false : draft.showOnMap,
+      // Publishing shows the pin; once live, Map pins decides whether it stays shown.
+      showOnMap: mode === 'draft' ? false : record.status === 'draft' ? true : draft.showOnMap,
       history: [...draft.history, ...entries],
     });
     setDraft((current) => ({
@@ -361,27 +377,15 @@ function EditorForm({
                 onChange={(event) => change('title', event.target.value)}
               />
             </Field>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label={copy.fields.type}>
-                <MenuSelect
-                  value={draft.type}
-                  onValueChange={(value) => {
-                    if (isAnnouncementType(value)) change('type', value);
-                  }}
-                  options={typeOptions}
-                />
-              </Field>
-              <Field label={copy.fields.area}>
-                <MenuSelect
-                  value={areaId}
-                  onValueChange={(value) => {
-                    const picked = areas.find((area) => area.id === value);
-                    if (picked) change('areaIds', [picked.id]);
-                  }}
-                  options={areas.map((area) => ({ value: area.id, label: area.label }))}
-                />
-              </Field>
-            </div>
+            <Field label={copy.fields.type}>
+              <MenuSelect
+                value={draft.type}
+                onValueChange={(value) => {
+                  if (isAnnouncementType(value)) change('type', value);
+                }}
+                options={typeOptions}
+              />
+            </Field>
             <Field label={copy.fields.summary} error={errors.summary}>
               <Textarea
                 rows={4}
@@ -439,13 +443,27 @@ function EditorForm({
             title={copy.sections.where}
             className="gap-4 px-6 py-5"
           >
-            <Field label={copy.fields.road} error={errors.road}>
+            <Field
+              label={copy.fields.road}
+              error={errors.road}
+              hint={
+                roadLookup.status === 'loading'
+                  ? adminCopy.pinPlace.findingRoad
+                  : roadLookup.status === 'failed'
+                    ? adminCopy.pinPlace.roadFailed
+                    : undefined
+              }
+            >
               <TextInput
                 value={draft.location}
-                onChange={(event) => change('location', event.target.value)}
+                onChange={(event) => {
+                  roadLookup.cancel();
+                  change('location', event.target.value);
+                }}
                 leadingIcon={<MapPin className="size-4" />}
               />
             </Field>
+            <NearestStation station={station} hint />
             <Field
               label={copy.fields.mapName}
               hint={copy.fields.mapNameHint(adminCopy.mapItems.kinds[kindOfType[draft.type]])}
@@ -463,12 +481,14 @@ function EditorForm({
               className="h-72 rounded-xl md:h-100"
               markers={[]}
               pin={{
-                point: { lat: draft.lat, lng: draft.lng },
-                onChange: (point) => setDraft((current) => ({ ...current, ...point })),
+                point: pinned ? point : null,
+                onChange: placePin,
                 label: () => copy.map.pinLabel,
                 dropLabel: copy.map.dropLabel,
               }}
             />
+            {errors.pin ? <p className="type-body-s text-danger-700">{errors.pin}</p> : null}
+            <LocateButton onFound={placePin} />
           </AdminPanel>
 
           <AdminPanel
@@ -518,38 +538,6 @@ function EditorForm({
                 {noticeError}
               </p>
             ) : null}
-          </AdminPanel>
-        </div>
-
-        <div className="flex flex-col gap-5 xl:w-95 xl:shrink-0">
-          <AdminPanel
-            headingId="publishing-heading"
-            title={copy.publishing.title}
-            className="gap-3.5 p-5"
-          >
-            <p className="type-body-xs text-gray-600">
-              {nearbyNames ? copy.publishing.automatic(nearbyNames) : copy.publishing.automaticNone}
-            </p>
-            <Switch
-              label={copy.publishing.map.label}
-              description={copy.publishing.map.hint}
-              checked={draft.showOnMap}
-              onCheckedChange={(checked) => change('showOnMap', checked)}
-            />
-          </AdminPanel>
-
-          <AdminPanel headingId="history-heading" title={copy.history.title} className="gap-2 p-5">
-            {draft.history.length === 0 ? (
-              <p className="type-body-xs text-gray-600">{copy.history.empty}</p>
-            ) : (
-              <ul className="flex flex-col gap-2">
-                {draft.history.toReversed().map((entry) => (
-                  <li key={entry.id} className="type-body-xs text-gray-600">
-                    {historyText(entry)}
-                  </li>
-                ))}
-              </ul>
-            )}
           </AdminPanel>
         </div>
       </div>

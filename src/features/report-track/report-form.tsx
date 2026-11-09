@@ -24,7 +24,6 @@ import { ReportLocationSection, type MapView } from './report-location-section';
 import { ReportStationQuery } from './report-station-query';
 import {
   emptyReportValues,
-  nearestStation,
   reportFieldId,
   reportFieldOrder,
   reportRules,
@@ -32,7 +31,8 @@ import {
   type ReportStation,
   type ReportValues,
 } from './report-values';
-import { useCurrentLocation } from './use-current-location';
+import { nearestStation } from '@/lib/geo/nearest-station';
+import { useCurrentLocation } from '@/lib/geo/use-current-location';
 import { useReportDraft, type RestoredDraft } from './use-report-draft';
 
 const { actions, consent, draft, errorSummary, errors, header, location } = reportTrackCopy.report;

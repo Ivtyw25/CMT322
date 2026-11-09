@@ -7,7 +7,7 @@ import { getAnnouncements } from '@/data/api/announcements';
 import { getToday } from '@/data/api/clock';
 import { getRoadWorks } from '@/data/api/road-works';
 import { getSiteInfo } from '@/data/api/site-info';
-import { getStaffProgressUpdates } from '@/data/api/staff-content';
+import { getProgressUpdates, getStageBases } from '@/data/api/progress-updates';
 import { getStation, getStationCodes, getStations } from '@/data/api/stations';
 import { getTicketsNearStation } from '@/data/api/tickets';
 import { StationAlertsCard } from '@/features/project/station-alerts-card';
@@ -46,14 +46,15 @@ export default async function StationPage({ params }: StationPageProps) {
   const station = await getStation(stationCode);
   if (!station) notFound();
 
-  const [stations, announcements, roadWorks, tickets, siteInfo, progressUpdates, today] =
+  const [stations, announcements, roadWorks, tickets, siteInfo, progressUpdates, bases, today] =
     await Promise.all([
       getStations(),
       getAnnouncements({ stationCode: station.code }),
       getRoadWorks({ stationCode: station.code }),
       getTicketsNearStation(station.code),
       getSiteInfo(),
-      getStaffProgressUpdates(),
+      getProgressUpdates(),
+      getStageBases(),
       getToday(),
     ]);
 
@@ -62,7 +63,8 @@ export default async function StationPage({ params }: StationPageProps) {
   const nameOf = new Map(stations.map((item) => [item.code, item.name]));
   const neighbours = station.connectsTo.map((code) => ({ code, name: nameOf.get(code) ?? code }));
   const live = {
-    station: { code: station.code, progress: station.progress, stages: station.stages },
+    code: station.code,
+    base: bases.find((entry) => entry.code === station.code)?.stages ?? station.stages,
     updates: progressUpdates.filter((update) => update.stationCode === station.code),
     today,
   };

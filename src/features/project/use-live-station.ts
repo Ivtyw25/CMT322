@@ -1,30 +1,30 @@
 'use client';
 
 import { useMemo } from 'react';
-import type { StaffProgressUpdate } from '@/data/models/staff-content';
-import type { Station } from '@/data/models/station';
+import type { ProgressUpdate } from '@/data/models/progress-update';
+import type { StationCode, StationStage } from '@/data/models/station';
 import { progressStore } from '@/lib/staff-records/progress-store';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
-import { liveProgress, liveUpdatesFor, stagesAt } from '@/lib/station-progress/live-progress';
+import { stationProgressFrom } from '@/lib/station-progress/live-progress';
 
 export type LiveStationInput = {
-  station: Pick<Station, 'code' | 'progress' | 'stages'>;
+  code: StationCode;
+  /** The station's stages before any progress update. */
+  base: readonly StationStage[];
   /** The station's progress updates from the data layer; staff edits in this browser go on top. */
-  updates: readonly StaffProgressUpdate[];
+  updates: readonly ProgressUpdate[];
   /** Today as "YYYY-MM-DD", for scheduled updates. */
   today: string;
 };
 
-/** A station's live progress updates (newest first), its progress and its six stages. */
-export function useLiveStation({ station, updates, today }: LiveStationInput) {
+/**
+ * A station's live progress updates (newest first), its progress and its six stages, worked out
+ * the same way as the station records and the developer's Progress pages.
+ */
+export function useLiveStation({ code, base, updates, today }: LiveStationInput) {
   const records = useStaffRecords(progressStore, updates);
-  return useMemo(() => {
-    const live = liveUpdatesFor(station.code, records, today);
-    const progress = liveProgress(station.progress, live);
-    const stages =
-      progress && progress !== station.progress
-        ? stagesAt(station.stages, progress.currentStageId, progress.updatedAt)
-        : station.stages;
-    return { updates: live, progress, stages };
-  }, [station, records, today]);
+  return useMemo(
+    () => stationProgressFrom(code, base, records, today),
+    [code, base, records, today],
+  );
 }

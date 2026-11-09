@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { adminCopy } from '@/content/admin';
-import { getAreas } from '@/data/api/areas';
 import { getNow } from '@/data/api/clock';
 import { getStaffAnnouncements } from '@/data/api/staff-content';
 import { getStations } from '@/data/api/stations';
 import { AnnouncementEditor } from '@/features/admin/announcements/announcement-editor';
+import { pinStationOf } from '@/features/admin/pin-station';
 
 export const metadata = adminCopy.meta.announcementEditor;
 
@@ -17,9 +17,8 @@ export async function generateStaticParams() {
 
 export default async function AdminAnnouncementEditPage({ params }: Params) {
   const { id } = await params;
-  const [base, areas, stations, now] = await Promise.all([
+  const [base, stations, now] = await Promise.all([
     getStaffAnnouncements(),
-    getAreas(),
     getStations(),
     getNow(),
   ]);
@@ -32,12 +31,7 @@ export default async function AdminAnnouncementEditPage({ params }: Params) {
       <AnnouncementEditor
         id={decodeURIComponent(id)}
         base={base}
-        areas={areas.map((area) => ({ id: area.id, label: area.label }))}
-        stations={stations.map((station) => ({
-          code: station.code,
-          name: station.name,
-          areaId: station.areaId,
-        }))}
+        stations={stations.map(pinStationOf)}
         today={now.slice(0, 10)}
         now={now}
         center={center}

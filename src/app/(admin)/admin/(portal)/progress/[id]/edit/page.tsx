@@ -1,6 +1,6 @@
 import { adminCopy } from '@/content/admin';
 import { getNow } from '@/data/api/clock';
-import { getStaffProgressUpdates } from '@/data/api/staff-content';
+import { getProgressUpdates, getStageBases } from '@/data/api/progress-updates';
 import { getStations } from '@/data/api/stations';
 import { ProgressEditor } from '@/features/admin/progress/progress-editor';
 
@@ -9,15 +9,16 @@ export const metadata = adminCopy.meta.progressEditor;
 type Params = { params: Promise<{ id: string }> };
 
 export async function generateStaticParams() {
-  const items = await getStaffProgressUpdates();
+  const items = await getProgressUpdates();
   return [{ id: 'new' }, ...items.map((item) => ({ id: item.id }))];
 }
 
 export default async function AdminProgressEditPage({ params }: Params) {
   const { id } = await params;
-  const [base, stations, now] = await Promise.all([
-    getStaffProgressUpdates(),
+  const [base, stations, bases, now] = await Promise.all([
+    getProgressUpdates(),
     getStations(),
+    getStageBases(),
     getNow(),
   ]);
   return (
@@ -27,7 +28,7 @@ export default async function AdminProgressEditPage({ params }: Params) {
       stations={stations.map((station) => ({
         code: station.code,
         name: station.name,
-        progress: station.progress,
+        base: bases.find((entry) => entry.code === station.code)?.stages ?? station.stages,
       }))}
       today={now.slice(0, 10)}
       now={now}

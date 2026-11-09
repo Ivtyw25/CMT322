@@ -347,14 +347,6 @@ export const adminCopy = {
     },
     notFound: { title: 'Not found', body: 'Nothing has this ID. It may have been deleted.' },
     noDate: '—',
-    history: {
-      created: (when: string) => `Draft created, ${when}`,
-      'draft-saved': (when: string, by: string) => `Draft saved by ${by}, ${when}`,
-      scheduled: (when: string, by: string) => `Scheduled by ${by}, ${when}`,
-      published: (when: string, by: string) => `Published by ${by}, ${when}`,
-      updated: (when: string, by: string) => `Updated by ${by}, ${when}`,
-      'notice-uploaded': (when: string) => `Notice PDF uploaded, ${when}`,
-    },
   },
 
   announcements: {
@@ -402,6 +394,22 @@ export const adminCopy = {
     },
   },
 
+  /** Where a pin is: shared by the announcement editor and the Map pins page. */
+  pinPlace: {
+    nearestStation: 'Nearest station',
+    station: (code: string, name: string, area: string) => `${code} ${name}, ${area}`,
+    noPin: 'Place the pin to find the nearest station.',
+    stationHint:
+      'Set from the pin. The announcement shows on this station page and goes to its followers.',
+    useMyLocation: 'Use my current location',
+    locating: 'Finding your location…',
+    errorDenied:
+      'We could not get your location. Allow location access in your browser, or click the map.',
+    errorUnavailable: 'Location is not available on this device. Click the map instead.',
+    findingRoad: 'Finding the road…',
+    roadFailed: 'We could not find a road name for this spot. Type it in.',
+  },
+
   announcementEditor: {
     back: 'All announcements',
     newTitle: 'New announcement',
@@ -423,7 +431,6 @@ export const adminCopy = {
     fields: {
       title: 'Title',
       type: 'Type',
-      area: 'Area',
       summary: 'What commuters need to know',
       start: 'Start',
       end: 'End',
@@ -443,6 +450,7 @@ export const adminCopy = {
       end: 'Choose an end date.',
       endBeforeStart: 'The end date must be on or after the start date.',
       road: 'Enter the road or place.',
+      pin: 'Place the pin on the map.',
     },
     duration: {
       nights: (n: number) => (n === 1 ? '1 night' : `${n} nights`),
@@ -452,7 +460,7 @@ export const adminCopy = {
       none: '—',
     },
     map: {
-      label: 'Map of the road or place. Click the map to move the pin.',
+      label: 'Map of the road or place. Click the map to place the pin.',
       dropLabel: 'Drop a pin at the map centre',
       pinLabel: 'Announcement location pin',
     },
@@ -465,16 +473,6 @@ export const adminCopy = {
       tooBig: 'The notice is larger than 10 MB.',
       maxMegabytes: 10,
     },
-    publishing: {
-      title: 'Publishing',
-      automatic: (stations: string) =>
-        `When it goes live, it shows in the site banner and is emailed to people following ${stations}.`,
-      automaticNone:
-        'When it goes live, it shows in the site banner and is emailed to people following the stations nearby.',
-      and: ' and ',
-      map: { label: 'Show on the traffic map', hint: 'Shows its pin on the public traffic map.' },
-    },
-    history: { title: 'History', empty: 'Nothing has happened yet.' },
     messages: {
       saved: 'Draft saved.',
       scheduled: 'Scheduled. It goes live on the start date.',

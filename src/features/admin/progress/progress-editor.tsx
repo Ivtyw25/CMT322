@@ -13,8 +13,12 @@ import { TextInput } from '@/components/ui/text-input';
 import { routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
 import { uiCopy } from '@/content/ui';
-import type { StaffProgressUpdate } from '@/data/models/staff-content';
-import { STATION_STAGE_ORDER, type StationCode, type StationStageId } from '@/data/models/station';
+import type { ProgressUpdate } from '@/data/models/progress-update';
+import {
+  STATION_STAGE_ORDER,
+  type StationProgress,
+  type StationStageId,
+} from '@/data/models/station';
 import { DeveloperOnly } from '@/features/admin/developer-only';
 import { AdminPageHead } from '@/features/admin/page-head';
 import { AdminPanel } from '@/features/admin/panel';
@@ -25,7 +29,8 @@ import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
 import { useStaffSession } from '@/lib/staff-session';
 import { PhotoList } from './photo-list';
 import { progressStore, type ProgressStation } from '@/lib/staff-records/progress-store';
-import { liveProgress, liveUpdatesFor } from '@/lib/station-progress/live-progress';
+import { stationProgressFrom } from '@/lib/station-progress/live-progress';
+import { mockNow } from '@/lib/tickets/mock-clock';
 
 const copy = adminCopy.progressEditor;
 const NEW_ID = 'new';
@@ -45,8 +50,8 @@ type Errors = Partial<Record<'title' | 'body' | 'date', string>>;
 type ProgressEditorProps = {
   /** The route's ID, or "new". */
   id: string;
-  base: readonly StaffProgressUpdate[];
-  stations: readonly (ProgressStation & { code: StationCode })[];
+  base: readonly ProgressUpdate[];
+  stations: readonly ProgressStation[];
   /** Today as "YYYY-MM-DD", the mock day. */
   today: string;
   /** The mock "now" as an ISO date-time. */
@@ -66,12 +71,13 @@ export function ProgressEditor({ id, base, stations, today, now }: ProgressEdito
   const router = useRouter();
   const { staff } = useStaffSession();
   const records = useStaffRecords(progressStore, base);
-  // The station as commuters see it now, with this browser's published updates on top.
+  // Each station as commuters see it now: the same progress updates, worked out the same way.
   const liveStations = useMemo(
     () =>
       stations.map((entry) => ({
-        ...entry,
-        progress: liveProgress(entry.progress, liveUpdatesFor(entry.code, records, today)),
+        code: entry.code,
+        name: entry.name,
+        progress: stationProgressFrom(entry.code, entry.base, records, today).progress,
       })),
     [stations, records, today],
   );
@@ -91,17 +97,17 @@ export function ProgressEditor({ id, base, stations, today, now }: ProgressEdito
     );
   }
 
-  const blank: StaffProgressUpdate = {
+  const blank: ProgressUpdate = {
     id: NEW_ID,
     title: '',
     stationCode: firstStation?.code ?? 'S20',
-    stage: firstStation?.progress?.currentStageId ?? 'site-clearing',
+    stage: 'site-clearing',
     body: '',
     state: 'draft',
     author: staff?.name ?? '',
     date: '',
     photos: [],
-    percent: null,
+    percent: 0,
     savedAt: '',
   };
 
@@ -123,10 +129,12 @@ export function ProgressEditor({ id, base, stations, today, now }: ProgressEdito
   );
 }
 
+type LiveStation = Pick<ProgressStation, 'code' | 'name'> & { progress: StationProgress | null };
+
 type EditorFormProps = {
-  record: StaffProgressUpdate;
+  record: ProgressUpdate;
   isNew: boolean;
-  stations: ProgressEditorProps['stations'];
+  stations: readonly LiveStation[];
   today: string;
   now: string;
   staffName: string;
@@ -134,7 +142,9 @@ type EditorFormProps = {
 };
 
 function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }: EditorFormProps) {
-  const [draft, setDraft] = useState<StaffProgressUpdate>(record);
+  // A new update starts from the station as commuters see it now; a saved one keeps its own figures.
+  const [draft, setDraft] = useState<ProgressUpdate>(record);
+  const [follows, setFollows] = useState(isNew);
   const [mode, setMode] = useState<PublishMode>(record.state === 'scheduled' ? 'later' : 'now');
   const [errors, setErrors] = useState<Errors>({});
   const [showAltErrors, setShowAltErrors] = useState(false);
@@ -142,13 +152,20 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
 
   const station = stations.find((entry) => entry.code === draft.stationCode);
   const currentPercent = station?.progress?.percent ?? 0;
-  const percent = draft.percent ?? currentPercent;
+  const percent = follows ? currentPercent : draft.percent;
+  const stage = follows ? (station?.progress?.currentStageId ?? draft.stage) : draft.stage;
   const missingAlt = draft.photos.some((photo) => photo.alt.trim() === '');
   const wasPublished = record.state === 'published';
 
-  function change(partial: Partial<StaffProgressUpdate>) {
+  function change(partial: Partial<ProgressUpdate>) {
     setDraft((current) => ({ ...current, ...partial }));
     setMessage('');
+  }
+
+  /** Sets the stage or percentage; the other one keeps the value shown. */
+  function setProgress(partial: Pick<Partial<ProgressUpdate>, 'stage' | 'percent'>) {
+    setFollows(false);
+    change({ stage, percent, ...partial });
   }
 
   function save(target: 'draft' | 'publish') {
@@ -167,7 +184,8 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
       setMessage(copy.messages.invalid);
       return;
     }
-    const savedId = isNew ? `${slugify(draft.title) || 'update'}-${Date.parse(now)}` : draft.id;
+    const savedAt = mockNow(now);
+    const savedId = isNew ? `${slugify(draft.title) || 'update'}-${Date.parse(savedAt)}` : draft.id;
     const state = target === 'draft' ? 'draft' : mode === 'later' ? 'scheduled' : 'published';
     const date =
       state === 'draft'
@@ -177,15 +195,17 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
           : wasPublished
             ? record.date
             : today;
-    setDraft((current) => ({ ...current, id: savedId, state, date, savedAt: now }));
+    setFollows(false);
+    setDraft((current) => ({ ...current, id: savedId, state, date, stage, percent, savedAt }));
     progressStore.upsert({
       ...draft,
       id: savedId,
       state,
       date,
       author: draft.author || staffName,
+      stage,
       percent,
-      savedAt: now,
+      savedAt,
     });
     onSaved(savedId);
     setMessage(
@@ -253,11 +273,8 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
                   onValueChange={(code) => {
                     const picked = stations.find((entry) => entry.code === code);
                     if (picked) {
-                      change({
-                        stationCode: picked.code,
-                        stage: picked.progress?.currentStageId ?? 'site-clearing',
-                        percent: null,
-                      });
+                      setFollows(true);
+                      change({ stationCode: picked.code });
                     }
                   }}
                   options={stations.map((entry) => ({
@@ -268,9 +285,9 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
               </Field>
               <Field label={copy.fields.stage}>
                 <MenuSelect
-                  value={draft.stage}
+                  value={stage}
                   onValueChange={(value) => {
-                    if (isStage(value)) change({ stage: value });
+                    if (isStage(value)) setProgress({ stage: value });
                   }}
                   options={stageOptions}
                 />
@@ -303,7 +320,7 @@ function EditorForm({ record, isNew, stations, today, now, staffName, onSaved }:
                 max={100}
                 value={percent}
                 aria-describedby="station-progress-hint"
-                onChange={(event) => change({ percent: Number(event.target.value) })}
+                onChange={(event) => setProgress({ percent: Number(event.target.value) })}
                 className="h-2 w-full cursor-pointer accent-primary-600"
               />
               <p id="station-progress-hint" className="type-body-xs text-gray-500">

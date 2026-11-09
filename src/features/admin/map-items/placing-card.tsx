@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button';
 import { SegmentedControl, type SegmentedOption } from '@/components/ui/segmented-control';
 import { adminCopy } from '@/content/admin';
 import type { MapItemKind } from '@/data/models/staff-content';
+import type { GeoPoint } from '@/lib/geo/reverse-geocode';
 import type { AddressLookupStatus } from '@/lib/geo/use-reverse-geocode';
+import { LocateButton, NearestStation } from '@/features/admin/pin-place';
+import type { PinStation } from '@/features/admin/pin-station';
 
 const copy = adminCopy.mapItems;
 
@@ -16,18 +19,24 @@ type PlacingCardProps = {
   placed: boolean;
   road: string;
   lookup: AddressLookupStatus;
+  /** The station nearest the pin, or null before it is placed. */
+  station: PinStation | null;
+  /** "Use my current location" found where the staff member is. */
+  onLocate: (point: GeoPoint) => void;
   onKindChange: (kind: MapItemKind) => void;
   onContinue: () => void;
   onCancel: () => void;
 };
 
-/** The card beside the map while a new map item is being placed: type, road and the next step. */
+/** The card beside the map while a new map pin is placed: type, road, nearest station and the next step. */
 export function PlacingCard({
   kind,
   kindChoices,
   placed,
   road,
   lookup,
+  station,
+  onLocate,
   onKindChange,
   onContinue,
   onCancel,
@@ -68,6 +77,8 @@ export function PlacingCard({
           {roadText}
         </p>
       </div>
+      <NearestStation station={station} hint />
+      <LocateButton onFound={onLocate} />
       <div className="flex flex-wrap gap-3">
         <Button onClick={onContinue} disabled={!placed}>
           {copy.placing.continue}

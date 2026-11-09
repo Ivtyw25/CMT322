@@ -40,6 +40,9 @@ import { useReverseGeocode } from '@/lib/geo/use-reverse-geocode';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
 import { useStaffSession } from '@/lib/staff-session';
 import { PlacingCard } from './placing-card';
+import { NearestStation } from '@/features/admin/pin-place';
+import { pinPlaceOf, stationNear, type PinStation } from '@/features/admin/pin-station';
+import type { GeoPoint } from '@/lib/geo/reverse-geocode';
 
 const copy = adminCopy.mapItems;
 const kinds = ['closure', 'worksite', 'hazard'] as const satisfies readonly MapItemKind[];
@@ -71,6 +74,8 @@ type MapItemsPageProps = {
   /** The mock "now" as an ISO date-time. */
   now: string;
   center: { lat: number; lng: number };
+  /** Every station, to find the one nearest a pin. */
+  stations: readonly PinStation[];
 };
 
 type Tool = 'select' | 'pin';
@@ -84,7 +89,7 @@ const nameOf = (item: StaffAnnouncement) => item.mapName || item.title;
  * The map items editor (Figma 117:5034): the list, the traffic map and the edit card. A map item is
  * part of its announcement, so every change here is saved onto the announcement.
  */
-export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
+export function MapItemsPage({ base, today, now, center, stations }: MapItemsPageProps) {
   const router = useRouter();
   const { staff } = useStaffSession();
   const items = useStaffRecords(announcementStore, base);
@@ -102,10 +107,15 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
   const [message, setMessage] = useState('');
   const [placing, setPlacing] = useState<Placing | null>(null);
   const roadLookup = useReverseGeocode(
-    useCallback(
-      (road: string) => setPlacing((current) => (current ? { ...current, road } : current)),
-      [],
-    ),
+    useCallback((road: string) => {
+      setPlacing((current) => (current ? { ...current, road } : current));
+      // A moved pin of an existing item: its road follows the pin.
+      setForm((current) =>
+        current
+          ? { ...current, location: road, road: road.split(',')[0]?.trim() || road }
+          : current,
+      );
+    }, []),
   );
   const { lookup: findRoad, cancel: cancelRoadLookup } = roadLookup;
 
@@ -135,7 +145,15 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
     label: nameOf(item),
     variant: variantOf[kindOfType[item.type]],
   }));
-  const fitPoints = useMemo(() => items.map((item) => ({ lat: item.lat, lng: item.lng })), [items]);
+  const allPoints = useMemo(() => items.map((item) => ({ lat: item.lat, lng: item.lng })), [items]);
+  // The map fits all pins at first, and a located pin when "Use my current location" finds one.
+  const [fit, setFit] = useState<{ points: readonly GeoPoint[]; key: number }>({
+    points: [],
+    key: 1,
+  });
+  const fitPoints = fit.points.length > 0 ? fit.points : allPoints;
+  const placingStation = stationNear(stations, placing?.point ?? null);
+  const formStation = form ? stationNear(stations, { lat: form.lat, lng: form.lng }) : null;
 
   function startPlacing() {
     close();
@@ -150,6 +168,16 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
 
   function placePin(point: MapPoint) {
     setPlacing((current) => (current ? { ...current, point, road: '' } : current));
+    findRoad(point);
+  }
+
+  function locatePin(point: GeoPoint) {
+    placePin(point);
+    setFit((current) => ({ points: [point], key: current.key + 1 }));
+  }
+
+  function movePin(point: GeoPoint) {
+    update(point);
     findRoad(point);
   }
 
@@ -201,6 +229,7 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
     const status = isDraft ? 'draft' : statusFromDates(form.startDate, form.endDate, today);
     const saved: StaffAnnouncement = {
       ...form,
+      ...pinPlaceOf(formStation),
       mapName: form.mapName.trim(),
       status,
       showOnMap: isDraft ? false : form.showOnMap,
@@ -225,6 +254,8 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
       placed={placing.point !== null}
       road={placing.road}
       lookup={roadLookup.status}
+      station={placingStation}
+      onLocate={locatePin}
       onKindChange={(kind) => setPlacing((current) => (current ? { ...current, kind } : current))}
       onContinue={continueToAnnouncement}
       onCancel={stopPlacing}
@@ -281,6 +312,13 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
           />
         </Field>
       </div>
+      <div className="flex flex-col gap-1">
+        <p className="type-body-s-medium text-gray-900">{copy.placing.road}</p>
+        <p role="status" className="type-body-s text-gray-700">
+          {roadLookup.status === 'loading' ? copy.placing.finding : form.location || form.road}
+        </p>
+      </div>
+      <NearestStation station={formStation} />
       <div className="flex flex-col gap-1">
         <p className="type-body-s-medium text-gray-900">{copy.edit.announcement}</p>
         <Link
@@ -447,8 +485,9 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
                 if (picked) select(picked);
               }}
               fitPoints={fitPoints}
-              fitKey={1}
-              resetBounds={fitPoints}
+              fitKey={fit.key}
+              fitMaxZoom={16}
+              resetBounds={allPoints}
               pin={
                 placing
                   ? {
@@ -460,7 +499,7 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
                   : tool === 'pin' && form
                     ? {
                         point: { lat: form.lat, lng: form.lng },
-                        onChange: (point) => update(point),
+                        onChange: movePin,
                         label: () => copy.map.pinLabel(nameOf(form)),
                         dropLabel: copy.map.dropLabel,
                       }

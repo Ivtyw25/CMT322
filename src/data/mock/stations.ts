@@ -1,63 +1,24 @@
-import {
-  STATION_STAGE_ORDER,
-  type Station,
-  type StationProgress,
-  type StationStage,
-  type StationStageId,
-} from '@/data/models/station';
+import type { Station, StationCode } from '@/data/models/station';
+import { stationProgressFrom } from '@/lib/station-progress/live-progress';
+import { MOCK_NOW } from './clock';
+import { progressUpdates, stageBases } from './progress-updates';
 
 /*
  * The 22 stations in line order, Penang Sentral to PSR-A (docs/BRIEFING.md §3, Figma 100:3723).
- * KOMTAR (S20) is exactly as Figma 95:3102. Progress figures, stages and notes for the other
- * stations are invented mock records.
+ * KOMTAR (S20) is exactly as Figma 95:3102. Notes for the other stations are invented mock
+ * records. Progress and stages come from the progress updates, as on the station page.
  */
 
-/** When each stage is planned on Segment 1 if it has not started yet. */
-const SEGMENT_1_PLAN: Record<StationStageId, string> = {
-  'site-clearing': '2025',
-  piling: '2026',
-  piers: '2027',
-  structure: '2027',
-  systems: '2029 to 2030',
-  testing: 'Dec 2031',
-};
-
-/** Segment 2 construction starts in January 2027. */
-const SEGMENT_2_PLAN: Record<StationStageId, string> = {
-  'site-clearing': '2027',
-  piling: '2027 to 2028',
-  piers: '2028',
-  structure: '2029',
-  systems: '2030 to 2031',
-  testing: 'Dec 2031',
-};
-
-function planned(id: StationStageId, plan: Record<StationStageId, string>): StationStage {
-  return { id, status: 'planned', when: plan[id], isTarget: id === 'testing' };
-}
-
-/** Builds the six stages: finished ones with their month, the current one, then the plan. */
-function segment1Stages(
-  completed: Partial<Record<StationStageId, string>>,
-  current: StationStageId,
-): StationStage[] {
-  return STATION_STAGE_ORDER.map((id): StationStage => {
-    const completedIn = completed[id];
-    if (completedIn) return { id, status: 'done', completedIn };
-    if (id === current) return { id, status: 'in-progress' };
-    return planned(id, SEGMENT_1_PLAN);
-  });
-}
-
-const segment2Stages = (): StationStage[] =>
-  STATION_STAGE_ORDER.map((id) => planned(id, SEGMENT_2_PLAN));
-
-function progress(
-  percent: number,
-  currentStageId: StationStageId,
-  updatedAt: string,
-): StationProgress {
-  return { percent, currentStageId, updatedAt };
+/** A station's progress and six stages, from the progress updates (src/data/mock/progress-updates.ts). */
+function progressOf(code: StationCode): Pick<Station, 'progress' | 'stages'> {
+  const base = stageBases.find((entry) => entry.code === code)?.stages ?? [];
+  const { progress, stages } = stationProgressFrom(
+    code,
+    base,
+    progressUpdates,
+    MOCK_NOW.slice(0, 10),
+  );
+  return { progress, stages };
 }
 
 // VERIFY: approximate coordinates (lat, lng per station), estimated along the published alignment.
@@ -81,8 +42,7 @@ export const stations: Station[] = [
     interchanges: ['KTM Butterworth', 'Ferry terminal', 'Rapid Penang bus terminal'],
     interchangeModes: ['rail', 'ferry', 'bus'],
     nearby: ['Penang Sentral transport hub', 'Butterworth town centre'],
-    progress: null,
-    stages: segment2Stages(),
+    ...progressOf('S31'),
   },
   {
     code: 'S30',
@@ -102,8 +62,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Jalan Bagan Luar shops and offices'],
-    progress: null,
-    stages: segment2Stages(),
+    ...progressOf('S30'),
   },
   {
     code: 'S19',
@@ -123,8 +82,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Gat Lebuh Macallum', 'Weld Quay'],
-    progress: null,
-    stages: segment2Stages(),
+    ...progressOf('S19'),
   },
   {
     code: 'S20',
@@ -145,8 +103,7 @@ export const stations: Station[] = [
     interchanges: ['KOMTAR bus terminal'],
     interchangeModes: ['bus'],
     nearby: ['KOMTAR Tower', 'George Town UNESCO site'],
-    progress: progress(38, 'piers', '2026-10-27'),
-    stages: segment1Stages({ 'site-clearing': '2025-03', piling: '2025-11' }, 'piers'),
+    ...progressOf('S20'),
   },
   {
     code: 'S18',
@@ -166,8 +123,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Bandar Sri Pinang housing', 'Lebuhraya Tun Dr Lim Chong Eu'],
-    progress: progress(14, 'piling', '2026-10-08'),
-    stages: segment1Stages({ 'site-clearing': '2026-06' }, 'piling'),
+    ...progressOf('S18'),
   },
   {
     code: 'S17',
@@ -187,8 +143,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Sungai Pinang river', 'Jalan Sungai Pinang'],
-    progress: progress(29, 'piers', '2026-10-16'),
-    stages: segment1Stages({ 'site-clearing': '2025-04', piling: '2026-02' }, 'piers'),
+    ...progressOf('S17'),
   },
   {
     code: 'S16',
@@ -208,8 +163,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Jelutong town', 'Lebuhraya Tun Dr Lim Chong Eu'],
-    progress: progress(33, 'piers', '2026-10-16'),
-    stages: segment1Stages({ 'site-clearing': '2025-04', piling: '2026-01' }, 'piers'),
+    ...progressOf('S16'),
   },
   {
     code: 'S15',
@@ -229,8 +183,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Eastern waterfront', 'Lebuhraya Tun Dr Lim Chong Eu'],
-    progress: progress(31, 'piers', '2026-10-16'),
-    stages: segment1Stages({ 'site-clearing': '2025-05', piling: '2026-02' }, 'piers'),
+    ...progressOf('S15'),
   },
   {
     code: 'S14',
@@ -250,8 +203,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Gelugor town', 'Jalan Gelugor'],
-    progress: progress(41, 'piers', '2026-10-20'),
-    stages: segment1Stages({ 'site-clearing': '2025-03', piling: '2025-10' }, 'piers'),
+    ...progressOf('S14'),
   },
   {
     code: 'S13',
@@ -271,11 +223,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Universiti Sains Malaysia (USM) main campus'],
-    progress: progress(46, 'structure', '2026-10-21'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-02', piling: '2025-09', piers: '2026-08' },
-      'structure',
-    ),
+    ...progressOf('S13'),
   },
   {
     code: 'S12',
@@ -295,8 +243,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Batu Uban', 'Masjid Jamek Batu Uban'],
-    progress: progress(39, 'piers', '2026-10-20'),
-    stages: segment1Stages({ 'site-clearing': '2025-03', piling: '2025-12' }, 'piers'),
+    ...progressOf('S12'),
   },
   {
     code: 'S11',
@@ -316,11 +263,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Sungai Dua Depot', 'Jalan Sungai Dua'],
-    progress: progress(48, 'structure', '2026-10-18'),
-    stages: segment1Stages(
-      { 'site-clearing': '2025-02', piling: '2025-08', piers: '2026-07' },
-      'structure',
-    ),
+    ...progressOf('S11'),
   },
   {
     code: 'S10',
@@ -340,8 +283,7 @@ export const stations: Station[] = [
     interchanges: ['Sungai Nibong bus terminal'],
     interchangeModes: ['bus'],
     nearby: ['Sungai Nibong bus terminal', 'Jalan Sultan Azlan Shah'],
-    progress: progress(42, 'piers', '2026-10-22'),
-    stages: segment1Stages({ 'site-clearing': '2025-02', piling: '2025-10' }, 'piers'),
+    ...progressOf('S10'),
   },
   {
     code: 'S09',
@@ -361,8 +303,7 @@ export const stations: Station[] = [
     interchanges: ['Rapid Penang bus hub'],
     interchangeModes: ['bus'],
     nearby: ['Bukit Jambul Complex', 'SK Bayan Baru'],
-    progress: progress(36, 'piers', '2026-10-26'),
-    stages: segment1Stages({ 'site-clearing': '2025-03', piling: '2026-01' }, 'piers'),
+    ...progressOf('S09'),
   },
   {
     code: 'S08',
@@ -382,8 +323,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['SPICE Arena', 'SPICE Convention Centre'],
-    progress: progress(34, 'piers', '2026-10-12'),
-    stages: segment1Stages({ 'site-clearing': '2025-04', piling: '2026-01' }, 'piers'),
+    ...progressOf('S08'),
   },
   {
     code: 'S07',
@@ -403,8 +343,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Bayan Baru town centre'],
-    progress: progress(30, 'piers', '2026-10-12'),
-    stages: segment1Stages({ 'site-clearing': '2025-05', piling: '2026-03' }, 'piers'),
+    ...progressOf('S07'),
   },
   {
     code: 'S06',
@@ -425,8 +364,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Bayan Lepas Free Industrial Zone, Phase 3'],
-    progress: progress(17, 'piling', '2026-10-15'),
-    stages: segment1Stages({ 'site-clearing': '2026-04' }, 'piling'),
+    ...progressOf('S06'),
   },
   {
     code: 'S05',
@@ -447,8 +385,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Bayan Lepas Free Industrial Zone, Phase 4', 'Lebuh Kampung Jawa'],
-    progress: progress(21, 'piling', '2026-10-19'),
-    stages: segment1Stages({ 'site-clearing': '2026-02' }, 'piling'),
+    ...progressOf('S05'),
   },
   {
     code: 'S04',
@@ -468,8 +405,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Sungai Tiram', 'Jalan Sungai Tiram'],
-    progress: progress(24, 'piers', '2026-09-28'),
-    stages: segment1Stages({ 'site-clearing': '2025-06', piling: '2026-05' }, 'piers'),
+    ...progressOf('S04'),
   },
   {
     code: 'S03',
@@ -489,8 +425,7 @@ export const stations: Station[] = [
     interchanges: ['Penang International Airport terminal'],
     interchangeModes: ['air'],
     nearby: ['Penang International Airport terminal'],
-    progress: progress(27, 'piers', '2026-10-05'),
-    stages: segment1Stages({ 'site-clearing': '2025-05', piling: '2026-04' }, 'piers'),
+    ...progressOf('S03'),
   },
   {
     code: 'S02',
@@ -510,8 +445,7 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Permatang Damar Laut village'],
-    progress: progress(12, 'piling', '2026-09-24'),
-    stages: segment1Stages({ 'site-clearing': '2026-03' }, 'piling'),
+    ...progressOf('S02'),
   },
   {
     code: 'A01',
@@ -531,7 +465,6 @@ export const stations: Station[] = [
     interchanges: [],
     interchangeModes: [],
     nearby: ['Penang South Reclamation island A'],
-    progress: progress(6, 'site-clearing', '2026-09-24'),
-    stages: segment1Stages({}, 'site-clearing'),
+    ...progressOf('A01'),
   },
 ];

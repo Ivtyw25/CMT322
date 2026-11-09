@@ -6,7 +6,7 @@ import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
 import { Field } from '@/components/ui/field';
 import { TextInput } from '@/components/ui/text-input';
 import { adminCopy } from '@/content/admin';
-import type { ProgressPhoto } from '@/data/models/staff-content';
+import type { ProgressPhoto } from '@/data/models/progress-update';
 import { useAnnounce } from '@/lib/announce/announcer';
 import { cn } from '@/lib/cn';
 

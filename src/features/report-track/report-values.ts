@@ -115,24 +115,6 @@ export function reportRules(values: ReportValues, uploading: boolean): FieldRule
   };
 }
 
-/** The station closest to a point (straight-line, good enough at city scale). */
-export function nearestStation(
-  stations: readonly ReportStation[],
-  point: ReportPoint,
-): ReportStation | null {
-  const cosine = Math.cos((point.lat * Math.PI) / 180);
-  let best: ReportStation | null = null;
-  let bestDistance = Number.POSITIVE_INFINITY;
-  for (const station of stations) {
-    const distance = (station.lat - point.lat) ** 2 + ((station.lng - point.lng) * cosine) ** 2;
-    if (distance < bestDistance) {
-      best = station;
-      bestDistance = distance;
-    }
-  }
-  return best;
-}
-
 /** "5.2945" */
 export const formatCoordinate = (value: number) => value.toFixed(4);
 
