@@ -103,10 +103,3 @@ export async function getRoadChangesThisWeek(limit: number): Promise<Announcemen
 export async function getTrafficUpdatedAt(): Promise<string> {
   return TRAFFIC_UPDATED_AT.slice(11, 16);
 }
-
-/** The last day of "Next 7 days" at the design date, "YYYY-MM-DD" (inclusive). */
-export async function getTrafficWeekEnd(): Promise<string> {
-  return new Date(Date.parse(MOCK_NOW) + WEEK_DAYS * DAY_MS + 8 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10);
-}

@@ -1,4 +1,4 @@
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, TrainFront } from 'lucide-react';
 import Link from 'next/link';
 import { Tag } from '@/components/ui/tag';
 import { routes } from '@/config/routes';
@@ -7,10 +7,17 @@ import type { TrafficEntry } from './traffic-entry';
 
 const linkClass = 'type-body-s-medium text-primary-700 hover:text-primary-800';
 
-/** The details of one road change inside the map's popup (Figma 67:2416). */
-export function MapPopup({ entry }: { entry: TrafficEntry }) {
+/** The details of one road change inside the map's popup (Figma 67:2416), with its station. */
+export function MapPopup({
+  entry,
+  station,
+}: {
+  entry: TrafficEntry;
+  /** The station the road change is at, or the one nearest its pin. */
+  station: { code: string; name: string } | null;
+}) {
   const copy = trafficCopy.map.popup;
-  const firstStation = entry.stationCodes[0];
+  const firstStation = station?.code ?? entry.stationCodes[0];
   const titleId = `popup-${entry.id}`;
   return (
     <div
@@ -19,7 +26,18 @@ export function MapPopup({ entry }: { entry: TrafficEntry }) {
       tabIndex={-1}
       className="flex w-[min(18.75rem,calc(100vw-4rem))] flex-col gap-2"
     >
-      <Tag kind={entry.layer} className="self-start" />
+      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+        <Tag kind={entry.layer} />
+        {station ? (
+          <Link
+            href={routes.project.station(station.code)}
+            className="flex items-center gap-1 type-body-xs-medium text-primary-700 hover:text-primary-800"
+          >
+            <TrainFront aria-hidden className="size-3.5 shrink-0" />
+            {copy.station(station.code, station.name)}
+          </Link>
+        ) : null}
+      </div>
       <h3 id={titleId} className="type-heading-3xs text-gray-900">
         {entry.title}
       </h3>

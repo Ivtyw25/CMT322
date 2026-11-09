@@ -13,6 +13,8 @@ import { SearchBar } from '@/components/ui/search-bar';
 import { trafficCopy } from '@/content/traffic';
 import { FilterLiveRegion } from './filter-live-region';
 import { MapPopup } from './map-popup';
+import { nearestStation } from '@/lib/geo/nearest-station';
+import type { StationCode } from '@/data/models/station';
 import { PanelHeader } from './panel-header';
 import { LayerToggles } from './layer-toggles';
 import { RoadChangeList, emptyTextOf } from './road-change-list';
@@ -63,6 +65,10 @@ function reducedMotion(): boolean {
 
 /** Traffic map (Figma 1:801): the filter panel and list beside a Leaflet map of the road changes. */
 export function MapView({ entries, stations, alignment, updatedAt }: MapViewProps) {
+  /** The road change's station, or the one nearest its pin when it names none. */
+  const stationOf = (entry: TrafficEntry): MapStation | null =>
+    stations.find((station) => entry.stationCodes.includes(station.code as StationCode)) ??
+    nearestStation(stations, entry);
   const copy = trafficCopy.map;
   const { params, when, hidden, setWhen, toggleLayer } = useTrafficParams();
   const [query, setQuery] = useState(() => params.get('q')?.slice(0, MAX_QUERY_LENGTH) ?? '');
@@ -258,7 +264,7 @@ export function MapView({ entries, stations, alignment, updatedAt }: MapViewProp
             onDeselect={() => params.set({ focus: null })}
             renderPopup={(id) => {
               const entry = popupEntry(id);
-              return entry ? <MapPopup entry={entry} /> : null;
+              return entry ? <MapPopup entry={entry} station={stationOf(entry)} /> : null;
             }}
             focusId={pan?.id ?? null}
             focusKey={pan?.key ?? 0}

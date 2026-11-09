@@ -22,8 +22,6 @@ export type TrafficEntry = {
   dateText: string;
   /** "10 pm to 6 am" or "All day". Null for a hazard, which has no working hours. */
   hoursText: string | null;
-  /** Starts within the next seven days, or is already under way. */
-  inWeek: boolean;
   /** Title, road, place and area names, normalised, for the search. */
   searchText: string;
 };
@@ -45,11 +43,10 @@ function hoursTextOf(item: TrafficItem): string | null {
   return copy.popup.hours(from, to);
 }
 
-/** Builds the entries once, on the server. `weekEnd` is the last day of "Next 7 days". */
+/** Builds the entries once, on the server. */
 export function toTrafficEntries(
   items: readonly TrafficItem[],
   areas: readonly Area[],
-  weekEnd: string,
 ): TrafficEntry[] {
   return items.map((item) => {
     const areaNames = areas
@@ -68,7 +65,6 @@ export function toTrafficEntries(
       announcementId: item.announcementId,
       dateText: dateTextOf(item),
       hoursText: hoursTextOf(item),
-      inWeek: item.status === 'active' || item.startDate <= weekEnd,
       searchText: normaliseQuery([item.title, item.road, item.location, ...areaNames].join(' ')),
     };
   });

@@ -11,7 +11,7 @@ type TimeFilterProps = {
 };
 
 /**
- * "Happening now / Next 7 days / Upcoming" (Figma 67:2449): a native radio group, so the arrow keys
+ * "Active / Upcoming" (Figma 67:2449, owner decision 2026-11-09): a native radio group, so the arrow keys
  * move and select. Choosing the selected window again goes back to showing everything.
  */
 export function TimeFilter({ value, onChange }: TimeFilterProps) {

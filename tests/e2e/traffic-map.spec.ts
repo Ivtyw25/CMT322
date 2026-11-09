@@ -6,7 +6,7 @@ import { loadTrafficData } from '@/features/traffic/traffic-data';
 import { prepare, settle, whenHydrated } from '../support/browser';
 
 const copy = trafficCopy.map;
-const { entries } = await loadTrafficData();
+const { entries, stations } = await loadTrafficData();
 
 const total = entries.length;
 const byLayer = (layer: string) => entries.filter((entry) => entry.layer === layer);
@@ -20,7 +20,6 @@ const construction = entries.find((entry) => entry.layer === 'construction');
 if (!closure || !hazard || !reportedHazard || !construction)
   throw new Error('Mock traffic data changed: update spec');
 const nowCount = entries.filter((entry) => entry.status === 'active').length;
-const weekCount = entries.filter((entry) => entry.inWeek).length;
 const upcomingCount = entries.filter((entry) => entry.status === 'upcoming').length;
 
 const DESKTOP = { width: 1440, height: 900 };
@@ -80,7 +79,7 @@ test.describe('panel', () => {
   test('the view switch marks Map view as current and keeps the filters for Route view', async ({
     page,
   }) => {
-    await visit(page, `${routes.traffic.map}?when=week&hide=hazard,lrt`);
+    await visit(page, `${routes.traffic.map}?when=upcoming&hide=hazard,lrt`);
     const nav = page.getByRole('navigation', { name: copy.viewSwitch.label });
     await expect(nav.getByRole('link', { name: copy.viewSwitch.map })).toHaveAttribute(
       'aria-current',
@@ -88,7 +87,7 @@ test.describe('panel', () => {
     );
     await expect(nav.getByRole('link', { name: copy.viewSwitch.route })).toHaveAttribute(
       'href',
-      `${routes.traffic.route}?when=week&hide=hazard`,
+      `${routes.traffic.route}?when=upcoming&hide=hazard`,
     );
   });
 });
@@ -98,13 +97,11 @@ test.describe('time filter', () => {
     page,
   }) => {
     await visit(page);
-    await timeOption(page, copy.filters.time.now).click({ force: true });
-    await expect(page).toHaveURL(/when=now/);
+    await timeOption(page, copy.filters.time.active).click({ force: true });
+    await expect(page).toHaveURL(/when=active/);
     await expect(listHeading(page)).toHaveText(copy.results.title(nowCount));
-    await timeOption(page, copy.filters.time.week).click({ force: true });
-    await expect(page).toHaveURL(/when=week/);
-    await expect(listHeading(page)).toHaveText(copy.results.title(weekCount));
     await timeOption(page, copy.filters.time.upcoming).click({ force: true });
+    await expect(page).toHaveURL(/when=upcoming/);
     await expect(listHeading(page)).toHaveText(copy.results.title(upcomingCount));
     expect(await page.evaluate(() => window.history.length)).toBeLessThanOrEqual(2);
   });
@@ -112,12 +109,12 @@ test.describe('time filter', () => {
   test('the arrow keys move and select; choosing the selected window again shows everything', async ({
     page,
   }) => {
-    await visit(page, `${routes.traffic.map}?when=now`);
-    await timeOption(page, copy.filters.time.now).focus();
+    await visit(page, `${routes.traffic.map}?when=active`);
+    await timeOption(page, copy.filters.time.active).focus();
     await page.keyboard.press('ArrowRight');
-    await expect(timeOption(page, copy.filters.time.week)).toBeChecked();
-    await expect(page).toHaveURL(/when=week/);
-    await timeOption(page, copy.filters.time.week).click({ force: true });
+    await expect(timeOption(page, copy.filters.time.upcoming)).toBeChecked();
+    await expect(page).toHaveURL(/when=upcoming/);
+    await timeOption(page, copy.filters.time.upcoming).click({ force: true });
     await expect(page).not.toHaveURL(/when=/);
     await expect(listHeading(page)).toHaveText(copy.results.title(total));
   });
@@ -227,7 +224,7 @@ test.describe('search', () => {
   test('an empty time range says nothing is planned, and clearing filters resets it', async ({
     page,
   }) => {
-    await visit(page, `${routes.traffic.map}?when=now&q=night`);
+    await visit(page, `${routes.traffic.map}?when=active&q=night`);
     const fromNight = entries.filter(
       (entry) => entry.status === 'active' && entry.searchText.includes('night'),
     ).length;
@@ -260,6 +257,12 @@ test.describe('list, markers and popup', () => {
       'href',
       routes.reportTrack.reportAt(closure.stationCodes[0] ?? ''),
     );
+    const station = stations.find((entry) => entry.code === closure.stationCodes[0]);
+    await expect(
+      dialog.getByRole('link', {
+        name: copy.popup.station(station?.code ?? '', station?.name ?? ''),
+      }),
+    ).toHaveAttribute('href', routes.project.station(station?.code ?? ''));
   });
 
   test('choosing the selected item again deselects it and closes the popup', async ({ page }) => {
@@ -319,7 +322,7 @@ test.describe('list, markers and popup', () => {
     if (!upcoming) throw new Error('No upcoming item in the mock data');
     await visit(
       page,
-      `${routes.traffic.map}?when=now&hide=closure,construction,hazard&focus=${upcoming.id}`,
+      `${routes.traffic.map}?when=active&hide=closure,construction,hazard&focus=${upcoming.id}`,
     );
     await expect(item(page, upcoming.id)).toHaveAttribute('aria-pressed', 'true');
     await expect(page).not.toHaveURL(/when=|hide=/);

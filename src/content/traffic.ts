@@ -21,8 +21,7 @@ const filters = {
   /** Group name read out for the time filter. */
   timeGroupLabel: 'Time period',
   time: {
-    now: 'Happening now',
-    week: 'Next 7 days',
+    active: 'Active',
     upcoming: 'Upcoming',
   },
   layersTitleDiagram: 'Show on diagram',
@@ -209,6 +208,7 @@ export const trafficCopy = {
       reportProblem: 'Report a problem',
       allDay: 'All day',
       hours: (from: string, to: string) => `${from} to ${to}`,
+      station: (code: string, name: string) => `Near ${code} ${name} station`,
     },
     mapError: {
       title: 'The map did not load',
@@ -269,7 +269,7 @@ export const trafficCopy = {
       viewStation: 'View station page',
       empty: {
         title: 'No road changes near this station',
-        body: 'Nothing matches these filters. Try Next 7 days or Upcoming.',
+        body: 'Nothing matches these filters. Try Upcoming, or clear the time filter.',
       },
       noLayers: 'Turn on at least one type above to see road changes.',
     },

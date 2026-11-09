@@ -3,7 +3,7 @@ import { normaliseQuery } from '@/lib/search/normalise';
 import type { TrafficEntry } from './traffic-entry';
 
 /** Time windows. No window (`null`) shows every road change that has not ended. */
-export const timeWindows = ['now', 'week', 'upcoming'] as const;
+export const timeWindows = ['active', 'upcoming'] as const;
 export type TimeWindow = (typeof timeWindows)[number];
 
 /** What a layer toggle can switch off: the three kinds of road change, and the line on the map. */
@@ -33,9 +33,7 @@ export function serialiseHidden(hidden: readonly HideKey[]): string | null {
 
 function inWindow(entry: TrafficEntry, when: TimeWindow | null): boolean {
   if (when === null) return true;
-  if (when === 'now') return entry.status === 'active';
-  if (when === 'upcoming') return entry.status === 'upcoming';
-  return entry.inWeek;
+  return entry.status === when;
 }
 
 /** Entries that pass the time window and the search, whatever layers are shown. */
