@@ -36,7 +36,6 @@ import { DeveloperOnly } from '@/features/admin/developer-only';
 import { cn } from '@/lib/cn';
 import { useReverseGeocode } from '@/lib/geo/use-reverse-geocode';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
-import { useStaffSession } from '@/lib/staff-session';
 import { PlacingCard } from './placing-card';
 import { NearestStation } from '@/features/admin/pin-place';
 import { pinPlaceOf, stationNear, type PinStation } from '@/features/admin/pin-station';
@@ -91,7 +90,6 @@ const nameOf = (item: StaffAnnouncement) => item.mapName || item.title;
  */
 export function MapItemsPage({ base, today, now, center, stations }: MapItemsPageProps) {
   const router = useRouter();
-  const { staff } = useStaffSession();
   const items = useStaffRecords(announcementStore, base);
   const [query, setQuery] = useState('');
   const [kindFilter, setKindFilter] = useState<KindFilter>('all');
@@ -244,10 +242,7 @@ export function MapItemsPage({ base, today, now, center, stations }: MapItemsPag
       duration: isDraft
         ? form.duration
         : durationLabel(form.startDate, form.endDate, isNightly(form)),
-      history: [
-        ...form.history,
-        { id: `h${form.history.length + 1}`, at: now, action: 'updated', by: staff?.name ?? '' },
-      ],
+      savedAt: now,
     };
     announcementStore.upsert(saved);
     setForm(saved);

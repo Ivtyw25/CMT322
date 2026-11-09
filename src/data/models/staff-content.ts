@@ -1,15 +1,5 @@
 import type { Announcement, AnnouncementStatus } from './announcement';
 
-/** One step in the history list of a staff record. */
-export type StaffHistoryEntry = {
-  id: string;
-  /** ISO 8601 date-time. */
-  at: string;
-  action: 'created' | 'draft-saved' | 'scheduled' | 'published' | 'updated' | 'notice-uploaded';
-  /** The staff member's name. */
-  by: string;
-};
-
 export type StaffAnnouncementStatus = 'draft' | AnnouncementStatus;
 
 export type OfficialNotice = {
@@ -35,8 +25,8 @@ export type StaffAnnouncement = Omit<Announcement, 'status'> & {
   /** Whether the pin is on the public map: true once published. */
   showOnMap: boolean;
   notice: OfficialNotice | null;
-  /** Oldest first. */
-  history: StaffHistoryEntry[];
+  /** ISO 8601 date-time of the last save, for "Last saved" on a draft. */
+  savedAt: string;
 };
 
 /** How the public traffic map classes an announcement's pin. A construction announcement is a worksite. */

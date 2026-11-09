@@ -8,7 +8,7 @@ import type {
 import { removeKey } from '@/lib/storage';
 import { createRecordStore } from '@/lib/staff-records/record-store';
 
-export const announcementStore = createRecordStore<StaffAnnouncement>('mlc-staff-announcements');
+export const announcementStore = createRecordStore<StaffAnnouncement>('mlc-staff-announcements-v2');
 
 /* Map items used to have their own store. They are part of their announcement now, so drop it. */
 if (typeof window !== 'undefined') removeKey('mlc-staff-map-items');

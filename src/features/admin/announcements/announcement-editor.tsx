@@ -15,7 +15,7 @@ import { TextInput } from '@/components/ui/text-input';
 import { announcementPlaceParams, routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
 import type { AnnouncementType } from '@/data/models/announcement';
-import type { StaffAnnouncement, StaffHistoryEntry } from '@/data/models/staff-content';
+import type { StaffAnnouncement } from '@/data/models/staff-content';
 import { AdminPanel } from '@/features/admin/panel';
 import { DeveloperOnly } from '@/features/admin/developer-only';
 import { AdminPageHead } from '@/features/admin/page-head';
@@ -27,7 +27,6 @@ import { slugify } from '@/lib/format/slug';
 import type { GeoPoint } from '@/lib/geo/reverse-geocode';
 import { useReverseGeocode } from '@/lib/geo/use-reverse-geocode';
 import { useStaffRecords } from '@/lib/staff-records/use-staff-records';
-import { useStaffSession } from '@/lib/staff-session';
 import {
   announcementStore,
   durationLabel,
@@ -105,7 +104,7 @@ function blankAnnouncement(
     mapName: '',
     showOnMap: false,
     notice: null,
-    history: [],
+    savedAt: '',
   };
 }
 
@@ -129,7 +128,6 @@ export function AnnouncementEditor({
   center,
 }: AnnouncementEditorProps) {
   const router = useRouter();
-  const { staff } = useStaffSession();
   const records = useStaffRecords(announcementStore, base);
   const params = useSearchParams();
   const existing = records.find((record) => record.id === id) ?? null;
@@ -147,7 +145,6 @@ export function AnnouncementEditor({
           stations={stations}
           today={today}
           now={now}
-          staffName={staff?.name ?? ''}
           onSaved={(savedId) => {
             if (isNew) router.replace(routes.admin.announcementEdit(savedId));
           }}
@@ -171,7 +168,6 @@ type EditorFormProps = {
   stations: readonly PinStation[];
   today: string;
   now: string;
-  staffName: string;
   onSaved: (id: string) => void;
 };
 
@@ -182,7 +178,6 @@ function EditorForm({
   stations,
   today,
   now,
-  staffName,
   onSaved,
 }: EditorFormProps) {
   const [draft, setDraft] = useState<StaffAnnouncement>(record);
@@ -245,35 +240,6 @@ function EditorForm({
       : draft.id;
     const status =
       mode === 'draft' ? 'draft' : statusFromDates(draft.startDate, draft.endDate, today);
-    const action: StaffHistoryEntry['action'] =
-      mode === 'draft'
-        ? isNew
-          ? 'created'
-          : 'draft-saved'
-        : status === 'upcoming'
-          ? 'scheduled'
-          : record.status === 'draft'
-            ? 'published'
-            : 'updated';
-    const noticeAdded = draft.notice !== null && draft.notice.fileName !== record.notice?.fileName;
-    const entries = [
-      ...(noticeAdded
-        ? [
-            {
-              id: `h${draft.history.length + 1}`,
-              at: now,
-              action: 'notice-uploaded' as const,
-              by: staffName,
-            },
-          ]
-        : []),
-      {
-        id: `h${draft.history.length + 1 + (noticeAdded ? 1 : 0)}`,
-        at: now,
-        action,
-        by: staffName,
-      },
-    ];
     const road = draft.location.split(',')[0]?.trim() ?? draft.location;
     announcementStore.upsert({
       ...draft,
@@ -288,14 +254,9 @@ function EditorForm({
       publishedAt: mode === 'draft' ? draft.publishedAt : today,
       // A published announcement's pin is always on the public map.
       showOnMap: mode !== 'draft',
-      history: [...draft.history, ...entries],
+      savedAt: now,
     });
-    setDraft((current) => ({
-      ...current,
-      id: savedId,
-      status,
-      history: [...current.history, ...entries],
-    }));
+    setDraft((current) => ({ ...current, id: savedId, status, savedAt: now }));
     onSaved(savedId);
     setMessage(
       mode === 'draft'
@@ -328,7 +289,7 @@ function EditorForm({
     });
   }
 
-  const saved = record.history.at(-1)?.at;
+  const saved = record.savedAt;
   const statusLine =
     draft.status === 'draft'
       ? copy.status.draft(saved ? formatFullDateTime(saved) : '')
