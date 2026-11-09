@@ -46,6 +46,8 @@ const copy = adminCopy.mapItems;
 const kinds = ['closure', 'worksite', 'hazard'] as const satisfies readonly MapItemKind[];
 const tagOf = { draft: 'draft', upcoming: 'scheduled', ended: 'ended', active: 'active' } as const;
 type KindFilter = 'all' | MapItemKind;
+const statusFilters = ['all', 'active', 'upcoming'] as const;
+type StatusFilter = (typeof statusFilters)[number];
 
 const iconOf: Record<MapItemKind, LucideIcon> = {
   closure: Ban,
@@ -93,6 +95,7 @@ export function MapItemsPage({ base, today, now, center, stations }: MapItemsPag
   const items = useStaffRecords(announcementStore, base);
   const [query, setQuery] = useState('');
   const [kindFilter, setKindFilter] = useState<KindFilter>('all');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [form, setForm] = useState<StaffAnnouncement | null>(null);
   const [tool, setTool] = useState<Tool>('select');
   const [focusKey, setFocusKey] = useState(0);
@@ -123,15 +126,21 @@ export function MapItemsPage({ base, today, now, center, stations }: MapItemsPag
     worksite: items.filter((item) => item.type === 'construction').length,
     hazard: items.filter((item) => item.type === 'hazard').length,
   };
+  const statusCounts = {
+    all: items.length,
+    active: items.filter((item) => item.status === 'active').length,
+    upcoming: items.filter((item) => item.status === 'upcoming').length,
+  };
 
   const shown = useMemo(() => {
     const text = query.trim().toLowerCase();
     return items.filter(
       (item) =>
         (kindFilter === 'all' || kindOfType[item.type] === kindFilter) &&
+        (statusFilter === 'all' || item.status === statusFilter) &&
         (text === '' || `${nameOf(item)} ${item.road}`.toLowerCase().includes(text)),
     );
-  }, [items, kindFilter, query]);
+  }, [items, kindFilter, statusFilter, query]);
 
   const markers: MapMarker[] = [
     ...shown.filter((item) => item.id !== form?.id),
@@ -406,6 +415,24 @@ export function MapItemsPage({ base, today, now, center, stations }: MapItemsPag
                   )}
                 >
                   {copy.filters[value](counts[value])}
+                </button>
+              ))}
+            </div>
+            <div role="group" aria-label={copy.statusLabel} className="flex flex-wrap gap-1.5">
+              {statusFilters.map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={statusFilter === value}
+                  onClick={() => setStatusFilter(value)}
+                  className={cn(
+                    'hit-area cursor-pointer rounded-full border px-2.5 py-1 type-body-xs-medium transition-colors duration-(--duration-fast)',
+                    statusFilter === value
+                      ? 'border-primary-600 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 bg-surface text-gray-700 hover:border-gray-400',
+                  )}
+                >
+                  {copy.statusFilters[value](statusCounts[value])}
                 </button>
               ))}
             </div>

@@ -509,6 +509,12 @@ export const adminCopy = {
       worksite: (n: number) => `Worksites ${n}`,
       hazard: (n: number) => `Hazards ${n}`,
     },
+    statusLabel: 'Pin status',
+    statusFilters: {
+      all: (n: number) => `Any status ${n}`,
+      active: (n: number) => `Active ${n}`,
+      upcoming: (n: number) => `Upcoming ${n}`,
+    },
     kinds: { closure: 'Closure', worksite: 'Worksite', hazard: 'Hazard' },
     itemMeta: (kind: string, hazardNoEnd: boolean) => (hazardNoEnd ? `${kind}, no end date` : kind),
     empty: 'No map pins match this search.',
