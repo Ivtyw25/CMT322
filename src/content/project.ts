@@ -433,7 +433,7 @@ export const projectCopy = {
       following: {
         title: (name: string) => `You’re following ${name}`,
         body: 'We email you about closures, night works and milestones near this station.',
-        link: 'Manage alerts in your profile',
+        link: 'Manage your followed stations',
       },
       notFollowing: {
         title: (name: string) => `Get alerts for ${name}`,

@@ -271,7 +271,7 @@ export function MapItemsPage({ base, today, now, center }: MapItemsPageProps) {
         </Field>
         <Field
           label={copy.edit.to}
-          hint={form.type === 'hazard' ? copy.edit.toHint : undefined}
+          optional={form.type === 'hazard'}
           error={errors.end ?? errors.range}
         >
           <TextInput

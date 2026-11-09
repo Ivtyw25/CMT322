@@ -283,7 +283,7 @@ test.describe('station: following', () => {
     await expect(heading(page, copy.alerts.following.title('KOMTAR'))).toBeVisible();
     await expect(page.getByRole('link', { name: copy.alerts.following.link })).toHaveAttribute(
       'href',
-      routes.account.profileSection('notifications'),
+      routes.account.profileSection('stations'),
     );
   });
 

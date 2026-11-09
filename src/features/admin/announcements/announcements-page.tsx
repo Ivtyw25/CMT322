@@ -10,7 +10,6 @@ import { ChipSelect } from '@/components/ui/chip-select';
 import { ConfirmDialog } from '@/components/ui/dialog';
 import { Pagination } from '@/components/ui/pagination';
 import { SearchInput } from '@/components/ui/search-input';
-import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tag, type TagKind } from '@/components/ui/tag';
 import { routes } from '@/config/routes';
@@ -66,7 +65,7 @@ function dateText(value: string): string {
   return value ? formatDate(value) : adminCopy.content.noDate;
 }
 
-/** Traffic announcements (Figma 116:4985): tabs, filters, the list and the banner switches. */
+/** Traffic announcements (Figma 116:4985): tabs, filters and the list. */
 export function AnnouncementsPage({ base, areas }: AnnouncementsPageProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -135,17 +134,6 @@ export function AnnouncementsPage({ base, areas }: AnnouncementsPageProps) {
     const text = next.toString();
     return `${pathname}${text ? `?${text}` : ''}`;
   }
-
-  const bannerSwitch = (item: StaffAnnouncement) => (
-    <Switch
-      label={copy.table.banner(item.title)}
-      hideLabel
-      checked={item.showBanner}
-      disabled={item.status === 'draft'}
-      onCheckedChange={(checked) => announcementStore.upsert({ ...item, showBanner: checked })}
-      className="relative z-10 min-h-0"
-    />
-  );
 
   const menu = (item: StaffAnnouncement) => (
     <RowMenu
@@ -241,17 +229,17 @@ export function AnnouncementsPage({ base, areas }: AnnouncementsPageProps) {
                     <caption className="sr-only">{copy.table.label}</caption>
                     <thead className="border-b border-gray-200 bg-gray-50">
                       <tr>
-                        {(
-                          ['announcement', 'start', 'end', 'duration', 'status', 'banner'] as const
-                        ).map((column) => (
-                          <th
-                            key={column}
-                            scope="col"
-                            className="px-4 py-2.5 text-left type-body-xs-semibold text-gray-600"
-                          >
-                            {copy.table.columns[column]}
-                          </th>
-                        ))}
+                        {(['announcement', 'start', 'end', 'duration', 'status'] as const).map(
+                          (column) => (
+                            <th
+                              key={column}
+                              scope="col"
+                              className="px-4 py-2.5 text-left type-body-xs-semibold text-gray-600"
+                            >
+                              {copy.table.columns[column]}
+                            </th>
+                          ),
+                        )}
                         <th scope="col" className="w-14">
                           <span className="sr-only">{adminCopy.content.rowMenu.edit}</span>
                         </th>
@@ -284,7 +272,6 @@ export function AnnouncementsPage({ base, areas }: AnnouncementsPageProps) {
                           <td className={cell}>
                             <Tag kind={tagOf[item.status]} />
                           </td>
-                          <td className={cell}>{bannerSwitch(item)}</td>
                           <td className="pr-4">{menu(item)}</td>
                         </tr>
                       ))}
@@ -310,7 +297,7 @@ export function AnnouncementsPage({ base, areas }: AnnouncementsPageProps) {
                           <Tag kind={tagOf[item.status]} />
                           {menu(item)}
                         </div>
-                        <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-4">
+                        <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-3">
                           <div className="flex flex-col gap-0.5">
                             <dt className="type-body-xs text-gray-500">
                               {copy.table.columns.start}
@@ -330,12 +317,6 @@ export function AnnouncementsPage({ base, areas }: AnnouncementsPageProps) {
                             <dd className="type-body-s text-gray-700">
                               {item.duration || adminCopy.content.noDate}
                             </dd>
-                          </div>
-                          <div className="flex flex-col gap-0.5">
-                            <dt className="type-body-xs text-gray-500">
-                              {copy.table.columns.banner}
-                            </dt>
-                            <dd>{bannerSwitch(item)}</dd>
                           </div>
                         </dl>
                       </li>

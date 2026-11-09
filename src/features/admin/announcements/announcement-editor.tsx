@@ -73,7 +73,7 @@ function isAnnouncementType(value: string): value is AnnouncementType {
 
 type Place = { type: AnnouncementType; lat: number; lng: number; road: string };
 
-/** The starting place a new announcement gets from the Map items page, read from the query. */
+/** The starting place a new announcement gets from the Map pins page, read from the query. */
 function placeOf(params: URLSearchParams): Place | null {
   const type = params.get(announcementPlaceParams.type) ?? '';
   const lat = Number(params.get(announcementPlaceParams.lat));
@@ -106,8 +106,6 @@ function blankAnnouncement(
     duration: '',
     detour: [],
     publishedAt: '',
-    showBanner: false,
-    emailFollowers: false,
     mapName: '',
     showOnMap: false,
     notice: null,
@@ -198,7 +196,7 @@ function EditorForm({
   const nearbyNames = nearby
     .slice(0, 2)
     .map((station) => `${station.code} ${station.name}`)
-    .join(copy.publishing.email.and);
+    .join(copy.publishing.and);
 
   function change<K extends keyof StaffAnnouncement>(key: K, value: StaffAnnouncement[K]) {
     setDraft((current) => ({ ...current, [key]: value }));
@@ -407,11 +405,7 @@ function EditorForm({
                   onChange={(event) => change('startDate', event.target.value)}
                 />
               </Field>
-              <Field
-                label={copy.fields.end}
-                hint={draft.type === 'hazard' ? copy.fields.endHint : undefined}
-                error={errors.end}
-              >
+              <Field label={copy.fields.end} optional={draft.type === 'hazard'} error={errors.end}>
                 <TextInput
                   type="date"
                   value={draft.endDate ? fullEndDate(draft.endDate) : ''}
@@ -533,20 +527,9 @@ function EditorForm({
             title={copy.publishing.title}
             className="gap-3.5 p-5"
           >
-            <Switch
-              label={copy.publishing.banner.label}
-              description={copy.publishing.banner.hint}
-              checked={draft.showBanner}
-              onCheckedChange={(checked) => change('showBanner', checked)}
-            />
-            <Switch
-              label={copy.publishing.email.label}
-              description={
-                nearbyNames ? copy.publishing.email.hint(nearbyNames) : copy.publishing.email.none
-              }
-              checked={draft.emailFollowers}
-              onCheckedChange={(checked) => change('emailFollowers', checked)}
-            />
+            <p className="type-body-xs text-gray-600">
+              {nearbyNames ? copy.publishing.automatic(nearbyNames) : copy.publishing.automaticNone}
+            </p>
             <Switch
               label={copy.publishing.map.label}
               description={copy.publishing.map.hint}

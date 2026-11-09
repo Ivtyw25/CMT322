@@ -30,7 +30,7 @@ function SignedIn({ code, name }: { code: StationCode; name: string }) {
         <Title>{alerts.following.title(name)}</Title>
         <p className="type-body-s text-gray-700">{alerts.following.body}</p>
         <Link
-          href={routes.account.profileSection('notifications')}
+          href={routes.account.profileSection('stations')}
           className="hit-area w-fit type-body-s-medium text-primary-700 hover:text-primary-800"
         >
           {alerts.following.link}

@@ -10,7 +10,6 @@ import { uiCopy } from '@/content/ui';
 import { Button } from '@/components/ui/button';
 import { ButtonLink } from '@/components/ui/button-link';
 import { Container } from '@/components/layout/container';
-import { Switch } from '@/components/ui/switch';
 import { Tag } from '@/components/ui/tag';
 import { ConfirmDialog } from '@/components/ui/dialog';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
@@ -21,7 +20,7 @@ import { useSession } from '@/lib/session';
 import { useFollowedStations } from '@/lib/follows';
 import { writeFollows } from '@/lib/follows/follows';
 import { lastActivityAt, useTickets } from '@/lib/tickets';
-import { useProfile, saveProfile, clearProfile } from '@/lib/profile/profile';
+import { useProfile, clearProfile } from '@/lib/profile/profile';
 import { authDelay } from '@/lib/auth/auth';
 import { initialsOf } from '@/lib/format/person';
 import { formatDate } from '@/lib/format/dates';
@@ -86,7 +85,6 @@ export function ProfilePage({
     copy.nav.items.details,
     copy.nav.items.reports,
     copy.nav.items.stations,
-    copy.nav.items.notifications,
     copy.nav.items.security,
     copy.nav.items.privacy,
   ];
@@ -284,38 +282,6 @@ export function ProfilePage({
                     {copy.stations.undo}
                   </Button>
                 </div>
-              ) : null}
-            </ProfileCard>
-            <ProfileCard
-              id="notifications"
-              title={copy.notifications.title}
-              lede={copy.notifications.lede(email)}
-            >
-              {(
-                Object.keys(profile.notifications) as (keyof AccountProfile['notifications'])[]
-              ).map((id) => (
-                <div key={id} className="border-t border-gray-200 px-4 py-4 md:px-6">
-                  <Switch
-                    label={copy.notifications.items[id].label}
-                    description={copy.notifications.items[id].hint}
-                    checked={overrides.notifications?.[id] ?? profile.notifications[id]}
-                    onCheckedChange={(checked) => {
-                      saveProfile({
-                        notifications: {
-                          ...profile.notifications,
-                          ...overrides.notifications,
-                          [id]: checked,
-                        },
-                      });
-                      setMessage(copy.notifications.saved);
-                    }}
-                  />
-                </div>
-              ))}
-              {!follows.codes.length ? (
-                <p className="border-t border-gray-200 px-4 py-4 type-body-s text-gray-500 md:px-6">
-                  {copy.notifications.noStationsNote}
-                </p>
               ) : null}
             </ProfileCard>
             <ProfileCard id="security" title={copy.security.title} lede={copy.security.lede}>

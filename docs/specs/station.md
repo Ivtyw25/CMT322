@@ -99,7 +99,7 @@ Full-bleed `gray-50` band with a 1 px `gray-200` bottom border, padding top 40, 
 | Map container | focus / drag | Pan | focus-visible ring | Arrows pan, +/− zoom | |
 | Report an issue (CTA) | click | → report form for this station | Primary states | Enter | |
 | Connects to links | click | → neighbour station | link states | Enter | |
-| Alerts card link/button | click | → profile notifications / follow / log in | link or Secondary states | Enter | |
+| Alerts card link/button | click | → profile My stations / follow / log in | link or Secondary states | Enter | |
 | Careline | click | Call | link states | Enter | `tel:` |
 
 **Follow behaviour.** Uses the followed-stations store (Stations spec, "Shared component needs" 1). Toggling is instant (optimistic; mock store cannot fail). Announce in the global polite live region: "You're following {name}. We'll email you about works near it." / "You've stopped following {name}." Focus stays on the button. Both the header button and the alerts card reflect the same state. Changes sync to other tabs. No confirmation dialog for unfollow (one tap undoes it).
@@ -149,7 +149,7 @@ Full-bleed `gray-50` band with a 1 px `gray-200` bottom border, padding top 40, 
 | Open the traffic map, Open full traffic map | `routes.traffic.map` (**Decision:** the plain map; a station-focused map URL waits for the Traffic map spec) |
 | Progress along the whole line | `routes.project.construction` |
 | Connects to | `routes.project.station(neighbour.code)` |
-| Manage alerts in your profile | `routes.account.profileSection('notifications')` |
+| Manage your followed stations | `routes.account.profileSection('stations')` |
 | Log in to follow {name} | `routes.account.loginReturningTo(routes.project.station(code))` |
 | Careline | `siteInfo.careline.tel` |
 

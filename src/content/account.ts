@@ -189,7 +189,7 @@ export const accountCopy = {
   account: {
     meta: {
       title: 'Your account',
-      description: 'Manage your details, reports, followed stations and notifications.',
+      description: 'Manage your details, reports and followed stations.',
     },
     breadcrumb: 'Account',
     header: {
@@ -203,7 +203,6 @@ export const accountCopy = {
         details: 'Profile details',
         reports: 'My reports',
         stations: 'My stations',
-        notifications: 'Notifications',
         security: 'Sign-in & security',
         privacy: 'Privacy & data',
       },
@@ -304,36 +303,6 @@ export const accountCopy = {
         body: 'Follow a station to get alerts about closures and works near it.',
         action: 'Add a station',
       },
-    },
-
-    notifications: {
-      title: 'Email notifications',
-      lede: (email: string) => `Sent to ${email}. You can unsubscribe from any email.`,
-      saved: 'Notification settings saved.',
-      saveFailed: "We couldn't save that change. Try again.",
-      items: {
-        'ticket-updates': {
-          label: 'Ticket updates',
-          hint: 'When your report changes status or the team replies.',
-        },
-        'road-closures': {
-          label: 'Road closures near my stations',
-          hint: 'New and changed closures, lane changes and detours.',
-        },
-        'night-works': {
-          label: 'Night works near my stations',
-          hint: 'Planned noisy works between 10 pm and 6 am.',
-        },
-        'construction-milestones': {
-          label: 'Construction milestones',
-          hint: 'When a station or segment reaches a major stage.',
-        },
-        newsletter: {
-          label: 'Monthly project newsletter',
-          hint: 'A short summary of progress along the whole line.',
-        },
-      },
-      noStationsNote: 'Road closure and night works alerts need at least 1 followed station.',
     },
 
     security: {

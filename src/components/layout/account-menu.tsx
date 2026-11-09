@@ -1,6 +1,6 @@
 'use client';
 
-import { Bell, ChevronDown, LogOut, MapPin, Ticket, User } from 'lucide-react';
+import { ChevronDown, LogOut, MapPin, Ticket, User } from 'lucide-react';
 import { DropdownMenu } from 'radix-ui';
 import Link from 'next/link';
 import { navCopy } from '@/content/nav';
@@ -16,7 +16,6 @@ const itemIcons = {
   profile: User,
   reports: Ticket,
   stations: MapPin,
-  notifications: Bell,
 } as const;
 
 const itemClass = cn(

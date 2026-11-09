@@ -1,5 +1,5 @@
 # Profile and settings: UX spec
-Route: `/account` (`routes.account.profile`, protected), anchors `#profile #reports #stations #notifications #security #privacy` · Figma: desktop 92:2963, mobile 133:36817 · no dark frames
+Route: `/account` (`routes.account.profile`, protected), anchors `#profile #reports #stations #security #privacy` · Figma: desktop 92:2963, mobile 133:36817 · no dark frames
 
 Header, footer, docs layout: [`_shared.md`](./_shared.md). Mock session, dialog, inline-edit row: [`_account-shared.md`](./_account-shared.md).
 
@@ -22,10 +22,9 @@ Page header: breadcrumb Home / Account, avatar circle 72 (`primary-600`, initial
 1. **Profile details** (`#profile`): rows Full name, Email (with "Verified" tag), Phone (optional), Home area, Language. Actions "Edit" (Language: "Change").
 2. **My reports** (`#reports`): counts Pending, In progress, Resolved from the user's tickets (`lib/reports` plus mock tickets); "View all tickets" → `routes.reportTrack.track`; latest report row (title, ID, "updated {date} at {time}", status Tag, `chevron-right`) is one link to `routes.reportTrack.ticket(id)`. Up to 3 rows (most recent first); each is a link.
 3. **My stations** (`#stations`): followed stations from `lib/follows` as chips (code tag, name, area, remove `x`). "Add a station".
-4. **Email notifications** (`#notifications`): 5 switch rows, "Sent to {email}".
-5. **Sign-in and security** (`#security`): Password (dots, "Last changed 2 months ago", Change), Google account (email, "Connected", Disconnect), Signed-in devices ("Log out of other devices").
-6. **Privacy and data** (`#privacy`): Your data "Request", Terms "View" (→ `routes.legal.terms`).
-7. **Delete account** card (danger text, outlined danger button).
+4. **Sign-in and security** (`#security`): Password (dots, "Last changed 2 months ago", Change), Google account (email, "Connected", Disconnect), Signed-in devices ("Log out of other devices").
+5. **Privacy and data** (`#privacy`): Your data "Request", Terms "View" (→ `routes.legal.terms`).
+6. **Delete account** card (danger text, outlined danger button).
 
 ## Edit details
 Row "Edit" swaps the value into a field with Save (Primary small) and Cancel (text) under it; one row edits at a time: while one is open the other Edit links are `aria-disabled`. Focus goes to the field; Save returns focus to that row's Edit link. Escape = Cancel.

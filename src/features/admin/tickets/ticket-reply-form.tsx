@@ -11,12 +11,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { adminCopy } from '@/content/admin';
 import { uiCopy } from '@/content/ui';
 import type { StaffMember } from '@/data/models/staff';
-import type { ReplyStatus, ReplyTemplate, Ticket, TicketPriority } from '@/data/models/ticket';
+import type { ReplyStatus, Ticket, TicketPriority } from '@/data/models/ticket';
 import { useAnnounce } from '@/lib/announce/announcer';
 import { useTickets } from '@/lib/tickets';
 
 const copy = adminCopy.ticket.reply;
-const NONE = 'none';
 
 const statusChoices: readonly SegmentedOption<ReplyStatus>[] = [
   { value: 'in-progress', label: copy.statusOptions['in-progress'] },
@@ -37,7 +36,6 @@ type Errors = { subject?: string; description?: string; files?: string };
 type TicketReplyFormProps = {
   ticket: Ticket;
   staff: StaffMember;
-  templates: readonly ReplyTemplate[];
 };
 
 /**
@@ -45,14 +43,13 @@ type TicketReplyFormProps = {
  * adds a reply to the conversation, sets the status and priority, and emails the reporter
  * (simulated: there is no backend).
  */
-export function TicketReplyForm({ ticket, staff, templates }: TicketReplyFormProps) {
+export function TicketReplyForm({ ticket, staff }: TicketReplyFormProps) {
   const { reply } = useTickets();
   const announce = useAnnounce();
   const [status, setStatus] = useState<ReplyStatus>(
     ticket.status === 'pending' ? 'in-progress' : ticket.status,
   );
   const [priority, setPriority] = useState<TicketPriority>(ticket.priority);
-  const [templateId, setTemplateId] = useState(NONE);
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [files, setFiles] = useState<File[]>([]);
@@ -82,7 +79,6 @@ export function TicketReplyForm({ ticket, staff, templates }: TicketReplyFormPro
     );
     setSubject('');
     setBody('');
-    setTemplateId(NONE);
     setFiles([]);
     setUploadKey((key) => key + 1);
     setSending(false);
@@ -118,28 +114,6 @@ export function TicketReplyForm({ ticket, staff, templates }: TicketReplyFormPro
             setMessage('');
           }}
           options={priorityChoices}
-        />
-      </Field>
-
-      <Field label={copy.template}>
-        <MenuSelect
-          value={templateId}
-          onValueChange={(next) => {
-            setTemplateId(next);
-            const template = templates.find((candidate) => candidate.id === next);
-            if (template) {
-              setSubject(template.subject);
-              setBody(template.body);
-            }
-            setMessage('');
-          }}
-          options={[
-            { value: NONE, label: copy.noTemplate },
-            ...templates.map((template) => ({
-              value: template.id,
-              label: copy.templateOption(template.label),
-            })),
-          ]}
         />
       </Field>
 

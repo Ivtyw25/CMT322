@@ -8,7 +8,7 @@ import { Callout } from '@/components/ui/callout';
 import { Tag } from '@/components/ui/tag';
 import { routes } from '@/config/routes';
 import { adminCopy } from '@/content/admin';
-import type { ReplyTemplate, ReportCategory, Ticket } from '@/data/models/ticket';
+import type { ReportCategory, Ticket } from '@/data/models/ticket';
 import { AdminPanel } from '@/features/admin/panel';
 import { useStaffSession } from '@/lib/staff-session';
 import { isHandler, isUnclaimed, useTicket } from '@/lib/tickets';
@@ -71,11 +71,10 @@ function ReporterCard({ ticket }: { ticket: Ticket }) {
 type TicketDetailProps = {
   ticketId: string;
   categories: readonly ReportCategory[];
-  templates: readonly ReplyTemplate[];
 };
 
 /** One ticket for staff: claim it, read the conversation, reply, and keep internal notes. */
-export function TicketDetail({ ticketId, categories, templates }: TicketDetailProps) {
+export function TicketDetail({ ticketId, categories }: TicketDetailProps) {
   const { staff } = useStaffSession();
   const lookup = useTicket(ticketId);
   if (!staff || lookup.state === 'loading') return null;
@@ -142,12 +141,7 @@ export function TicketDetail({ ticketId, categories, templates }: TicketDetailPr
           ) : null}
           {handler ? (
             <AdminPanel headingId="reply-heading" title={copy.reply.title} className="gap-4 p-5">
-              <TicketReplyForm
-                key={ticket.id}
-                ticket={ticket}
-                staff={staff}
-                templates={templates}
-              />
+              <TicketReplyForm key={ticket.id} ticket={ticket} staff={staff} />
             </AdminPanel>
           ) : null}
           <ReporterCard ticket={ticket} />

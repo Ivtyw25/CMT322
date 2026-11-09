@@ -13,11 +13,4 @@ export const mockAccountProfile: AccountProfile = {
     { name: 'Chrome on Windows', current: true, lastActive: 'now' },
     { name: 'Safari on iPhone', current: false, lastActive: 'yesterday' },
   ],
-  notifications: {
-    'ticket-updates': true,
-    'road-closures': true,
-    'night-works': true,
-    'construction-milestones': false,
-    newsletter: false,
-  },
 };

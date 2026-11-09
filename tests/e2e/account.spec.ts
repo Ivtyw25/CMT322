@@ -90,23 +90,23 @@ test('mobile account section bar follows selected headings and tolerates malform
   const bar = page.locator('[data-section-bar]');
   await expect(bar).toHaveCSS('position', 'sticky');
   await bar.getByRole('button').click();
-  await bar.getByRole('link', { name: 'Notifications', exact: true }).click();
+  await bar.getByRole('link', { name: 'Sign-in & security', exact: true }).click();
   await expect(
-    page.getByRole('heading', { name: 'Email notifications', exact: true }),
+    page.getByRole('heading', { name: 'Sign-in & security', exact: true }),
   ).toBeFocused();
-  await expect(bar.getByRole('button')).toContainText('Notifications');
+  await expect(bar.getByRole('button')).toContainText('Sign-in & security');
   // Click the sticky control at its painted position; locator.click scrolls it to its layout box.
   const trigger = await bar.getByRole('button').boundingBox();
   expect(trigger).not.toBeNull();
   await page.mouse.click(trigger!.x + trigger!.width / 2, trigger!.y + trigger!.height / 2);
-  await expect(bar.getByRole('link', { name: 'Notifications', exact: true })).toHaveAttribute(
+  await expect(bar.getByRole('link', { name: 'Sign-in & security', exact: true })).toHaveAttribute(
     'aria-current',
     'page',
   );
   await page.keyboard.press('Escape');
   await expect(bar.getByRole('button')).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(bar.getByRole('link', { name: 'Notifications', exact: true })).toHaveAttribute(
+  await expect(bar.getByRole('link', { name: 'Sign-in & security', exact: true })).toHaveAttribute(
     'aria-current',
     'page',
   );
@@ -155,7 +155,7 @@ test('password reset shows a generic confirmation and a resend cooldown', async 
   await expect(page.getByLabel('Email address', { exact: true })).toBeFocused();
 });
 
-test('profile edits and notification preferences persist through reload', async ({ page }) => {
+test('profile edits persist through reload', async ({ page }) => {
   await prepare(page, { signedIn: true });
   await page.goto(routes.account.profile);
   const details = page.getByRole('region', { name: 'Profile details', exact: true });
@@ -164,11 +164,8 @@ test('profile edits and notification preferences persist through reload', async 
   await details.getByRole('button', { name: 'Save changes' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Updated Demo Name');
   await expect(page.getByRole('button', { name: 'Account menu, Updated Demo Name' })).toBeVisible();
-  const preference = page.getByRole('switch', { name: 'Ticket updates', exact: true });
-  await preference.uncheck();
   await page.reload();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Updated Demo Name');
-  await expect(preference).not.toBeChecked();
 });
 
 test('follow removal supports undo and deletion requires a confirmation', async ({ page }) => {

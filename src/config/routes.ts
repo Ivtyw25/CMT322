@@ -1,4 +1,4 @@
-/** Query parameter names of a new announcement's starting place (set from the Map items page). */
+/** Query parameter names of a new announcement's starting place (set from the Map pins page). */
 export const announcementPlaceParams = {
   type: 'type',
   lat: 'lat',
@@ -93,14 +93,7 @@ export const routes = {
   },
 } as const;
 
-export const profileSections = [
-  'profile',
-  'reports',
-  'stations',
-  'notifications',
-  'security',
-  'privacy',
-] as const;
+export const profileSections = ['profile', 'reports', 'stations', 'security', 'privacy'] as const;
 export type ProfileSection = (typeof profileSections)[number];
 
 /** Routes that need a signed-in user. Guests go to Log in and come back after. */

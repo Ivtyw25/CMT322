@@ -1,6 +1,3 @@
-export type NotificationPreferenceId =
-  'ticket-updates' | 'road-closures' | 'night-works' | 'construction-milestones' | 'newsletter';
-
 export type AccountDevice = {
   name: string;
   current: boolean;
@@ -18,5 +15,4 @@ export type AccountProfile = {
   googleEmail: string | null;
   passwordLastChanged: string;
   devices: AccountDevice[];
-  notifications: Record<NotificationPreferenceId, boolean>;
 };

@@ -27,12 +27,10 @@ export type OfficialNotice = {
  * `endDate`: it stays until someone removes it.
  *
  * Every announcement owns exactly one pin on the public traffic map. Its type, `mapName`, `lat`,
- * `lng`, dates and `showOnMap` are the map item; the Map items page edits these same fields.
+ * `lng`, dates and `showOnMap` are the map pin; the Map pins page edits these same fields.
  */
 export type StaffAnnouncement = Omit<Announcement, 'status'> & {
   status: StaffAnnouncementStatus;
-  showBanner: boolean;
-  emailFollowers: boolean;
   /** Name on the public map. */
   mapName: string;
   /** Whether the pin is visible on the public map. */

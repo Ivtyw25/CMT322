@@ -2,14 +2,12 @@
 
 import { useSyncExternalStore } from 'react';
 import { readStorage, writeStorage } from '@/lib/dom/safe-storage';
-import type { NotificationPreferenceId } from '@/data/models/account';
 
 export type ProfileChanges = {
   name?: string;
   email?: string;
   phone?: string;
   homeArea?: string;
-  notifications?: Partial<Record<NotificationPreferenceId, boolean>>;
 };
 const key = 'mlc-profile';
 let memory: string | null = null;
@@ -24,19 +22,6 @@ function parseProfile(raw: string | null): ProfileChanges {
     const result: ProfileChanges = {};
     for (const field of ['name', 'email', 'phone', 'homeArea'] as const) {
       if (typeof stored[field] === 'string') result[field] = stored[field];
-    }
-    if (stored.notifications && typeof stored.notifications === 'object') {
-      const notifications = stored.notifications as Record<string, unknown>;
-      result.notifications = {};
-      for (const id of [
-        'ticket-updates',
-        'road-closures',
-        'night-works',
-        'construction-milestones',
-        'newsletter',
-      ] as const) {
-        if (typeof notifications[id] === 'boolean') result.notifications[id] = notifications[id];
-      }
     }
     return result;
   } catch {

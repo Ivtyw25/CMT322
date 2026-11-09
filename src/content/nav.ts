@@ -194,11 +194,6 @@ export const navCopy = {
       { id: 'profile', label: 'Profile & settings', href: routes.account.profile },
       { id: 'reports', label: 'My reports', href: routes.account.profileSection('reports') },
       { id: 'stations', label: 'My stations', href: routes.account.profileSection('stations') },
-      {
-        id: 'notifications',
-        label: 'Notifications',
-        href: routes.account.profileSection('notifications'),
-      },
     ],
     logOut: 'Log out',
   },

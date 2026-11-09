@@ -128,7 +128,3 @@ export type Ticket = {
   /** Oldest first. */
   notes: TicketNote[];
 };
-
-export type ReplyTemplateId = 'action-scheduled' | 'more-information' | 'resolved';
-
-export type ReplyTemplate = { id: ReplyTemplateId; label: string; subject: string; body: string };

@@ -82,7 +82,7 @@ Right column:
 
 ### 5. Account menu (desktop, signed in), node 101:4008
 - Opened by the account chip. 300 px wide, 8 px below the header, right edge aligned to the chip's right edge. Radius `2xl` (Figma 14; use `2xl`, 12, and log the 2 px difference), `shadow-panel`.
-- Content: identity block (avatar 40 px `primary-600` with initials `static-white`, full name Body/S Semibold, email Body/XS `gray-500`; not focusable). Links: Profile & settings (`user`) → profile, My reports (`ticket`) → `#reports`, My stations (`map-pin`) → `#stations`, Notifications (`bell`) → `#notifications`. Divider. "Log out" (`log-out`) is a **button** (it is an action, although Figma draws it as a link).
+- Content: identity block (avatar 40 px `primary-600` with initials `static-white`, full name Body/S Semibold, email Body/XS `gray-500`; not focusable). Links: Profile & settings (`user`) → profile, My reports (`ticket`) → `#reports`, My stations (`map-pin`) → `#stations`. Divider. "Log out" (`log-out`) is a **button** (it is an action, although Figma draws it as a link).
 - Item states: hover/highlighted bg `gray-100`, text `gray-900`; focus-visible ring inside the item.
 - Chip states: hover bg `gray-100`; open bg `primary-50` (102:4220); focus-visible ring.
 - Pattern: ARIA menu (Radix `DropdownMenu`, links via `asChild`). Focus goes to the first item on open; Arrow keys, Home/End, Escape (focus back to chip), outside click closes. Choosing a link navigates and closes.
@@ -328,7 +328,7 @@ Durations from 100 to 200 ms. Easing: enter `cubic-bezier(0.16, 1, 0.3, 1)`, exi
 | Report & Track: Overview, Report an issue, Track a ticket | `routes.reportTrack.overview`, `.report`, `.track` |
 | "Create an account" (panel, drawer) | `routes.account.signup` |
 | "Log in" (header, drawer) | `routes.account.loginReturningTo(current path)` |
-| Account menu: Profile & settings, My reports, My stations, Notifications | `routes.account.profile`, `routes.account.profileSection('reports' / 'stations' / 'notifications')` |
+| Account menu: Profile & settings, My reports, My stations | `routes.account.profile`, `routes.account.profileSection('reports' / 'stations')` |
 | Drawer: Profile & settings, My reports | `routes.account.profile`, `profileSection('reports')` |
 | Mobile avatar | `routes.account.profile` |
 | Log out | Action: sign out (then Home if on a protected route) |

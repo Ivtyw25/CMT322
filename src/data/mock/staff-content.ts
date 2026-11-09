@@ -8,17 +8,12 @@ const DANIEL = 'Daniel Lim';
 const FARAH = 'Farah Hassan';
 
 /*
- * Staff view of the 21 public announcements (Figma 116:4985), plus two drafts. The banner is on for
- * the lane closure and the night closure, as in the Figma list; everything else is off.
+ * Staff view of the 21 public announcements (Figma 116:4985), plus two drafts.
  * Every announcement owns its pin on the traffic map, so the six road works and the hazard that
  * the public map shows beside the announcements also exist here as announcements.
  */
-const bannerOn = new Set(['sultan-azlan-shah-lane-closure', 'komtar-crosshead-night-closure']);
-
 const publishedAnnouncements: StaffAnnouncement[] = announcements.map((item) => ({
   ...item,
-  showBanner: bannerOn.has(item.id),
-  emailFollowers: item.id === 'komtar-crosshead-night-closure',
   mapName: item.title,
   showOnMap: item.status !== 'ended',
   notice:
@@ -57,8 +52,6 @@ const drafts: StaffAnnouncement[] = draftBase
         endDate: '',
         duration: '',
         detour: [],
-        showBanner: false,
-        emailFollowers: false,
         mapName: 'Footpath closure on Jalan Tun Dr Awang',
         showOnMap: false,
         notice: null,
@@ -78,8 +71,6 @@ const drafts: StaffAnnouncement[] = draftBase
         endDate: '',
         duration: '',
         detour: [],
-        showBanner: false,
-        emailFollowers: false,
         mapName: 'Night works at the Jalan Macallum junction',
         showOnMap: false,
         notice: null,
@@ -107,8 +98,6 @@ const roadWorkAnnouncements: StaffAnnouncement[] = roadWorks.map((item) => ({
   duration: item.duration,
   detour: [],
   publishedAt: item.startDate,
-  showBanner: false,
-  emailFollowers: false,
   mapName: item.title,
   showOnMap: true,
   notice: null,
@@ -134,8 +123,6 @@ const hazardAnnouncements: StaffAnnouncement[] = hazards.map((item) => ({
   duration: '',
   detour: [],
   publishedAt: item.reportedOn,
-  showBanner: false,
-  emailFollowers: false,
   mapName: item.title,
   showOnMap: true,
   notice: null,

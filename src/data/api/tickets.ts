@@ -1,8 +1,7 @@
 import { reportCategories } from '@/data/mock/report-categories';
-import { replyTemplates } from '@/data/mock/reply-templates';
 import { tickets } from '@/data/mock/tickets';
 import type { StationCode } from '@/data/models/station';
-import type { ReplyTemplate, ReportCategory, Ticket, TicketId } from '@/data/models/ticket';
+import type { ReportCategory, Ticket, TicketId } from '@/data/models/ticket';
 
 const newestFirst = (a: Ticket, b: Ticket) => Date.parse(b.submittedAt) - Date.parse(a.submittedAt);
 
@@ -22,11 +21,6 @@ export async function getTicketsNearStation(code: StationCode): Promise<Ticket[]
 /** Report form "Category" options, in display order. */
 export async function getReportCategories(): Promise<ReportCategory[]> {
   return reportCategories;
-}
-
-/** Starting points for a staff reply. */
-export async function getReplyTemplates(): Promise<ReplyTemplate[]> {
-  return replyTemplates;
 }
 
 /** The ID of every demo ticket, for generating the track and staff ticket pages ahead of time. */
