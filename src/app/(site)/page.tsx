@@ -4,6 +4,8 @@ import { homeCopy } from '@/content/home';
 import { getAnnouncements } from '@/data/api/announcements';
 import { getAreas } from '@/data/api/areas';
 import { getConstructionUpdates } from '@/data/api/construction';
+import { getToday } from '@/data/api/clock';
+import { getProgressUpdates, getStageBases } from '@/data/api/progress-updates';
 import { getMostAskedFaq } from '@/data/api/faq';
 import { getRoadWorks } from '@/data/api/road-works';
 import { getSearchIndex } from '@/data/api/search';
@@ -12,6 +14,8 @@ import { getStations } from '@/data/api/stations';
 import type { AreaId } from '@/data/models/area';
 import { AboutSection } from '@/features/home/about-section';
 import { FaqSection } from '@/features/home/faq-section';
+import { FollowedSection } from '@/features/home/followed-section';
+import { toFollowedStations } from '@/features/home/followed-stations-data';
 import { GuideSection } from '@/features/home/guide-section';
 import { HelpSection } from '@/features/home/help-section';
 import { Hero } from '@/features/home/hero';
@@ -43,6 +47,9 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
     constructionUpdates,
     siteInfo,
     faqItems,
+    progressUpdates,
+    stageBases,
+    today,
   ] = await Promise.all([
     searchParams,
     getSearchIndex(),
@@ -53,6 +60,9 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
     getConstructionUpdates(),
     getSiteInfo(),
     getMostAskedFaq(),
+    getProgressUpdates(),
+    getStageBases(),
+    getToday(),
   ]);
   const areaOptions = areas.map(({ id, label }) => ({ id, label }));
 
@@ -66,6 +76,10 @@ export default async function HomePage({ searchParams }: PageProps<'/'>) {
           params.area,
           areas.map((area) => area.id),
         )}
+      />
+      <FollowedSection
+        stations={toFollowedStations(stations, announcements, progressUpdates, stageBases)}
+        today={today}
       />
       <LineSection stations={stations} />
       <AboutSection />

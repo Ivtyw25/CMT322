@@ -264,6 +264,41 @@ export const homeCopy = {
     ],
   },
 
+  followed: {
+    title: 'Your stations',
+    lede: 'Traffic changes, construction progress and reports for the stations you follow.',
+    /** Accessible name of the station tab row. */
+    tabsLabel: 'Stations you follow',
+    stationPage: (name: string) => `Open ${name} station page`,
+    guest: {
+      title: 'See updates for your stations',
+      body: 'Log in and follow stations to see their traffic changes, construction progress and reports here.',
+      action: 'Log in to follow stations',
+    },
+    none: {
+      title: "You don't follow any stations yet",
+      body: 'Follow a station from its page to see its traffic changes, construction progress and reports here.',
+      action: 'Choose stations to follow',
+    },
+    traffic: {
+      title: 'Traffic changes',
+      empty: (name: string) => `No traffic changes near ${name} right now.`,
+      all: (name: string) => `All traffic changes at ${name}`,
+    },
+    construction: {
+      title: 'Construction',
+      latest: 'Latest update',
+      notStarted: 'Construction starts in January 2027.',
+      all: (name: string) => `Construction progress at ${name}`,
+    },
+    reports: {
+      title: 'Recent reports',
+      empty: (name: string) => `No reports near ${name} yet.`,
+      all: (name: string) => `All reports near ${name}`,
+      report: 'Report a problem here',
+    },
+  },
+
   progress: {
     title: 'Latest construction progress',
     lede: 'Updates and site photos from the project team.',
