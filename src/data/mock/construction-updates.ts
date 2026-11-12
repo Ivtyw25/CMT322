@@ -1,4 +1,5 @@
 import type { ConstructionUpdate, Milestone } from '@/data/models/construction-update';
+import { sitePhotos } from './photos';
 
 /*
  * Line-wide site updates, newest first. The first four are Figma 1:413 (and Home 37:1025);
@@ -18,7 +19,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'bayan-lepas',
     stationCodes: ['S06', 'S05'],
     phase: 'viaduct',
-    photoCount: 3,
+    photos: [sitePhotos.viaductPierCaps, sitePhotos.trafficDiversion, sitePhotos.siteHoarding],
   },
   {
     id: 'water-mains-bayan-lepas-fiz',
@@ -32,7 +33,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'bayan-lepas',
     stationCodes: ['S06'],
     phase: 'utility-relocation',
-    photoCount: 2,
+    photos: [sitePhotos.utilityTrench, sitePhotos.siteHoarding],
   },
   {
     id: 'piling-george-town-station',
@@ -47,7 +48,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     // VERIFY: Figma says "George Town station site" without naming it; linked to S18 Bandar Sri Pinang.
     stationCodes: ['S18'],
     phase: 'piling',
-    photoCount: 3,
+    photos: [sitePhotos.boredPiling, sitePhotos.siteHoarding, sitePhotos.coveredWalkway],
   },
   {
     id: 'ground-survey-penang-sentral',
@@ -61,7 +62,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'butterworth',
     stationCodes: ['S31'],
     phase: 'stations',
-    photoCount: 0,
+    photos: [],
   },
   {
     id: 'first-span-gelugor',
@@ -75,7 +76,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'gelugor',
     stationCodes: ['S14'],
     phase: 'viaduct',
-    photoCount: 2,
+    photos: [sitePhotos.viaductSpan, sitePhotos.viaductPierCaps],
   },
   {
     id: 'concourse-jalan-universiti',
@@ -89,7 +90,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'gelugor',
     stationCodes: ['S13'],
     phase: 'stations',
-    photoCount: 2,
+    photos: [sitePhotos.concourseFormwork, sitePhotos.coveredWalkway],
   },
   {
     id: 'power-cables-tun-dr-awang',
@@ -103,7 +104,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'bukit-jambul',
     stationCodes: ['S10'],
     phase: 'utility-relocation',
-    photoCount: 1,
+    photos: [sitePhotos.utilityTrench],
   },
   {
     id: 'piling-fiz-south',
@@ -117,7 +118,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'bayan-lepas',
     stationCodes: ['S05'],
     phase: 'piling',
-    photoCount: 2,
+    photos: [sitePhotos.boredPiling, sitePhotos.siteHoarding],
   },
   {
     id: 'platform-beams-sungai-dua',
@@ -131,7 +132,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'gelugor',
     stationCodes: ['S11'],
     phase: 'stations',
-    photoCount: 3,
+    photos: [sitePhotos.platformBeamLift, sitePhotos.concourseFormwork, sitePhotos.viaductSpan],
   },
   {
     id: 'launching-gantry-bayan-lepas',
@@ -145,7 +146,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'bayan-lepas',
     stationCodes: ['S04'],
     phase: 'viaduct',
-    photoCount: 2,
+    photos: [sitePhotos.launchingGantry, sitePhotos.viaductPierCaps],
   },
   {
     id: 'telecom-lines-komtar',
@@ -159,7 +160,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'george-town',
     stationCodes: ['S20'],
     phase: 'utility-relocation',
-    photoCount: 1,
+    photos: [sitePhotos.utilityTrench],
   },
   {
     id: 'piling-complete-sungai-tiram',
@@ -173,7 +174,7 @@ export const constructionUpdates: ConstructionUpdate[] = [
     areaId: 'bayan-lepas',
     stationCodes: ['S04'],
     phase: 'piling',
-    photoCount: 2,
+    photos: [sitePhotos.boredPiling, sitePhotos.siteHoarding],
   },
 ];
 

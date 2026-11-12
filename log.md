@@ -311,3 +311,13 @@ Verify before this round (port 3300): typecheck, lint, tokens, build, e2e 443, l
 **Open:** Phase 3 (shared header/footer polish, R-QA1/2/5/9, lowering the 15 released pages to 3%) runs as a separate round. Per-viewport tolerances recorded above (contact 390 at 0.18; terms, privacy, accessibility 390 at 0.04).
 
 Merged to main (1b1ae84), pushed and deployed: https://mutiara-connect-9l3xxjg27-ivtyw25s-projects.vercel.app (alias https://mutiara-connect.vercel.app). Smoke test: all ten routes return 200 (404 page returns 404); live link crawl 98/98 passed (`.logs/smoke-links6.log`).
+
+## Site photos replace grey placeholders (2026-11-12)
+
+**Owner request:** replace the photo placeholders with generated photos, reusing one photo wherever the same kind of scene fits instead of generating one per slot.
+
+- 16 photos generated with Figma AI (`gemini-3.1-flash-image`, Figma file "Mutiara LRT site photos (generated)", EXmIWJW22keH473fV7FVKy, Ivan's Team), plus two crops of them (`site-hoarding-lorry`, `road-potholes-close`). Number plate blurred on `road-potholes`. 1024 px JPEGs in `public/photos/`.
+- `data/mock/photos.ts` holds the shared set: 10 construction scenes with alt text (`sitePhotos`) and 9 report pictures (`reportPhotos`). Records point at it: construction updates (`photos` replaces `photoCount`), station progress notes and staff drafts (`ProgressPhoto.src`), demo ticket attachments (`TicketAttachment.src`).
+- Photos are URLs in `public/`, not static imports: Playwright loads the mock data in Node and cannot import image files. A real API would return URLs here too.
+- New `components/patterns/site-photo.tsx`: the photo cropped to its frame, or the grey placeholder when there is none (photos staff add in the editor, files without a stored blob).
+- **Note:** demo tickets or progress updates that were edited in a browser before this change are stored without `src` and keep the placeholder there until site data is cleared.

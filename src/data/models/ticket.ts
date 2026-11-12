@@ -1,3 +1,4 @@
+import type { PhotoSource } from './photo';
 import type { StationCode } from './station';
 
 /** Format MLC-YYMMDD-NNNN, e.g. MLC-261028-0482. */
@@ -32,12 +33,16 @@ export type ReportCategory = {
   hint: string;
 };
 
-/** A photo or file on a submission or a reply. The file itself lives in IndexedDB under `id`. */
+/**
+ * A photo or file on a submission or a reply. A file sent from this browser lives in IndexedDB
+ * under `id`; the demo tickets' photos come with the picture in `src`.
+ */
 export type TicketAttachment = {
   id: string;
   fileName: string;
   sizeBytes: number;
   mimeType: string;
+  src?: PhotoSource;
 };
 
 /** Always shared: the form requires all three. */

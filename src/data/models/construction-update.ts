@@ -1,4 +1,5 @@
 import type { AreaId } from './area';
+import type { Photo } from './photo';
 import type { StationCode } from './station';
 
 /** The Construction progress filter chips. Labels live in src/content/ui.ts. */
@@ -23,8 +24,8 @@ export type ConstructionUpdate = {
   areaId: AreaId;
   stationCodes: StationCode[];
   phase: ConstructionPhase;
-  /** Number of photos. Photos are grey placeholders until real ones are supplied. */
-  photoCount: number;
+  /** Site photos, first one on cards. The timeline shows up to three. */
+  photos: Photo[];
 };
 
 export type Milestone = {

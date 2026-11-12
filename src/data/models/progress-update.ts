@@ -1,3 +1,4 @@
+import type { PhotoSource } from './photo';
 import type { StationCode, StationStage, StationStageId } from './station';
 
 export type ProgressState = 'draft' | 'scheduled' | 'published';
@@ -7,6 +8,8 @@ export type ProgressPhoto = {
   fileName: string;
   /** What the photo shows: the caption on the station page and its text for screen readers. Needed before the update can be published. */
   alt: string;
+  /** The picture. Photos staff add in the editor have none: only the file name is kept. */
+  src?: PhotoSource;
 };
 
 /**

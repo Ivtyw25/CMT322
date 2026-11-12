@@ -5,6 +5,8 @@ import type {
   TicketReply,
   TicketReporter,
 } from '@/data/models/ticket';
+import type { PhotoSource } from '@/data/models/photo';
+import { reportPhotos } from './photos';
 
 const NURUL: TicketHandler = {
   staffId: 'staff-nurul',
@@ -23,11 +25,17 @@ const MEILING: TicketReporter = {
   phone: '+60 12-345 6789',
 };
 
-const photo = (id: string, fileName: string, sizeBytes: number): TicketAttachment => ({
+const photo = (
+  id: string,
+  fileName: string,
+  sizeBytes: number,
+  src: PhotoSource,
+): TicketAttachment => ({
   id,
   fileName,
   sizeBytes,
   mimeType: 'image/jpeg',
+  src,
 });
 const pdf = (id: string, fileName: string, sizeBytes: number): TicketAttachment => ({
   id,
@@ -69,7 +77,14 @@ export const tickets: Ticket[] = [
     submittedAt: '2026-10-29T09:48:00+08:00',
     reporterId: null,
     reporter: { name: 'Ong Hui Min', email: 'huimin.ong@example.com', phone: '016-882 4410' },
-    attachments: [photo('MLC-261029-0514-s1', 'bus-stop-new-spot.jpg', 1_480_000)],
+    attachments: [
+      photo(
+        'MLC-261029-0514-s1',
+        'bus-stop-new-spot.jpg',
+        1_480_000,
+        reportPhotos.temporaryBusStop,
+      ),
+    ],
     handler: null,
     replies: [],
     reporterReplies: [],
@@ -92,7 +107,14 @@ export const tickets: Ticket[] = [
     submittedAt: '2026-10-29T09:14:00+08:00',
     reporterId: 'user-meiling',
     reporter: MEILING,
-    attachments: [photo('MLC-261029-0511-s1', 'dust-over-jalan-penang.jpg', 2_150_000)],
+    attachments: [
+      photo(
+        'MLC-261029-0511-s1',
+        'dust-over-jalan-penang.jpg',
+        2_150_000,
+        reportPhotos.worksiteDust,
+      ),
+    ],
     handler: null,
     replies: [],
     reporterReplies: [],
@@ -116,8 +138,18 @@ export const tickets: Ticket[] = [
     reporterId: 'user-meiling',
     reporter: MEILING,
     attachments: [
-      photo('MLC-261028-0482-s1', 'hoarding-across-driveway.jpg', 2_410_000),
-      photo('MLC-261028-0482-s2', 'lorry-cannot-turn.jpg', 1_960_000),
+      photo(
+        'MLC-261028-0482-s1',
+        'hoarding-across-driveway.jpg',
+        2_410_000,
+        reportPhotos.siteHoarding,
+      ),
+      photo(
+        'MLC-261028-0482-s2',
+        'lorry-cannot-turn.jpg',
+        1_960_000,
+        reportPhotos.siteHoardingLorry,
+      ),
     ],
     handler: NURUL,
     replies: [
@@ -244,8 +276,18 @@ export const tickets: Ticket[] = [
     reporterId: null,
     reporter: { name: 'Siti Noraini', email: 'siti.noraini@example.com', phone: '017-205 9931' },
     attachments: [
-      photo('MLC-261026-0444-s1', 'potholes-jalan-batu-uban.jpg', 3_020_000),
-      photo('MLC-261026-0444-s2', 'pothole-close-up.jpg', 1_740_000),
+      photo(
+        'MLC-261026-0444-s1',
+        'potholes-jalan-batu-uban.jpg',
+        3_020_000,
+        reportPhotos.roadPotholes,
+      ),
+      photo(
+        'MLC-261026-0444-s2',
+        'pothole-close-up.jpg',
+        1_740_000,
+        reportPhotos.roadPotholesClose,
+      ),
     ],
     handler: NURUL,
     replies: [],
@@ -285,7 +327,9 @@ export const tickets: Ticket[] = [
     submittedAt: '2026-10-25T07:55:00+08:00',
     reporterId: null,
     reporter: { name: 'Ahmad Faiz', email: 'ahmad.faiz@example.com', phone: '013-664 2078' },
-    attachments: [photo('MLC-261025-0440-s1', 'blocked-drain-spice.jpg', 2_260_000)],
+    attachments: [
+      photo('MLC-261025-0440-s1', 'blocked-drain-spice.jpg', 2_260_000, reportPhotos.blockedDrain),
+    ],
     handler: DANIEL,
     replies: [
       reply(DANIEL, {
@@ -301,7 +345,9 @@ export const tickets: Ticket[] = [
         subject: 'Photo of the cleared drain',
         body: 'The first section is now clear and water is flowing again. The crew returns tomorrow to finish the rest of the lane.',
         status: null,
-        attachments: [photo('MLC-261025-0440-r2-f1', 'drain-cleared.jpg', 1_820_000)],
+        attachments: [
+          photo('MLC-261025-0440-r2-f1', 'drain-cleared.jpg', 1_820_000, reportPhotos.clearedDrain),
+        ],
       }),
     ],
     reporterReplies: [],
@@ -423,7 +469,9 @@ export const tickets: Ticket[] = [
     submittedAt: '2026-10-19T13:35:00+08:00',
     reporterId: null,
     reporter: { name: 'Kavitha Nair', email: 'kavitha.nair@example.com', phone: '014-322 5817' },
-    attachments: [photo('MLC-261019-0381-s1', 'wall-cracks.jpg', 2_780_000)],
+    attachments: [
+      photo('MLC-261019-0381-s1', 'wall-cracks.jpg', 2_780_000, reportPhotos.wallCracks),
+    ],
     handler: DANIEL,
     replies: [
       reply(DANIEL, {

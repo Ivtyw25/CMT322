@@ -19,7 +19,7 @@ src/
   components/
     ui/                Shared primitives: button, tag, field, switch, tabs, accordion, … (shadcn-based, restyled)
     layout/            Header, mobile menu, nav panel, notification bar, footer, section bar, docs layout
-    patterns/          Line rail, timeline, stepper, theme switcher, image placeholder, map (client-only)
+    patterns/          Line rail, timeline, stepper, theme switcher, site photo, image placeholder, map (client-only)
   content/             All copy. One file per page group (home.ts, project.ts, …) plus common.ts, nav.ts.
   data/
     models/            Domain types (Station, Announcement, Ticket, …). No logic.
@@ -51,6 +51,7 @@ docs/                  BRIEFING.md (product facts), design-system.md (tokens), f
 | A hook or helper | `src/lib/<topic>/` (no JSX) or next to the one component that uses it |
 | A staff portal page | route in `src/app/(admin)/admin/…`, sections in `src/features/admin/`, copy in `src/content/admin.ts`, staff records in `src/data/mock/` + `data/api`. Staff portal layout parts live in `src/features/admin/layout/`. |
 | An image | `src/assets/images/`, imported statically into `next/image` |
+| A photo on a record (update, ticket) | `public/photos/`, referenced by URL from `data/mock/photos.ts` (Playwright reads mock data in Node and cannot import image files); render it with `SitePhoto` |
 
 ## 3. Rules the linter enforces
 

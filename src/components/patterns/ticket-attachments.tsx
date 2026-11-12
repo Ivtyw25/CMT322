@@ -17,7 +17,15 @@ function Attachment({ attachment }: { attachment: TicketAttachment }) {
   return (
     <li className="flex w-36 max-w-full flex-col gap-1.5">
       <div className={tile}>
-        {isImage && file.state === 'ready' ? (
+        {isImage && attachment.src ? (
+          <Image
+            src={attachment.src}
+            alt={uiCopy.ticketThread.photoAlt(attachment.fileName)}
+            fill
+            sizes="144px"
+            className="object-cover"
+          />
+        ) : isImage && file.state === 'ready' ? (
           <Image
             src={file.url}
             alt={uiCopy.ticketThread.photoAlt(attachment.fileName)}

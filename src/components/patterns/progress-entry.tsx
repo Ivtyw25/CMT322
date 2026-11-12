@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
+import { SitePhoto } from '@/components/patterns/site-photo';
 import type { ProgressUpdate } from '@/data/models/progress-update';
 import { cn } from '@/lib/cn';
 import { formatDate } from '@/lib/format/dates';
@@ -80,7 +80,11 @@ export function ProgressEntry({
               {update.photos.map((photo) => (
                 <li key={photo.id}>
                   <figure className="flex flex-col gap-1.5">
-                    <ImagePlaceholder decorative className="aspect-3/2 rounded-lg" />
+                    <SitePhoto
+                      src={photo.src}
+                      sizes="(min-width: 640px) 220px, 45vw"
+                      className="aspect-3/2 rounded-lg"
+                    />
                     <figcaption className="type-body-xs text-gray-600">{photo.alt}</figcaption>
                   </figure>
                 </li>

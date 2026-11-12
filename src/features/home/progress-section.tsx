@@ -1,4 +1,5 @@
-import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
+import { SitePhoto } from '@/components/patterns/site-photo';
+import type { Photo } from '@/data/models/photo';
 import { SwipeRow } from '@/components/patterns/swipe-row';
 import { SwipeRowItem } from '@/components/patterns/swipe-row-item';
 import { ButtonLink } from '@/components/ui/button-link';
@@ -9,7 +10,14 @@ import { HomeSection, SectionHeader } from './section-frame';
 
 const HEADING_ID = 'progress-heading';
 
-export type ProgressItem = { id: string; date: string; title: string; summary: string };
+export type ProgressItem = {
+  id: string;
+  date: string;
+  title: string;
+  summary: string;
+  /** The first one is the card photo. */
+  photos: readonly Photo[];
+};
 
 type ProgressSectionProps = { updates: readonly ProgressItem[] };
 
@@ -37,7 +45,11 @@ export function ProgressSection({ updates }: ProgressSectionProps) {
                 title={update.title}
                 media={
                   <div className="flex flex-col gap-5">
-                    <ImagePlaceholder decorative className="h-50 w-full" />
+                    <SitePhoto
+                      src={update.photos[0]?.src}
+                      sizes="(min-width: 768px) 400px, 85vw"
+                      className="h-50 w-full"
+                    />
                     <time dateTime={update.date} className="px-5 type-body-xs text-gray-500">
                       {formatDate(update.date)}
                     </time>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
+import { SitePhoto } from '@/components/patterns/site-photo';
 import { routes } from '@/config/routes';
 import { projectCopy } from '@/content/project';
 import type { ConstructionUpdate } from '@/data/models/construction-update';
@@ -29,8 +29,9 @@ export function OverviewLatestUpdate({ update }: { update: ConstructionUpdate | 
 
   return (
     <div className="flex flex-col gap-5 md:flex-row">
-      <ImagePlaceholder
-        decorative
+      <SitePhoto
+        src={update.photos[0]?.src}
+        sizes="(min-width: 768px) 200px, 100vw"
         className="aspect-350/132 w-full shrink-0 rounded-xl md:aspect-auto md:h-33 md:w-50"
       />
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">

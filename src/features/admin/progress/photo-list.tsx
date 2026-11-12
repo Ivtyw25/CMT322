@@ -2,7 +2,7 @@
 
 import { Upload, X } from 'lucide-react';
 import { useId, useRef, useState } from 'react';
-import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
+import { SitePhoto } from '@/components/patterns/site-photo';
 import { Field } from '@/components/ui/field';
 import { TextInput } from '@/components/ui/text-input';
 import { adminCopy } from '@/content/admin';
@@ -107,7 +107,7 @@ export function PhotoList({ photos, onChange, showAltErrors }: PhotoListProps) {
         <ul className="flex flex-col gap-3">
           {photos.map((photo) => (
             <li key={photo.id} className="flex items-start gap-4">
-              <ImagePlaceholder decorative className="h-20 w-25 shrink-0 rounded-lg" />
+              <SitePhoto src={photo.src} sizes="100px" className="h-20 w-25 shrink-0 rounded-lg" />
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                 <div className="flex items-center gap-2">
                   <p className="min-w-0 flex-1 type-body-s-medium break-all text-gray-900">

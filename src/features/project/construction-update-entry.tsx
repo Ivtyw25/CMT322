@@ -1,5 +1,5 @@
 import { User } from 'lucide-react';
-import { ImagePlaceholder } from '@/components/patterns/image-placeholder';
+import { SitePhoto } from '@/components/patterns/site-photo';
 import { projectCopy } from '@/content/project';
 import { uiCopy } from '@/content/ui';
 import type { ConstructionUpdate } from '@/data/models/construction-update';
@@ -17,7 +17,7 @@ export function ConstructionUpdateEntry({
   update: ConstructionUpdate;
   first: boolean;
 }) {
-  const photos = Math.min(update.photoCount, MAX_PHOTOS);
+  const photos = update.photos.slice(0, MAX_PHOTOS);
   const titleId = `${update.id}-title`;
   return (
     <li className="group">
@@ -53,21 +53,22 @@ export function ConstructionUpdateEntry({
             {update.timelineTitle ?? update.title}
           </h3>
           <p className="type-body-s text-gray-700">{update.body}</p>
-          {photos > 0 ? (
+          {photos.length > 0 ? (
             <>
               <div aria-hidden className="grid grid-cols-3 gap-2.5">
-                {Array.from({ length: photos }, (_, index) => (
-                  <ImagePlaceholder
+                {photos.map((photo, index) => (
+                  <SitePhoto
                     key={index}
-                    decorative
+                    src={photo.src}
+                    sizes={photos.length === 1 ? '(min-width: 768px) 240px, 90vw' : '240px'}
                     className={cn(
                       'aspect-3/2 rounded-lg',
-                      photos === 1 && 'col-span-3 md:col-span-1',
+                      photos.length === 1 && 'col-span-3 md:col-span-1',
                     )}
                   />
                 ))}
               </div>
-              <p className="sr-only">{copy.photosNote(photos)}</p>
+              <p className="sr-only">{copy.photosNote(photos.length)}</p>
             </>
           ) : null}
           <p className="flex items-center gap-1.5 type-body-xs text-gray-500">

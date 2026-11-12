@@ -172,12 +172,12 @@ test.describe('construction: site updates', () => {
     await expect(loadOlder(page)).toHaveCount(0);
   });
 
-  test('photos follow the photo count, at most three, as placeholders', async ({ page }) => {
+  test("photos follow the update's photos, at most three", async ({ page }) => {
     await open(page);
     const first = entries(page).first();
-    const expected = Math.min(3, updates[0]?.photoCount ?? 0);
+    const expected = Math.min(3, updates[0]?.photos.length ?? 0);
     await expect(first.getByText(copy.updates.photosNote(expected))).toBeAttached();
-    await expect(first.locator('[aria-hidden="true"] svg')).toHaveCount(expected);
+    await expect(first.locator('[aria-hidden="true"] img')).toHaveCount(expected);
   });
 
   test('each entry shows date, place, phase label and the byline', async ({ page }) => {

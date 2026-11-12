@@ -6,6 +6,7 @@ import {
   type StationStageId,
 } from '@/data/models/station';
 import { constructionUpdates } from './construction-updates';
+import { sitePhotos } from './photos';
 
 /*
  * Station progress, in one place. The station records (src/data/mock/stations.ts), the station
@@ -113,10 +114,11 @@ const fromSiteUpdates: ProgressUpdate[] = constructionUpdates.flatMap((item, ind
       state: 'published',
       author: Math.floor(index / 2) % 2 === 0 ? DANIEL : FARAH,
       date: item.date,
-      photos: Array.from({ length: item.photoCount }, (_, photo) => ({
-        id: `${item.id}-p${photo + 1}`,
-        fileName: `${item.id}-${photo + 1}.jpg`,
-        alt: item.title,
+      photos: item.photos.map((photo, index) => ({
+        id: `${item.id}-p${index + 1}`,
+        fileName: `${item.id}-${index + 1}.jpg`,
+        alt: photo.alt,
+        src: photo.src,
       })),
       percent: progress.percent,
       savedAt: `${item.date}T10:00:00+08:00`,
@@ -140,6 +142,7 @@ const stationNotes: StationNote[] = [
         id: 'p1',
         fileName: 'komtar-lane-layout.jpg',
         alt: 'Traffic using the new lane layout beside the KOMTAR worksite',
+        src: sitePhotos.trafficDiversion.src,
       },
     ],
     percent: 35,
@@ -152,7 +155,12 @@ const stationNotes: StationNote[] = [
     body: 'Crosshead cast on the pier facing KOMTAR Tower. Night lifting works start on 3 November.',
     date: '2026-10-27',
     photos: [
-      { id: 'p1', fileName: 'crosshead-cast.jpg', alt: 'The cast crosshead on top of the pier' },
+      {
+        id: 'p1',
+        fileName: 'crosshead-cast.jpg',
+        alt: 'The cast crosshead on top of the pier',
+        src: sitePhotos.viaductPierCaps.src,
+      },
     ],
     percent: 38,
   },
@@ -168,11 +176,13 @@ const stationNotes: StationNote[] = [
         id: 'p1',
         fileName: 'concourse-formwork.jpg',
         alt: 'Timber formwork for the concourse slab above the station site',
+        src: sitePhotos.concourseFormwork.src,
       },
       {
         id: 'p2',
         fileName: 'usm-gate-footpath.jpg',
         alt: 'The temporary footpath beside the USM gate',
+        src: sitePhotos.coveredWalkway.src,
       },
     ],
     percent: 46,
@@ -199,6 +209,7 @@ const stationNotes: StationNote[] = [
         id: 'p1',
         fileName: 'mayang-pasir-pier-cap.jpg',
         alt: 'A pier cap in place over Jalan Mayang Pasir',
+        src: sitePhotos.viaductPierCaps.src,
       },
     ],
     percent: 34,
@@ -308,8 +319,14 @@ const drafts: ProgressUpdate[] = [
         id: 'p1',
         fileName: 'komtar-pier-6.jpg',
         alt: 'Completed concrete pier beside KOMTAR Tower with scaffolding removed',
+        src: sitePhotos.viaductPierCaps.src,
       },
-      { id: 'p2', fileName: 'komtar-pier-6-wide.jpg', alt: '' },
+      {
+        id: 'p2',
+        fileName: 'komtar-pier-6-wide.jpg',
+        alt: '',
+        src: sitePhotos.trafficDiversion.src,
+      },
     ],
     percent: 41,
     savedAt: '2026-10-29T10:42:00+08:00',
