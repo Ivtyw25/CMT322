@@ -76,7 +76,7 @@ export const footerCopy = {
     },
   },
   legal: {
-    copyright: '© 2026 Mutiara LRT Community Connect',
+    copyright: '© 2026 Penang Mutiara',
     links: [
       { label: 'Privacy policy', href: routes.legal.privacy },
       { label: 'Terms & Conditions', href: routes.legal.terms },

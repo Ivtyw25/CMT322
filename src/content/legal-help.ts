@@ -47,9 +47,8 @@ export const legalHelpCopy = {
   summaryTitle: 'In short',
   terms: {
     title: 'Terms & Conditions',
-    description:
-      'What you can expect from Mutiara Line Community Connect, and what we expect from you.',
-    lede: 'These terms explain what you can expect from Mutiara Line Community Connect, and what we expect from you when you browse the portal, sign in, report an issue or track a ticket.',
+    description: 'What you can expect from Penang Mutiara, and what we expect from you.',
+    lede: 'These terms explain what you can expect from Penang Mutiara, and what we expect from you when you browse the portal, sign in, report an issue or track a ticket.',
     updated: 'Last updated 29 October 2026. Effective from 1 November 2026.',
     summary: [
       'You can browse project updates, the traffic map and FAQs without an account.',
@@ -211,9 +210,8 @@ export const legalHelpCopy = {
   },
   privacy: {
     title: 'Privacy policy',
-    description:
-      'How Mutiara Line Community Connect collects, uses and protects your personal data.',
-    lede: 'How Mutiara Line Community Connect collects, uses and protects your personal data, and the choices you have.',
+    description: 'How Penang Mutiara collects, uses and protects your personal data.',
+    lede: 'How Penang Mutiara collects, uses and protects your personal data, and the choices you have.',
     updated: 'Last updated 29 October 2026. Effective from 1 November 2026.',
     summary: [
       'We only collect what we need to run your account and handle your reports.',
@@ -312,8 +310,7 @@ export const legalHelpCopy = {
   },
   accessibility: {
     title: 'Accessibility',
-    description:
-      'How Mutiara Line Community Connect works for everyone, and its known limitations.',
+    description: 'How Penang Mutiara works for everyone, and its known limitations.',
     lede: 'Everyone should be able to check road changes and report problems, whatever device or assistive technology they use.',
     updated: 'Last reviewed 29 October 2026.',
     sections: [
@@ -428,8 +425,8 @@ export const legalHelpCopy = {
   },
   sitemap: {
     title: 'Sitemap',
-    description: 'Find public pages on Mutiara LRT Community Connect.',
-    lede: 'Every page on Mutiara Line Community Connect, grouped the same way as the menu.',
+    description: 'Find public pages on Penang Mutiara.',
+    lede: 'Every page on Penang Mutiara, grouped the same way as the menu.',
     groups: [
       ...Object.values(navGroups).map((group) => ({
         id: group.id,

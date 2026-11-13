@@ -1,14 +1,14 @@
 /** Site-wide copy. Page copy lives in one file per page group next to this one. */
 export const commonCopy = {
   /** Product name, as in the footer copyright and the browser title. */
-  siteName: 'Mutiara LRT Community Connect',
+  siteName: 'Penang Mutiara',
   /** Wordmark beside the logo (header, footer, auth pages). */
   shortName: 'Mutiara Line',
   /** Full line name for running text, e.g. "Line: LRT Mutiara Line". */
   lineName: 'LRT Mutiara Line',
   metadata: {
-    titleTemplate: '%s | Mutiara LRT Community Connect',
-    defaultTitle: 'Mutiara LRT Community Connect',
+    titleTemplate: '%s | Penang Mutiara',
+    defaultTitle: 'Penang Mutiara',
     description:
       'Construction news, road changes and community reports for the LRT Mutiara Line in Penang, in one place.',
   },
