@@ -39,6 +39,8 @@ export const routes = {
     routeAt: (stationCode: string) => `/traffic/route?station=${stationCode.toLowerCase()}`,
     announcements: '/traffic/announcements',
     announcement: (announcementId: string) => `/traffic/announcements#${announcementId}`,
+    /** Demo: every "View notice" downloads this one official notice PDF (public/notices). */
+    noticeFile: '/notices/TA01403-FINAL.pdf',
   },
   reportTrack: {
     overview: '/report-track',

@@ -97,6 +97,15 @@ test('an unknown deep link shows a dismissible message', async ({ page }) => {
   await expect(page.getByText(copy.notFound.text)).toBeHidden();
 });
 
+test('View notice downloads the notice PDF', async ({ page }) => {
+  await visit(page, routes.traffic.announcements);
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    rows(page).first().getByRole('link', { name: viewNotice }).click(),
+  ]);
+  expect(download.suggestedFilename()).toBe(routes.traffic.noticeFile.split('/').pop());
+});
+
 test('below 1280 px the rows are cards with labelled values and two actions', async ({ page }) => {
   await visit(page, routes.traffic.announcements, 390);
   const first = rows(page).first();

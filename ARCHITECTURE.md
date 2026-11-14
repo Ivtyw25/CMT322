@@ -52,6 +52,7 @@ docs/                  BRIEFING.md (product facts), design-system.md (tokens), f
 | A staff portal page | route in `src/app/(admin)/admin/…`, sections in `src/features/admin/`, copy in `src/content/admin.ts`, staff records in `src/data/mock/` + `data/api`. Staff portal layout parts live in `src/features/admin/layout/`. |
 | An image | `src/assets/images/`, imported statically into `next/image` |
 | A photo on a record (update, ticket) | `public/photos/`, referenced by URL from `data/mock/photos.ts` (Playwright reads mock data in Node and cannot import image files); render it with `SitePhoto` |
+| A downloadable file (notice PDF) | `public/notices/`, path in `config/routes.ts`; link with a plain `<a download>`, not `next/link` |
 
 ## 3. Rules the linter enforces
 

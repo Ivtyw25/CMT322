@@ -220,12 +220,6 @@ export function AnnouncementsBrowser({ rows, areaOptions }: AnnouncementsBrowser
     row.focus({ preventScroll: true });
   }, [scrollTick, visibleKey]);
 
-  function viewNotice(event: React.MouseEvent<HTMLAnchorElement>, id: string) {
-    event.preventDefault();
-    window.history.replaceState(null, '', `${pathname}${window.location.search}#${id}`);
-    applyHash();
-  }
-
   function hrefFor(target: number): string {
     const next = new URLSearchParams(searchParams.toString());
     if (target === 1) next.delete('page');
@@ -314,7 +308,7 @@ export function AnnouncementsBrowser({ rows, areaOptions }: AnnouncementsBrowser
                 ) : null}
               </div>
             ) : (
-              <AnnouncementsTable rows={visible} linkedId={linkedId} onViewNotice={viewNotice} />
+              <AnnouncementsTable rows={visible} linkedId={linkedId} />
             )}
           </div>
         </TabsContent>

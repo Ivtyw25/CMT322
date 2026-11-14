@@ -142,7 +142,7 @@ test.describe('station: sections', () => {
       page.getByRole('link', {
         name: `${uiCopy.actions.viewNotice}${copy.traffic.actionSuffix(first?.title ?? '')}`,
       }),
-    ).toHaveAttribute('href', routes.traffic.announcement(first?.id ?? ''));
+    ).toHaveAttribute('href', routes.traffic.noticeFile);
     await expect(
       page.getByRole('link', {
         name: `${uiCopy.actions.viewOnMap}${copy.traffic.actionSuffix(first?.title ?? '')}`,

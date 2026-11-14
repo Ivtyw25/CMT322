@@ -12,9 +12,25 @@ const { traffic: copy } = projectCopy.station;
 
 const linkClass = 'hit-area type-body-s-medium text-primary-700 hover:text-primary-800';
 
-function NoticeAction({ href, label, title }: { href: string; label: string; title: string }) {
+type NoticeActionProps = {
+  href: string;
+  label: string;
+  title: string;
+  /** The link is a file to save, not a page. */
+  download?: boolean;
+};
+
+function NoticeAction({ href, label, title, download = false }: NoticeActionProps) {
+  const name = `${label}${copy.actionSuffix(title)}`;
+  if (download) {
+    return (
+      <a href={href} download aria-label={name} className={linkClass}>
+        {label}
+      </a>
+    );
+  }
   return (
-    <Link href={href} aria-label={`${label}${copy.actionSuffix(title)}`} className={linkClass}>
+    <Link href={href} aria-label={name} className={linkClass}>
       {label}
     </Link>
   );
@@ -63,9 +79,10 @@ export function StationTraffic({
                 </div>
                 <div className="flex shrink-0 gap-4 sm:flex-col sm:items-end sm:gap-1">
                   <NoticeAction
-                    href={routes.traffic.announcement(notice.id)}
+                    href={routes.traffic.noticeFile}
                     label={uiCopy.actions.viewNotice}
                     title={notice.title}
+                    download
                   />
                   <NoticeAction
                     href={routes.traffic.mapFocus(notice.id)}

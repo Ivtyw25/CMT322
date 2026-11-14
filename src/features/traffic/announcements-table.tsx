@@ -19,15 +19,13 @@ type AnnouncementsTableProps = {
   rows: readonly AnnouncementRow[];
   /** The row opened by a deep link: highlighted. */
   linkedId: string | null;
-  /** "View notice" was clicked: the page highlights that row. */
-  onViewNotice: (event: React.MouseEvent<HTMLAnchorElement>, id: string) => void;
 };
 
 /**
  * The announcements (Figma 1:671): a table from 1280 px, cards below. The elements keep their
  * table roles when CSS changes their display, so screen readers still read a table.
  */
-export function AnnouncementsTable({ rows, linkedId, onViewNotice }: AnnouncementsTableProps) {
+export function AnnouncementsTable({ rows, linkedId }: AnnouncementsTableProps) {
   const { columns, card } = copy;
   return (
     <div className="max-md:rounded-xl max-md:border max-md:border-gray-200 xl:overflow-hidden xl:rounded-xl xl:border xl:border-gray-200">
@@ -127,14 +125,14 @@ export function AnnouncementsTable({ rows, linkedId, onViewNotice }: Announcemen
                   <span className="text-gray-700">{row.duration}</span>
                 </td>
                 <td role="cell" className="xl:border-t xl:border-gray-200 xl:px-3 xl:py-4">
-                  <Link
-                    href={routes.traffic.announcement(row.id)}
+                  <a
+                    href={routes.traffic.noticeFile}
+                    download
                     aria-label={copy.viewNotice(row.title)}
-                    onClick={(event) => onViewNotice(event, row.id)}
                     className={cn(linkClass, 'inline-flex items-center')}
                   >
                     {copy.viewNoticeLabel}
-                  </Link>
+                  </a>
                 </td>
                 <td role="cell" className="xl:border-t xl:border-gray-200 xl:py-4 xl:pr-5 xl:pl-3">
                   <Link
